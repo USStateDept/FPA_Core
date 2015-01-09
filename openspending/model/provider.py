@@ -22,7 +22,7 @@ def sort_on_deps(joinslist, detail_table):
     joinslist.insert(0, keyjoin)
     return joinslist
 
-def add_table_identifier(meta_items, name, seperator="~"):
+def add_table_identifier(meta_items, name, seperator="__"):
     for dim in meta_items:
         dim.name = name + seperator + dim.name
         try:
@@ -47,13 +47,13 @@ def coalesce_cubes(master_meta, detail_meta):
 
     master_meta_new = {}
     for mapkey in master_meta['mappings'].keys():
-        master_meta_new[master_meta['name'] + "~" + mapkey] = master_meta['mappings'][mapkey]
+        master_meta_new[master_meta['name'] + "__" + mapkey] = master_meta['mappings'][mapkey]
     for mapkey in detail_meta['mappings']:
-       master_meta_new[detail_meta['name'] + "~" + mapkey] = detail_meta['mappings'][mapkey]
+       master_meta_new[detail_meta['name'] + "__" + mapkey] = detail_meta['mappings'][mapkey]
     master_meta['mappings'] = master_meta_new
     #don't forget the actual amounts
-    master_meta['mappings'][master_meta['name'] + '~amount'] = master_meta['name'] + '__entry.amount'
-    master_meta['mappings'][detail_meta['name'] + '~amount'] = detail_meta['name'] + '__entry.amount'
+    master_meta['mappings'][master_meta['name'] + '__amount'] = master_meta['name'] + '__entry.amount'
+    master_meta['mappings'][detail_meta['name'] + '__amount'] = detail_meta['name'] + '__entry.amount'
 
     master_meta['mappings'].update(detail_meta['mappings'])
     master_meta['joins']  = master_meta['joins'] + \
