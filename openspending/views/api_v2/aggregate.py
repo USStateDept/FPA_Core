@@ -1,6 +1,6 @@
 import logging
 
-from flask import request
+from flask import request, g
 
 from openspending.core import cache
 from openspending.auth import require
@@ -12,6 +12,11 @@ from openspending.inflation.aggregation import aggregate as inf_aggregate
 from openspending.lib.hypermedia import drilldowns_apply_links
 from openspending.views.cache import etag_cache_keygen
 from openspending.views.api_v2.common import blueprint
+
+from openspending.lib.cubes_util import *
+from cubes.server.utils import validated_parameter, CSVGenerator
+
+
 
 
 log = logging.getLogger(__name__)
@@ -91,3 +96,132 @@ def aggregate():
     if format == 'csv':
         return write_csv(result['drilldown'], filename=dataset.name + '.csv')
     return jsonify(result)
+
+
+@blueprint.route("/api/2/cubes_aggregate")
+@requires_complex_browser
+#@log_request("aggregate", "aggregates")
+def aggregate_cubes():
+
+    cubes_arg = request.args.get("cubes", None)
+
+    try:
+        cubes = cubes_arg.split("|")
+    except:
+        raise RequestError("Parameter cubes with value  '%s'should be a valid cube names separated by a '|'"
+                % (cubes_arg) )
+
+    if len (cubes) > 5:
+        raise RequestError("You can only join 5 cubes together at one time")  
+
+    starcore_table = request.args.get("starcore", None)
+    if not starcore_table:
+        raise RequestError("Parameter cubes with value  '%s'should be a valid cube names separated by a '|'"
+                % (cubes_arg) )
+
+
+    #skipping authorization without "authorized_cube" func
+
+    starcore_cube = current_app.cubes_workspace.cube(starcore_table, locale=g.locale, metaonly=True)
+    print "my starcore cub", type(starcore_cube)
+
+
+    for cube_name in cubes:
+        if cube_name:
+            cube_meta = current_app.cubes_workspace.cube(cube_name, locale=g.locale, metaonly=True)
+            cubes.append(cube)
+        else:
+            cube = None
+
+    g.cube = Cube(name=cube_meta['name'],
+                            fact=cube_meta['fact'],
+                            aggregates=cube_meta['aggregates'],
+                            measures=cube_meta['measures'],
+                            label=cube_meta['label'],
+                            description=cube_meta['description'],
+                            dimensions=cube_meta['dimensions'],
+                            store=cube_meta['store'],
+                            mappings=cube_meta['mappings'],
+                            joins=cube_meta['joins'])
+    
+    g.cube
+    g.browser = workspace.browser(g.cube)
+
+
+
+
+    cube = g.cube
+
+    output_format = validated_parameter(request.args, "format",
+                                        values=["json", "csv"],
+                                        default="json")
+
+    header_type = validated_parameter(request.args, "header",
+                                      values=["names", "labels", "none"],
+                                      default="labels")
+
+    fields_str = request.args.get("fields")
+    if fields_str:
+        fields = fields_str.lower().split(',')
+    else:
+        fields = None
+
+    # Aggregates
+    # ----------
+
+    aggregates = []
+    for agg in request.args.getlist("aggregates") or []:
+        aggregates += agg.split("|")
+
+    drilldown = []
+
+    ddlist = request.args.getlist("drilldown")
+    if ddlist:
+        for ddstring in ddlist:
+            drilldown += ddstring.split("|")
+
+    prepare_cell("split", "split")
+
+    result = g.browser.aggregate(g.cell,
+                                 aggregates=aggregates,
+                                 drilldown=drilldown,
+                                 split=g.split,
+                                 page=g.page,
+                                 page_size=g.page_size,
+                                 order=g.order)
+
+    # Hide cuts that were generated internally (default: don't)
+    if current_app.slicer.hide_private_cuts:
+        result.cell = result.cell.public_cell()
+
+    if output_format == "json":
+        return jsonify(result)
+    elif output_format != "csv":
+        raise RequestError("unknown response format '%s'" % output_format)
+
+    # csv
+    if header_type == "names":
+        header = result.labels
+    elif header_type == "labels":
+        header = []
+        for l in result.labels:
+            # TODO: add a little bit of polish to this
+            if l == SPLIT_DIMENSION_NAME:
+                header.append('Matches Filters')
+            else:
+                header += [ attr.label or attr.name for attr in cube.get_attributes([l], aggregated=True) ]
+    else:
+        header = None
+
+    fields = result.labels
+    generator = CSVGenerator(result,
+                             fields,
+                             include_header=bool(header),
+                             header=header)
+
+    headers = {"Content-Disposition": 'attachment; filename="aggregate.csv"'}
+    return Response(generator.csvrows(),
+                    mimetype='text/csv',
+                    headers=headers)
+
+
