@@ -11,6 +11,7 @@ from cubes.server.errors import *
 from cubes.server.local import *
 from cubes.server.decorators import prepare_cell
 from cubes.calendar import CalendarMemberConverter
+from cubes.model import Cube
 
 from contextlib import contextmanager
 
@@ -72,6 +73,34 @@ def requires_complex_browser(f):
 
     return wrapper
 
+def get_complex_cube(star_name, cubes):
+
+    #skipping authorization without "authorized_cube" func
+    #the workspace.cube function will raiseerror if cube is not found
+    star_cube_raw = current_app.cubes_workspace.cube(star_name, locale=g.locale, metaonly=True)
+    star_cube = add_table_identifier(star_cube_raw, seperator="__")
+
+
+    cubes_meta = []
+    for cube_name in cubes:
+        if cube_name:
+            cube_joiner_meta_raw = current_app.cubes_workspace.cube(cube_name, locale=g.locale, metaonly=True)
+            cube_joiner_meta = add_table_identifier(cube_joiner_meta_raw, seperator="__")
+            cubes_meta.append(cube_joiner_meta)
+    
+    star_cube = coalesce_cubes(star_cube, cubes_meta)
+
+
+    return Cube(name=star_cube['name'],
+                            fact=star_cube['fact'],
+                            aggregates=star_cube['aggregates'],
+                            measures=star_cube['measures'],
+                            label=star_cube['label'],
+                            description=star_cube['description'],
+                            dimensions=star_cube['dimensions'],
+                            store=star_cube['store'],
+                            mappings=star_cube['mappings'],
+                            joins=star_cube['joins'])
 
 
 def figure_out_deps(masterjoin, rightjointable):
