@@ -198,7 +198,7 @@ def cubes_facts(star_name):
     else:
         g.prettyprint = current_app.slicer.prettyprint
 
-        
+
     # Request parameters
     fields_str = request.args.get("fields")
     if fields_str:
