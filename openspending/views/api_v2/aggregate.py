@@ -123,12 +123,15 @@ def aggregate_cubes(star_name):
     star_cube_raw = current_app.cubes_workspace.cube(star_name, locale=g.locale, metaonly=True)
     star_cube = add_table_identifier(star_cube_raw, seperator="__")
 
+
+    cubes_meta = []
     for cube_name in cubes:
         if cube_name:
             cube_joiner_meta_raw = current_app.cubes_workspace.cube(cube_name, locale=g.locale, metaonly=True)
             cube_joiner_meta = add_table_identifier(cube_joiner_meta_raw, seperator="__")
-            star_cube = coalesce_cubes(star_cube, cube_joiner_meta)
-
+            cubes_meta.append(cube_joiner_meta)
+    
+    star_cube = coalesce_cubes(star_cube, cubes_meta)
 
 
     g.cube = Cube(name=star_cube['name'],
