@@ -14,7 +14,9 @@ from openspending.views.cache import etag_cache_keygen
 from openspending.views.api_v2.common import blueprint
 
 from openspending.lib.cubes_util import *
-from cubes.server.utils import validated_parameter, CSVGenerator
+from cubes.server.utils import *
+from cubes.model import Cube
+from cubes.server.decorators import prepare_cell
 
 
 
@@ -98,10 +100,10 @@ def aggregate():
     return jsonify(result)
 
 
-@blueprint.route("/api/2/cubes_aggregate")
+@blueprint.route("/api/slicer/cube/<star_name>/cubes_aggregate")
 @requires_complex_browser
 #@log_request("aggregate", "aggregates")
-def aggregate_cubes():
+def aggregate_cubes(star_name):
 
     cubes_arg = request.args.get("cubes", None)
 
@@ -114,39 +116,34 @@ def aggregate_cubes():
     if len (cubes) > 5:
         raise RequestError("You can only join 5 cubes together at one time")  
 
-    starcore_table = request.args.get("starcore", None)
-    if not starcore_table:
-        raise RequestError("Parameter cubes with value  '%s'should be a valid cube names separated by a '|'"
-                % (cubes_arg) )
 
 
     #skipping authorization without "authorized_cube" func
-
-    starcore_cube = current_app.cubes_workspace.cube(starcore_table, locale=g.locale, metaonly=True)
-    print "my starcore cub", type(starcore_cube)
-
+    #the workspace.cube function will raiseerror if cube is not found
+    star_cube_raw = current_app.cubes_workspace.cube(star_name, locale=g.locale, metaonly=True)
+    star_cube = add_table_identifier(star_cube_raw, seperator="__")
 
     for cube_name in cubes:
         if cube_name:
-            cube_meta = current_app.cubes_workspace.cube(cube_name, locale=g.locale, metaonly=True)
-            cubes.append(cube)
-        else:
-            cube = None
+            cube_joiner_meta_raw = current_app.cubes_workspace.cube(cube_name, locale=g.locale, metaonly=True)
+            cube_joiner_meta = add_table_identifier(cube_joiner_meta_raw, seperator="__")
+            star_cube = coalesce_cubes(star_cube, cube_joiner_meta)
 
-    g.cube = Cube(name=cube_meta['name'],
-                            fact=cube_meta['fact'],
-                            aggregates=cube_meta['aggregates'],
-                            measures=cube_meta['measures'],
-                            label=cube_meta['label'],
-                            description=cube_meta['description'],
-                            dimensions=cube_meta['dimensions'],
-                            store=cube_meta['store'],
-                            mappings=cube_meta['mappings'],
-                            joins=cube_meta['joins'])
+
+
+    g.cube = Cube(name=star_cube['name'],
+                            fact=star_cube['fact'],
+                            aggregates=star_cube['aggregates'],
+                            measures=star_cube['measures'],
+                            label=star_cube['label'],
+                            description=star_cube['description'],
+                            dimensions=star_cube['dimensions'],
+                            store=star_cube['store'],
+                            mappings=star_cube['mappings'],
+                            joins=star_cube['joins'])
     
-    g.cube
-    g.browser = workspace.browser(g.cube)
 
+    g.browser = current_app.cubes_workspace.browser(g.cube)
 
 
 
@@ -180,7 +177,11 @@ def aggregate_cubes():
         for ddstring in ddlist:
             drilldown += ddstring.split("|")
 
+
+    prepare_cell(restrict=False)
+
     prepare_cell("split", "split")
+
 
     result = g.browser.aggregate(g.cell,
                                  aggregates=aggregates,
@@ -193,6 +194,14 @@ def aggregate_cubes():
     # Hide cuts that were generated internally (default: don't)
     if current_app.slicer.hide_private_cuts:
         result.cell = result.cell.public_cell()
+
+    # Copy from the application context
+    g.json_record_limit = current_app.slicer.json_record_limit
+    if "prettyprint" in request.args:
+        g.prettyprint = str_to_bool(request.args.get("prettyprint"))
+    else:
+        g.prettyprint = current_app.slicer.prettyprint
+
 
     if output_format == "json":
         return jsonify(result)

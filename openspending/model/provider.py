@@ -49,6 +49,7 @@ class OpenSpendingModelProvider(ModelProvider):
             dimensions.append(create_dimension(meta))
 
 
+
         cube_meta = {"name":dataset.name,
                                 "fact":fact_table,
                                 "aggregates":aggregates,
