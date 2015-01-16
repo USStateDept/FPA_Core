@@ -23,7 +23,7 @@ from cubes.server.decorators import prepare_cell
 log = logging.getLogger(__name__)
 
 
-@blueprint.route("/api/slicer/cube/<star_name>/cubes_model")
+@blueprint.route("/api/slicer/cube/<star_name>/cubes_model", methods=["JSON", "GET"])
 @requires_complex_browser
 #@log_request("aggregate", "aggregates")
 def cubes_model(star_name):
@@ -61,7 +61,7 @@ def cubes_model(star_name):
 
 
 
-@blueprint.route("/api/slicer/cube/<star_name>/cubes_aggregate")
+@blueprint.route("/api/slicer/cube/<star_name>/cubes_aggregate", methods=["JSON", "GET"])
 @requires_complex_browser
 #@log_request("aggregate", "aggregates")
 def aggregate_cubes(star_name):
@@ -171,7 +171,7 @@ def aggregate_cubes(star_name):
                     headers=headers)
 
 
-@blueprint.route("/api/slicer/cube/<star_name>/cubes_facts")
+@blueprint.route("/api/slicer/cube/<star_name>/cubes_facts", methods=["JSON", "GET"])
 @requires_complex_browser
 #@log_request("facts", "fields")
 def cubes_facts(star_name):
