@@ -11,7 +11,7 @@ from cubes.server.errors import *
 from cubes.server.local import *
 from cubes.server.decorators import prepare_cell
 from cubes.calendar import CalendarMemberConverter
-from cubes.model import Cube
+from cubes.model import Cube, create_dimension
 
 from contextlib import contextmanager
 
@@ -38,7 +38,7 @@ def requires_complex_browser(f):
             g.locale = None
 
 
-        prepare_cell(restrict=False)
+        #prepare_cell(restrict=False)
 
 
         if "page" in request.args:
@@ -187,7 +187,7 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
     #search for "Country_level0" or country_level0 or any other labels we might apply in case not consistent in data loading
     #before we do amny edits to the master_meta
-    candidates = ["Country_level0.label", "country_level0.label"]
+    candidates = ["Country_level0.label", "country_level0.label", "geometry_level0.label"]
     leftjoin_field = None
     for joinfield in master_meta['dimensions']:
         if joinfield.name.split('__')[1] + ".label" in candidates:
@@ -225,3 +225,170 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
 
     return master_meta
+
+
+
+COUNTRY_CUBES_TEMPLATE = {
+    "role": "geometry",
+    "levels": [
+        {
+            "name": "year",
+            "label": "Year"
+        },
+        {
+            "name": "quarter",
+            "label": "Quarter"
+        },
+        {
+            "name": "month",
+            "label": "Month"
+        },
+        {
+            "name": "week",
+            "label": "Week"
+        },
+        {
+            "name": "day",
+            "label": "Day",
+            "key": "name",
+            "attributes": ['day', 'name']
+        }
+    ],
+    "hierarchies": [
+        {
+            "name": "weekly",
+            "label": "Weekly",
+            "levels": ["year", "week"]
+        },
+        {
+            "name": "daily",
+            "label": "Daily",
+            "levels": ["year", "month", "day"]
+        },
+        {
+            "name": "monthly",
+            "label": "Monthly",
+            "levels": ["year", "quarter", "month"]
+        }
+    ]
+}
+
+
+
+def getGeomCube(name, dataset, provider, metaonly):
+
+    mappings = {}
+    joins = []
+    fact_table = dataset.model.table.name
+
+    aggregates = []
+    measures = []
+
+    dimensions = []
+    for dim in dataset.model.dimensions:
+        meta = dim.to_cubes(mappings, joins)
+
+
+        #####end to_cubes override
+        meta.update({'name': dim.name, 'label': dim.label})
+        if dim.name == "country_level0":
+            #switch to this to be automatic when adding in a new level1 item
+            meta['levels'] = [  
+                            {  
+                               "name":"name",
+                               "info":{  
+
+                               },
+                               "label":"Country Name",
+                               "key":"name",
+                               "label_attribute":"name",
+                               "order_attribute":"name",
+                               "attributes":[  
+                                  {  
+                                     "name":"name",
+                                     "info":{  
+
+                                     },
+                                     "label":"Country Name",
+                                     "ref":"geometry__country_level0.name",
+                                     "locales":[  
+
+                                     ]
+                                  }
+                               ]
+                            },
+                           {  
+                               "name":"dos_level1",
+                               "info":{  
+
+                               },
+                               "label":"Department of State",
+                               "key":"dos_level1",
+                               "label_attribute":"dos_level1",
+                               "order_attribute":"dos_level1",
+                               "attributes":[  
+                                  {  
+                                     "name":"dos_level1",
+                                     "info":{  
+
+                                     },
+                                     "label":"Department of State",
+                                     "ref":"geometry__country_level0.dos_level1",
+                                     "locales":[  
+
+                                     ]
+                                  }
+                               ]
+                            }];
+            meta['hierarchies'] = [  
+                    {  
+                       "name":"name",
+                       "info":{  
+
+                       },
+                       "label":"Country Level",
+                       "levels":[  
+                          "name"
+                       ]
+                    },
+                    {  
+                       "name":"dos_level1",
+                       "info":{  
+
+                       },
+                       "label":"DOSly",
+                       "levels":[  
+                          "dos_level1",
+                          "name"
+                       ]
+                    }];
+
+            print meta
+        dimensions.append(create_dimension(meta))
+
+
+
+    cube_meta = {"name":dataset.name,
+                            "fact":fact_table,
+                            "aggregates":aggregates,
+                            "measures":measures,
+                            "label":dataset.label,
+                            "description":dataset.description,
+                            "dimensions":dimensions,
+                            "store":provider.store,
+                            "mappings":mappings,
+                            "joins":joins}
+
+    if metaonly:
+        return cube_meta
+    else:
+        return Cube(name=cube_meta['name'],
+                        fact=cube_meta['fact'],
+                        aggregates=cube_meta['aggregates'],
+                        measures=cube_meta['measures'],
+                        label=cube_meta['label'],
+                        description=cube_meta['description'],
+                        dimensions=cube_meta['dimensions'],
+                        store=cube_meta['store'],
+                        mappings=cube_meta['mappings'],
+                        joins=cube_meta['joins'])

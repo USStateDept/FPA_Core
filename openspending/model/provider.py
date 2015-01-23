@@ -8,6 +8,7 @@ from cubes.logging import get_logger
 from openspending.core import db
 from openspending.model import Dataset
 
+from openspending.lib.cubes_util import getGeomCube
 
 
 
@@ -20,10 +21,14 @@ class OpenSpendingModelProvider(ModelProvider):
     def requires_store(self):
         return True
 
+
     def cube(self, name, locale=None, metaonly = False):
         dataset = Dataset.by_name(name)
         if name is None:
             raise NoSuchCubeError("Unknown dataset %s" % name, name)
+
+        if name == "geometry":
+            return getGeomCube(name, dataset, self, metaonly)
 
         mappings = {}
         joins = []
