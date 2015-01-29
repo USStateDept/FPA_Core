@@ -14,7 +14,7 @@ from openspending.auth import require
 from openspending.lib import solr_util as solr
 from openspending.lib.helpers import url_for, get_dataset
 from openspending.lib.helpers import flash_success
-from openspending.lib.cache import clear_index_cache
+#from openspending.lib.cache import clear_index_cache
 from openspending.reference.currency import CURRENCIES
 from openspending.reference.country import COUNTRIES
 from openspending.reference.category import CATEGORIES
@@ -295,7 +295,7 @@ def publish(dataset):
     db.session.commit()
 
     # Need to invalidate the cache of the dataset index
-    clear_index_cache()
+    #clear_index_cache()
 
     public_url = url_for('dataset.view', dataset=dataset.name)
     flash_success(
@@ -313,7 +313,7 @@ def retract(dataset):
 
     dataset.private = True
     dataset.touch()
-    clear_index_cache()
+    #clear_index_cache()
     db.session.commit()
 
     flash_success(_("The dataset has been retracted. "
