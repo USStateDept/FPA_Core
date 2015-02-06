@@ -1,6 +1,17 @@
+from functools import wraps
+
 from werkzeug.exceptions import HTTPException
 from flask import request, render_template, Response
 
+from openspending.lib.jsonexport import jsonify
+
+
+def api_json_errors(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        request._return_json = True
+        return f(*args, **kwargs)
+    return decorated_function
 
 def handle_error(exc):
     status = 500
