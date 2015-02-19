@@ -1,23 +1,36 @@
 from datetime import datetime
 
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, reconstructor
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Unicode, DateTime
+from sqlalchemy import BigInteger
 
 from openspending.core import db
 from openspending.model.common import MutableDict, JSONType
 from openspending.model.dataset import Dataset
 from openspending.model.account import Account
+from openspending.model.model import Model
 
 
 class Source(db.Model):
     __tablename__ = 'source'
 
     id = Column(Integer, primary_key=True)
+    name = Column(Unicode(255))
     url = Column(Unicode)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, onupdate=datetime.utcnow)
     analysis = Column(MutableDict.as_mutable(JSONType), default=dict)
+    data = Column(MutableDict.as_mutable(JSONType), default=dict)
+
+    ORid = Column(BigInteger)
+
+    ORoperations = Column( MutableDict.as_mutable(JSONType), default=dict)
+
+    prefuncs = Column(MutableDict.as_mutable(JSONType), default=dict)
+
+
+
 
     dataset_id = Column(Integer, ForeignKey('dataset.id'))
     dataset = relationship(
@@ -29,10 +42,24 @@ class Source(db.Model):
     creator = relationship(Account,
                            backref=backref('sources', lazy='dynamic'))
 
-    def __init__(self, dataset, creator, url):
+    def __init__(self, dataset, creator, url, data):
+        #copy the raw data 
+        self.OR
+        self.data = data.copy()
+
         self.dataset = dataset
         self.creator = creator
         self.url = url
+        self._load_model()
+
+    @reconstructor
+    def _load_model(self):
+        self.model = Model(self)
+
+
+    @property
+    def mapping(self):
+        return self.data.get('mapping', {})
 
     @property
     def loadable(self):
@@ -86,6 +113,10 @@ class Source(db.Model):
     @classmethod
     def by_id(cls, id):
         return db.session.query(cls).filter_by(id=id).first()
+
+    @classmethod
+    def by_source_name(cls, datasetname, sourcename):
+        return db.session.query(cls).join(cls.dataset).filter(Dataset.name==datasetname).filter(cls.name==sourcename).first()
 
     @classmethod
     def all(cls):

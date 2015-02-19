@@ -11,12 +11,13 @@ from openspending.model import Dataset
 from openspending.auth import require
 from openspending.lib import solr_util as solr
 from openspending.lib.jsonexport import jsonify
-from openspending.lib.helpers import get_dataset
+from openspending.lib.helpers import get_dataset, get_source
 from openspending.lib.indices import clear_index_cache
 from openspending.views.cache import etag_cache_keygen
 from openspending.views.context import api_form_data
 from openspending.views.error import api_json_errors
 from openspending.validation.model.dataset import dataset_schema
+from openspending.validation.model.mapping import mapping_schema
 from openspending.validation.model.common import ValidationState
 
 
@@ -29,22 +30,24 @@ blueprint = Blueprint('datasets_api2', __name__)
 def index():
     #page = request.args.get('page')
     fields = request.args.get('fields', "").split(",")
+    getsources = request.args.get('getsources', None)
 
     q = Dataset.all_by_account(current_user).all()
 
-    if len(fields) < 1:
+    if len(fields) < 1 and not getsources:
         return jsonify(q)
-
-    #this can be done better
+    
     returnset = []
     for obj in q:
-        obj_dict = obj.as_dict()
-        tempobj = {}
-        for field in fields:
-            if field in obj_dict.keys():
-                tempobj[field] = obj_dict[field]
+        tempobj = {} 
+        if len(fields) >0:
+            for field in fields:
+                tempobj[field] = getattr(obj, field)
+        else:
+            tempobj = obj.as_dict()
+        if getsources:
+            tempobj['sources'] = obj.sources.all()
         returnset.append(tempobj) 
-
 
 
     # TODO: Facets for territories and languages
@@ -58,25 +61,13 @@ def index():
 @blueprint.route('/datasets/<name>')
 @api_json_errors
 def view(name):
+    """
+    Get the dataset info to populate a form
+    """
+
     dataset = get_dataset(name)
     etag_cache_keygen(dataset)
     return jsonify(dataset)
-
-
-@blueprint.route('/datasets/<name>/model')
-@api_json_errors
-def model(name):
-    dataset = get_dataset(name)
-    etag_cache_keygen(dataset)
-    return jsonify(dataset.mapping)
-
-
-@blueprint.route('/datasets/<name>/fields')
-@api_json_errors
-def fields(name):
-    dataset = get_dataset(name)
-    etag_cache_keygen(dataset)
-    return jsonify(dataset.fields)
 
 
 @blueprint.route('/datasets', methods=['POST', 'PUT'])
@@ -112,23 +103,59 @@ def create():
 @blueprint.route('/datasets/<name>', methods=['POST', 'PUT'])
 @api_json_errors
 def update(name):
+    """
+    Update a dataset with a json object and name from the dataset form
+    """
+    try:
+        dataset = get_dataset(name)
+        print name
+        print dataset
+        require.dataset.update(dataset)
+        schema = dataset_schema(ValidationState(dataset.model_data))
+        data = schema.deserialize(api_form_data())
+        dataset.update(data)
+        db.session.commit()
+        #clear_index_cache()
+        return jsonify({"Success":True})
+    except Exception, e:
+        print e
+        return jsonify({"errors":['Unknown Error has occurred']}) 
+
+
+@blueprint.route('/datasets/<name>/fields')
+@api_json_errors
+def fields(name):
     dataset = get_dataset(name)
-    print dataset
-    #TODO
-    return jsonify({"Success":"notyet"})
-    # require.dataset.update(dataset)
-    # schema = dataset_schema(ValidationState(dataset.model_data))
-    # data = schema.deserialize(api_form_data())
-    # dataset.update(data)
-    # db.session.commit()
-    # clear_index_cache()
-    # return view(name)
+    etag_cache_keygen(dataset)
+    return jsonify(dataset.fields)
 
 
-@blueprint.route('/datasets/<name>/model', methods=['POST', 'PUT'])
+
+@blueprint.route('/datasets/<datasetname>/model', defaults={'sourcename': None})
+@blueprint.route('/datasets/<datasetname>/model/create', defaults={'sourcename': "create__source"})
+@blueprint.route('/datasets/<datasetname>/model/<sourcename>')
+@api_json_errors
+def model(datasetname, sourcename):
+    #if not sourcename then we are saving the defaults for dataset
+    if sourcename == "create__source":
+        dataset = get_dataset(datasetname)
+        return jsonify(require.dataset.read(dataset))
+    elif not sourcename:
+        dataset = get_dataset(datasetname)
+        etag_cache_keygen(dataset)
+        return jsonify(dataset.mapping) 
+    else:
+        source = get_source(datasetname, sourcename)
+        return jsonify(source.mapping)
+
+
+
+
+@blueprint.route('/datasets/<name>/model', methods=['POST', 'PUT'], defaults={'sourcename': None})
+@blueprint.route('/datasets/<name>/model/<sourcename>', methods=['POST', 'PUT'])
 @api_json_errors
 def update_model(name):
-    dataset = get_dataset(name)
+    dataset = get_dataset(datasetname, sourcename)
     print dataset
     #TODO
     return jsonify({"Success":"notyet"})
