@@ -6,7 +6,7 @@ from urllib import urlopen
 from messytables import CSVRowSet, headers_processor, offset_processor
 
 from openspending.core import db
-from openspending.model.run import Run
+from openspending.model import Run
 from openspending.model.log_record import LogRecord
 from openspending.validation.model import Invalid
 from openspending.validation.data import convert_types

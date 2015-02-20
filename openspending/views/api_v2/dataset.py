@@ -261,3 +261,14 @@ def delete(name):
     # clear_index_cache()
     # solr.drop_index(dataset.name)
     # return jsonify({'status': 'deleted'}, status=410)
+
+
+@blueprint.route('/datasets/<datasetname>/model/<sourcename>/ORoperations')
+@api_json_errors
+def ORoperations(datasetname, sourcename):
+    try:
+        source = get_source(sourcename)
+        ORinstructions = source.getORInstructions()
+        return jsonify(ORinstructions)
+    except Exception, e:
+        return jsonify({"error":"Could not fetch the ORinstructions"})

@@ -11,6 +11,8 @@ from openspending.model.dataset import Dataset
 from openspending.model.account import Account
 from openspending.model.model import Model
 
+from openspending.preprocessors.ORhelper import RefineProj
+
 
 class Source(db.Model):
     __tablename__ = 'source'
@@ -48,8 +50,26 @@ class Source(db.Model):
         self.creator = creator
         self.url = url
         self.name = name
+        self.prefuncs = {}
+        self.createORProject()
         if (data):
             self.addData(data)
+
+    def createORProject(self):
+        refineproj = RefineProj(source=self)
+        self.ORid = refineproj.refineproj.project_id
+        return
+
+    def saveORInstructions(self):
+        #get the new ioperations from OR and save them int he database
+        refineproj = RefineProj(source=self)
+        self.ORoperations = refineproj.get_operations()
+        return
+
+    def getORInstructions(self):
+        #get the new ioperations from OR and save them int he database
+        refineproj = RefineProj(source=self)
+        return refineproj.get_operations()
         
 
     def addData(self, data):
@@ -135,5 +155,6 @@ class Source(db.Model):
             "name": self.name,
             "url": self.url,
             "dataset": self.dataset.name,
-            "created_at": self.created_at
+            "created_at": self.created_at,
+            "ORid": self.ORid
         }
