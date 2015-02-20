@@ -7,7 +7,7 @@ from colander import SchemaNode, String, Invalid
 from restpager import Pager
 
 from openspending.core import db
-from openspending.model import Dataset
+from openspending.model import Dataset, Source
 from openspending.auth import require
 from openspending.lib import solr_util as solr
 from openspending.lib.jsonexport import jsonify
@@ -16,7 +16,7 @@ from openspending.lib.indices import clear_index_cache
 from openspending.views.cache import etag_cache_keygen
 from openspending.views.context import api_form_data
 from openspending.views.error import api_json_errors
-from openspending.validation.model.dataset import dataset_schema
+from openspending.validation.model.dataset import dataset_schema, source_schema
 from openspending.validation.model.mapping import mapping_schema
 from openspending.validation.model.common import ValidationState
 
@@ -132,29 +132,106 @@ def fields(name):
 
 
 @blueprint.route('/datasets/<datasetname>/model', defaults={'sourcename': None})
-@blueprint.route('/datasets/<datasetname>/model/create', defaults={'sourcename': "create__source"})
+@blueprint.route('/datasets/<datasetname>/model/create__source', defaults={'sourcename': "create__source"})
 @blueprint.route('/datasets/<datasetname>/model/<sourcename>')
 @api_json_errors
 def model(datasetname, sourcename):
     #if not sourcename then we are saving the defaults for dataset
     if sourcename == "create__source":
+        #this will have the name and URL
+        #verify that name is unique
+
         dataset = get_dataset(datasetname)
+        if not require.dataset.create(dataset):
+            return jsonify({"errors":["Can not create new source.  Permission denied"]})
+        #create new source
         return jsonify(require.dataset.read(dataset))
     elif not sourcename:
         dataset = get_dataset(datasetname)
         etag_cache_keygen(dataset)
         return jsonify(dataset.mapping) 
     else:
-        source = get_source(datasetname, sourcename)
-        return jsonify(source.mapping)
+        source = get_source(sourcename)
+        return jsonify(source)
 
 
 
 
-@blueprint.route('/datasets/<name>/model', methods=['POST', 'PUT'], defaults={'sourcename': None})
-@blueprint.route('/datasets/<name>/model/<sourcename>', methods=['POST', 'PUT'])
+@blueprint.route('/datasets/<datasetname>/model', methods=['POST', 'PUT'], defaults={'sourcename': None})
+@blueprint.route('/datasets/<datasetname>/model/create_default', defaults={'sourcename': "create__default"})
+@blueprint.route('/datasets/<datasetname>/model/<sourcename>', methods=['POST', 'PUT'])
 @api_json_errors
-def update_model(name):
+def update_model(datasetname, sourcename):
+
+    #if not sourcename then we are saving the defaults for dataset
+    if sourcename == "create__default":
+
+        dataset = get_dataset(datasetname)
+        if not require.dataset.update(dataset):
+            return jsonify({"errors":["Can not create new source.  Permission denied"]})
+
+        #source will have name and URL
+        source = api_form_data()
+
+        #verify that name is unique
+
+        model = {'source': source}
+        schema = source_schema(ValidationState(model))
+
+        data = schema.deserialize(source)
+        if Source.by_source_name(data['name']) is not None:
+            return jsonify({"errors":["A dataset with this name already exists"]})
+        print data
+        #source = Source({'souce': data})
+        # dataset.private = True
+        # dataset.managers.append(current_user)
+        # db.session.add(dataset)
+        # db.session.commit()
+
+        #create new source
+        return jsonify(require.dataset.read(dataset))
+    elif not sourcename:
+        dataset = get_dataset(datasetname)
+        if not require.dataset.update(dataset):
+            return jsonify({"errors":["Can not create new source.  Permission denied"]})
+        #source will have name and URL
+        source = api_form_data()
+
+        #verify that name is unique and URL is real
+        model = {'source': source}
+        schema = source_schema(ValidationState(model))
+        try:
+            data = schema.deserialize(source)
+        except Invalid, e:
+            #print message in thefuture
+            return jsonify({"errors":["Invalid field"]})
+        if Source.by_source_name(data['name']) is not None:
+            return jsonify({"errors":["A dataset with this name already exists"]})
+
+        #addin the dataset
+        data['dataset'] = dataset
+        print data
+        source = Source(dataset=dataset, name=data['name'], url=data['url'], creator=current_user)
+        #dataset.private = True
+        #dataset.managers.append(current_user)
+        db.session.add(source)
+        db.session.commit()
+
+        return jsonify({"Success":True})
+    else:
+        source = get_source(sourcename)
+        return jsonify(source)
+
+
+
+    #this will have the name and URL
+    #verify that name is unique
+
+    dataset = get_dataset(datasetname)
+    if not require.dataset.create(dataset):
+        return jsonify({"errors":["Can not create new source.  Permission denied"]})
+    #create new source
+
     dataset = get_dataset(datasetname, sourcename)
     print dataset
     #TODO

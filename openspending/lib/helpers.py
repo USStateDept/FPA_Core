@@ -28,8 +28,8 @@ def get_dataset(name):
     require.dataset.read(dataset)
     return dataset
 
-def get_source(datasetname, sourcename):
-    source = obj_or_404(Source.by_source_name(datasetname, sourcename))
+def get_source(sourcename):
+    source = obj_or_404(Source.by_source_name(sourcename))
     #require.dataset.read(dataset)
     return source
 

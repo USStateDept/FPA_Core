@@ -42,19 +42,25 @@ class Source(db.Model):
     creator = relationship(Account,
                            backref=backref('sources', lazy='dynamic'))
 
-    def __init__(self, dataset, creator, url, data):
+    def __init__(self, dataset, creator, url, name, data = None):
         #copy the raw data 
-        self.OR
-        self.data = data.copy()
-
         self.dataset = dataset
         self.creator = creator
         self.url = url
+        self.name = name
+        if (data):
+            self.addData(data)
+        
+
+    def addData(self, data):
+        self.data = data.copy()
         self._load_model()
 
     @reconstructor
     def _load_model(self):
-        self.model = Model(self)
+        if self.data.get('mapping', {}).keys() > 0:
+            print "building the model", self.name
+            self.model = Model(self)
 
 
     @property
@@ -115,8 +121,9 @@ class Source(db.Model):
         return db.session.query(cls).filter_by(id=id).first()
 
     @classmethod
-    def by_source_name(cls, datasetname, sourcename):
-        return db.session.query(cls).join(cls.dataset).filter(Dataset.name==datasetname).filter(cls.name==sourcename).first()
+    def by_source_name(cls, sourcename):
+        return db.session.query(cls).join(cls.dataset).filter(cls.name==sourcename).first()
+
 
     @classmethod
     def all(cls):
@@ -125,6 +132,7 @@ class Source(db.Model):
     def as_dict(self):
         return {
             "id": self.id,
+            "name": self.name,
             "url": self.url,
             "dataset": self.dataset.name,
             "created_at": self.created_at

@@ -7,6 +7,8 @@ from openspending.reference.language import LANGUAGES
 from openspending.reference.country import COUNTRIES
 from openspending.reference.category import CATEGORIES
 
+import urlparse
+
 
 def no_double_underscore(name):
     """ Double underscores are used for dataset bunkering in the
@@ -39,6 +41,13 @@ def valid_country(code):
         return "%s is not a valid country code." % code
     return True
 
+def validURL(code):
+    parts = urlparse.urlsplit(code)
+    if not parts.scheme or not parts.netloc:  
+        return "%s is not a valid URL." % code
+    else:
+        return True
+
 
 def dataset_schema(state):
     schema = mapping('dataset')
@@ -67,4 +76,22 @@ def dataset_schema(state):
     schema.add(sequence('territories',
         key('territory', validator=valid_country), 
         missing=[]))
+    return schema
+
+
+def source_schema(state):
+    schema = mapping('source')
+    schema.add(key('name', validator=chained(
+            nonempty_string,
+            reserved_name,
+            database_name,
+            no_double_underscore
+        ),
+        preparer=lambda x: x.lower().strip() if x else None))
+
+    schema.add(key('url', validator=chained(
+            validURL
+        ),
+        preparer=lambda x: x.strip() if x else None))
+
     return schema

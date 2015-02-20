@@ -74,7 +74,7 @@ class Dataset(db.Model):
         return model
 
     @property
-    def default_mapping(self):
+    def mapping(self):
         return self.data.get('mapping', {})
 
     def touch(self):
