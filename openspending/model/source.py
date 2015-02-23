@@ -51,14 +51,13 @@ class Source(db.Model):
         self.url = url
         self.name = name
         self.prefuncs = {}
-        self.createORProject()
+        refineproj = self.get_or_create_ORProject()
+        self.ORid = refineproj.refineproj.project_id
         if (data):
             self.addData(data)
 
-    def createORProject(self):
-        refineproj = RefineProj(source=self)
-        self.ORid = refineproj.refineproj.project_id
-        return
+    def get_or_create_ORProject(self):
+        return RefineProj(source=self)
 
     def saveORInstructions(self):
         #get the new ioperations from OR and save them int he database

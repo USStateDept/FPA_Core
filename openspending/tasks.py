@@ -8,6 +8,9 @@ from openspending.lib.solr_util import build_index
 from openspending.importer import CSVImporter, BudgetDataPackageImporter
 from openspending.importer.bdp import create_budget_data_package
 
+import csv
+from sqlalchemy import text
+
 
 log = get_task_logger(__name__)
 
@@ -20,6 +23,62 @@ def analyze_all_sources():
     with flask_app.app_context():
         for source in db.session.query(Source):
             analyze_source.delay(source.id)
+
+
+#we are using this in-sync becuase it takes less than 1 second
+# if the processing time grows, we should consider a task
+@celery.task(ignore_result=True)
+def check_column(source_id, columnkey, columnvalue):
+    with flask_app.app_context():
+        source = Source.by_id(source_id)
+        sourcerefine = source.get_or_create_ORProject()
+        #should cache this at some point
+        sourcefile = sourcerefine.refineproj.export()
+        sourcefile_csv = csv.DictReader(sourcefile, delimiter="\t")
+
+        arrayset = []
+        for row in sourcefile_csv:
+            arrayset.append(row[columnvalue])
+
+        sourcefile.close()
+
+        returnval = {"errors":[], "message": "There was an unexpected error"}
+
+        if columnkey == "country_level0":
+            temp_geom_countries = db.session.query("country").from_statement(text("SELECT geometry__country_level0.label as country FROM public.geometry__country_level0 ")).all()
+            geom_countries = [y for x in temp_geom_countries for y in x]
+            temp_geom_countries = None
+
+            returnval['message'] = "The following countries were not found:"
+
+            for country in arrayset:
+                #there is probably a better method that takes advantage of a sorted list
+                if country not in geom_countries:
+                    #log as error
+                    returnval['errors'].append(country)
+
+
+        elif columnkey == "time":
+            pass
+            #check to see if it can be parsed here
+
+        return returnval
+
+
+
+
+
+
+        # if not source:
+        #     return log.error("No such source: %s", source_id)
+        # log.info("Analyzing: %s", source.url)
+        # source.analysis = analyze_csv(source.url)
+        # if 'error' in source.analysis:
+        #     log.error(source.analysis.get('error'))
+        # else:
+        #     log.info("Columns: %r", source.analysis.get('columns'))
+        # db.session.commit()
+
 
 
 @celery.task(ignore_result=True)

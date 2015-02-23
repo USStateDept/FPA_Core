@@ -7,7 +7,7 @@ from colander import SchemaNode, String, Invalid
 from restpager import Pager
 
 from openspending.core import db
-from openspending.model import Dataset, Source
+from openspending.model import Dataset, Source, Run
 from openspending.auth import require
 from openspending.lib import solr_util as solr
 from openspending.lib.jsonexport import jsonify
@@ -19,6 +19,7 @@ from openspending.views.error import api_json_errors
 from openspending.validation.model.dataset import dataset_schema, source_schema
 from openspending.validation.model.mapping import mapping_schema
 from openspending.validation.model.common import ValidationState
+from openspending.tasks import check_column
 
 
 log = logging.getLogger(__name__)
@@ -79,7 +80,7 @@ def create():
     The json_errors return a json object
     """
 
-    if not auth.dataset.create():
+    if not require.dataset.create():
         return jsonify({"errors":["Can not create new dataset.  Permission denied"]})
 
     try:
@@ -108,8 +109,6 @@ def update(name):
     """
     try:
         dataset = get_dataset(name)
-        print name
-        print dataset
         require.dataset.update(dataset)
         schema = dataset_schema(ValidationState(dataset.model_data))
         data = schema.deserialize(api_form_data())
@@ -122,12 +121,82 @@ def update(name):
         return jsonify({"errors":['Unknown Error has occurred']}) 
 
 
-@blueprint.route('/datasets/<name>/fields')
+@blueprint.route('/datasets/<datasetname>/model/<sourcename>/fields')
 @api_json_errors
-def fields(name):
-    dataset = get_dataset(name)
-    etag_cache_keygen(dataset)
-    return jsonify(dataset.fields)
+def field(datasetname, sourcename):
+    """
+    get the column names and any existing info for them
+    - add check for if source name does not exist
+    """
+
+    source = get_source(sourcename)
+    if source.data:
+        #we have a model.  Get the model info
+        return jsonify({"error":"not yet implemented"})
+    else:
+        refineproj = source.get_or_create_ORProject()
+        # this is awkward.  the class should be extended
+        return jsonify(refineproj.refineproj.columns)
+
+
+@blueprint.route('/datasets/<datasetname>/model/<sourcename>/fieldcheck/<columnname>', methods=['GET'])
+@api_json_errors
+def field_polling_check(datasetname, sourcename, columnname):
+    """
+    GET to check if the run is complete
+    """
+
+    source = get_source(sourcename)
+    if self.data:
+        #we have a model.  Get the model info
+        return jsonify({"error":"not yet implemented"})
+    else:
+        refineproj = source.get_or_create_ORProject()
+        # this is awkward.  the class should be extended
+        return jsonify(refineproj.refineproj.columns)
+
+
+
+@blueprint.route('/datasets/<datasetname>/model/<sourcename>/fieldcheck/<columnkey>', methods=['POST'])
+@api_json_errors
+def field_polling_post(datasetname, sourcename, columnkey):
+    """
+    post to check to verify that the column is good
+    """
+
+    #print request.get_json().get('columnval', None)
+    ORcolumn = request.get_json().get('columnval', None)
+    if not ORcolumn:
+        return jsonify({"errors":["could not find the column name"]})
+
+    dataset = get_dataset(datasetname)
+
+    if not require.dataset.update(dataset):
+        return jsonify({"errors":["Can not create new dataset.  Permission denied"]})
+
+
+
+
+
+    try:
+        columnsettings = api_form_data()
+
+        source = get_source(sourcename)
+
+        #use this later if async run is necessary
+        #runop = Run(columnsettings['columnval'], dataset, source)
+        #db.session.add(runop)
+        #db.session.commit()
+
+        #check_column.apply_async(args=[source.id, columnkey, columnsettings['columnval'], runop.id], countdown=1)
+        resultval = check_column(source.id, columnkey, columnsettings['columnval'])
+
+        if len(resultval['errors']) == 0:
+            return jsonify({"Success":True})
+        else:
+            return jsonify(resultval)
+    except Exception, e:
+        return jsonify({"errors":['Unknown Error has occurred']})
 
 
 
