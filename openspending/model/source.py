@@ -59,6 +59,10 @@ class Source(db.Model):
     def get_or_create_ORProject(self):
         return RefineProj(source=self)
 
+    def get_ORexport(self):
+        refineproj = RefineProj(source=self)
+        return refineproj.refineproj.export() 
+
     def saveORInstructions(self):
         #get the new ioperations from OR and save them int he database
         refineproj = RefineProj(source=self)

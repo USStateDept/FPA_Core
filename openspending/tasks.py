@@ -5,11 +5,12 @@ from openspending.core import db
 from openspending.model.source import Source
 from openspending.importer.analysis import analyze_csv
 from openspending.lib.solr_util import build_index
-from openspending.importer import CSVImporter, BudgetDataPackageImporter
+from openspending.importer import CSVImporter, BudgetDataPackageImporter, ORImporter
 from openspending.importer.bdp import create_budget_data_package
 
 import csv
 from sqlalchemy import text
+from dateutil.parser import *
 
 
 log = get_task_logger(__name__)
@@ -59,8 +60,21 @@ def check_column(source_id, columnkey, columnvalue):
 
 
         elif columnkey == "time":
-            pass
-            #check to see if it can be parsed here
+            returnval['message'] = "Could not parse the following dates:"
+            for date_col in arrayset:
+                try:
+                    parse(date_col)
+                except Exception, e:
+                    returnval['errors'].append(date_col)
+
+        elif columnkey == "indicatorvalue":
+            returnval['message'] = "Could not parse the following values: "
+            for val_col in arrayset:
+                try:
+                    float(val_col)
+                except:
+                    returnval['errors'].append(val_col)
+            #check if value is actually a number
 
         return returnval
 
@@ -96,6 +110,26 @@ def analyze_source(source_id):
         db.session.commit()
 
 
+
+@celery.task(ignore_result=True)
+def load_source(source_id, sample=False):
+    with flask_app.app_context():
+        source = Source.by_id(source_id)
+        if not source:
+            return log.error("No such source: %s", source_id)
+
+        if not source.loadable:
+            return log.error("Dataset has no mapping.")
+
+        source.model.generate()
+        importer = ORImporter(source)
+        if sample:
+            importer.run(dry_run=True, max_lines=1000, max_errors=1000)
+        else:
+            importer.run()
+            #index_dataset.delay(source.dataset.name)
+
+
 @celery.task(ignore_result=True)
 def analyze_budget_data_package(url, user, private):
     """
@@ -108,24 +142,6 @@ def analyze_budget_data_package(url, user, private):
             # Submit source to loading queue
             load_budgetdatapackage.delay(source.id)
 
-
-@celery.task(ignore_result=True)
-def load_source(source_id, sample=False):
-    with flask_app.app_context():
-        source = Source.by_id(source_id)
-        if not source:
-            return log.error("No such source: %s", source_id)
-
-        if not source.loadable:
-            return log.error("Dataset has no mapping.")
-
-        source.dataset.model.generate()
-        importer = CSVImporter(source)
-        if sample:
-            importer.run(dry_run=True, max_lines=1000, max_errors=1000)
-        else:
-            importer.run()
-            index_dataset.delay(source.dataset.name)
 
 
 @celery.task(ignore_result=True)

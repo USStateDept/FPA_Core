@@ -176,7 +176,7 @@ class CompoundDimension(Dimension, TableHandler):
         column = Column(self.name + '_id', Integer, index=True)
         fact_table.append_column(column)
         if make_table is True:
-            self._init_table(meta, self.model.dataset.name, self.name)
+            self._init_table(meta, self.model.source.name, self.name)
             for attr in self.attributes:
                 attr.column = attr.init(meta, self.table)
             alias_name = self.name.replace('_', ALIAS_PLACEHOLDER)

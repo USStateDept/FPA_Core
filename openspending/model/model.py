@@ -106,7 +106,7 @@ class Model(TableHandler):
                 self.table.append_constraint(ForeignKeyConstraint(
                     [dim.name + '_id'], [dim.table.name + '.id'],
                     # use_alter=True,
-                    name='fk_' + self.dataset.name + '_' + dim.name
+                    name='fk_' + self.source.name + '_' + dim.name
                 ))
         self._generate_table()
         self._is_generated = True
