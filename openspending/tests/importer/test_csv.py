@@ -44,137 +44,137 @@ def csvimport_fixture(name):
     return source
 
 
-class TestCSVImporter(DatabaseTestCase):
+# class TestCSVImporter(DatabaseTestCase):
 
-    def test_successful_import(self):
-        source = csvimport_fixture('successful_import')
-        importer = CSVImporter(source)
-        importer.run()
-        dataset = db.session.query(Dataset).first()
+#     def test_successful_import(self):
+#         source = csvimport_fixture('successful_import')
+#         importer = CSVImporter(source)
+#         importer.run()
+#         dataset = db.session.query(Dataset).first()
 
-        assert dataset is not None, "Dataset should not be None"
-        assert dataset.name == "test-csv"
+#         assert dataset is not None, "Dataset should not be None"
+#         assert dataset.name == "test-csv"
 
-        entries = dataset.model.entries()
-        assert len(list(entries)) == 4, len(list(entries))
+#         entries = dataset.model.entries()
+#         assert len(list(entries)) == 4, len(list(entries))
 
-        # TODO: provenance
-        entry = list(dataset.model.entries(limit=1, offset=1)).pop()
-        assert entry is not None, "Entry with name could not be found"
-        assert entry['amount'] == 66097.77
+#         # TODO: provenance
+#         entry = list(dataset.model.entries(limit=1, offset=1)).pop()
+#         assert entry is not None, "Entry with name could not be found"
+#         assert entry['amount'] == 66097.77
 
-    def test_no_dimensions_for_measures(self):
-        source = csvimport_fixture('simple')
-        importer = CSVImporter(source)
-        importer.run()
-        dataset = db.session.query(Dataset).first()
+#     def test_no_dimensions_for_measures(self):
+#         source = csvimport_fixture('simple')
+#         importer = CSVImporter(source)
+#         importer.run()
+#         dataset = db.session.query(Dataset).first()
 
-        dimensions = [str(d.name) for d in dataset.model.dimensions]
-        assert sorted(dimensions) == ['entry_id', 'from', 'time', 'to']
+#         dimensions = [str(d.name) for d in dataset.model.dimensions]
+#         assert sorted(dimensions) == ['entry_id', 'from', 'time', 'to']
 
-    def test_successful_import_with_simple_testdata(self):
-        source = csvimport_fixture('simple')
-        importer = CSVImporter(source)
-        importer.run()
-        assert importer.errors == 0, importer.errors
+#     def test_successful_import_with_simple_testdata(self):
+#         source = csvimport_fixture('simple')
+#         importer = CSVImporter(source)
+#         importer.run()
+#         assert importer.errors == 0, importer.errors
 
-        dataset = db.session.query(Dataset).first()
-        assert dataset is not None, "Dataset should not be None"
+#         dataset = db.session.query(Dataset).first()
+#         assert dataset is not None, "Dataset should not be None"
 
-        entries = list(dataset.model.entries())
-        assert len(entries) == 5
+#         entries = list(dataset.model.entries())
+#         assert len(entries) == 5
 
-        entry = entries[0]
-        assert entry['from']['label'] == 'Test From'
-        assert entry['to']['label'] == 'Test To'
-        assert entry['time']['name'] == '2010-01-01'
-        assert entry['amount'] == 100.00
+#         entry = entries[0]
+#         assert entry['from']['label'] == 'Test From'
+#         assert entry['to']['label'] == 'Test To'
+#         assert entry['time']['name'] == '2010-01-01'
+#         assert entry['amount'] == 100.00
 
-    def test_import_errors(self):
-        source = csvimport_fixture('import_errors')
+#     def test_import_errors(self):
+#         source = csvimport_fixture('import_errors')
 
-        importer = CSVImporter(source)
-        importer.run(dry_run=True)
-        assert importer.errors > 1, "Should have errors"
+#         importer = CSVImporter(source)
+#         importer.run(dry_run=True)
+#         assert importer.errors > 1, "Should have errors"
 
-        records = list(importer._run.records)
-        assert records[0].row == 1, \
-            "Should detect missing date colum in line 1"
+#         records = list(importer._run.records)
+#         assert records[0].row == 1, \
+#             "Should detect missing date colum in line 1"
 
-    def test_empty_csv(self):
-        source = csvimport_fixture('default')
-        source.url = 'file:///dev/null'
-        importer = CSVImporter(source)
-        importer.run(dry_run=True)
+#     def test_empty_csv(self):
+#         source = csvimport_fixture('default')
+#         source.url = 'file:///dev/null'
+#         importer = CSVImporter(source)
+#         importer.run(dry_run=True)
 
-        assert importer.errors == 2
+#         assert importer.errors == 2
 
-        records = list(importer._run.records)
-        assert records[0].row == 0
-        assert records[1].row == 0
-        assert "Didn't read any lines of data" in str(records[1].message)
+#         records = list(importer._run.records)
+#         assert records[0].row == 0
+#         assert records[1].row == 0
+#         assert "Didn't read any lines of data" in str(records[1].message)
 
-    def test_malformed_csv(self):
-        source = csvimport_fixture('malformed')
-        importer = CSVImporter(source)
-        importer.run(dry_run=True)
-        assert importer.errors == 1
+#     def test_malformed_csv(self):
+#         source = csvimport_fixture('malformed')
+#         importer = CSVImporter(source)
+#         importer.run(dry_run=True)
+#         assert importer.errors == 1
 
-    def test_erroneous_values(self):
-        source = csvimport_fixture('erroneous_values')
-        importer = CSVImporter(source)
-        importer.run(dry_run=True)
+#     def test_erroneous_values(self):
+#         source = csvimport_fixture('erroneous_values')
+#         importer = CSVImporter(source)
+#         importer.run(dry_run=True)
 
-        # Expected failures:
-        # * unique key constraint not met (2x)
-        # * amount cannot be parsed
-        # * time cannot be parse
-        assert importer.errors == 4
+#         # Expected failures:
+#         # * unique key constraint not met (2x)
+#         # * amount cannot be parsed
+#         # * time cannot be parse
+#         assert importer.errors == 4
 
-        records = list(importer._run.records)
-        # The fourth record should be about badly formed date
-        assert "time" in records[3].attribute, \
-            "Should find badly formatted date"
+#         records = list(importer._run.records)
+#         # The fourth record should be about badly formed date
+#         assert "time" in records[3].attribute, \
+#             "Should find badly formatted date"
 
-        # The row number of the badly formed date should be 5
-        assert records[3].row == 5
+#         # The row number of the badly formed date should be 5
+#         assert records[3].row == 5
 
-    def test_error_with_empty_additional_date(self):
-        source = csvimport_fixture('empty_additional_date')
-        importer = CSVImporter(source)
-        importer.run()
-        assert importer.errors == 1
+#     def test_error_with_empty_additional_date(self):
+#         source = csvimport_fixture('empty_additional_date')
+#         importer = CSVImporter(source)
+#         importer.run()
+#         assert importer.errors == 1
 
-    def test_quoting(self):
-        source = csvimport_fixture('quoting')
-        importer = CSVImporter(source)
-        importer.run()
-        assert importer.errors == 0
+#     def test_quoting(self):
+#         source = csvimport_fixture('quoting')
+#         importer = CSVImporter(source)
+#         importer.run()
+#         assert importer.errors == 0
 
 
-class TestCSVImportDatasets(DatabaseTestCase):
+# class TestCSVImportDatasets(DatabaseTestCase):
 
-    def count_lines_in_stream(self, f):
-        try:
-            return len(f.read().splitlines())
-        finally:
-            f.seek(0)
+#     def count_lines_in_stream(self, f):
+#         try:
+#             return len(f.read().splitlines())
+#         finally:
+#             f.seek(0)
 
-    def _test_import(self, name):
-        source = csvimport_fixture(name)
-        data = open(source.url)
-        lines = self.count_lines_in_stream(data) - 1  # -1 for header row
+#     def _test_import(self, name):
+#         source = csvimport_fixture(name)
+#         data = open(source.url)
+#         lines = self.count_lines_in_stream(data) - 1  # -1 for header row
 
-        importer = CSVImporter(source)
-        importer.run()
+#         importer = CSVImporter(source)
+#         importer.run()
 
-        assert importer.errors == 0
+#         assert importer.errors == 0
 
-        # check correct number of entries
-        dataset = db.session.query(Dataset).first()
-        entries = list(dataset.entries())
-        assert len(entries) == lines
+#         # check correct number of entries
+#         dataset = db.session.query(Dataset).first()
+#         entries = list(dataset.entries())
+#         assert len(entries) == lines
 
-    def test_all_imports(self):
-        for dir in ('lbhf', 'mexico', 'sample', 'uganda'):
-            yield self._test_import, dir
+#     def test_all_imports(self):
+#         for dir in ('lbhf', 'mexico', 'sample', 'uganda'):
+#             yield self._test_import, dir

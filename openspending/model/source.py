@@ -19,6 +19,8 @@ class Source(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(255))
+    label = Column(Unicode(2000))
+    description = Column(Unicode())
     url = Column(Unicode)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, onupdate=datetime.utcnow)
@@ -50,6 +52,8 @@ class Source(db.Model):
         self.creator = creator
         self.url = url
         self.name = name
+        self.label = name
+        self.description = "Need to change this in the model"
         self.prefuncs = {}
         refineproj = self.get_or_create_ORProject()
         self.ORid = refineproj.refineproj.project_id

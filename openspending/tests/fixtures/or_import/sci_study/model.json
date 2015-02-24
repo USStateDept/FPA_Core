@@ -1,0 +1,8 @@
+{
+    "name": "sci_study",
+    "unique_keys": ["entry_id"],
+    "label": "Scientific pubs",
+    "description": "Non-blank description",
+    "url": "http://api.worldbank.org/countries/indicators/WP11623_4.3?per_page=14200&date=1960:2015&format=csv"
+}
+

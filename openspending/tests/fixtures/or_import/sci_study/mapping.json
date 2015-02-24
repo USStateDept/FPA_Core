@@ -1,0 +1,38 @@
+{
+  "mapping": {
+    "country_level0": {
+      "attributes": {
+        "name": {
+          "column": "Country Name",
+          "datatype": "id",
+          "default_value": ""
+        },
+        "label": {
+          "column": "Country Name",
+          "datatype": "string",
+          "default_value": ""
+        }
+      },
+      "type": "compound",
+      "description": null,
+      "label": null
+    },
+    "amount": {
+      "default_value": "",
+      "description": null,
+      "datatype": "float",
+      "label": null,
+      "column": "Values",
+      "type": "measure"
+    },
+    "time": {
+      "default_value": "",
+      "description": null,
+      "format": null,
+      "column": "Date",
+      "label": null,
+      "datatype": "date",
+      "type": "date"
+    }
+  }
+}

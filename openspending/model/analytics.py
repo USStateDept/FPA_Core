@@ -55,7 +55,7 @@ def aggregate(dataset, measures=['amount'], drilldowns=[], cuts=[],
     summary.update({
         'pagesize': pagesize,
         'page': page,
-        'currency': {m: dataset.currency for m in measures},
+        #'currency': {m: dataset.currency for m in measures},
         'num_drilldowns': num_drilldowns,
         'pages': int(math.ceil(num_drilldowns / float(pagesize)))
     })

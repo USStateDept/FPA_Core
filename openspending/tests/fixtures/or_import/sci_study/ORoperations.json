@@ -1,0 +1,32 @@
+[
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Column using expression grel:2007",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Column",
+    "expression": "grel:2007",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column MRV",
+    "columnName": "MRV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column 2011 to Values",
+    "oldColumnName": "2011",
+    "newColumnName": "Values"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Column to Date",
+    "oldColumnName": "Column",
+    "newColumnName": "Date"
+  }
+]

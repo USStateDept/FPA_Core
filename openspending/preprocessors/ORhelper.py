@@ -134,3 +134,14 @@ class RefineProj:
         f = refineproj.export(export_format='csv')
         self.deleteOR(refineproj)
         return f.read()
+
+import json
+
+def cleanOperations(JSONObj):
+    operations = []
+
+    for entry in JSONObj.values():
+        print entry
+        if 'operation' in entry.keys():
+            operations.append(entry['operation'])
+    return json.dumps(operations)
