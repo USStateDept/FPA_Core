@@ -47,5 +47,7 @@ def createuser(username):
     isadmin = raw_input("User is admin (leave blank for no): ")
     if not isadmin:
         account.admin = False
+    else:
+        account.admin = True
     db.session.add(account)
     db.session.commit()
