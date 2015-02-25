@@ -143,11 +143,6 @@ def field(datasetname, sourcename):
 
         basemodeler = DEFAULT_SOURCE_MAPPING
 
-        # basemodeler = {"country_level0": {"column":None, "label":None, "description":None},
-        #               "time": {"column":None, "label":None, "description":None},
-        #               "indicatorvalue": {"column":None, "label":None, "description":None}
-        #               }
-        # this is awkward.  the class should be extended
         return jsonify({"columns": refineproj.refineproj.columns, 'modeler':basemodeler}, headers=headers)
 
 
