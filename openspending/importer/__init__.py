@@ -4,12 +4,14 @@ from datetime import datetime
 
 from urllib import urlopen
 from messytables import CSVRowSet, headers_processor, offset_processor
+import csv
 
 from openspending.core import db
-from openspending.model.run import Run
+from openspending.model import Run
 from openspending.model.log_record import LogRecord
 from openspending.validation.model import Invalid
 from openspending.validation.data import convert_types
+
 
 log = logging.getLogger(__name__)
 
@@ -38,14 +40,14 @@ class BaseImporter(object):
         if dry_run:
             self.unique_check = {}
 
-        before_count = len(self.dataset.model)
+        before_count = len(self.source.model)
 
         self.row_number = 0
 
         # If max_lines is set we're doing a sample, not an import
         operation = Run.OPERATION_SAMPLE if dry_run else Run.OPERATION_IMPORT
-        self._run = Run(operation, Run.STATUS_RUNNING,
-                        self.dataset, self.source)
+        self._run = Run(operation, 
+                        self.dataset, self.source, Run.STATUS_RUNNING)
         db.session.add(self._run)
         db.session.commit()
         log.info("Run reference: #%s", self._run.id)
@@ -69,7 +71,7 @@ class BaseImporter(object):
             self.log_exception(ValueError("Didn't read any lines of data"),
                                error='')
 
-        num_loaded = len(self.dataset.model) - before_count
+        num_loaded = len(self.source.model) - before_count
         if not dry_run and not self.errors and \
                 num_loaded < (self.row_number - 1):
             self.log_exception(
@@ -85,7 +87,7 @@ class BaseImporter(object):
             self._run.status = Run.STATUS_COMPLETE
             log.info("Finished import with no errors!")
         self._run.time_end = datetime.utcnow()
-        self.dataset.updated_at = self._run.time_end
+        self.source.updated_at = self._run.time_end
         db.session.commit()
 
     @property
@@ -96,7 +98,7 @@ class BaseImporter(object):
         """
         Return a list of unique keys for the dataset
         """
-        return [k for k, v in self.dataset.mapping.iteritems()
+        return [k for k, v in self.source.mapping.iteritems()
                 if v.get('key', False)]
 
     def process_line(self, line):
@@ -104,9 +106,9 @@ class BaseImporter(object):
             log.info('Imported %s lines' % self.row_number)
 
         try:
-            data = convert_types(self.dataset.mapping, line)
+            data = convert_types(self.source.mapping, line)
             if not self.dry_run:
-                self.dataset.model.load(data)
+                self.source.model.load(data)
             else:
                 # Check uniqueness
                 unique_value = ', '.join([unicode(data[k]) for k in self.key])
@@ -171,6 +173,21 @@ class CSVImporter(BaseImporter):
         row_set.register_processor(offset_processor(1))
         for row in row_set:
             yield dict([(c.column, c.value) for c in row])
+
+class ORImporter(BaseImporter):
+
+    @property
+    def lines(self):
+        #let's create a uniqueness to this
+        fh = self.source.get_ORexport()
+        #we can use messytables earlier in the process as prefuncs
+        #at this point we are use that everyting should line up
+        sourcefile_csv = csv.DictReader(fh, delimiter="\t")
+        counter = 0
+        for row in sourcefile_csv:
+            counter += 1
+            row.update({"uniqueid":str(counter)})
+            yield row
 
 
 class BudgetDataPackageImporter(BaseImporter):

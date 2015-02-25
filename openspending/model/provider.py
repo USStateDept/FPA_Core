@@ -6,7 +6,8 @@ from cubes.common import coalesce_options
 from cubes.logging import get_logger
 
 from openspending.core import db
-from openspending.model import Dataset
+from openspending.model import Dataset, Source
+from openspending.lib.helpers import get_source
 
 from openspending.lib.cubes_util import getGeomCube
 
@@ -23,22 +24,22 @@ class OpenSpendingModelProvider(ModelProvider):
 
 
     def cube(self, name, locale=None, metaonly = False):
-        dataset = Dataset.by_name(name)
+        source = get_source(name)
         if name is None:
             raise NoSuchCubeError("Unknown dataset %s" % name, name)
 
         if name == "geometry":
-            return getGeomCube(name, dataset, self, metaonly)
+            return getGeomCube(name, source, self, metaonly)
 
         mappings = {}
         joins = []
-        fact_table = dataset.model.table.name
+        fact_table = source.model.table.name
 
         aggregates = [MeasureAggregate('num_entries',
                                        label='Numer of entries',
                                        function='count')]
         measures = []
-        for measure in dataset.model.measures:
+        for measure in source.model.measures:
             cubes_measure = Measure(measure.name, label=measure.label)
             measures.append(cubes_measure)
             aggregate = MeasureAggregate(measure.name,
@@ -48,19 +49,19 @@ class OpenSpendingModelProvider(ModelProvider):
             aggregates.append(aggregate)
 
         dimensions = []
-        for dim in dataset.model.dimensions:
+        for dim in source.model.dimensions:
             meta = dim.to_cubes(mappings, joins)
             meta.update({'name': dim.name, 'label': dim.label})
             dimensions.append(create_dimension(meta))
 
 
 
-        cube_meta = {"name":dataset.name,
+        cube_meta = {"name":source.name,
                                 "fact":fact_table,
                                 "aggregates":aggregates,
                                 "measures":measures,
-                                "label":dataset.label,
-                                "description":dataset.description,
+                                "label":source.label,
+                                "description":source.description,
                                 "dimensions":dimensions,
                                 "store":self.store,
                                 "mappings":mappings,
@@ -86,12 +87,12 @@ class OpenSpendingModelProvider(ModelProvider):
 
     def list_cubes(self):
         cubes = []
-        for dataset in Dataset.all_by_account(None):
-            if not len(dataset.mapping):
+        for source in Source.all():
+            if not len(source.mapping):
                 continue
             cubes.append({
-                'name': dataset.name,
-                'label': dataset.label
+                'name': source.name,
+                'label': source.label
             })
         return cubes
 

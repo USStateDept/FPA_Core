@@ -2,6 +2,7 @@ from datetime import datetime
 from sqlalchemy.orm import reconstructor, relationship, backref
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Unicode, Boolean, DateTime
+from sqlalchemy import BigInteger
 from sqlalchemy.sql.expression import false, or_
 from sqlalchemy.ext.associationproxy import association_proxy
 
@@ -38,7 +39,14 @@ class Dataset(db.Model):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
+
     data = Column(MutableDict.as_mutable(JSONType), default=dict)
+
+    ORid = Column(BigInteger)
+
+    ORoperations = Column( MutableDict.as_mutable(JSONType), default=dict)
+
+    prefuncs = Column(MutableDict.as_mutable(JSONType), default=dict)
 
     languages = association_proxy('_languages', 'code')
     territories = association_proxy('_territories', 'code')
@@ -57,7 +65,7 @@ class Dataset(db.Model):
         self.default_time = dataset.get('default_time')
         self.languages = dataset.get('languages', [])
         self.territories = dataset.get('territories', [])
-        self._load_model()
+        
 
     @property
     def model_data(self):
@@ -68,10 +76,6 @@ class Dataset(db.Model):
     @property
     def mapping(self):
         return self.data.get('mapping', {})
-
-    @reconstructor
-    def _load_model(self):
-        self.model = Model(self)
 
     def touch(self):
         """ Update the dataset timestamp. This is used for cache
@@ -89,6 +93,17 @@ class Dataset(db.Model):
 
     def __repr__(self):
         return "<Dataset(%r,%r)>" % (self.id, self.name)
+
+    def update(self, dataset):
+        self.label = dataset.get('label')
+        self.name = dataset.get('name')
+        self.private = dataset.get('private')
+        self.description = dataset.get('description')
+        self.currency = dataset.get('currency')
+        self.category = dataset.get('category')
+        self.default_time = dataset.get('default_time')
+        self.languages = dataset.get('languages', [])
+        self.territories = dataset.get('territories', [])
 
     def as_dict(self):
         return {

@@ -43,9 +43,12 @@ class Run(db.Model):
                                           order_by='Run.time_start.desc()',
                                           lazy='dynamic'))
 
-    def __init__(self, operation, status, dataset, source):
+    def __init__(self, operation, dataset, source, status=None):
         self.operation = operation
-        self.status = status
+        if not status:
+            self.status = self.STATUS_RUNNING
+        else:
+            self.status = status
         self.dataset = dataset
         self.source = source
 

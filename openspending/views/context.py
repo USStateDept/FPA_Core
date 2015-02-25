@@ -70,3 +70,11 @@ def template_context_processor():
         }
     }
     return data
+
+
+
+def api_form_data():
+    data = request.get_json(silent=True)
+    if data is None:
+        data = dict(request.form.items())
+    return data

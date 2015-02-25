@@ -5,7 +5,7 @@ from flask import flash, request
 from werkzeug.exceptions import NotFound
 
 from openspending.auth import require
-from openspending.model import Dataset
+from openspending.model import Dataset, Source
 
 
 def url_for(endpoint, **kwargs):
@@ -27,6 +27,11 @@ def get_dataset(name):
     dataset = obj_or_404(Dataset.by_name(name))
     require.dataset.read(dataset)
     return dataset
+
+def get_source(sourcename):
+    source = obj_or_404(Source.by_source_name(sourcename))
+    #require.dataset.read(dataset)
+    return source
 
 
 def get_page(param='page'):

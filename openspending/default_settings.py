@@ -48,6 +48,9 @@ CELERY_ROUTES = {
     'openspending.tasks.analyze_all_sources': {
         'queue': 'analysis'
     },
+    'openspending.tasks.check_column': {
+        'queue': 'analysis'
+    },
     'openspending.tasks.analyze_source': {
         'queue': 'analysis'
     },
