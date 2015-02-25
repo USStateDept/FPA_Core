@@ -128,16 +128,24 @@ def field(datasetname, sourcename):
     get the column names and any existing info for them
     - add check for if source name does not exist
     """
-
+    mysource = Source.by_source_name(sourcename)
     source = get_source(sourcename)
+
     if source.data:
         #we have a model.  Get the model info
-        return jsonify({"error":"not yet implemented"})
+        modeler = source.data['mapping']
+        refineproj = source.get_or_create_ORProject()
+        columns = refineproj.refineproj.columns
+        return jsonify({"columns":columns, "modeler":modeler}, headers= {'Cache-Control' : 'no-cache'})
     else:
         refineproj = source.get_or_create_ORProject()
         headers= {'Cache-Control' : 'no-cache'}
+        basemodeler = {"country_level0": {"column":None, "label":None, "description":None},
+                      "time": {"column":None, "label":None, "description":None},
+                      "indicatorvalue": {"column":None, "label":None, "description":None}
+                      }
         # this is awkward.  the class should be extended
-        return jsonify(refineproj.refineproj.columns, headers=headers)
+        return jsonify({"columns": refineproj.refineproj.columns, 'modeler':basemodeler}, headers=headers)
 
 
 @blueprint.route('/datasets/<datasetname>/model/<sourcename>/fieldcheck/<columnname>', methods=['GET'])
@@ -239,7 +247,6 @@ def update_model_createdefault(datasetname, sourcename):
     data = schema.deserialize(source)
     if Source.by_source_name(data['name']) is not None:
         return jsonify({"errors":["A dataset with this name already exists"]})
-    print data
     #source = Source({'souce': data})
     # dataset.private = True
     # dataset.managers.append(current_user)
@@ -270,14 +277,13 @@ def update_model_createnew(datasetname, sourcename):
 
     #addin the dataset
     data['dataset'] = dataset
-    print data
     source = Source(dataset=dataset, name=data['name'], url=data['url'], creator=current_user)
     #dataset.private = True
     #dataset.managers.append(current_user)
     db.session.add(source)
     db.session.commit()
 
-    return jsonify({"Success":True})
+    return jsonify(source)
 
 
 
@@ -365,21 +371,32 @@ def update_model(datasetname, sourcename):
     # return model(name)
 
 
-@blueprint.route('/datasets/<name>', methods=['DELETE'])
+@blueprint.route('/datasets/<datasetname>/sources/<sourcename>', methods=['DELETE'])
 @api_json_errors
-def delete(name):
-    dataset = get_dataset(name)
-    print dataset
-    #TODO
-    return jsonify({"Success":"notyet"})
-    # require.dataset.update(dataset)
+def delete(datasetname, sourcename):
+    try:
+        dataset = get_dataset(datasetname)
+        require.dataset.update(dataset)
 
-    # dataset.fact_table.drop()
-    # db.session.delete(dataset)
-    # db.session.commit()
-    # clear_index_cache()
-    # solr.drop_index(dataset.name)
-    # return jsonify({'status': 'deleted'}, status=410)
+        source = get_source(sourcename)
+        db.session.delete(source)
+        db.session.commit()
+        clear_index_cache()
+
+        q = Dataset.all_by_account(current_user).all()
+        
+        returnset = []
+        for obj in q:
+            tempobj = obj.as_dict()
+            tempobj['sources'] = obj.sources.all()
+            returnset.append(tempobj) 
+
+        #drop solr index
+        #solr.drop_index(source.name)
+        return jsonify(returnset)
+    except Exception, e:
+        return jsonify({"errors":[e]})
+    # require.dataset.update(dataset)
 
 
 @blueprint.route('/datasets/<datasetname>/model/<sourcename>/ORoperations')

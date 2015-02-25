@@ -19,8 +19,8 @@ class Source(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(255))
-    label = Column(Unicode(2000))
-    description = Column(Unicode())
+    #label = Column(Unicode(2000))
+    #description = Column(Unicode())
     url = Column(Unicode)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, onupdate=datetime.utcnow)
@@ -141,7 +141,7 @@ class Source(db.Model):
         return True in [r.successful_load for r in self.runs]
 
     def __repr__(self):
-        return "<Source(%r,%s)>" % (self.id, self.url)
+        return "<Source(%s,%r,%s)>" % (self.name, self.id, self.url)
 
     @classmethod
     def by_id(cls, id):
@@ -149,7 +149,8 @@ class Source(db.Model):
 
     @classmethod
     def by_source_name(cls, sourcename):
-        return db.session.query(cls).join(cls.dataset).filter(cls.name==sourcename).first()
+        print sourcename, "in class methods"
+        return db.session.query(cls).filter(cls.name==sourcename).first()
 
 
     @classmethod
