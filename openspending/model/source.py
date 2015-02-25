@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from sqlalchemy.orm import relationship, backref, reconstructor
 from sqlalchemy.schema import Column, ForeignKey
@@ -67,16 +68,25 @@ class Source(db.Model):
         refineproj = RefineProj(source=self)
         return refineproj.refineproj.export() 
 
-    def saveORInstructions(self):
-        #get the new ioperations from OR and save them int he database
-        refineproj = RefineProj(source=self)
-        self.ORoperations = refineproj.get_operations()
-        return
+    # def saveORInstructions(self):
+    #     #get the new ioperations from OR and save them int he database
+    #     refineproj = RefineProj(source=self)
+    #     self.ORoperations = refineproj.get_operations()
+    #     return
+
+    def applyORInstructions(self, ORoperations):
+        refineproj = self.get_or_create_ORProject()
+        #check this ia valid or operations with the operations attr
+        print ORoperations
+        data = {'operations': json.dumps([ORoperations['operation']])}
+        print data
+        refineproj.refineproj.do_json("apply-operations", data=data)
+        return True
 
     def getORInstructions(self):
         #get the new ioperations from OR and save them int he database
         refineproj = RefineProj(source=self)
-        return refineproj.get_operations()
+        return refineproj.refineproj.get_operations()
         
 
     def addData(self, data):

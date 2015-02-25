@@ -91,7 +91,7 @@ def create():
         if Dataset.by_name(data['name']) is not None:
             return jsonify({"errors":["A dataset with this name already exists"]})
         dataset = Dataset({'dataset': data})
-        dataset.private = True
+        dataset.private = False
         dataset.managers.append(current_user)
         db.session.add(dataset)
         db.session.commit()
@@ -209,21 +209,11 @@ def field_polling_post(datasetname, sourcename, columnkey):
 
 
 @blueprint.route('/datasets/<datasetname>/model', defaults={'sourcename': None})
-@blueprint.route('/datasets/<datasetname>/model/create__source', defaults={'sourcename': "create__source"})
 @blueprint.route('/datasets/<datasetname>/model/<sourcename>')
 @api_json_errors
 def model(datasetname, sourcename):
     #if not sourcename then we are saving the defaults for dataset
-    if sourcename == "create__source":
-        #this will have the name and URL
-        #verify that name is unique
-
-        dataset = get_dataset(datasetname)
-        if not require.dataset.create(dataset):
-            return jsonify({"errors":["Can not create new source.  Permission denied"]})
-        #create new source
-        return jsonify(require.dataset.read(dataset))
-    elif not sourcename:
+    if not sourcename:
         dataset = get_dataset(datasetname)
         etag_cache_keygen(dataset)
         return jsonify(dataset.mapping) 
@@ -234,37 +224,94 @@ def model(datasetname, sourcename):
 
 
 
-@blueprint.route('/datasets/<datasetname>/model/create_default', defaults={'sourcename': "create__default"})
-def update_model_createdefault(datasetname, sourcename):
+@blueprint.route('/datasets/<datasetname>/applymodel/<sourcename>')
+@api_json_errors
+def apply_default_model(datasetname, sourcename):
+    source = get_source(sourcename)
+    dataset = get_dataset(datasetname)
+    if not source or not dataset:
+        return jsonify({"errors":["Invalid URL.  Cannot find source or dataset"]})
+
+    print "doing stuff here", dataset.ORoperations
+    if dataset.ORoperations:
+        source.applyORInstructions(dataset.ORoperations)
+
+    source.addData(dataset.data)
+
+    db.session.commit()
+
+    #refresh from the DB to verify
+    source = get_source(sourcename)
+
+    return jsonify(source)
+
+
+@blueprint.route('/datasets/<datasetname>/applymodel/<sourcename>', methods=['POST', 'PUT'])
+@api_json_errors
+def save_default_model(datasetname, sourcename):
+
     dataset = get_dataset(datasetname)
     if not require.dataset.update(dataset):
         return jsonify({"errors":["Can not create new source.  Permission denied"]})
 
-    #source will have name and URL
-    source = api_form_data()
+    sourcemeta = request.get_json().get("meta", None)
+    sourcemodeler = request.get_json().get("modeler", None)
+    
+    if not sourcemeta or not sourcemodeler:
+        return jsonify({"errors":["Invalid Arguments"]})
 
-    #verify that name is unique
+    source = Source.by_id(sourcemeta['id'])
 
-    model = {'source': source}
-    schema = source_schema(ValidationState(model))
+    if not source:
+        return jsonify({"errors":["Could not find the source"]})
 
-    data = schema.deserialize(source)
-    if Source.by_source_name(data['name']) is not None:
-        return jsonify({"errors":["A dataset with this name already exists"]})
-    #source = Source({'souce': data})
-    # dataset.private = True
-    # dataset.managers.append(current_user)
-    # db.session.add(dataset)
-    # db.session.commit()
 
-    #create new source
-    return jsonify(require.dataset.read(dataset))
+    r = {"mapping":sourcemodeler}
 
-@blueprint.route('/datasets/<datasetname>/model', methods=['POST', 'PUT'], defaults={'sourcename': None})
-def update_model_createnew(datasetname, sourcename):
+    #let's handle the compounds
+    for item in r['mapping'].values():
+        if item['type'] == "compound":
+            for attitem in item['attributes'].values():
+                attitem['column'] = item['column']
+
+    #if not hasattr(r['mapping'], 'theid'):
+    r['mapping']['theid'] = {
+                              "default_value": "",
+                              "description": "Unique ID",
+                              "datatype": "string",
+                              "key": True,
+                              "label": "UniqueID",
+                              "column": "uniqueid",
+                              "type": "attribute",
+                              "form": {
+                                "label": "Unique Identifier"
+                                }
+                            }
+
+    dataset.data = r
+
+    #also need to get the operations of the OR and save it to 
+    ORoperations = source.getORInstructions()
+    dataset.ORoperations = ORoperations[0]
+
+    db.session.commit()
+
+
+    return jsonify({"Success":True})
+
+
+
+
+
+
+
+@blueprint.route('/datasets/<datasetname>/model', methods=['POST', 'PUT'])
+@api_json_errors
+def update_model_createnew(datasetname):
+
     dataset = get_dataset(datasetname)
-    if not require.dataset.update(dataset):
-        return jsonify({"errors":["Can not create new source.  Permission denied"]})
+
+
     #source will have name and URL
     source = api_form_data()
 
@@ -285,7 +332,10 @@ def update_model_createnew(datasetname, sourcename):
     #dataset.private = True
     #dataset.managers.append(current_user)
     db.session.add(source)
+
+
     db.session.commit()
+
 
     return jsonify(source)
 
@@ -322,8 +372,6 @@ def update_model(datasetname, sourcename):
                                 "label": "Unique Identifier"
                                 }
                             }
-    # print r
-    # return None
 
     source = get_source(sourcename)
     source.addData(r)
@@ -380,7 +428,7 @@ def ORoperations(datasetname, sourcename):
     try:
         source = get_source(sourcename)
         ORinstructions = source.getORInstructions()
-        return jsonify(ORinstructions)
+        return jsonify(ORinstructions, headers= {'Cache-Control' : 'no-cache'})
     except Exception, e:
         return jsonify({"error":"Could not fetch the ORinstructions"})
 

@@ -118,7 +118,7 @@ def load_source(source_id, sample=False):
         if not source:
             return log.error("No such source: %s", source_id)
 
-        if not source.loadable:
+        if not source.data['mapping']:
             return log.error("Dataset has no mapping.")
 
         source.model.generate()
