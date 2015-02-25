@@ -140,10 +140,13 @@ def field(datasetname, sourcename):
     else:
         refineproj = source.get_or_create_ORProject()
         headers= {'Cache-Control' : 'no-cache'}
-        basemodeler = {"country_level0": {"column":None, "label":None, "description":None},
-                      "time": {"column":None, "label":None, "description":None},
-                      "indicatorvalue": {"column":None, "label":None, "description":None}
-                      }
+
+        basemodeler = DEFAULT_SOURCE_MAPPING
+
+        # basemodeler = {"country_level0": {"column":None, "label":None, "description":None},
+        #               "time": {"column":None, "label":None, "description":None},
+        #               "indicatorvalue": {"column":None, "label":None, "description":None}
+        #               }
         # this is awkward.  the class should be extended
         return jsonify({"columns": refineproj.refineproj.columns, 'modeler':basemodeler}, headers=headers)
 
@@ -230,6 +233,7 @@ def model(datasetname, sourcename):
 
 
 
+
 @blueprint.route('/datasets/<datasetname>/model/create_default', defaults={'sourcename': "create__default"})
 def update_model_createdefault(datasetname, sourcename):
     dataset = get_dataset(datasetname)
@@ -297,58 +301,29 @@ def update_model(datasetname, sourcename):
     sourcemodeler = request.get_json().get("modeler", None)
     #validate that we have everything here
 
-    r = {"mapping":{}}
+    r = {"mapping":sourcemodeler}
 
-    r['mapping']["country_level0"] = {  
-             "attributes":{  
-                "name":{  
-                   "column":sourcemodeler['country_level0']['column'],
-                   "datatype":"id",
-                   "default_value":""
-                },
-                "label":{  
-                   "column":sourcemodeler['country_level0']['column'],
-                   "datatype":"string",
-                   "default_value":""
-                }
-             },
-             "type":"compound",
-             "description":sourcemodeler['country_level0']['description'],
-             "label":sourcemodeler['country_level0']['label']
-          }
+    #let's handle the compounds
+    for item in r['mapping'].values():
+        if item['type'] == "compound":
+            for attitem in item['attributes'].values():
+                attitem['column'] = item['column']
 
-    r['mapping']['amount'] = {  
-         "default_value":"",
-         "datatype":"float",
-         "description":sourcemodeler['indicatorvalue']['description'],
-         "column":sourcemodeler['indicatorvalue']['column'],
-         "type":"measure",
-         "label":sourcemodeler['indicatorvalue']['label']
-      }
-
-    r['mapping']["time"] = {  
-         "default_value":"",
-         "description":sourcemodeler['time']['description'],
-         "format":None,
-         "column":sourcemodeler['time']['column'],
-         "label":sourcemodeler['time']['label'],
-         "datatype":"date",
-         "type":"date"
-      }
-
-    r['mapping']["time"] = {  
-         "default_value":"",
-         "description":sourcemodeler['time']['description'],
-         "format":None,
-         "column":sourcemodeler['time']['column'],
-         "label":sourcemodeler['time']['label'],
-         "datatype":"date",
-         "type":"date"
-      }
-
-    #this unique number is appended to each item
-    r['mapping']["theid"] = {"default_value": "", "datatype": "string", "description": "Unique ID", "key": True, "column": "uniqueid", "type": "attribute", "label": "UniqueID"}
-    #add extra columns
+    #if not hasattr(r['mapping'], 'theid'):
+    r['mapping']['theid'] = {
+                              "default_value": "",
+                              "description": "Unique ID",
+                              "datatype": "string",
+                              "key": True,
+                              "label": "UniqueID",
+                              "column": "uniqueid",
+                              "type": "attribute",
+                              "form": {
+                                "label": "Unique Identifier"
+                                }
+                            }
+    # print r
+    # return None
 
     source = get_source(sourcename)
     source.addData(r)
@@ -408,3 +383,62 @@ def ORoperations(datasetname, sourcename):
         return jsonify(ORinstructions)
     except Exception, e:
         return jsonify({"error":"Could not fetch the ORinstructions"})
+
+
+DEFAULT_SOURCE_MAPPING = {
+                            "country_level0": {
+                              "attributes": {
+                                "name": {
+                                  "column": None,
+                                  "datatype": "id",
+                                  "default_value": ""
+                                },
+                                "label": {
+                                  "column": None,
+                                  "datatype": "string",
+                                  "default_value": ""
+                                }
+                              },
+                              "type": "compound",
+                              "description": None,
+                              "label": None,
+                              "form": {
+                                "label": "Country Name"
+                                }
+                            },
+                            "amount": {
+                              "default_value": "",
+                              "description": None,
+                              "datatype": "float",
+                              "label": None,
+                              "column": None,
+                              "type": "measure",
+                              "form": {
+                                "label": "Indicator Value",
+                                "extraoptions": {
+                                    "label": "Data Type",
+                                    "options": [{
+                                            "code":"float",
+                                            "label":"float"
+                                        },
+                                        {
+                                            "code":"string",
+                                            "label":"string"
+                                        },
+                                        ]
+                                    }
+                                }
+                            },
+                            "time": {
+                              "default_value": "",
+                              "description": None,
+                              "format": None,
+                              "column": None,
+                              "label": None,
+                              "datatype": "date",
+                              "type": "date",
+                              "form": {
+                                "label": "Date/Time"
+                                }
+                            }
+                        }
