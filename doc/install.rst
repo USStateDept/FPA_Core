@@ -87,23 +87,20 @@ This should be pretty painless. Just run::
 
     $ pip install -r requirements.txt -e .
 
-> For Windows users, run::
-```
-    $pip install -r windows_reqs.txt
-```
+For Windows users, run::
 
-Additionally to the core repository, you will need to check out two auxilliary
-repositories and symlink them into OpenSpending. The repos contain the 
-JavaScript components and the help system content for the site. The following 
-instructions will download and link in the JS files::
+    $ pip install -r windows_reqs.txt
 
-    $ git clone http://github.com/openspending/openspendingjs.git
-    $ ln -s <full path to openspendingjs> openspending/static/openspendingjs
 
-You will also need to install python bindings for your database. For example,
-for Postgresql you will want to install the psycopg2 library::
+Additionally to the core repository, you will need to install submodules::
 
-    $ pip install psycopg2
+    $ git submodule init
+    $ git submodule update
+
+You will need to install psycopg.  Get the wheel from 
+http://www.lfd.uci.edu/~gohlke/pythonlibs/#psycopg::
+
+    $ pip install C:\path\to\psycopg2.whl
 
 Create a database if you do not have one already. We recommend using Postgres
 but you can use anything compatible with SQLAlchemy. For postgres you would do::
@@ -113,10 +110,6 @@ but you can use anything compatible with SQLAlchemy. For postgres you would do::
 Having done that, you can copy configuration templates::
 
     $ cp settings.py_tmpl settings.py
-    $ export OPENSPENDING_SETTINGS=`pwd`/settings.py
-
-Ensure that the ``OPENSPENDING_SETTINGS`` environment variable is set whenever
-you work with the application.
 
 Edit the configuration files to make sure you're pointing to a valid database 
 URL is set::
@@ -124,10 +117,14 @@ URL is set::
     # TCP
     SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{pass}@localhost/openspending'
 
-    or
 
-    # Local socket
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///openspending'
+The ```OPENSPENDING_SETTINGS``` environment variable is used to point to the 
+settings file.  To ensure that it is always set to the directory you are working
+on, you should use setenv.bat or use the runservers.bat file before work.
+
+Run to set your environment variable::
+
+    $ setenv.bat
 
 Initialize the database::
 
@@ -137,12 +134,6 @@ Generate the help system documentation (this is used by the front-end
 and must be available, developer documents are separate). The output 
 will be copied to the web applications template directory::
 
-    $ git submodule init && git submodule update
-    $ (cd doc && make clean html)
-
-Compile the translations: ::
-
-    $ python setup.py compile_catalog
 
 Run the application::
 
