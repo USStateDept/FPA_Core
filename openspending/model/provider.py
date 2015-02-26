@@ -63,8 +63,9 @@ class OpenSpendingModelProvider(ModelProvider):
                                 "fact":fact_table,
                                 "aggregates":aggregates,
                                 "measures":measures,
-                                "label":source.label,
-                                "description":source.description,
+                                #change these when they get addeed to the model
+                                "label":source.name,
+                                "description":"non null description",
                                 "dimensions":dimensions,
                                 "store":self.store,
                                 "mappings":mappings,

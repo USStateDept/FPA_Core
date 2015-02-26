@@ -116,4 +116,5 @@ def permissions():
         'read': False if dataset is None else can.dataset.read(dataset),
         'update': False if dataset is None else can.dataset.update(dataset),
         'delete': False if dataset is None else can.dataset.delete(dataset)
-    })
+    },
+    headers= {'Cache-Control' : 'no-cache'})
