@@ -24,12 +24,15 @@ class OpenSpendingModelProvider(ModelProvider):
 
 
     def cube(self, name, locale=None, metaonly = False):
+
+        if name == "geometry":
+            return getGeomCube(self, metaonly)
+
         source = get_source(name)
         if name is None:
             raise NoSuchCubeError("Unknown dataset %s" % name, name)
 
-        if name == "geometry":
-            return getGeomCube(name, source, self, metaonly)
+
 
         mappings = {}
         joins = []
@@ -66,6 +69,7 @@ class OpenSpendingModelProvider(ModelProvider):
                                 "store":self.store,
                                 "mappings":mappings,
                                 "joins":joins}
+
 
         if metaonly:
             return cube_meta

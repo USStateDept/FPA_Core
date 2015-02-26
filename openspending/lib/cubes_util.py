@@ -228,152 +228,112 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
 
 
-COUNTRY_CUBES_TEMPLATE = {
-    "role": "geometry",
-    "levels": [
-        {
-            "name": "year",
-            "label": "Year"
-        },
-        {
-            "name": "quarter",
-            "label": "Quarter"
-        },
-        {
-            "name": "month",
-            "label": "Month"
-        },
-        {
-            "name": "week",
-            "label": "Week"
-        },
-        {
-            "name": "day",
-            "label": "Day",
-            "key": "name",
-            "attributes": ['day', 'name']
-        }
-    ],
-    "hierarchies": [
-        {
-            "name": "weekly",
-            "label": "Weekly",
-            "levels": ["year", "week"]
-        },
-        {
-            "name": "daily",
-            "label": "Daily",
-            "levels": ["year", "month", "day"]
-        },
-        {
-            "name": "monthly",
-            "label": "Monthly",
-            "levels": ["year", "quarter", "month"]
-        }
-    ]
-}
+
+def getGeomCube(provider, metaonly):
+
+
+    basemeta = {
+                  "name": "geometry",
+                  "info": {},
+                  "label": "geometry",
+                  'fact_table': "geometry__entry",
+                  "description": "This is the geom",
+                  "aggregates": [],
+                  "measures": [],
+                  "details": []
+                }
+
+    dim_metas = [
+                    {
+                      "name": "country_level0",
+                      "info": {},
+                      "label": "Country_level0",
+                      "default_hierarchy_name": "name",
+                      "levels": [
+                        {
+                          "name": "name",
+                          "info": {},
+                          "label": "Country Name",
+                          "key": "name",
+                          "label_attribute": "name",
+                          "order_attribute": "name",
+                          "attributes": [
+                            {
+                              "name": "name",
+                              "info": {},
+                              "label": "Country Name",
+                              "ref": "geometry__country_level0.name",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "dos_level1",
+                          "info": {},
+                          "label": "Department of State",
+                          "key": "dos_level1",
+                          "label_attribute": "dos_level1",
+                          "order_attribute": "dos_level1",
+                          "attributes": [
+                            {
+                              "name": "dos_level1",
+                              "info": {},
+                              "label": "Department of State",
+                              "ref": "geometry__country_level0.dos_level1",
+                              "locales": []
+                            }
+                          ]
+                        }
+                      ],
+                      "hierarchies": [
+                        {
+                          "name": "name",
+                          "info": {},
+                          "label": "Country Level",
+                          "levels": [
+                            "name"
+                          ]
+                        },
+                        {
+                          "name": "dos_level1",
+                          "info": {},
+                          "label": "Department of State",
+                          "levels": [
+                            "dos_level1",
+                            "name"
+                          ]
+                        }
+                      ],
+                      "is_flat": False,
+                      "has_details": False
+                    }
+                  ]
 
 
 
-def getGeomCube(name, dataset, provider, metaonly):
-
-    mappings = {}
-    joins = []
-    fact_table = dataset.model.table.name
-
-    aggregates = []
-    measures = []
+    joins = [{"master": u"geometry__entry.country_level0_id", "detail": u"geometry__country_level0.id"}] 
+    mappings = {
+                u"country_level0.dos_level1": u"geometry__country_level0.dos_level1", 
+                u"country_level0.dod_level1": u"geometry__country_level0.dod_level1", 
+                u"country_level0.id": u"geometry__country_level0.id",
+                 u"country_level0.usaid_level1": u"geometry__country_level0.usaid_level1", 
+                 u"country_level0.name": u"geometry__country_level0.name",
+                 u"country_level0.incomegroup_level1": u"geometry__country_level0.incomegroup_level1",
+                 u"country_level0.label": u"geometry__country_level0.label"
+            } 
 
     dimensions = []
-    for dim in dataset.model.dimensions:
-        meta = dim.to_cubes(mappings, joins)
-
-
-        #####end to_cubes override
-        meta.update({'name': dim.name, 'label': dim.label})
-        if dim.name == "country_level0":
-            #switch to this to be automatic when adding in a new level1 item
-            meta['levels'] = [  
-                            {  
-                               "name":"name",
-                               "info":{  
-
-                               },
-                               "label":"Country Name",
-                               "key":"name",
-                               "label_attribute":"name",
-                               "order_attribute":"name",
-                               "attributes":[  
-                                  {  
-                                     "name":"name",
-                                     "info":{  
-
-                                     },
-                                     "label":"Country Name",
-                                     "ref":"geometry__country_level0.name",
-                                     "locales":[  
-
-                                     ]
-                                  }
-                               ]
-                            },
-                           {  
-                               "name":"dos_level1",
-                               "info":{  
-
-                               },
-                               "label":"Department of State",
-                               "key":"dos_level1",
-                               "label_attribute":"dos_level1",
-                               "order_attribute":"dos_level1",
-                               "attributes":[  
-                                  {  
-                                     "name":"dos_level1",
-                                     "info":{  
-
-                                     },
-                                     "label":"Department of State",
-                                     "ref":"geometry__country_level0.dos_level1",
-                                     "locales":[  
-
-                                     ]
-                                  }
-                               ]
-                            }];
-            meta['hierarchies'] = [  
-                    {  
-                       "name":"name",
-                       "info":{  
-
-                       },
-                       "label":"Country Level",
-                       "levels":[  
-                          "name"
-                       ]
-                    },
-                    {  
-                       "name":"dos_level1",
-                       "info":{  
-
-                       },
-                       "label":"DOSly",
-                       "levels":[  
-                          "dos_level1",
-                          "name"
-                       ]
-                    }];
-
-            print meta
-        dimensions.append(create_dimension(meta))
+    for dim in dim_metas:
+        dimensions.append(create_dimension(dim))
 
 
 
-    cube_meta = {"name":dataset.name,
-                            "fact":fact_table,
-                            "aggregates":aggregates,
-                            "measures":measures,
-                            "label":dataset.label,
-                            "description":dataset.description,
+    cube_meta = {"name":basemeta['name'],
+                            "fact":basemeta['fact_table'],
+                            "aggregates":basemeta['aggregates'],
+                            "measures":basemeta['measures'],
+                            "label":basemeta['label'],
+                            "description":basemeta['description'],
                             "dimensions":dimensions,
                             "store":provider.store,
                             "mappings":mappings,
@@ -392,3 +352,6 @@ def getGeomCube(name, dataset, provider, metaonly):
                         store=cube_meta['store'],
                         mappings=cube_meta['mappings'],
                         joins=cube_meta['joins'])
+
+
+
