@@ -130,9 +130,13 @@ Initialize the database::
 
     $ ostool db init
 
-Generate the help system documentation (this is used by the front-end
-and must be available, developer documents are separate). The output 
-will be copied to the web applications template directory::
+
+Load the Geometry Entries.  This will be required for a lot of the functionality
+using country level indicators.  There are two options::
+
+    - Use the "Restore" feature in pgadmin and load the fixutres/geometry_file.backup
+
+    - Use psql to load the fixtures/geometry_file.sql file using the command line.
 
 
 Run the application::
