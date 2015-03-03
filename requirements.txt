@@ -37,5 +37,5 @@ cssmin==0.2.0
 #git+https://github.com/pudo/cubes.git@a18f043424155594321ce83f89218850febd949c
 git+https://github.com/USStateDept/cubes.git@arb_vars
 restpager==0.1
-git+https://github.com/PaulMakepeace/refine-client-py.git
+git+https://github.com/kroman0/refine-client-py.git@master
 
