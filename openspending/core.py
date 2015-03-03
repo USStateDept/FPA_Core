@@ -12,6 +12,7 @@ import formencode_jinja2
 from celery import Celery
 from cubes import Workspace
 from cubes.extensions import extensions
+from google.refine import refine
 
 from openspending import default_settings
 from openspending.lib.routing import NamespaceRouteRule
@@ -66,6 +67,15 @@ def create_app(**config):
     app.cubes_workspace = Workspace()
     #db_url = app.config.get('SQLALCHEMY_DATABASE_URI')
     app.cubes_workspace.register_default_store('openspending')
+
+
+    #do app.config in the future
+    refine_server = refine.RefineServer(server="http://127.0.0.1:3333")
+    try:
+        print "Using OpenRefine", refine_server.get_version()
+    except Exception, e:
+        print "Could not find OpenRefine.  Components could be broken"
+        print "The error", e
 
     return app
 
