@@ -76,10 +76,17 @@ class Source(db.Model):
 
     def applyORInstructions(self, ORoperations):
         refineproj = self.get_or_create_ORProject()
+        if 'data' not in ORoperations.keys():
+            print "got OR instrutions without data"
+            return False
         #check this ia valid or operations with the operations attr
-        print ORoperations
-        data = {'operations': json.dumps([ORoperations['operation']])}
-        print data
+        myoperations = []
+        for op in ORoperations['data']:
+            myoperations.append(op['operation'])
+        print "with operations\n\n"
+        print myoperations
+        data = {'operations': json.dumps(myoperations)}
+        #data = {'operations': json.dumps(ORoperations['data'])}
         refineproj.refineproj.do_json("apply-operations", data=data)
         return True
 
