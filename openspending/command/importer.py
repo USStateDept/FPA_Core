@@ -10,6 +10,8 @@ from openspending.lib import json
 from openspending.model import Source, Dataset, Account, View
 from openspending.core import db
 
+from openspending.preprocessors.ORhelper import testORLoad
+
 from openspending.importer import CSVImporter
 from openspending.importer.analysis import analyze_csv
 
@@ -21,6 +23,15 @@ from openspending.validation.model import Invalid
 log = logging.getLogger(__name__)
 
 SHELL_USER = 'system'
+
+
+
+
+
+
+
+
+
 
 
 def shell_account():
@@ -229,3 +240,129 @@ def add_import_commands(manager):
         # Import visualisations if there are any
         if args['views']:
             import_views(dataset, args['views'])
+
+
+    @manager.option('jsondata', nargs=argparse.REMAINDER,
+                    help="JSON data from databank.edip-maps.net")
+    @manager.command
+    def testdatabankjson(**args):
+        """ Load a JSON dump from  """
+        if len(args['jsondata']) != 1:
+            print "\n\nPlease specify one and only one json dump from python manage.py etldata dumpdata"
+            sys.exit(1)
+
+        try:
+            jsonfile = open(args['jsondata'][0], 'rb')
+        except Exception, e:
+            print "failed to open file"
+            print e
+            sys.exit(1)
+
+        try:
+            databankjson = json.load(jsonfile)
+        except Exception, e:
+            print "\n\nYou hit an error on json loading"
+            print e
+            sys.exit(1)
+
+        #split the objects to their approrpirate spot
+        modelobjs = {}
+
+        for jsonobj in databankjson:
+            modelname = jsonobj['model'].split(".")[1]
+            if modelname in modelobjs.keys():
+                modelobjs[modelname].append(jsonobj)
+            else:
+                modelobjs[modelname] = [jsonobj]
+
+        for modelname,obj in modelobjs.iteritems():
+            print "you have ", len(obj), modelname
+
+
+        results = {"success":0, "errored":0, "skipped":0}
+
+        #go through the dataconnections
+        for dataconnection in modelobjs["dataconnection"]:
+
+            if not dataconnection['fields'].get("data_type", None):
+                print "skipping", dataconnection
+                continue
+
+            if dataconnection['fields']['data_type'] == "API - CSV":
+                if dataconnection['fields']['webservice']:
+                    myresult = testORLoad(sourceurl=dataconnection['fields']['webservice'])
+                    if myresult:
+                        results['success'] += 1
+                    else:
+                        results['errored'] +=1
+                else:
+                    results['skipped'] +=1
+                #attempt to load
+                pass
+            elif dataconnection['fields']['data_type'] == "API - JSON":
+                results['skipped'] +=1
+                #json preprocessor
+                pass
+            else:
+                results['skipped'] +=1
+                print "other not currently supported"
+                continue
+
+        print "\n\nHere are results:"
+        print results
+
+
+
+
+
+
+        #iterate through the json to find the etldata.dataconnections
+            #find which method to try
+
+            #add preprocessors if necessary using the type format
+
+            #Load into OR
+
+            #check that it is there
+
+            #delete it
+
+        #print report
+
+
+
+
+    @manager.option('-n', '--dry-run', dest='dry_run', action='store_true',
+                    help="Perform a dry run, don't load any data.")
+    @manager.option('-i', '--index', dest='build_indices', action='store_true',
+                    help="Suppress Solr index build.")
+    @manager.option('--raise-on-error', action="store_true",
+                    dest='raise_errors', default=False,
+                    help='Get full traceback on first error.')
+    @manager.option('jsondata', nargs=argparse.REMAINDER,
+                    help="JSON data from databank.edip-maps.net")
+    @manager.command
+    def loaddatabankjson(**args):
+        """ Load a JSON dump from  """
+        if len(args['jsondata']) == 0:
+            print "you need to identify the json file from the python manage.py dumpdata etldata command"
+            sys.exit(1)
+
+        #parse the json
+
+        #iterate through the json to find the etldata.dataconnections
+            #find which method to try
+
+            #add preprocessors if necessary using the type format
+
+            #Load into OR
+
+            #check that it is there
+
+            #delete it
+
+        #print report
+
+
+
+

@@ -30,6 +30,7 @@ class RefineProj:
         return self.source.ORid
 
 
+
     #depending on how long this takes, it could be a celery call
     def createOR(self, source):
 
@@ -145,3 +146,61 @@ def cleanOperations(JSONObj):
         if 'operation' in entry.keys():
             operations.append(entry['operation'])
     return json.dumps(operations)
+
+
+
+def testORLoad(sourceurl=None, fileobj=None):
+    #download source data and save to temp file
+    #add checks for a valid URL or file path
+
+    if not sourceurl and not fileobj:
+        print "You're missing the sourceurl or the sourceurl or the fileobj"
+
+    
+    if sourceurl:
+        res = requests.get(sourceurl)
+        datatext = res.text
+    elif fileobj:
+        with codecs.open(fileobj, 'rb') as datafile:
+            datatext = datafile.read()
+    else:
+        print "something went wrong with finding sourceurl or fileobj"
+
+
+    filepath = os.path.join(tempfile.gettempdir(), str(int(time.time())) + ".csv").replace("\\","/")
+
+
+    
+    with codecs.open(filepath, 'wb', 'utf-8') as f:
+        f.write(datatext)
+
+    #store raw file here with barn
+
+    try:
+        refine_server = refine.Refine(server="http://127.0.0.1:3333")
+        refineproj = refine_server.new_project(project_file=filepath,project_name="testerhere", separator=',',
+                #store_blank_rows=True,
+                #store_blank_cells_as_nulls=True
+                )
+    except Exception, e:
+        print "hit error on project creation"
+        print e
+        os.remove(filepath)
+        return False
+
+    os.remove(filepath)
+
+    try:
+        numrows = refineproj.get_rows()
+        if numrows == 0:
+            print "failed to get data, there was an error, or something else"
+            refineproj.delete()
+            return False
+        else:
+            print "Data load success"
+            refineproj.delete()
+            return True
+    except:
+        print "something went wrong with calling the proj"
+        print e
+        refineproj.delete()
