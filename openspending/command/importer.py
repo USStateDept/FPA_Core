@@ -20,6 +20,9 @@ from openspending.command.archive import get_url_filename
 from openspending.validation.model import validate_model
 from openspending.validation.model import Invalid
 
+
+from openspending.importer import ORImporter
+
 log = logging.getLogger(__name__)
 
 SHELL_USER = 'system'
@@ -186,6 +189,115 @@ def import_views(dataset, views_url):
         create_view(dataset, view)
 
 
+def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=True):
+
+    #get or create dataset
+    dataset = Dataset.by_name(dataproviderjson['fields']['title'])
+
+    modelDataset = {'dataset': 
+            {
+                'label': dataproviderjson['fields']['title'],
+                #slugify the name
+                'name': dataproviderjson['fields']['title'],
+                'description': dataproviderjson['fields']['description'],
+                'currency': None,
+                'category': None,
+                'currency': None,
+                'serp_title': dataproviderjson['fields']['title'],
+                'serp_teaser': dataproviderjson['fields']['description']
+
+            }
+        }
+
+    if not dataset:
+        #create one
+
+        dataset = Dataset(modelDataset)
+        dataset.ORoperations = dataproviderjson['fields']['ORoperations']
+        dataset.data = dataproviderjson['fields']['mapping']
+        db.session.add(dataset)
+
+    else:
+        dataset.ORoperations = dataproviderjson['fields']['ORoperations']
+        dataset.data = dataproviderjson['fields']['mapping']
+        dataset.update(modelDataset['dataset'])
+
+
+    db.session.commit()
+
+
+    systemaccount = Account.by_id(1)
+
+    if sourcejson['fields'].get('indicator', None):
+        tempsource = Source.by_source_name(sourcejson['fields'].get('indicator'))
+        tempsource.delete()
+    else:
+        print "your source does not have a title"
+        return False
+
+    source = Source(dataset=dataset, 
+                    creator=systemaccount, 
+                    url=sourcejson['fields'].get('webservice'), 
+                    name=sourcejson['fields'].get('indicator'))
+    db.session.add(source)
+
+    if len(dataproviderjson['fields'].get("prefuncs", {}).keys()):
+        source.prefuncs = dataproviderjson['fields'].get("prefuncs", {})
+
+
+
+    if len(dataset.ORoperations.keys()):
+
+
+        # csvdict = []
+        # for row in sourcefile_csv:
+        #     csvdict.append(row) 
+
+        # #apply preprocessors
+        # preprocessors = self.source.getPreFuncs()
+        # if len(preprocessors):
+        #     for func in preprocessors:
+        #         tempmethod = getattr(processing_funcs, func, None)
+        #         if tempmethod:
+        #             csvdict = tempmethod(csvdict)
+
+        source.applyORInstructions(dataset.ORoperations)
+        source.ORoperations = dataset.ORoperations
+    else:
+        print "can not apply the ORoperations"
+    
+    #probably need to make sure this is here before we add the dynamic model
+    db.session.commit()
+
+    if len(dataset.data.keys()):
+        source.addData(dataset.data)
+    else:
+
+        print "there was no field mapping.  Failed", dataset.label
+        return False
+        
+
+    importer = ORImporter(source)
+    #dry run this
+    importer.run(dry_run=dry_run)
+    return True
+
+
+
+def getDataProviderJSONObj(dataconnectionjsonobj, dataproviderobjs):
+    #there's a much better way to do this but who cares if it takes a little longer
+    thematch = dataconnectionjsonobj['fields'].get("metadata", None)
+    if not thematch:
+        return False
+
+    for dataproviderobj in dataproviderobjs:
+
+        if (dataproviderobj['pk']== thematch):
+            return dataproviderobj
+    return False
+
+
+
 def map_source_urls(model, urls):
     """
     Go through the source urls of the dataset model and map them to the
@@ -281,19 +393,21 @@ def add_import_commands(manager):
 
         results = {"success":0, "errored":0, "skipped":0}
 
+
         #go through the dataconnections
         for dataconnection in modelobjs["dataconnection"]:
 
+            print "\n\n******************************************"
+
             if not dataconnection['fields'].get("data_type", None):
-                print "skipping", dataconnection
                 continue
+
+             
 
             if dataconnection['fields']['data_type'] == "API - CSV":
                 if dataconnection['fields']['webservice']:
                     myresult = testORLoad(sourceurl=dataconnection['fields']['webservice'])
-                    if myresult:
-                        results['success'] += 1
-                    else:
+                    if not myresult:
                         results['errored'] +=1
                 else:
                     results['skipped'] +=1
@@ -307,6 +421,22 @@ def add_import_commands(manager):
                 results['skipped'] +=1
                 print "other not currently supported"
                 continue
+
+            #get the dataprovider json
+            datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
+            if not datasetprovider:
+                print "could not find the meta attached to this", dataconnection['fields']['indicator']
+
+
+            #if we get here then we can try load a source
+            loadresult = load_from_databank(dataconnection, datasetprovider, dry_run=True)
+            if loadresult:
+                results['success'] +=1
+            else:
+                results['errored'] += 1
+
+
+
 
         print "\n\nHere are results:"
         print results

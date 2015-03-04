@@ -65,6 +65,8 @@ class Dataset(db.Model):
         self.default_time = dataset.get('default_time')
         self.languages = dataset.get('languages', [])
         self.territories = dataset.get('territories', [])
+        self.ORoperations = dataset.get('ORoperations', {})
+        self.data = dataset.get('mapping', {})
         
 
     @property

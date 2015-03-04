@@ -4,6 +4,7 @@ import os
 import requests
 import codecs
 import time
+import csv
 
 class RefineProj:
 
@@ -38,19 +39,23 @@ class RefineProj:
         #add checks for a valid URL or file path
         resp = requests.get(source.url)
 
+        responsetext = resp.text
+
         #do the preprocessing funcs here!!!!
         print source.prefuncs
         if (len(source.prefuncs.keys()) > 0):
-            print "we have the processing functions in createOR this is where we need to do it"
-
-
-        
-        
+            #apply preprocessors
+            preprocessors = self.source.getPreFuncs()
+            if len(preprocessors):
+                for func in preprocessors:
+                    tempmethod = getattr(processing_funcs, func, None)
+                    if tempmethod:
+                        responsetext = tempmethod(responsetext)
 
 
         filepath = os.path.join(tempfile.gettempdir(), str(int(time.time())) + ".csv").replace("\\","/")
         with codecs.open(filepath, 'wb', 'utf-8') as f:
-            f.write(resp.text)
+            f.write(responsetext)
 
         #store raw file here with barn
 
