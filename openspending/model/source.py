@@ -51,6 +51,7 @@ class Source(db.Model):
         #copy the raw data 
         self.dataset = dataset
         self.creator = creator
+        print "here's more URL", url
         self.url = url
         self.name = name
         self.label = name
@@ -100,11 +101,26 @@ class Source(db.Model):
         self.data = data.copy()
         self._load_model()
 
+    def getPreFuncs(self):
+        if len(self.prefuncs.keys()):
+            return self.prefuncs.get("data", [])
+        else:
+            return []
+
     @reconstructor
     def _load_model(self):
         if self.data.get('mapping', {}).keys() > 0:
             print "building the model", self.name
             self.model = Model(self)
+
+    def delete(self):
+        refineproj = self.get_or_create_ORProject()
+        refineproj.refineproj.delete()
+
+        #delete the source data from the tables
+
+        db.session.delete(self)
+        db.session.commit()
 
 
     @property
@@ -166,7 +182,6 @@ class Source(db.Model):
 
     @classmethod
     def by_source_name(cls, sourcename):
-        print sourcename, "in class methods"
         return db.session.query(cls).filter(cls.name==sourcename).first()
 
 

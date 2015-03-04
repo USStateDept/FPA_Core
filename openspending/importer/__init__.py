@@ -174,6 +174,10 @@ class CSVImporter(BaseImporter):
         for row in row_set:
             yield dict([(c.column, c.value) for c in row])
 
+
+
+from openspending.preprocessors import processing_funcs
+
 class ORImporter(BaseImporter):
 
     @property
@@ -183,6 +187,11 @@ class ORImporter(BaseImporter):
         #we can use messytables earlier in the process as prefuncs
         #at this point we are use that everyting should line up
         sourcefile_csv = csv.DictReader(fh, delimiter="\t")
+        #adds some iteration, but need this to get the keys
+
+        fh.close()
+
+
         counter = 0
         for row in sourcefile_csv:
             counter += 1
