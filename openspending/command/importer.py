@@ -348,12 +348,15 @@ def add_import_commands(manager):
         if args['views']:
             import_views(dataset, args['views'])
 
-
+    @manager.option('--org', action="store", dest='specificorg', type=str,
+                    default=None, metavar='N',
+                    help="organization to load")
     @manager.option('jsondata', nargs=argparse.REMAINDER,
                     help="JSON data from databank.edip-maps.net")
     @manager.command
     def testdatabankjson(**args):
         """ Load a JSON dump from  """
+        specificorg = args.get("specificorg", None)
         if len(args['jsondata']) != 1:
             print "\n\nPlease specify one and only one json dump from python manage.py etldata dumpdata"
             sys.exit(1)
@@ -395,9 +398,21 @@ def add_import_commands(manager):
             print "\n\n******************************************"
 
             if not dataconnection['fields'].get("data_type", None):
+                results['skipped'] +=1
                 continue
 
-             
+            #get the dataprovider json
+            datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
+            if not datasetprovider:
+                results['skipped'] += 1
+                print "could not find the meta attached to this", dataconnection['fields']['indicator']
+                continue
+            if specificorg and datasetprovider['fields'].get("title", "nothinghere") != specificorg:
+                results['skipped'] += 1
+                print "skipping unspecified organizations", datasetprovider['fields'].get("title", None)
+                continue
+
+
 
             if dataconnection['fields']['data_type'] == "API - CSV":
                 if dataconnection['fields']['webservice']:
@@ -417,11 +432,7 @@ def add_import_commands(manager):
                 print "other not currently supported"
                 continue
 
-            #get the dataprovider json
-            datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
-            if not datasetprovider:
-                print "could not find the meta attached to this", dataconnection['fields']['indicator']
-                continue
+
 
 
             #if we get here then we can try load a source
