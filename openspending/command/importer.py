@@ -230,7 +230,8 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
 
     if sourcejson['fields'].get('indicator', None):
         tempsource = Source.by_source_name(sourcejson['fields'].get('indicator'))
-        tempsource.delete()
+        if tempsource:
+            tempsource.delete()
     else:
         print "your source does not have a title"
         return False
@@ -238,29 +239,20 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
     source = Source(dataset=dataset, 
                     creator=systemaccount, 
                     url=sourcejson['fields'].get('webservice'), 
-                    name=sourcejson['fields'].get('indicator'))
+                    name=sourcejson['fields'].get('indicator'),
+                    prefuncs = dataproviderjson['fields'].get("prefuncs", {}))
+
+    # print "###############raw prefuncs", dataproviderjson['fields'].get("prefuncs")
+    # if len(dataproviderjson['fields'].get("prefuncs", {}).keys()):
+    #     source.prefuncs = dataproviderjson['fields'].get("prefuncs", {})
+
     db.session.add(source)
 
-    if len(dataproviderjson['fields'].get("prefuncs", {}).keys()):
-        source.prefuncs = dataproviderjson['fields'].get("prefuncs", {})
+    db.session.commit()
 
 
 
     if len(dataset.ORoperations.keys()):
-
-
-        # csvdict = []
-        # for row in sourcefile_csv:
-        #     csvdict.append(row) 
-
-        # #apply preprocessors
-        # preprocessors = self.source.getPreFuncs()
-        # if len(preprocessors):
-        #     for func in preprocessors:
-        #         tempmethod = getattr(processing_funcs, func, None)
-        #         if tempmethod:
-        #             csvdict = tempmethod(csvdict)
-
         source.applyORInstructions(dataset.ORoperations)
         source.ORoperations = dataset.ORoperations
     else:
@@ -275,12 +267,15 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
 
         print "there was no field mapping.  Failed", dataset.label
         return False
-        
+    
 
     importer = ORImporter(source)
     #dry run this
     importer.run(dry_run=dry_run)
-    return True
+    if importer._run.successful_sample:
+        return True
+    else:
+        return False
 
 
 
@@ -391,7 +386,7 @@ def add_import_commands(manager):
             print "you have ", len(obj), modelname
 
 
-        results = {"success":0, "errored":0, "skipped":0}
+        results = {"success":0, "errored":0, "skipped":0, "added_needs_work":0}
 
 
         #go through the dataconnections
@@ -426,6 +421,7 @@ def add_import_commands(manager):
             datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
             if not datasetprovider:
                 print "could not find the meta attached to this", dataconnection['fields']['indicator']
+                continue
 
 
             #if we get here then we can try load a source
@@ -433,7 +429,7 @@ def add_import_commands(manager):
             if loadresult:
                 results['success'] +=1
             else:
-                results['errored'] += 1
+                results['added_needs_work'] += 1
 
 
 

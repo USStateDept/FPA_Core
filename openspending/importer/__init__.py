@@ -189,9 +189,6 @@ class ORImporter(BaseImporter):
         sourcefile_csv = csv.DictReader(fh, delimiter="\t")
         #adds some iteration, but need this to get the keys
 
-        fh.close()
-
-
         counter = 0
         for row in sourcefile_csv:
             counter += 1

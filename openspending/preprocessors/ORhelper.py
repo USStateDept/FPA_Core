@@ -5,6 +5,7 @@ import requests
 import codecs
 import time
 import csv
+from openspending.preprocessors import processing_funcs
 
 class RefineProj:
 
@@ -41,8 +42,7 @@ class RefineProj:
 
         responsetext = resp.text
 
-        #do the preprocessing funcs here!!!!
-        print source.prefuncs
+        #preprocessing functions
         if (len(source.prefuncs.keys()) > 0):
             #apply preprocessors
             preprocessors = self.source.getPreFuncs()

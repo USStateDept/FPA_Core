@@ -47,16 +47,15 @@ class Source(db.Model):
     creator = relationship(Account,
                            backref=backref('sources', lazy='dynamic'))
 
-    def __init__(self, dataset, creator, url, name, data = None):
+    def __init__(self, dataset, creator, url, name, prefuncs={}, data = None):
         #copy the raw data 
         self.dataset = dataset
         self.creator = creator
-        print "here's more URL", url
         self.url = url
         self.name = name
         self.label = name
         self.description = "Need to change this in the model"
-        self.prefuncs = {}
+        self.prefuncs = prefuncs
         refineproj = self.get_or_create_ORProject()
         self.ORid = refineproj.refineproj.project_id
         if (data):
