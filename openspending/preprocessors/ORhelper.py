@@ -5,6 +5,7 @@ import requests
 import codecs
 import time
 import csv
+import urllib
 from openspending.preprocessors import processing_funcs
 
 class RefineProj:
@@ -38,9 +39,17 @@ class RefineProj:
 
         #download source data and save to temp file
         #add checks for a valid URL or file path
-        resp = requests.get(source.url)
+        try:
+            resp = requests.get(source.url)
+            responsetext = resp.text
+        except Exception, e:
+            #let's try another method
+            fp = urllib.urlopen(source.url)
+            responsetext = fp.read()
 
-        responsetext = resp.text
+        if not responsetext:
+            return None
+
 
         #preprocessing functions
         if (len(source.prefuncs.keys()) > 0):
@@ -54,8 +63,13 @@ class RefineProj:
 
 
         filepath = os.path.join(tempfile.gettempdir(), str(int(time.time())) + ".csv").replace("\\","/")
-        with codecs.open(filepath, 'wb', 'utf-8') as f:
-            f.write(responsetext)
+        try:
+            with codecs.open(filepath, 'wb', 'utf-8') as f:
+                f.write(responsetext)
+        except Exception, e:
+            #codec issue trying default
+            with codecs.open(filepath, 'wb') as f:
+                f.write(responsetext)         
 
         #store raw file here with barn
 

@@ -3,7 +3,7 @@ import logging
 import sys
 import os
 import urllib2
-import urlparse
+import urlparse, urllib
 
 from openspending.lib import json
 
@@ -29,14 +29,6 @@ SHELL_USER = 'system'
 
 
 
-
-
-
-
-
-
-
-
 def shell_account():
     account = Account.by_name(SHELL_USER)
     if account is not None:
@@ -47,149 +39,10 @@ def shell_account():
     return account
 
 
-def _is_local_file(url):
-    """
-    Check to see if the provided url is a local file. Returns True if it is
-    and False if it isn't. This method only checks if their is a scheme
-    associated with the url or not (so file:location will be regarded as a url)
-    """
-
-    # Parse the url and check if scheme is '' (no scheme)
-    parsed_result = urlparse.urlparse(url)
-    return parsed_result.scheme == ''
 
 
-def json_of_url(url):
-    # Check if it's a local file
-    if _is_local_file(url):
-        # If it is we open it as a normal file
-        return json.load(open(url, 'r'))
-    else:
-        # If it isn't we open the url as a file
-        return json.load(urllib2.urlopen(url))
 
-
-def create_view(dataset, view_config):
-    """
-    Create view for a provided dataset from a view provided as dict
-    """
-
-    # Check if it exists (if not we create it)
-    existing = View.by_name(dataset, view_config['name'])
-    if existing is None:
-        # Create the view
-        view = View()
-
-        # Set saved configurations
-        view.widget = view_config['widget']
-        view.state = view_config['state']
-        view.name = view_config['name']
-        view.label = view_config['label']
-        view.description = view_config['description']
-        view.public = view_config['public']
-
-        # Set the dataset as the current dataset
-        view.dataset = dataset
-
-        # Try and set the account provided but if it doesn't exist
-        # revert to shell account
-        view.account = Account.by_name(view_config['account'])
-        if view.account is None:
-            view.account = shell_account()
-
-        # Commit view to database
-        db.session.add(view)
-        db.session.commit()
-
-
-def get_model(model):
-    """
-    Get and validate the model. If the model doesn't validate we exit the
-    program.
-    """
-
-    # Get and parse the model
-    model = json_of_url(model)
-
-    # Validate the model
-    try:
-        log.info("Validating model")
-        model = validate_model(model)
-    except Invalid as i:
-        log.error("Errors occured during model validation:")
-        for field, error in i.asdict().items():
-            log.error("%s: %s", field, error)
-        sys.exit(1)
-
-    # Return the model
-    return model
-
-
-def get_or_create_dataset(model):
-    """
-    Based on a provided model we get the model (if it doesn't exist we
-    create it).
-    """
-
-    # Get the dataset by the name provided in the model
-    dataset = Dataset.by_name(model['dataset']['name'])
-
-    # If the dataset wasn't found we create it
-    if dataset is None:
-        dataset = Dataset(model)
-        db.session.add(dataset)
-        db.session.commit()
-
-    # Log information about the dataset and return it
-    log.info("Dataset: %s", dataset.name)
-    return dataset
-
-
-def import_csv(dataset, url, args):
-    """
-    Import the csv data into the dataset
-    """
-
-    csv_data_url, source_url = url
-    source = Source(dataset, shell_account(),
-                    csv_data_url)
-    # Analyse the csv data and add it to the source
-    # If we don't analyse it we'll be left with a weird message
-    source.analysis = analyze_csv(csv_data_url)
-    # Check to see if the dataset already has this source
-    for source_ in dataset.sources:
-        if source_.url == csv_data_url:
-            source = source_
-            break
-    db.session.add(source)
-    db.session.commit()
-
-    dataset.generate()
-    importer = CSVImporter(source)
-    importer.run(**args)
-
-    # Check if imported from the file system (source and data url differ)
-    if csv_data_url != source_url:
-        # If we did, then we must update the source url based on the
-        # sources in the dataset model (so we need to fetch the source again
-        # or else we'll add a new one)
-        source = Source.by_id(source.id)
-        source.url = source_url
-        db.session.commit()
-
-
-def import_views(dataset, views_url):
-    """
-    Import views into the provided dataset which are defined in a json object
-    located at the views_url
-    """
-
-    # Load the json and loop over its 'visualisations' property
-    for view in json_of_url(views_url)['visualisations']:
-        create_view(dataset, view)
-
-
-def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=True):
+def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=True, meta_only=False, file_dir = None):
 
     #get or create dataset
     dataset = Dataset.by_name(dataproviderjson['fields']['title'])
@@ -213,13 +66,13 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
         #create one
 
         dataset = Dataset(modelDataset)
-        dataset.ORoperations = dataproviderjson['fields']['ORoperations']
-        dataset.data = dataproviderjson['fields']['mapping']
+        dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
+        dataset.data = dataproviderjson['fields'].get('mapping',{})
         db.session.add(dataset)
 
     else:
-        dataset.ORoperations = dataproviderjson['fields']['ORoperations']
-        dataset.data = dataproviderjson['fields']['mapping']
+        dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
+        dataset.data = dataproviderjson['fields'].get('mapping',{})
         dataset.update(modelDataset['dataset'])
 
 
@@ -234,13 +87,31 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
             tempsource.delete()
     else:
         print "your source does not have a title"
-        return False
+        return (None, False)
+
+    #check if we have a file uploaded first
+    if not sourcejson['fields']['webservice'] and not sourcejson['fields']['downloadedFile']:
+        print "you don't have any files to use"
+        return (None, False)
+
+    if sourcejson['fields']['downloadedFile'] and file_dir and not sourcejson['fields']['webservice']:
+        #convert to a file:///name
+        filename = sourcejson['fields']['downloadedFile'].split("/")[1]
+        sourcejson['fields']['webservice'] = urlparse.urljoin('file:', urllib.pathname2url(os.path.join(file_dir,filename )))
+
+
+
+    if not sourcejson['fields']['webservice']:
+        print "you don't have a webservice (or a file in the future)"
+        return (None, False)
 
     source = Source(dataset=dataset, 
                     creator=systemaccount, 
                     url=sourcejson['fields'].get('webservice'), 
                     name=sourcejson['fields'].get('indicator'),
                     prefuncs = dataproviderjson['fields'].get("prefuncs", {}))
+
+
 
     # print "###############raw prefuncs", dataproviderjson['fields'].get("prefuncs")
     # if len(dataproviderjson['fields'].get("prefuncs", {}).keys()):
@@ -249,6 +120,9 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
     db.session.add(source)
 
     db.session.commit()
+
+    if sourcejson['fields']['downloadedFile']:
+        sys.exit()
 
 
 
@@ -264,18 +138,21 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
     if len(dataset.data.keys()):
         source.addData(dataset.data)
     else:
+        if not meta_only:
+            print "there was no field mapping.  Failed", dataset.label
+            return (source, False)
 
-        print "there was no field mapping.  Failed", dataset.label
-        return False
+    if meta_only:
+        return (source, True)
     
 
     importer = ORImporter(source)
     #dry run this
     importer.run(dry_run=dry_run)
     if importer._run.successful_sample:
-        return True
+        return (source, True)
     else:
-        return False
+        return (source, False)
 
 
 
@@ -293,60 +170,46 @@ def getDataProviderJSONObj(dataconnectionjsonobj, dataproviderobjs):
 
 
 
-def map_source_urls(model, urls):
-    """
-    Go through the source urls of the dataset model and map them to the
-    files or urls. Returns a dict where the key is the url and the value
-    is how it should be represented in the dataset.
-    """
+def parseDBJSON(args):
+    if len(args['jsondata']) != 1:
+        print "\n\nPlease specify one and only one json dump from python manage.py etldata dumpdata"
+        sys.exit(1)
 
-    # Create map from file to model sources
-    source_files = {get_url_filename(s): s
-                    for s in model['dataset'].get('sources', [])}
+    try:
+        jsonfile = open(args['jsondata'][0], 'rb')
+    except Exception, e:
+        print "failed to open file"
+        print e
+        sys.exit(1)
 
-    # Return a map for the representation of csv urls
-    return {u: source_files.get(os.path.basename(u), u) for u in urls}
+    try:
+        databankjson = json.load(jsonfile)
+    except Exception, e:
+        print "\n\nYou hit an error on json loading"
+        print e
+        sys.exit(1)
+
+    #split the objects to their approrpirate spot
+    modelobjs = {}
+
+    for jsonobj in databankjson:
+        modelname = jsonobj['model'].split(".")[1]
+        if modelname in modelobjs.keys():
+            modelobjs[modelname].append(jsonobj)
+        else:
+            modelobjs[modelname] = [jsonobj]
+
+    for modelname,obj in modelobjs.iteritems():
+        print "you have ", len(obj), modelname
+
+    return modelobjs
+
+
+
+
 
 
 def add_import_commands(manager):
-
-    @manager.option('-n', '--dry-run', dest='dry_run', action='store_true',
-                    help="Perform a dry run, don't load any data.")
-    @manager.option('-i', '--index', dest='build_indices', action='store_true',
-                    help="Suppress Solr index build.")
-    @manager.option('--max-lines', action="store", dest='max_lines', type=int,
-                    default=None, metavar='N',
-                    help="Number of lines to import.")
-    @manager.option('--raise-on-error', action="store_true",
-                    dest='raise_errors', default=False,
-                    help='Get full traceback on first error.')
-    @manager.option('--model', action="store", dest='model',
-                    default=None, metavar='url', required=True,
-                    help="URL of JSON format model (metadata and mapping).")
-    @manager.option('--visualisations', action="store", dest="views",
-                    default=None, metavar='url/file',
-                    help="URL/file of JSON format visualisations.")
-    @manager.option('dataset_urls', nargs=argparse.REMAINDER,
-                    help="Dataset file URLs")
-    @manager.command
-    def csvimport(**args):
-        """ Load a CSV dataset """
-        # Get the model
-        model = get_model(args['model'])
-
-        # Get the source map (data urls to models)
-        source_map = map_source_urls(model, args['dataset_urls'])
-
-        # Get the dataset for the model
-        dataset = get_or_create_dataset(model)
-
-        # For every url in mapped dataset_urls (arguments) we import it
-        for urlmap in source_map.iteritems():
-            import_csv(dataset, urlmap, args)
-
-        # Import visualisations if there are any
-        if args['views']:
-            import_views(dataset, args['views'])
 
     @manager.option('--org', action="store", dest='specificorg', type=str,
                     default=None, metavar='N',
@@ -357,36 +220,7 @@ def add_import_commands(manager):
     def testdatabankjson(**args):
         """ Load a JSON dump from  """
         specificorg = args.get("specificorg", None)
-        if len(args['jsondata']) != 1:
-            print "\n\nPlease specify one and only one json dump from python manage.py etldata dumpdata"
-            sys.exit(1)
-
-        try:
-            jsonfile = open(args['jsondata'][0], 'rb')
-        except Exception, e:
-            print "failed to open file"
-            print e
-            sys.exit(1)
-
-        try:
-            databankjson = json.load(jsonfile)
-        except Exception, e:
-            print "\n\nYou hit an error on json loading"
-            print e
-            sys.exit(1)
-
-        #split the objects to their approrpirate spot
-        modelobjs = {}
-
-        for jsonobj in databankjson:
-            modelname = jsonobj['model'].split(".")[1]
-            if modelname in modelobjs.keys():
-                modelobjs[modelname].append(jsonobj)
-            else:
-                modelobjs[modelname] = [jsonobj]
-
-        for modelname,obj in modelobjs.iteritems():
-            print "you have ", len(obj), modelname
+        modelobjs = parseDBJSON(args)
 
 
         results = {"success":0, "errored":0, "skipped":0, "added_needs_work":0}
@@ -436,12 +270,15 @@ def add_import_commands(manager):
 
 
             #if we get here then we can try load a source
-            loadresult = load_from_databank(dataconnection, datasetprovider, dry_run=True)
+            sourceobj, loadresult = load_from_databank(dataconnection, datasetprovider, dry_run=True, meta_only=False)
             if loadresult:
                 results['success'] +=1
             else:
                 results['added_needs_work'] += 1
 
+            # #if we are here then we created a source.  Let's now delete it.
+            # #this will not delete the data tables yet
+            # sourceobj.delete()
 
 
 
@@ -452,19 +289,58 @@ def add_import_commands(manager):
 
 
 
+    @manager.option('-n', '--dry-run', dest='dry_run', action='store_true',
+                    help="Perform a dry run, don't load any data.")
+    @manager.option('-i', '--index', dest='build_indices', action='store_true',
+                    help="Suppress Solr index build.")
+    @manager.option('--raise-on-error', action="store_true",
+                    dest='raise_errors', default=False,
+                    help='Get full traceback on first error.')
+    @manager.option('-f', '--file-dir',
+                    dest='file_dir',
+                    help='File Dir of the uploaded Files')
+    @manager.option('jsondata', nargs=argparse.REMAINDER,
+                    help="JSON data from databank.edip-maps.net")
+    @manager.command
+    def loadmetaonlyjson(**args):
+        """ Load a JSON dump from  """
+        specificorg = args.get("specificorg", None)
+        file_dir = args.get('file_dir', None)
+        modelobjs = parseDBJSON(args)
 
-        #iterate through the json to find the etldata.dataconnections
-            #find which method to try
+        results = {"success":0, "errored":0, "skipped":0, "added_needs_work":0}
 
-            #add preprocessors if necessary using the type format
 
-            #Load into OR
+        #go through the dataconnections
+        for dataconnection in modelobjs["dataconnection"]:
 
-            #check that it is there
+            print "\n\n******************************************"
 
-            #delete it
 
-        #print report
+
+            #get the dataprovider json
+            datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
+            if not datasetprovider:
+                results['skipped'] += 1
+                print "could not find the meta attached to this", dataconnection['fields']['indicator']
+                continue
+            if specificorg and datasetprovider['fields'].get("title", "nothinghere") != specificorg:
+                results['skipped'] += 1
+                print "skipping unspecified organizations", datasetprovider['fields'].get("title", None)
+                continue
+
+
+
+            #if we get here then we can try load a source
+            sourceobj, loadresult = load_from_databank(dataconnection, datasetprovider, file_dir=file_dir, dry_run=True, meta_only=True)
+            if loadresult:
+                results['success'] +=1
+            else:
+                results['added_needs_work'] += 1
+
+
+        print "\n\nHere are results:"
+        print results
 
 
 
