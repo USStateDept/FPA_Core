@@ -66,7 +66,7 @@ Installation
 First, check out the source code from the repository, e.g. via git on 
 the command line::
 
-    $ git clone http://github.com/openspending/openspending.git
+    $ git clone https://github.com/USStateDept/FPA_Core.git
     $ cd openspending
 
 We also highly recommend you use a virtualenv_ to isolate the installed 
