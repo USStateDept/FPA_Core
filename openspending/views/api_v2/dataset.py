@@ -56,7 +56,7 @@ def index():
     #maybe put the pager back in
     # print q
     # pager = Pager(q)
-    return jsonify(returnset)
+    return jsonify(returnset, headers= {'Cache-Control' : 'no-cache'})
 
 
 @blueprint.route('/datasets/<name>')
@@ -68,7 +68,7 @@ def view(name):
 
     dataset = get_dataset(name)
     etag_cache_keygen(dataset)
-    return jsonify(dataset)
+    return jsonify(dataset, headers= {'Cache-Control' : 'no-cache'})
 
 
 @blueprint.route('/datasets', methods=['POST', 'PUT'])
@@ -218,7 +218,7 @@ def model(datasetname, sourcename):
 
 
 
-
+#probably shouldn't be a GET
 @blueprint.route('/datasets/<datasetname>/applymodel/<sourcename>')
 @api_json_errors
 def apply_default_model(datasetname, sourcename):
@@ -227,8 +227,9 @@ def apply_default_model(datasetname, sourcename):
     if not source or not dataset:
         return jsonify({"errors":["Invalid URL.  Cannot find source or dataset"]})
 
-    print "doing stuff here", dataset.ORoperations
     if dataset.ORoperations:
+        print "******"
+        print dataset.ORoperations
         source.applyORInstructions(dataset.ORoperations)
 
     source.addData(dataset.data)
@@ -238,7 +239,7 @@ def apply_default_model(datasetname, sourcename):
     #refresh from the DB to verify
     source = get_source(sourcename)
 
-    return jsonify(source)
+    return jsonify(source,headers= {'Cache-Control' : 'no-cache'})
 
 
 @blueprint.route('/datasets/<datasetname>/applymodel/<sourcename>', methods=['POST', 'PUT'])
@@ -287,7 +288,7 @@ def save_default_model(datasetname, sourcename):
 
     #also need to get the operations of the OR and save it to 
     ORoperations = source.getORInstructions()
-    dataset.ORoperations = ORoperations[0]
+    dataset.ORoperations = {"data": ORoperations}
 
     db.session.commit()
 
@@ -425,7 +426,7 @@ def ORoperations(datasetname, sourcename):
         ORinstructions = source.getORInstructions()
         return jsonify(ORinstructions, headers= {'Cache-Control' : 'no-cache'})
     except Exception, e:
-        return jsonify({"error":"Could not fetch the ORinstructions"})
+        return jsonify({"error":"Could not fetch the ORinstructions" + str(e)})
 
 
 DEFAULT_SOURCE_MAPPING = {

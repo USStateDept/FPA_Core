@@ -96,8 +96,9 @@ class OpenSpendingModelProvider(ModelProvider):
             if not len(source.mapping):
                 continue
             cubes.append({
+                #change here too
                 'name': source.name,
-                'label': source.label
+                'label': source.name
             })
         return cubes
 

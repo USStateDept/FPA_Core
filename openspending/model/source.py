@@ -83,8 +83,6 @@ class Source(db.Model):
         myoperations = []
         for op in ORoperations['data']:
             myoperations.append(op['operation'])
-        print "with operations\n\n"
-        print myoperations
         data = {'operations': json.dumps(myoperations)}
         #data = {'operations': json.dumps(ORoperations['data'])}
         refineproj.refineproj.do_json("apply-operations", data=data)
