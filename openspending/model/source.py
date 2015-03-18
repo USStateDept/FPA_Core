@@ -195,3 +195,7 @@ class Source(db.Model):
             "created_at": self.created_at,
             "ORid": self.ORid
         }
+
+    def __unicode__(self):
+        return "<Source Model Name:" + self.name + ">"
+

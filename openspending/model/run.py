@@ -82,4 +82,7 @@ class Run(db.Model):
         return db.session.query(cls).filter_by(id=id).first()
 
     def __repr__(self):
-        return "<Run(%r, %r)>" % (self.source.id, self.id)
+        if not self.source:
+            return "<OldRun(%r)>" % (self.id)
+        else:
+            return "<Run(%r, %r)>" % (self.source.id, self.id)

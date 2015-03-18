@@ -18,7 +18,7 @@ from openspending.views.cache import disable_cache
 
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('source', __name__)
+blueprint = Blueprint('sourceapp', __name__)
 
 
 def get_source(dataset, id):

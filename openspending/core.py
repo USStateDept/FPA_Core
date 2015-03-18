@@ -17,6 +17,8 @@ from google.refine import refine
 from openspending import default_settings
 from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
+from openspending.admin.routes import register_admin
+from flask.ext.superadmin import Admin, model
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -71,6 +73,9 @@ def create_app(**config):
 
     #do app.config in the future
     refine_server = refine.RefineServer(server="http://127.0.0.1:3333")
+
+
+
     try:
         print "Using OpenRefine", refine_server.get_version()
     except Exception, e:
@@ -88,6 +93,9 @@ def create_web_app(**config):
 
     Gravatar(app, size=200, rating='g',
              default='retro', use_ssl=True)
+
+    flaskadmin = Admin(app, url='/admin', name='admin2')
+    register_admin(flaskadmin, db)
 
     return app
 
