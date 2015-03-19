@@ -16,6 +16,13 @@ class SourceModel(ModelAdmin):
 
     search_fields = ('name',)
 
+    def save_model(self, instance, form, adding=False):
+        form.populate_obj(instance)
+        if adding:
+            self.session.add(instance)
+        self.session.commit()
+        return instance
+
 
 def register_admin(flaskadmin, db):
 

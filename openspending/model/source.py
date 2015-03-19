@@ -8,8 +8,8 @@ from sqlalchemy import BigInteger
 
 from openspending.core import db
 from openspending.model.common import MutableDict, JSONType
-from openspending.model.dataset import Dataset
-from openspending.model.account import Account
+#from openspending.model.dataset import Dataset
+#from openspending.model.account import Account
 from openspending.model.model import Model
 
 from openspending.preprocessors.ORhelper import RefineProj
@@ -26,7 +26,7 @@ class Source(db.Model):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, onupdate=datetime.utcnow)
     analysis = Column(MutableDict.as_mutable(JSONType), default=dict)
-    data = Column(MutableDict.as_mutable(JSONType), default=dict)
+    mapping = Column(MutableDict.as_mutable(JSONType), default=dict)
 
     ORid = Column(BigInteger)
 
@@ -35,19 +35,7 @@ class Source(db.Model):
     prefuncs = Column(MutableDict.as_mutable(JSONType), default=dict)
 
 
-
-
-    dataset_id = Column(Integer, ForeignKey('dataset.id'))
-    dataset = relationship(
-        Dataset,
-        backref=backref('sources', lazy='dynamic',
-                        order_by='Source.created_at.desc()'))
-
-    creator_id = Column(Integer, ForeignKey('account.id'))
-    creator = relationship(Account,
-                           backref=backref('sources', lazy='dynamic'))
-
-    def __init__(self, dataset=None, creator=None, url=None, name=None, prefuncs={}, data = None):
+    def __init__(self, dataset=None, creator=None, url=None, name=None, prefuncs={}, mapping = None):
         #required for WTForms
         if dataset == None:
             return
@@ -61,8 +49,8 @@ class Source(db.Model):
         self.prefuncs = prefuncs
         refineproj = self.get_or_create_ORProject()
         self.ORid = refineproj.refineproj.project_id
-        if (data):
-            self.addData(data)
+        if (mapping):
+            self.addData(mapping)
 
     def get_or_create_ORProject(self):
         return RefineProj(source=self)
@@ -97,8 +85,8 @@ class Source(db.Model):
         return refineproj.refineproj.get_operations()
         
 
-    def addData(self, data):
-        self.data = data.copy()
+    def addData(self, mapping):
+        self.mapping = mapping.copy()
         self._load_model()
 
     def getPreFuncs(self):
@@ -109,7 +97,7 @@ class Source(db.Model):
 
     @reconstructor
     def _load_model(self):
-        if self.data.get('mapping', {}).keys() > 0:
+        if self.mapping.get('mapping', {}).keys() > 0:
             print "building the model", self.name
             self.model = Model(self)
 
@@ -125,7 +113,7 @@ class Source(db.Model):
 
     @property
     def mapping(self):
-        return self.data.get('mapping', {})
+        return self.mapping.get('mapping', {})
 
     @property
     def loadable(self):
