@@ -14,7 +14,7 @@ from openspending.model.source import Source
 from openspending.lib.jsonexport import jsonify
 from openspending.lib.paramparser import LoadingAPIParamParser
 from openspending.lib.hypermedia import dataset_apply_links
-from openspending.tasks import load_source, analyze_budget_data_package
+from openspending.tasks import load_source
 from openspending.validation.model import validate_model
 from openspending.views.api_v2.common import blueprint
 
@@ -42,10 +42,6 @@ def create():
         return load_with_model_and_csv(
             params['metadata'], params['csv_file'], params['private'])
 
-
-def load_with_budget_data_package(bdp_url, private):
-    """ Analyze and load data using a budget data package """
-    analyze_budget_data_package.delay(bdp_url, current_user, private)
 
 
 def load_with_model_and_csv(metadata, csv_file, private):
