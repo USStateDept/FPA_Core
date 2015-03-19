@@ -63,6 +63,7 @@ class MetadataOrg(db.Model):
         self.contactEmail = metadata.get('contactEmail')
         self.accessLevel = metadata.get('accessLevel')
         self.bureauCode = metadata.get('bureauCode')
+        self.lastUpdated = datetime.utcnow()
 
     def as_dict(self):
         return {
