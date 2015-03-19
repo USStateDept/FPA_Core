@@ -87,6 +87,7 @@ def upgrade(migrate_engine):
     myset.append(Column('loaded', Boolean()))
     myset.append(Column('tested', Boolean()))
     myset.append(Column('dataorg_id', Integer, ForeignKey('dataorg.id')))
+    myset.append(Column('datalastupdated', DateTime))
 
     for theset in myset:
         try:
