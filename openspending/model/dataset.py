@@ -141,6 +141,14 @@ class Dataset(db.Model):
         return q
 
     @classmethod
+    def get_all_admin(cls, order=True):
+        """ Query available datasets based on dataset visibility. """
+        q = db.session.query(cls)
+        if order:
+            q = q.order_by(cls.label.asc())
+        return q
+
+    @classmethod
     def by_name(cls, name):
         return db.session.query(cls).filter_by(name=name).first()
 

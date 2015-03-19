@@ -47,7 +47,10 @@ class Source(db.Model):
     creator = relationship(Account,
                            backref=backref('sources', lazy='dynamic'))
 
-    def __init__(self, dataset, creator, url, name, prefuncs={}, data = None):
+    def __init__(self, dataset=None, creator=None, url=None, name=None, prefuncs={}, data = None):
+        #required for WTForms
+        if dataset == None:
+            return
         #copy the raw data 
         self.dataset = dataset
         self.creator = creator
