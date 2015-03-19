@@ -42,8 +42,10 @@ def upgrade(migrate_engine):
                     Column('ORTemplate', MutableDict.as_mutable(JSONType), default=dict),
                     Column('mappingTemplate', MutableDict.as_mutable(JSONType), default=dict),
                     Column('prefuncs', MutableDict.as_mutable(JSONType), default=dict),
-                    Column('lastUpdated', DateTime)
+                    Column('lastUpdated', DateTime),
+                    Column('metadataorg_id', Integer, ForeignKey('metadataorg.id'))
                     )
+
     try:
         dataorg.create()
     except Exception, e:

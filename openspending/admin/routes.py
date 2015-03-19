@@ -26,7 +26,7 @@ class SourceModel(ModelAdmin):
 
 def register_admin(flaskadmin, db):
 
-    from openspending.model import Source
+    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run
     
 
 
@@ -34,6 +34,12 @@ def register_admin(flaskadmin, db):
     #flaskadmin.add_view(MyAdminView(category='Test'))
 
     flaskadmin.register(Source, SourceModel, session=db.session)
+
+    flaskadmin.register(Dataset, session=db.session)
+    flaskadmin.register(DataOrg, session=db.session)
+    flaskadmin.register(MetadataOrg, session=db.session)
+    flaskadmin.register(Account, session=db.session, endpoint='useraccount')
+    flaskadmin.register(Run, session=db.session)
 
 
     return flaskadmin

@@ -97,7 +97,8 @@ class Source(db.Model):
 
     @reconstructor
     def _load_model(self):
-        if self.mapping.get('mapping', {}).keys() > 0:
+        print self.mapping.get('data', {})
+        if self.mapping.get('data', {}).keys() > 0:
             print "building the model", self.name
             self.model = Model(self)
 
@@ -112,8 +113,8 @@ class Source(db.Model):
 
 
     @property
-    def mapping(self):
-        return self.mapping.get('mapping', {})
+    def get_data(self):
+        return self.mapping.get('data', {})
 
     @property
     def loadable(self):
@@ -126,7 +127,7 @@ class Source(db.Model):
         if self.successfully_loaded:
             return False
         # It needs mapping to be loadable
-        if not len(self.dataset.mapping):
+        if not len(self.mapping.get('data', {}).keys()):
             return False
         # There can be no errors in the analysis of the source
         if 'error' in self.analysis:
