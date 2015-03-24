@@ -9,4 +9,5 @@ from openspending.model.source import Source
 from openspending.model.log_record import LogRecord  # NOQA
 from openspending.model.run import Run  # NOQA
 from openspending.model.source import Source  # NOQA
-from openspending.model.view import View  # NOQA
+#from openspending.model.view import View  # NOQA
+from openspending.model.sourcefile import SourceFile

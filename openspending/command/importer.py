@@ -7,7 +7,7 @@ import urlparse, urllib
 
 from openspending.lib import json
 
-from openspending.model import Source, Dataset, Account, View
+from openspending.model import Source, Dataset, Account
 from openspending.core import db
 
 from openspending.preprocessors.ORhelper import testORLoad

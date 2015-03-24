@@ -17,8 +17,8 @@ from google.refine import refine
 from openspending import default_settings
 from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
-from openspending.admin.routes import register_admin
-from flask.ext.superadmin import Admin, model
+#from flask.ext.superadmin import Admin, model
+import flask_admin as admin
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -94,7 +94,9 @@ def create_web_app(**config):
     Gravatar(app, size=200, rating='g',
              default='retro', use_ssl=True)
 
-    flaskadmin = Admin(app, url='/admin', name='admin2')
+    from openspending.admin.routes import register_admin
+    flaskadmin = admin.Admin(app, name='Example: SQLAlchemy')
+    #flaskadmin = Admin(app, url='/admin', name='admin2')
     register_admin(flaskadmin, db)
 
     return app

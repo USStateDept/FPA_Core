@@ -1,45 +1,107 @@
 
 
-from flask.ext.superadmin.model.backends.sqlalchemy import ModelAdmin
+#from flask.ext.superadmin.model.backends.sqlalchemy import ModelAdmin
+#from flask.ext.superadmin.model.base import BaseModelAdmin
+from flask.ext import wtf
+from flask_admin.contrib import sqla
+from wtforms.fields import StringField, PasswordField, BooleanField
+from wtforms.validators import Required, ValidationError
+from flask import flash
 #from flask.ext.superadmin.model.backends.sqlalchemy.orm import AdminModelConverter as _AdminModelConverter
 #from flask.ext import superadmin
 #from wtforms.ext.sqlalchemy.orm import converts
 
+from openspending.model import Account
+from werkzeug.security import generate_password_hash
+
+
 #import copy
 
+#see http://flask-admin.readthedocs.org/en/latest/api/mod_model/
 
 
 
-class SourceModel(ModelAdmin):
-    list_display = ('name',)
-    list_per_page = 100
 
-    search_fields = ('name',)
+class AccountView(sqla.ModelView):
 
-    def save_model(self, instance, form, adding=False):
-        form.populate_obj(instance)
-        if adding:
-            self.session.add(instance)
-        self.session.commit()
-        return instance
+    #form_overrides = dict(name=PasswordField)
+
+    form_extra_fields = {
+        "password1": PasswordField('Password', validators=[Required()]),
+        "password2": PasswordField('Password (Again)', validators=[Required()])
+    }
+
+    form_excluded_columns = ('password', 'datasets',)
+
+
+    def validate_form(self, form):
+        if form.data['password1'] == None:
+            return False
+        if form.data['password1'] == "":
+            raise ValidationError('Passwords do not match')
+        if form.data['password1'] == form.data['password2']:
+            return True
+        else:
+            raise ValidationError('passwords do not match')
+        return False
+
+        #if db.session.query(User).filter_by(login=self.login.data).count() > 0:
+        #    raise ValidationError('Duplicate username')
+
+    def is_accessible(self):
+        return True
+
+
+
+    # Model handlers
+    def on_model_change(self, form, model, is_created=False):
+    #def create_model(self, form):
+
+        print "running this for some reason", model
+        if form.data['password1'] != None:
+            model.password = generate_password_hash(form.data['password1'])
+        return
+
+
+# class SourceModel(ModelAdmin):
+#     list_display = ('name',)
+#     list_per_page = 100
+
+#     search_fields = ('name',)
+
+#     def save_model(self, instance, form, adding=False):
+#         form.populate_obj(instance)
+#         if adding:
+#             self.session.add(instance)
+#         self.session.commit()
+#         return instance
 
 
 def register_admin(flaskadmin, db):
 
-    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run
+    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile
     
 
 
 
     #flaskadmin.add_view(MyAdminView(category='Test'))
 
-    flaskadmin.register(Source, SourceModel, session=db.session)
+    flaskadmin.add_view(sqla.ModelView(Dataset, db.session))
+    flaskadmin.add_view(sqla.ModelView(DataOrg, db.session))
+    flaskadmin.add_view(sqla.ModelView(Source, db.session))
+    flaskadmin.add_view(sqla.ModelView(MetadataOrg, db.session))
+    flaskadmin.add_view(AccountView(Account, db.session, endpoint='useraccount'))
+    flaskadmin.add_view(sqla.ModelView(Run, db.session))
+    flaskadmin.add_view(sqla.ModelView(SourceFile, db.session,endpoint='sourceadmin'))
 
-    flaskadmin.register(Dataset, session=db.session)
-    flaskadmin.register(DataOrg, session=db.session)
-    flaskadmin.register(MetadataOrg, session=db.session)
-    flaskadmin.register(Account, session=db.session, endpoint='useraccount')
-    flaskadmin.register(Run, session=db.session)
+    # flaskadmin.register(Source, SourceModel, session=db.session)
+
+    # flaskadmin.register(Dataset, session=db.session)
+    # flaskadmin.register(DataOrg, session=db.session)
+    # flaskadmin.register(MetadataOrg, session=db.session)
+    # flaskadmin.register(Account, AccountModel, session=db.session, endpoint="accountadmin" )
+    # flaskadmin.register(Run, session=db.session)
+    # flaskadmin.register(SourceFile, session=db.session, endpoint='sourcefileadmin')
 
 
     return flaskadmin
