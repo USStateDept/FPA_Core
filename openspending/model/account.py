@@ -47,14 +47,9 @@ class Account(db.Model):
     name = Column(Unicode(255), unique=True)
     fullname = Column(Unicode(2000))
     email = Column(Unicode(2000))
-    public_email = Column(Boolean, default=False)
-    twitter_handle = Column(Unicode(140))
-    public_twitter = Column(Boolean, default=False)
     password = Column(Unicode(2000))
     api_key = Column(Unicode(2000), default=make_uuid)
     admin = Column(Boolean, default=False)
-    script_root = Column(Unicode(2000))
-    terms = Column(Boolean, default=False)
 
     datasets = relationship(Dataset,
                             secondary=account_dataset_table,

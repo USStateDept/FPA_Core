@@ -25,14 +25,10 @@ class Source(db.Model):
     url = Column(Unicode)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, onupdate=datetime.utcnow)
-    analysis = Column(MutableDict.as_mutable(JSONType), default=dict)
-    mapping = Column(MutableDict.as_mutable(JSONType), default=dict)
 
     ORid = Column(BigInteger)
 
-    ORoperations = Column( MutableDict.as_mutable(JSONType), default=dict)
 
-    prefuncs = Column(MutableDict.as_mutable(JSONType), default=dict)
 
 
     def __init__(self, dataset=None, creator=None, url=None, name=None, prefuncs={}, mapping = None):

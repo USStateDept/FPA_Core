@@ -93,7 +93,7 @@ def drop_dataset(**args):
 def migrate():
     """ Run pending data migrations """
     url = current_app.config.get('SQLALCHEMY_DATABASE_URI')
-    repo = os.path.join(os.path.dirname(__file__), '..', 'migration')
+    repo = os.path.join(os.path.dirname(__file__), '..', 'findmigs')
 
     try:
         migrate_api.upgrade(url, repo)

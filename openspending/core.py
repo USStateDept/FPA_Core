@@ -34,7 +34,7 @@ cache = Cache()
 mail = Mail()
 assets = Environment()
 
-badge_images = UploadSet('badgeimages', IMAGES)
+sourcefiles = UploadSet('sourcefiles', extensions=('txt', 'rtf', 'odf', 'ods', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'json', 'xml'))
 
 
 def create_app(**config):
@@ -58,7 +58,7 @@ def create_app(**config):
     mail.init_app(app)
     assets.init_app(app)
     login_manager.init_app(app)
-    configure_uploads(app, (badge_images,))
+    configure_uploads(app, (sourcefiles,))
 
     # HACKY SHIT IS HACKY
     from openspending.lib.solr_util import configure as configure_solr
@@ -77,7 +77,7 @@ def create_app(**config):
 
 
     try:
-        print "Using OpenRefine", refine_server.get_version()
+        test = refine_server.get_version()
     except Exception, e:
         print "Could not find OpenRefine.  Components could be broken"
         print "The error", e

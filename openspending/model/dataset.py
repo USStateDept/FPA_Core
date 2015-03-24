@@ -56,10 +56,6 @@ class Dataset(db.Model):
 
     tested = Column(Boolean, default=False)
 
-    # creator_id = Column(Integer, ForeignKey('account.id'))
-    # creator = relationship(Account,
-    #                        backref=backref('datasets', lazy='dynamic'))
-
     dataorg_id = Column(Integer, ForeignKey('dataorg.id'))
     dataorg = relationship(DataOrg,
                            backref=backref('datasets', lazy='dynamic'))

@@ -1,4 +1,4 @@
-from openspending.core import badge_images
+from openspending.core import sourcefiles
 from openspending.lib.helpers import url_for
 
 
@@ -40,13 +40,12 @@ def drilldowns_apply_links(dataset_name, drilldowns):
     return linked_data
 
 
-def badge_apply_links(badge):
+def badge_apply_links(sourcefile):
     """
     Add links or to badge dictionary representation or modify a dictionary
     representation to include a fully qualified domain
     """
     # Add an html_url to represent the html representation of the badge
-    badge['html_url'] = url_for('badge.information', id=badge['id'])
     # Change the image url to be a fully qualified url if it isn't already
-    badge['image'] = badge_images.url(badge['image'])
-    return badge
+    sourcefile['rawfile'] = sourcefiles.url(sourcefile['rawfile'])
+    return sourcefile
