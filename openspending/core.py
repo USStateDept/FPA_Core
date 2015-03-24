@@ -95,7 +95,7 @@ def create_web_app(**config):
              default='retro', use_ssl=True)
 
     from openspending.admin.routes import register_admin
-    flaskadmin = admin.Admin(app, name='Example: SQLAlchemy')
+    flaskadmin = admin.Admin(app, name='FIND Admin')
     #flaskadmin = Admin(app, url='/admin', name='admin2')
     register_admin(flaskadmin, db)
 

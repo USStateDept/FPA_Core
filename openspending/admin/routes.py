@@ -7,12 +7,17 @@ from flask_admin.contrib import sqla
 from wtforms.fields import StringField, PasswordField, BooleanField
 from wtforms.validators import Required, ValidationError
 from flask import flash
+from flask_admin import form
 #from flask.ext.superadmin.model.backends.sqlalchemy.orm import AdminModelConverter as _AdminModelConverter
 #from flask.ext import superadmin
 #from wtforms.ext.sqlalchemy.orm import converts
 
 from openspending.model import Account
 from werkzeug.security import generate_password_hash
+
+from jinja2 import Markup
+
+from settings import UPLOADS_FOLDER
 
 
 #import copy
@@ -63,6 +68,38 @@ class AccountView(sqla.ModelView):
         return
 
 
+class SourceFileView(sqla.ModelView):
+
+    # def _list_thumbnail(view, context, model, name):
+    #     if not model.rawfile:
+    #         return ''
+
+    #     return Markup('<img />')
+
+    #     # return Markup('<img src="%s">' % url_for('static',
+    #     #                                          filename=form.thumbgen_filename(model.path)))
+
+    # column_formatters = {
+    #     'rawfile': _list_thumbnail
+    # }
+
+
+    form_overrides = {
+        'rawfile': form.FileUploadField
+    }
+
+    # Pass additional parameters to 'path' to FileUploadField constructor
+    form_args = {
+        'rawfile': {
+            'label': 'File',
+            'base_path': UPLOADS_FOLDER
+        }
+    }
+
+    
+
+
+
 # class SourceModel(ModelAdmin):
 #     list_display = ('name',)
 #     list_per_page = 100
@@ -92,7 +129,7 @@ def register_admin(flaskadmin, db):
     flaskadmin.add_view(sqla.ModelView(MetadataOrg, db.session))
     flaskadmin.add_view(AccountView(Account, db.session, endpoint='useraccount'))
     flaskadmin.add_view(sqla.ModelView(Run, db.session))
-    flaskadmin.add_view(sqla.ModelView(SourceFile, db.session,endpoint='sourceadmin'))
+    flaskadmin.add_view(SourceFileView(SourceFile, db.session,endpoint='sourcefileadmin'))
 
     # flaskadmin.register(Source, SourceModel, session=db.session)
 

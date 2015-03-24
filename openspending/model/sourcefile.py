@@ -52,6 +52,9 @@ class SourceFile(db.Model):
     def __repr__(self):
         return "<SourceFile(%r)>" % (self.id,)
 
+    def __unicode__(self):
+        return "<SourceFile(%r, %r)>" % (self.id, self.rawfile,)
+
 
 
     @classmethod
