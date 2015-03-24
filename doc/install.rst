@@ -2,49 +2,6 @@ Installation and Setup
 ======================
 
 
-Simple install
-''''''''''''''
-
-Requirements
-------------
-
-* Vagrant_ >= 1.4
-
-Installation
-------------
-
-You can avoid installing OpenSpending on your development machine by using Vagrant_ to execute the application and all of its dependencies in a virtual machine. To make use of this option, make sure to install Vagrant and the included VirtualBox provider. 
-
-If you haven't already, you'll need to install Vagrant's `cachier` plugin::
-
-    $ vagrant plugin install vagrant-cachier
-
-Then, from the source repository, you can set up a VM with::
-
-    $ vagrant up
-
-This will run for a while (fetch a coffee), until a working VM with Ubuntu 14.04 and OpenSpending has been deployed and Solr has started running.
-
-Once the application has run, you can start OpenSpending within the VM with::
-
-    $ vagrant ssh
-    vagrant@openspending$ cd /vagrant
-    vagrant@openspending$ ./startserver
-
-You will also need to start the backend workers which take care of the analysis and loading of datasets into your instance. You do this by opening another terminal and running within the VM::
-
-    $ vagrant ssh
-    vagrant@openspending$ cd /vagrant
-    vagrant@openspending$ celery -A openspending.tasks worker -l info
-
-The virtual machine includes OpenSpending, Postgres, RabbitMQ and Solr.
-
-.. _Vagrant: http://vagrantup.com/
-
-
-Manual install
-''''''''''''''
-
 Requirements
 ------------
 
@@ -133,6 +90,10 @@ using country level indicators.  There are two options::
     - Use the "Restore" feature in pgadmin and load the fixutres/geometry_file.backup
 
     - Use psql to load the fixtures/geometry_file.sql file using the command line.
+    
+
+
+You can now run the "runservers.bat" batch file in the root folder or do the following::
 
 
 Run the application::
@@ -168,30 +129,6 @@ Start Solr with the full path to the folder as a parameter: ::
 
     $ (cd solr/example && java -Dsolr.velocity.enabled=false -jar start.jar)
 
-Test the install
-----------------
-
-Create test configuration (which inherits, by default, from `development.ini`): ::
-
-    $ cp settings.py_tmpl test.py
-    $ export OPENSPENDING_SETTINGS=`pwd`/test.py
-
-You will need to either set up a second instance of solr, or comment
-out the solr url in settings file so that the tests use the same instance
-of solr. Regrettably, the tests delete all data from solr when they
-run, so having them share the development instance may be
-inconvenient.
-
-Run the tests.::
-
-    $ nosetests 
-
-Import a sample dataset: ::
-
-    $ ostool csvimport --model https://dl.dropbox.com/u/3250791/sample-openspending-model.json http://mk.ucant.org/info/data/sample-openspending-dataset.csv
-    $ ostool solr load openspending-example
-
-Verify that the data is visible at http://127.0.0.1:5000/openspending-example/entries
 
 Create an Admin User
 --------------------
