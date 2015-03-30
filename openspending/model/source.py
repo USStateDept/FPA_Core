@@ -31,7 +31,7 @@ class Source(db.Model):
 
 
 
-    def __init__(self, dataset=None, creator=None, url=None, name=None, prefuncs={}, mapping = None):
+    def __init__(self, dataset=None, creator=None, url=None, name=None, prefuncs={}):
         #required for WTForms
         if dataset == None:
             return
@@ -40,13 +40,11 @@ class Source(db.Model):
         self.creator = creator
         self.url = url
         self.name = name
-        self.label = name
-        self.description = "Need to change this in the model"
-        self.prefuncs = prefuncs
+
         refineproj = self.get_or_create_ORProject()
         self.ORid = refineproj.refineproj.project_id
-        if (mapping):
-            self.addData(mapping)
+        if (dataset.mapping):
+            self.addData(dataset.mapping)
 
     def get_or_create_ORProject(self):
         return RefineProj(source=self)
@@ -80,21 +78,24 @@ class Source(db.Model):
         refineproj = RefineProj(source=self)
         return refineproj.refineproj.get_operations()
         
-
-    def addData(self, mapping):
-        self.mapping = mapping.copy()
-        self._load_model()
-
     def getPreFuncs(self):
-        if len(self.prefuncs.keys()):
-            return self.prefuncs.get("data", [])
+        if len(self.dataset.prefuncs.keys()):
+            return self.dataset.prefuncs.get("data", [])
         else:
             return []
 
+
+    def addData(self, mapping):
+        self.dataset.mapping = mapping.copy()
+        self._load_model()
+
+
     @reconstructor
     def _load_model(self):
-        print self.mapping.get('data', {})
-        if self.mapping.get('data', {}).keys() > 0:
+        if not self.dataset:
+            print "not dataset attached"
+            return
+        if self.dataset.mapping.get('data', {}).keys() > 0:
             print "building the model", self.name
             self.model = Model(self)
 
@@ -109,10 +110,6 @@ class Source(db.Model):
 
 
     @property
-    def get_data(self):
-        return self.mapping.get('data', {})
-
-    @property
     def loadable(self):
         """
         Returns True if the source is ready to be imported into the
@@ -123,11 +120,13 @@ class Source(db.Model):
         if self.successfully_loaded:
             return False
         # It needs mapping to be loadable
-        if not len(self.mapping.get('data', {}).keys()):
+        if not len(self.dataset.mapping.get('data', {}).keys()):
             return False
         # There can be no errors in the analysis of the source
-        if 'error' in self.analysis:
-            return False
+
+        #replace with logs
+        # if 'error' in self.analysis:
+        #     return False
         # All is good... proceed
         return True
 
@@ -159,7 +158,7 @@ class Source(db.Model):
         return True in [r.successful_load for r in self.runs]
 
     def __repr__(self):
-        return "<Source(%s,%r,%s)>" % (self.name, self.id, self.url)
+        return "<Source(%s,%r,%s)>" % (self.name, self.id)
 
     @classmethod
     def by_id(cls, id):
