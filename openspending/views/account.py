@@ -59,11 +59,12 @@ def login():
 
 @blueprint.route('/login', methods=['POST', 'PUT'])
 def login_perform():
-    account = Account.by_name(request.form.get('login'))
-    if account is not None:
+    account = Account.by_email(request.form.get('login'))
+    if account is not None and account.verified == True:
         if check_password_hash(account.password, request.form.get('password')):
             login_user(account, remember=True)
-            flash_success(_("Welcome back, %(name)s!", name=account.name))
+            print account
+            flash_success(_("Welcome back, %(fullname)s!", fullname=account.fullname))
             return redirect(url_for('account.dashboard'))
     flash_error(_("Incorrect user name or password!"))
     return login()
@@ -164,8 +165,17 @@ def verify():
         flash_error(_("We cannot find your login string"))
         return render_template('account/verify.html')
     
+    #update to verify this user so they can 
+    #use the password in the future
+    account.verified = True
+    db.session.commit()
+
+
     flash_success("You are now logged in")
     login_user(account, remember=True)
+
+
+
     return redirect(url_for('home.index'))
 
 
