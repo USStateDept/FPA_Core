@@ -44,12 +44,20 @@ class Account(db.Model):
     __tablename__ = 'account'
 
     id = Column(Integer, primary_key=True)
-    name = Column(Unicode(255), unique=True)
+
     fullname = Column(Unicode(2000))
-    email = Column(Unicode(2000))
+
+    email = Column(Unicode(2000), unique=True)
     password = Column(Unicode(2000))
     api_key = Column(Unicode(2000), default=make_uuid)
     admin = Column(Boolean, default=False)
+
+    verified = Column(Boolean, default=False) 
+
+    #use this in the future to mark based on domain
+    usg_group = Column(Unicode(2000))
+
+    login_hash = Column(Unicode(2000), default=make_uuid)
 
     datasets = relationship(Dataset,
                             secondary=account_dataset_table,
@@ -69,7 +77,7 @@ class Account(db.Model):
 
     @property
     def display_name(self):
-        return self.fullname or self.name
+        return self.fullname
 
     @property
     def token(self):
@@ -79,9 +87,6 @@ class Account(db.Model):
             h.update(self.password)
         return h.hexdigest()
 
-    @classmethod
-    def by_name(cls, name):
-        return db.session.query(cls).filter_by(name=name).first()
 
     @classmethod
     def by_id(cls, id):
@@ -95,6 +100,10 @@ class Account(db.Model):
     def by_api_key(cls, api_key):
         return db.session.query(cls).filter_by(api_key=api_key).first()
 
+    @classmethod
+    def by_login_hash(cls, login_hash):
+        return db.session.query(cls).filter_by(login_hash=login_hash).first()
+
     def as_dict(self):
         """
         Return the dictionary representation of the account
@@ -102,53 +111,38 @@ class Account(db.Model):
 
         # Dictionary will include name, fullname, email and the admin bit
         account_dict = {
-            'name': self.name,
             'fullname': self.fullname,
             'email': self.email,
             'admin': self.admin
         }
 
-        # If the user has a twitter handle we add it
-        if self.twitter_handle is not None:
-            account_dict['twitter'] = self.twitter_handle
 
         # Return the dictionary representation
         return account_dict
 
     def __repr__(self):
-        return '<Account(%r,%r)>' % (self.id, self.name)
+        return '<Account(%r,%r)>' % (self.id, self.email)
 
 
 class AccountRegister(colander.MappingSchema):
-    name = colander.SchemaNode(colander.String(),
-                               validator=colander.Regex(REGISTER_NAME_RE))
 
     fullname = colander.SchemaNode(colander.String())
     email = colander.SchemaNode(colander.String(),
                                 validator=colander.Email())
-    public_email = colander.SchemaNode(colander.Boolean(), missing=False)
     password1 = colander.SchemaNode(colander.String(),
                                     validator=colander.Length(min=4))
     password2 = colander.SchemaNode(colander.String(),
                                     validator=colander.Length(min=4))
     terms = colander.SchemaNode(colander.Bool())
-    subscribe_community = colander.SchemaNode(colander.Boolean(),
-                                              missing=False)
-    subscribe_developer = colander.SchemaNode(colander.Boolean(),
-                                              missing=False)
 
 
 class AccountSettings(colander.MappingSchema):
     fullname = colander.SchemaNode(colander.String())
     email = colander.SchemaNode(colander.String(),
                                 validator=colander.Email())
-    public_email = colander.SchemaNode(colander.Boolean(), missing=False)
-    twitter = colander.SchemaNode(colander.String(), missing=None,
-                                  validator=colander.Length(max=140))
-    public_twitter = colander.SchemaNode(colander.Boolean(), missing=False)
+
     password1 = colander.SchemaNode(colander.String(),
                                     missing=None, default=None)
     password2 = colander.SchemaNode(colander.String(),
                                     missing=None, default=None)
-    script_root = colander.SchemaNode(colander.String(),
-                                      missing=None, default=None)
+
