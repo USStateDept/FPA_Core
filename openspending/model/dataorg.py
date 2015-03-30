@@ -73,11 +73,9 @@ class DataOrg(db.Model):
 
     def as_dict(self):
         return {
+            'id' : self.id,
             'label': self.label,
             'description': self.description,
-            'ORTemplate': self.ORTemplate,
-            'mappingTemplate': self.mappingTemplate,
-            'prefuncs': self.prefuncs,
             'lastUpdated': self.lastUpdated,
             'metadataorg': self.metadataorg
         }

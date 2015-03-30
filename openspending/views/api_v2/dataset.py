@@ -7,7 +7,7 @@ from colander import SchemaNode, String, Invalid
 from restpager import Pager
 
 from openspending.core import db
-from openspending.model import Dataset, Source, Run
+from openspending.model import Dataset, Source, Run, DataOrg
 from openspending.auth import require
 from openspending.lib import solr_util as solr
 from openspending.lib.jsonexport import jsonify
@@ -24,6 +24,18 @@ from openspending.tasks import check_column, load_source
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('datasets_api2', __name__)
+
+
+
+@blueprint.route('/dataorgs')
+@api_json_errors
+def dataorgs():
+    #page = request.args.get('page')
+
+    q = DataOrg.get_all_admin().all()
+
+    return jsonify(q, headers= {'Cache-Control' : 'no-cache'})
+
 
 
 @blueprint.route('/datasets')

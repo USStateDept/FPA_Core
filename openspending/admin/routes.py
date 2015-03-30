@@ -96,6 +96,41 @@ class SourceFileView(sqla.ModelView):
         }
     }
 
+
+
+
+#class DatasetView(sqla.ModelView):
+
+    # def _list_thumbnail(view, context, model, name):
+    #     if not model.rawfile:
+    #         return ''
+
+    #     return Markup('<img />')
+
+    #     # return Markup('<img src="%s">' % url_for('static',
+    #     #                                          filename=form.thumbgen_filename(model.path)))
+
+    # column_formatters = {
+    #     'rawfile': _list_thumbnail
+    # }
+
+
+    # form_overrides = {
+    #     'rawfile': form.FileUploadField
+    # }
+
+    # # Pass additional parameters to 'path' to FileUploadField constructor
+    # form_args = {
+    #     'rawfile': {
+    #         'label': 'File',
+    #         'base_path': UPLOADS_FOLDER
+    #     }
+    # }
+
+
+
+
+
     
 
 
@@ -116,7 +151,7 @@ class SourceFileView(sqla.ModelView):
 
 def register_admin(flaskadmin, db):
 
-    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile
+    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord
     
 
 
@@ -130,6 +165,7 @@ def register_admin(flaskadmin, db):
     flaskadmin.add_view(AccountView(Account, db.session, endpoint='useraccount'))
     flaskadmin.add_view(sqla.ModelView(Run, db.session))
     flaskadmin.add_view(SourceFileView(SourceFile, db.session,endpoint='sourcefileadmin'))
+    flaskadmin.add_view(sqla.ModelView(LogRecord, db.session))
 
     # flaskadmin.register(Source, SourceModel, session=db.session)
 
