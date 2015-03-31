@@ -2,10 +2,8 @@ import logging
 
 from flask import Blueprint
 
-from openspending.reference.currency import CURRENCIES
-from openspending.reference.country import COUNTRIES
-from openspending.reference.category import CATEGORIES
-from openspending.reference.language import LANGUAGES
+from openspending.references.enumerations import DATATYPES
+from openspending.model import DataOrg
 from openspending.lib.jsonexport import jsonify
 from openspending.views.cache import etag_cache_keygen
 
@@ -20,13 +18,16 @@ def dicts(d):
         else:
             yield {'code': k, 'label': v}
 
+def fromModel(d):
+    for theobj in d:
+        yield {'value': theobj.id, 'label': theobj.label}
+
 
 @blueprint.route('/reference')
 def reference_data():
     etag_cache_keygen('england prevails')
+    dataorgs = fromModel(DataOrg.get_all().all())
     return jsonify({
-        'currencies': sorted(dicts(CURRENCIES), key=lambda d: d['label']),
-        'languages': sorted(dicts(LANGUAGES), key=lambda d: d['label']),
-        'territories': sorted(dicts(COUNTRIES), key=lambda d: d['label']),
-        'categories': sorted(dicts(CATEGORIES), key=lambda d: d['label'])
+        'dataTypes': sorted(DATATYPES, key=lambda d: d['label']),
+        'dataorgs': sorted(dataorgs, key=lambda d: d['label'])
     })

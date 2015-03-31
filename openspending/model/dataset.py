@@ -71,20 +71,36 @@ class Dataset(db.Model):
             return
         self.label = data.get('label')
         if (data.get('name', None)):
-            self.name = slugify(data.get('name'), max_length=50)
+            self.name = slugify(str(data.get('name')), max_length=50)
         else:
-            self.name = slugify(data.get('label'), max_length=50)
+            self.name = slugify(str(data.get('label')), max_length=50)
 
         self.description = data.get('description')
         self.ORoperations = data.get('ORoperations', {})
         self.mapping = data.get('mapping', {})
         self.prefuncs = data.get('prefuncs', {})
-        self.created_at = data.utcnow()
-        self.dataorg = data.get('dataorg')
+        self.created_at = datetime.utcnow()
+        self.dataType = data.get('dataType')
+        if type(data.get('dataorg')) == int:
+            self.dataorg = DataOrg.by_id(data.get('dataorg'))
+        else:
+            try:
+                self.dataorg = data.get('dataorg')
+            except Exception, e:
+                print "failed to load the dataorg for dataset"
+                print e
 
 
     def createSource(self, data):
         return
+
+
+    @property 
+    def has_data(self):
+        if self.source:
+            return True
+        else:
+            return False
 
 
         
@@ -100,35 +116,27 @@ class Dataset(db.Model):
     def __repr__(self):
         return "<Dataset(%r,%r)>" % (self.id, self.name)
 
-    def update(self, dataset):
-        self.label = dataset.get('label')
-        self.name = dataset.get('name')
-        self.private = dataset.get('private')
-        self.description = dataset.get('description')
-        self.currency = dataset.get('currency')
-        self.category = dataset.get('category')
-        self.default_time = dataset.get('default_time')
-        self.languages = dataset.get('languages', [])
-        self.territories = dataset.get('territories', [])
+    def update(self, data):
+        #not to update name
+        self.label = data.get('label')
+        if (data.get('name', None)):
+            self.name = slugify(str(data.get('name')), max_length=50)
+        else:
+            self.name = slugify(str(data.get('label')), max_length=50)
+        self.description = data.get('description')
+        self.dataType = data.get('dataType')
+        self.dataorg = DataOrg.by_id(data.get('dataorg'))
+
 
     def as_dict(self):
         return {
             'label': self.label,
             'name': self.name,
             'description': self.description,
-            'default_time': self.default_time,
-            'schema_version': self.schema_version,
-            'currency': self.currency,
-            'category': self.category,
-            'serp_title': self.serp_title,
-            'serp_teaser': self.serp_teaser,
-            'timestamps': {
-                'created': self.created_at,
-                'last_modified': self.updated_at
-            },
-            'languages': list(self.languages),
-            'territories': list(self.territories),
-            'badges': [b.as_dict(short=True) for b in self.badges]
+            'dataType': self.dataType,
+            'dataorg': self.dataorg_id,
+            'has_data': self.has_data,
+            'source': self.source_id
         }
 
     @classmethod

@@ -8,8 +8,6 @@ def create():
 
 
 def read(dataset):
-    if not dataset.private:
-        return True
     return update(dataset)
 
 

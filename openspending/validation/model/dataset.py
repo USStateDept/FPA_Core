@@ -58,24 +58,7 @@ def dataset_schema(state):
             no_double_underscore
         ),
         preparer=lambda x: x.lower().strip() if x else None))
-    schema.add(key('currency', validator=chained(
-            valid_currency
-        )))
-    schema.add(key('category', validator=chained(
-            valid_category
-        )))
-    schema.add(key('label', validator=chained(
-            nonempty_string,
-        )))
-    schema.add(key('description', validator=chained(
-            nonempty_string,
-        )))
-    schema.add(sequence('languages',
-        key('language', validator=valid_language), 
-        missing=[]))
-    schema.add(sequence('territories',
-        key('territory', validator=valid_country), 
-        missing=[]))
+
     return schema
 
 

@@ -90,8 +90,20 @@ class DataOrg(db.Model):
         return q
 
     @classmethod
+    def get_all(cls, order=True):
+        """ Query available datasets based on dataset visibility. """
+        q = db.session.query(cls)
+        if order:
+            q = q.order_by(cls.label.asc())
+        return q
+
+    @classmethod
     def by_name(cls, label):
         return db.session.query(cls).filter_by(label=label).first()
+
+    @classmethod
+    def by_id(cls, id):
+        return db.session.query(cls).filter_by(id=id).first()
 
 
 #TODO

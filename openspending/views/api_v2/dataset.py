@@ -1,4 +1,7 @@
 import logging
+import sys
+import traceback
+from slugify import slugify
 
 from flask import Blueprint, request
 from flask.ext.login import current_user
@@ -42,25 +45,27 @@ def dataorgs():
 @api_json_errors
 def index():
     #page = request.args.get('page')
-    fields = request.args.get('fields', "").split(",")
-    getsources = request.args.get('getsources', None)
 
-    q = Dataset.all_by_account(current_user).all()
+    q = Dataset.get_all_admin().all()
 
-    if len(fields) < 1 and not getsources:
-        return jsonify(q)
-    
     returnset = []
-    for obj in q:
-        tempobj = {} 
-        if len(fields) >0:
-            for field in fields:
-                tempobj[field] = getattr(obj, field)
-        else:
-            tempobj = obj.as_dict()
-        if getsources:
-            tempobj['sources'] = obj.sources.all()
-        returnset.append(tempobj) 
+    for theobj in q:
+        returnset.append(theobj)
+
+    # if len(fields) < 1 and not getsources:
+    #     return jsonify(q)
+    
+    # returnset = []
+    # for obj in q:
+    #     tempobj = {} 
+    #     if len(fields) >0:
+    #         for field in fields:
+    #             tempobj[field] = getattr(obj, field)
+    #     else:
+    #         tempobj = obj.as_dict()
+    #     if getsources:
+    #         tempobj['sources'] = obj.sources.all()
+    #     returnset.append(tempobj) 
 
 
     # TODO: Facets for territories and languages
@@ -97,19 +102,30 @@ def create():
 
     try:
         dataset = api_form_data()
-        model = {'dataset': dataset}
+        if not dataset.get("dataorg", None):
+            return jsonify({"errors":["You must select the data source organization"]}) 
+        model = {'data': dataset}
         schema = dataset_schema(ValidationState(model))
         data = schema.deserialize(dataset)
-        if Dataset.by_name(data['name']) is not None:
-            return jsonify({"errors":["A dataset with this name already exists"]})
-        dataset = Dataset({'dataset': data})
-        dataset.private = False
+
+        #should have a better place for sluggify
+        if (data.get('name', None)):
+            tempname = slugify(str(data.get('name')), max_length=50)
+        else:
+            tempname = slugify(str(data.get('label')), max_length=50)
+
+        if Dataset.by_name(tempname) is not None:
+            return jsonify({"errors":["A dataset with this name already exists "]})
+
+        dataset = Dataset(data=data)
         dataset.managers.append(current_user)
         db.session.add(dataset)
         db.session.commit()
         return jsonify({"success":True, "dataset":dataset.name})
     except Exception, e:
-        return jsonify({"errors":['Unknown Error has occurred']})
+        ex_type, ex, tb = sys.exc_info()
+        print traceback.print_tb(tb)
+        return jsonify({"errors":['Unknown Error has occurred: ' + str(e)]})
 
 
 
@@ -122,12 +138,13 @@ def update(name):
     try:
         dataset = get_dataset(name)
         require.dataset.update(dataset)
-        schema = dataset_schema(ValidationState(dataset.model_data))
+        schema = dataset_schema(ValidationState(dataset))
         data = schema.deserialize(api_form_data())
+        print data
         dataset.update(data)
         db.session.commit()
         #clear_index_cache()
-        return jsonify({"Success":True})
+        return jsonify({"success":True})
     except Exception, e:
         print e
         return jsonify({"errors":['Unknown Error has occurred']}) 
