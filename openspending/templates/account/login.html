@@ -11,7 +11,7 @@
     <form class="basic login form-horizontal" id="login" action="{{ url_for('account.login') }}" method="POST">
       <fieldset>
         <div class="control-group">
-          <label for="login">{% trans %}Login{% endtrans %}</label>
+          <label for="login">{% trans %}Email Login{% endtrans %}</label>
           <div class="controls">
             <input name="login" />
           </div>
@@ -31,28 +31,20 @@
   </div>
   <div class="span6">
     <h3>{% trans %}Create an account{% endtrans %}</h3>
+    <h3>Put more information here about why this is only USG</h3>
     {% formfill form_fill with form_errors %}
     <form class="basic register form-horizontal" id="register" action="{{ url_for('account.register') }}" method="POST">
       <fieldset>
-        <div class="control-group">
-          <label for="name">{% trans %}Login{% endtrans %}</label>
+        <div class="control-group form-inline">
+          <label for="email">{% trans %}Email USG only{% endtrans %}</label>
           <div class="controls">
-            <input name="name">
-          </div>
-        </div>
-        <div class="control-group">
-          <label for="fullname">{% trans %}Fullname{% endtrans %}</label>
-          <div class="controls">
-            <input name="fullname">
+            <input name="email">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label for="email">{% trans %}Email{% endtrans %}</label>
+          <label for="email">{% trans %}First and last name{% endtrans %}</label>
           <div class="controls">
-            <input name="email">
-	    <label class="checkbox">
-	      <input name="public_email" type="checkbox"> {% trans %}Visible to other users{% endtrans %}
-	    </label>
+            <input name="fullname">
           </div>
         </div>
         <div class="control-group">
@@ -74,18 +66,6 @@
               {% trans %}I agree to the <a href="http://okfn.org/terms-of-use/">Terms of Use</a>
               and <a href="http://okfn.org/privacy-policy/">Privacy Policy</a>.{% endtrans %}
             </label>
-	          {% if config.get('SUBSCRIBE_COMMUNITY') %}
-            <label class="checkbox">
-              <input type="checkbox" name="subscribe_community" checked="checked"/>
-              {% trans %}Add me to the OpenSpending community mailing list{% endtrans %}
-            </label>
-            {% endif %}
-            {% if config.get('SUBSCRIBE_DEVELOPER') %}
-            <label class="checkbox">
-              <input type="checkbox" name="subscribe_developer">
-              {% trans %}Sign me up for the OpenSpending developer mailing list{% endtrans %}
-            </label>
-	    {% endif %}
           </div>
         </div>
       </fieldset>

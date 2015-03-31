@@ -2,6 +2,7 @@ import colander
 from flask import Blueprint, render_template, request, redirect
 from flask.ext.login import current_user, login_user, logout_user
 from flask.ext.babel import gettext as _
+from flask import current_app
 from sqlalchemy.sql.expression import desc, func, or_
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -18,7 +19,14 @@ from openspending.lib.helpers import url_for, obj_or_404
 from openspending.lib.helpers import flash_error
 from openspending.lib.helpers import flash_notice, flash_success
 from openspending.lib.pagination import Page
+from openspending.lib.reghelper import sendhash
 from openspending.views.cache import disable_cache
+
+
+
+
+from wtforms import Form, TextField, PasswordField, validators
+
 
 
 blueprint = Blueprint('account', __name__)
@@ -51,11 +59,12 @@ def login():
 
 @blueprint.route('/login', methods=['POST', 'PUT'])
 def login_perform():
-    account = Account.by_name(request.form.get('login'))
-    if account is not None:
+    account = Account.by_email(request.form.get('login'))
+    if account is not None and account.verified == True:
         if check_password_hash(account.password, request.form.get('password')):
             login_user(account, remember=True)
-            flash_success(_("Welcome back, %(name)s!", name=account.name))
+            print account
+            flash_success(_("Welcome back, %(fullname)s!", fullname=account.fullname))
             return redirect(url_for('account.dashboard'))
     flash_error(_("Incorrect user name or password!"))
     return login()
@@ -65,18 +74,46 @@ def login_perform():
 def register():
     """ Perform registration of a new user """
     disable_cache()
-    require.account.create()
     errors, values = {}, dict(request.form.items())
 
     try:
         # Grab the actual data and validate it
         data = AccountRegister().deserialize(values)
 
+        #check if email is already registered
+            # it is, then send the email hash for the login
+
+        #check that email is real
+        #get the domain
+        print data['email']
+        if (data['email'].find('@') == -1 or data['email'].find('.') == -1):
+            raise colander.Invalid(AccountRegister.email,
+                    "You must use a valid USG email address")
+
+        domain = data['email'][data['email'].find('@') + 1:]
+
+        if 'EMAIL_WHITELIST' not in current_app.config.keys():
+            raise colander.Invalid(AccountRegister.email,
+                "System not set correctly.  Please contact the administrator.")
+
+        domainvalid = False
+
+        for domainemail in current_app.config['EMAIL_WHITELIST']:
+            if domain.lower() == domainemail.lower():
+                domainvalid = True
+
+        if not domainvalid:
+            raise colander.Invalid(AccountRegister.email,
+                "Your email is not available for registration.  Currently it is only available for US Government emails.")
+
+
+
         # Check if the username already exists, return an error if so
-        if Account.by_name(data['name']):
+        if Account.by_email(data['email']):
+            #resend the hash here to the email and notify the user
             raise colander.Invalid(
-                AccountRegister.name,
-                _("Login name already exists, please choose a "
+                AccountRegister.email,
+                _("Login email already exists, please choose a "
                   "different one"))
 
         # Check if passwords match, return error if not
@@ -86,31 +123,62 @@ def register():
 
         # Create the account
         account = Account()
-        account.name = data['name']
         account.fullname = data['fullname']
         account.email = data['email']
-        account.public_email = data['public_email']
         account.password = generate_password_hash(data['password1'])
 
         db.session.add(account)
         db.session.commit()
 
         # Perform a login for the user
-        login_user(account, remember=True)
+        #login_user(account, remember=True)
 
-        # Subscribe the user to the mailing lists
-        errors = subscribe_lists(('community', 'developer'), data)
-        if errors:
-            flash_notice(_("Subscription to the following mailing " +
-                           "lists probably failed: %(errors)s.",
-                           errors=', '.join(errors)))
+        sendhash(account)
 
-        # Registration successful - Redirect to the front page
+
+        # TO DO redirect to email sent page
         return redirect(url_for('home.index'))
     except colander.Invalid as i:
         errors = i.asdict()
     return render_template('account/login.html', form_fill=values,
                            form_errors=errors)
+
+
+@blueprint.route('/accounts/verify', methods=['GET'])
+def verify():
+    disable_cache()
+
+    parser = DistinctParamParser(request.args)
+    params, errors = parser.parse()
+    if errors:
+        flash_error(_("Your login url is invalid"))
+        return render_template('account/verify.html')
+
+    loginhash = request.args.get('login')
+    if not loginhash:
+        flash_error(_("We cannot find a login string"))
+        return render_template('account/verify.html')
+
+    account = Account.by_login_hash(loginhash)
+
+    if not account:
+        flash_error(_("We cannot find your login string"))
+        return render_template('account/verify.html')
+    
+    #update to verify this user so they can 
+    #use the password in the future
+    account.verified = True
+    db.session.commit()
+
+
+    flash_success("You are now logged in")
+    login_user(account, remember=True)
+
+
+
+    return redirect(url_for('home.index'))
+
+
 
 
 @blueprint.route('/settings')
@@ -257,6 +325,8 @@ def logout():
     return redirect(url_for('home.index'))
 
 
+
+#TODO send a new hash to this user
 @blueprint.route('/account/forgotten', methods=['POST', 'GET'])
 def trigger_reset():
     """

@@ -13,12 +13,14 @@ def upgrade(migrate_engine):
     #########################Account
     account = Table('account', meta,
                     Column('id', Integer, primary_key=True),
-                    Column('name', Unicode(255), unique=True),
                     Column('fullname', Unicode(2000)),
-                    Column('email', Unicode(2000)),
+                    Column('email', Unicode(2000), unique=True),
                     Column('password', Unicode(2000)),
                     Column('api_key', Unicode(2000)),
+                    Column('usg_group', Unicode(2000)),
+                    Column('login_hash', Unicode(2000)),
                     Column('admin', Boolean, default=False),
+                    Column('verified', Boolean, default=False) 
                     )
 
     account.create()
