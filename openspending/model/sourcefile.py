@@ -35,7 +35,7 @@ class SourceFile(db.Model):
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
 
-    def __init__(self, rawfile = None):
+    def __init__(self, rawfile = None, source = None):
         """
         Initialize a badge object.
         Badge label should be a representative title for the badge

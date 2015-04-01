@@ -31,20 +31,23 @@ class Source(db.Model):
 
 
 
-    def __init__(self, dataset=None, creator=None, url=None, name=None, prefuncs={}):
+    def __init__(self, dataset=None, url=None, name=None, rawfile= None):
         #required for WTForms
         if dataset == None:
             return
         #copy the raw data 
         self.dataset = dataset
-        self.creator = creator
         self.url = url
+        #backref to SourceFile
+        self.rawfile = rawfile
         self.name = name
 
-        refineproj = self.get_or_create_ORProject()
-        self.ORid = refineproj.refineproj.project_id
-        if (dataset.mapping):
-            self.addData(dataset.mapping)
+        #let's not do this yet
+
+        # refineproj = self.get_or_create_ORProject()
+        # self.ORid = refineproj.refineproj.project_id
+        # if (dataset.mapping):
+        #     self.addData(dataset.mapping)
 
     def get_or_create_ORProject(self):
         return RefineProj(source=self)
@@ -95,7 +98,7 @@ class Source(db.Model):
         if not self.dataset:
             print "not dataset attached"
             return
-        if self.dataset.mapping.get('data', {}).keys() > 0:
+        if len(self.dataset.mapping.get('data', {}).keys()) > 0:
             print "building the model", self.name
             self.model = Model(self)
 

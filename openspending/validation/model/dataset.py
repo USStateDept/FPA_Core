@@ -42,6 +42,8 @@ def valid_country(code):
     return True
 
 def validURL(code):
+    if not code:
+        return True
     parts = urlparse.urlsplit(code)
     if not parts.scheme or not parts.netloc:  
         return "%s is not a valid URL." % code
@@ -65,10 +67,7 @@ def dataset_schema(state):
 def source_schema(state):
     schema = mapping('source')
     schema.add(key('name', validator=chained(
-            nonempty_string,
-            reserved_name,
-            database_name,
-            no_double_underscore
+            nonempty_string
         ),
         preparer=lambda x: x.lower().strip() if x else None))
 

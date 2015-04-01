@@ -9,8 +9,8 @@ from flask.ext.babel import gettext as _
 from colander import SchemaNode, String, Invalid
 from restpager import Pager
 
-from openspending.core import db
-from openspending.model import Dataset, Source, Run, DataOrg
+from openspending.core import db, sourcefiles
+from openspending.model import Dataset, Source, Run, DataOrg, SourceFile
 from openspending.auth import require
 from openspending.lib import solr_util as solr
 from openspending.lib.jsonexport import jsonify
@@ -340,27 +340,40 @@ def update_model_createnew(datasetname):
     #source will have name and URL
     source = api_form_data()
 
+    if not source['name']:
+        return jsonify({"errors":["You must enter a data name " + str(e)]})
+
     #verify that name is unique and URL is real
-    model = {'source': source}
-    schema = source_schema(ValidationState(model))
+    #model = {'source': source}
+    schema = source_schema(ValidationState(source))
     try:
         data = schema.deserialize(source)
     except Invalid, e:
         #print message in thefuture
-        return jsonify({"errors":["Invalid field"]})
-    if Source.by_source_name(data['name']) is not None:
-        return jsonify({"errors":["A dataset with this name already exists"]})
+        return jsonify({"errors":["Invalid field " + str(e)]})
 
-    #addin the dataset
-    data['dataset'] = dataset
-    source = Source(dataset=dataset, name=data['name'], url=data['url'], creator=current_user)
-    #dataset.private = True
+
+
+    if len(request.files) == 1:
+
+        
+        
+
+        upload_source_path = sourcefiles.save(request.files['sourcefile'])
+        sourcefile = SourceFile(rawfile = upload_source_path)
+        db.session.add(sourcefile)
+
+        source = Source(dataset=dataset, name=data['name'], url=None, rawfile=sourcefile)
+        #handle file
+    else:
+
+        source = Source(dataset=dataset, name=data['name'], url=data['url'])
+
+
     #dataset.managers.append(current_user)
+    
     db.session.add(source)
-
-
     db.session.commit()
-
 
     return jsonify(source)
 
@@ -417,6 +430,8 @@ def update_model(datasetname, sourcename):
     # dataset.data['mapping'] = new_mapping
     # db.session.commit()
     # return model(name)
+
+
 
 
 @blueprint.route('/datasets/<datasetname>/sources/<sourcename>', methods=['DELETE'])
