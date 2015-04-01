@@ -8,6 +8,7 @@ Requirements
 * Python_ >= 2.7, with pip_ and virtualenv_   
 * PostgreSQL_ >= 8.4
 * RabbitMQ_ >= 2.6.1
+* Erlang_ >= 17.5
 * `Apache Solr`_ >= 4.0.0
 
 .. _Python: http://www.python.org/
