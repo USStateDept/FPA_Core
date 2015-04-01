@@ -13,6 +13,7 @@ Requirements
 .. _Python: http://www.python.org/
 .. _PostgreSQL: http://www.postgres.org/
 .. _RabbitMQ: http://www.rabbitmq.com//
+.. _Erlang: http://www.erlang.org/download.html
 .. _Apache Solr: http://lucene.apache.org/solr/
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _pip: http://pypi.python.org/pypi/pip
