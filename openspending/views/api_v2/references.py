@@ -3,6 +3,7 @@ import logging
 from flask import Blueprint
 
 from openspending.references.enumerations import DATATYPES
+from openspending.preprocessors.processing_funcs import AVAILABLE_FUNCTIONS
 from openspending.model import DataOrg
 from openspending.lib.jsonexport import jsonify
 from openspending.views.cache import etag_cache_keygen
@@ -31,3 +32,9 @@ def reference_data():
         'dataTypes': sorted(DATATYPES, key=lambda d: d['label']),
         'dataorgs': sorted(dataorgs, key=lambda d: d['label'])
     })
+
+
+@blueprint.route('/preprocessors')
+def reference_preprocessors():
+    etag_cache_keygen('preprocessors_api_3')
+    return jsonify(sorted(AVAILABLE_FUNCTIONS, key=lambda d: d['label']))

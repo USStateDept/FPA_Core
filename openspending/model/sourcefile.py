@@ -27,7 +27,7 @@ class SourceFile(db.Model):
     rawfile = Column(Unicode)
 
     source_id = Column(Integer, ForeignKey('source.id'))
-    source = relationship(Source, backref=backref("rawfile", uselist=False))
+    source = relationship(Source, backref=backref("rawfile", uselist=False, lazy='select'))
 
 
     # Timestamps
@@ -50,7 +50,7 @@ class SourceFile(db.Model):
 
 
     def __repr__(self):
-        return "<SourceFile(%r)>" % (self.id,)
+        return "<SourceFile(%r, %r)>" % (self.id, self.rawfile,)
 
     def __unicode__(self):
         return "<SourceFile(%r, %r)>" % (self.id, self.rawfile,)

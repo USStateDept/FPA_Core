@@ -232,18 +232,6 @@ def field_polling_post(datasetname, sourcename, columnkey):
 
 
 
-@blueprint.route('/datasets/<datasetname>/model', defaults={'sourcename': None})
-@blueprint.route('/datasets/<datasetname>/model/<sourcename>')
-@api_json_errors
-def model(datasetname, sourcename):
-    #if not sourcename then we are saving the defaults for dataset
-    if not sourcename:
-        dataset = get_dataset(datasetname)
-        etag_cache_keygen(dataset)
-        return jsonify(dataset.mapping) 
-    else:
-        source = get_source(sourcename)
-        return jsonify(source)
 
 
 
@@ -327,6 +315,20 @@ def save_default_model(datasetname, sourcename):
 
 
 
+@blueprint.route('/datasets/<datasetname>/model', defaults={'sourcename': None})
+@blueprint.route('/datasets/<datasetname>/model/<sourcename>')
+@api_json_errors
+def model(datasetname, sourcename):
+    #if not sourcename then we are saving the defaults for dataset
+    
+    dataset = get_dataset(datasetname)
+    etag_cache_keygen(dataset)
+    if not dataset.source:
+        return False
+    else:
+        #figure out what they need over there?
+        return jsonify(dataset.source)
+
 
 
 
@@ -380,46 +382,46 @@ def update_model_createnew(datasetname):
 
 
 
-@blueprint.route('/datasets/<datasetname>/model/<sourcename>', methods=['POST', 'PUT'])
-@api_json_errors
-def update_model(datasetname, sourcename):
+# @blueprint.route('/datasets/<datasetname>/model', methods=['POST', 'PUT'])
+# @api_json_errors
+# def update_model(datasetname, sourcename):
 
-    #we just got everything now let's save it
-    sourcemeta = request.get_json().get("meta", None)
-    sourcemodeler = request.get_json().get("modeler", None)
-    #validate that we have everything here
+#     #we just got everything now let's save it
+#     sourcemeta = request.get_json().get("meta", None)
+#     sourcemodeler = request.get_json().get("modeler", None)
+#     #validate that we have everything here
 
-    r = {"mapping":sourcemodeler}
+#     r = {"mapping":sourcemodeler}
 
-    #let's handle the compounds
-    for item in r['mapping'].values():
-        if item['type'] == "compound":
-            for attitem in item['attributes'].values():
-                attitem['column'] = item['column']
+#     #let's handle the compounds
+#     for item in r['mapping'].values():
+#         if item['type'] == "compound":
+#             for attitem in item['attributes'].values():
+#                 attitem['column'] = item['column']
 
-    #if not hasattr(r['mapping'], 'theid'):
-    r['mapping']['theid'] = {
-                              "default_value": "",
-                              "description": "Unique ID",
-                              "datatype": "string",
-                              "key": True,
-                              "label": "UniqueID",
-                              "column": "uniqueid",
-                              "type": "attribute",
-                              "form": {
-                                "label": "Unique Identifier"
-                                }
-                            }
+#     #if not hasattr(r['mapping'], 'theid'):
+#     r['mapping']['theid'] = {
+#                               "default_value": "",
+#                               "description": "Unique ID",
+#                               "datatype": "string",
+#                               "key": True,
+#                               "label": "UniqueID",
+#                               "column": "uniqueid",
+#                               "type": "attribute",
+#                               "form": {
+#                                 "label": "Unique Identifier"
+#                                 }
+#                             }
 
-    source = get_source(sourcename)
-    source.addData(r)
-    db.session.commit()
+#     source = get_source(sourcename)
+#     source.addData(r)
+#     db.session.commit()
 
 
-    load_source(source.id)
-    #add async request to load data
+#     load_source(source.id)
+#     #add async request to load data
 
-    return jsonify({"Success":True})
+#     return jsonify({"Success":True})
 
     #using colinder
     # require.dataset.update(dataset)

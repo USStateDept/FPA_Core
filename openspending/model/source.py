@@ -161,7 +161,7 @@ class Source(db.Model):
         return True in [r.successful_load for r in self.runs]
 
     def __repr__(self):
-        return "<Source(%s,%r,%s)>" % (self.name, self.id)
+        return "<Source(%s,%r)>" % (self.name, self.id)
 
     @classmethod
     def by_id(cls, id):
@@ -181,6 +181,7 @@ class Source(db.Model):
             "id": self.id,
             "name": self.name,
             "url": self.url,
+            "rawfile": str(self.rawfile),
             "dataset": self.dataset.name,
             "created_at": self.created_at,
             "ORid": self.ORid

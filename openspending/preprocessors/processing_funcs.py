@@ -4,11 +4,11 @@ import io
 import csv
 
 
-AVAILABLE_FUNCTIONS = {
-    "json_to_csv": "JSON to CSV",
-    "parse_xml_to_csv": "XML to CSV",
-    "World_Bank_Check_Date_Columns": "World Bank Check Date Columns"
-}
+AVAILABLE_FUNCTIONS = [
+    {"value": "json_to_csv", "label": "JSON to CSV"},
+    {"value" :"parse_xml_to_csv", "label": "XML to CSV"},
+    {"value" :"World_Bank_Check_Date_Columns", "label": "World Bank Check Date Columns"}
+    ]
 
 
 def json_to_csv(resptext):
