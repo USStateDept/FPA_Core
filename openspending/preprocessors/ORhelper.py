@@ -6,7 +6,7 @@ import codecs
 import time
 import csv
 import urllib
-from openspending.preprocessors import processing_funcs
+from openspending.preprocessors.processing_funcs import AVAILABLE_FUNCTIONS as preprocessor_funcs
 
 class RefineProj:
 
@@ -39,27 +39,32 @@ class RefineProj:
 
         #download source data and save to temp file
         #add checks for a valid URL or file path
-        try:
-            resp = requests.get(source.url)
-            responsetext = resp.text
-        except Exception, e:
-            #let's try another method
-            fp = urllib.urlopen(source.url)
+
+        if source.url:
+            try:
+                resp = requests.get(source.url)
+                responsetext = resp.text
+            except Exception, e:
+                #let's try another method
+                fp = urllib.urlopen(source.url)
+                responsetext = fp.read()
+        elif source.rawfile:
+            fp = source.rawfile.load_file()
             responsetext = fp.read()
+        else:
+            return None
 
         if not responsetext:
             return None
 
 
         #preprocessing functions
-        if (len(source.prefuncs.keys()) > 0):
+        if (len(source.dataset.prefuncs.keys()) > 0):
             #apply preprocessors
-            preprocessors = self.source.getPreFuncs()
-            if len(preprocessors):
-                for func in preprocessors:
-                    tempmethod = getattr(processing_funcs, func, None)
-                    if tempmethod:
-                        responsetext = tempmethod(responsetext)
+            for func in preprocessor_funcs:
+                tempmethod = getattr(processing_funcs, func, None)
+                if tempmethod:
+                    responsetext = tempmethod(responsetext)
 
 
         filepath = os.path.join(tempfile.gettempdir(), str(int(time.time())) + ".csv").replace("\\","/")
@@ -74,7 +79,7 @@ class RefineProj:
         #store raw file here with barn
 
 
-        refineproj = self.refine_server.new_project(project_file=filepath,project_name=self.source.name, separator=',',
+        refineproj = self.refine_server.new_project(project_file=filepath,project_name=self.source.dataset.name, separator=',',
                 #store_blank_rows=True,
                 #store_blank_cells_as_nulls=True
                 )
@@ -173,7 +178,7 @@ def testORLoad(sourceurl=None, fileobj=None):
     #add checks for a valid URL or file path
 
     if not sourceurl and not fileobj:
-        print "You're missing the sourceurl or the sourceurl or the fileobj"
+        print "You're missing the sourceurl or the fileobj"
 
     
     if sourceurl:

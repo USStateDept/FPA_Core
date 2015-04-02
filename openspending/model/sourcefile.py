@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.schema import Table, Column, ForeignKey
 from sqlalchemy.types import Integer, Unicode, DateTime
 
-from openspending.core import db
+from openspending.core import db, sourcefiles
 from openspending.model import Source
 
 
@@ -37,11 +37,8 @@ class SourceFile(db.Model):
 
     def __init__(self, rawfile = None, source = None):
         """
-        Initialize a badge object.
-        Badge label should be a representative title for the badge
-        Image should be a small, representative image for the badge
-        Description describes the purpose of the badge in more detail
-        Creator is the user who created the badge.
+        Initialize upload files
+
         """
         if rawfile == None:
             return
@@ -56,19 +53,24 @@ class SourceFile(db.Model):
         return "<SourceFile(%r, %r)>" % (self.id, self.rawfile,)
 
 
+    def load_file(self):
+        try:
+            return open(sourcefiles.path(self.rawfile), 'rb')
+        except Exception, e:
+            print "cannot find the rawfile"
+
+
 
     @classmethod
     def all(cls):
         """
-        Find all badges
+        Find all sourcefiles
         """
         return db.session.query(cls)
 
     def as_dict(self):
         """
-        A dictionary representation of the badge. This can return a long
-        version containing all interesting fields or a short version containing
-        only id, label and image.
+        dict
         """
         badge = {
             "id": self.id,
