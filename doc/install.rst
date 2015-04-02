@@ -9,12 +9,14 @@ Requirements
 * PostgreSQL_ >= 8.4
 * RabbitMQ_ >= 2.6.1
 * Erlang_ >= 17.5
+* Java >= 1.7
 * `Apache Solr`_ >= 4.0.0
 
 .. _Python: http://www.python.org/
 .. _PostgreSQL: http://www.postgres.org/
 .. _RabbitMQ: http://www.rabbitmq.com//
 .. _Erlang: http://www.erlang.org/download.html
+.. _Java: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 .. _Apache Solr: http://lucene.apache.org/solr/
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _pip: http://pypi.python.org/pypi/pip
