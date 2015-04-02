@@ -7,7 +7,7 @@ from cubes.logging import get_logger
 
 from openspending.core import db
 from openspending.model import Dataset, Source
-from openspending.lib.helpers import get_source
+from openspending.lib.helpers import get_dataset
 
 from openspending.lib.cubes_util import getGeomCube
 
@@ -28,7 +28,7 @@ class OpenSpendingModelProvider(ModelProvider):
         if name == "geometry":
             return getGeomCube(self, metaonly)
 
-        source = get_source(name)
+        dataset = get_dataset(name)
         if name is None:
             raise NoSuchCubeError("Unknown dataset %s" % name, name)
 
@@ -36,13 +36,13 @@ class OpenSpendingModelProvider(ModelProvider):
 
         mappings = {}
         joins = []
-        fact_table = source.model.table.name
+        fact_table = dataset.source.model.table.name
 
         aggregates = [MeasureAggregate('num_entries',
                                        label='Numer of entries',
                                        function='count')]
         measures = []
-        for measure in source.model.measures:
+        for measure in dataset.source.model.measures:
             cubes_measure = Measure(measure.name, label=measure.label)
             measures.append(cubes_measure)
             aggregate = MeasureAggregate(measure.name,
@@ -52,14 +52,14 @@ class OpenSpendingModelProvider(ModelProvider):
             aggregates.append(aggregate)
 
         dimensions = []
-        for dim in source.model.dimensions:
+        for dim in dataset.source.model.dimensions:
             meta = dim.to_cubes(mappings, joins)
             meta.update({'name': dim.name, 'label': dim.label})
             dimensions.append(create_dimension(meta))
 
 
 
-        cube_meta = {"name":source.name,
+        cube_meta = {"name":dataset.name,
                                 "fact":fact_table,
                                 "aggregates":aggregates,
                                 "measures":measures,
@@ -92,13 +92,13 @@ class OpenSpendingModelProvider(ModelProvider):
 
     def list_cubes(self):
         cubes = []
-        for source in Source.all():
-            if not len(source.mapping):
+        for dataset in Dataset.all():
+            if not len(dataset.mapping):
                 continue
             cubes.append({
                 #change here too
-                'name': source.name,
-                'label': source.name
+                'name': dataset.name,
+                'label': dataset.name
             })
         return cubes
 
