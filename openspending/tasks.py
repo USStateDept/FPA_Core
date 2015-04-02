@@ -1,4 +1,5 @@
 from celery.utils.log import get_task_logger
+import io
 
 from openspending.core import create_app, create_celery
 from openspending.core import db
@@ -33,11 +34,17 @@ def check_column(source_id, columnkey, columnvalue):
         source = Source.by_id(source_id)
         sourcerefine = source.get_or_create_ORProject()
         #should cache this at some point
-        sourcefile = sourcerefine.refineproj.export()
+        sourcefile_export = sourcerefine.refineproj.export()
+        #remove BOM from the source file
+        s = sourcefile_export.read()
+        u = s.decode("utf-8-sig")
+        sourcefile = io.BytesIO()
+        sourcefile.write(str(u))
         sourcefile_csv = csv.DictReader(sourcefile, delimiter="\t")
 
         arrayset = []
         for row in sourcefile_csv:
+            print row[columnvalue]
             arrayset.append(row[columnvalue])
 
         sourcefile.close()

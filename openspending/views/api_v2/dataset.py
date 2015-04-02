@@ -225,6 +225,7 @@ def field_polling_post(datasetname, columnkey):
         else:
             return jsonify(resultval)
     except Exception, e:
+        print "here is my error", e
         return jsonify({"errors":['Unknown Error has occurred']})
 
 

@@ -27,10 +27,6 @@ def requires_complex_browser(f):
         star_name = request.view_args.get("star_name")
         g.star_name = star_name
 
-        if "lang" in request.args:
-            g.locale = request.args.get("lang")
-        else:
-            g.locale = None
 
         if "lang" in request.args:
             g.locale = request.args.get("lang")
