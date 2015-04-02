@@ -6,7 +6,7 @@ Requirements
 ------------
 
 * Python_ >= 2.7, with pip_ and virtualenv_   
-* PostgreSQL_ >= 8.4
+* PostgreSQL_ >= 8.4, PostGIS >= 2.0
 * RabbitMQ_ >= 2.6.1
 * Erlang_ >= 17.5
 * Java_ >= 1.7
