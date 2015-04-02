@@ -10,7 +10,7 @@ Requirements
 * RabbitMQ_ >= 2.6.1
 * Erlang_ >= 17.5
 * Java_ >= 1.7
-* `Apache Solr`_ >= 4.0.0
+* `Apache Solr`_ = 4.x
 * GoogleRefine_ = 2.1
 
 .. _Python: http://www.python.org/
