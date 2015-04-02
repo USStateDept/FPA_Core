@@ -43,7 +43,7 @@ class Source(db.Model):
         self.name = name
 
         if self.rawfile or self.url:
-            self.ORid = get_or_create_ORProject().refineproj.project_id
+            self.ORid = self.get_or_create_ORProject().refineproj.project_id
 
 
         #let's not do this yet

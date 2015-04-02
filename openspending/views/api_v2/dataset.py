@@ -150,24 +150,23 @@ def update(name):
         return jsonify({"errors":['Unknown Error has occurred']}) 
 
 
-@blueprint.route('/datasets/<datasetname>/model/<sourcename>/fields')
+@blueprint.route('/datasets/<datasetname>/model/fields')
 @api_json_errors
-def field(datasetname, sourcename):
+def field(datasetname):
     """
     get the column names and any existing info for them
     - add check for if source name does not exist
     """
-    mysource = Source.by_source_name(sourcename)
-    source = get_source(sourcename)
+    dataset = get_dataset(datasetname)
 
-    if source.data:
+    if dataset.mapping:
         #we have a model.  Get the model info
-        modeler = source.data['mapping']
-        refineproj = source.get_or_create_ORProject()
+        modeler = dataset.mapping['mapping']
+        refineproj = dataset.source.get_or_create_ORProject()
         columns = refineproj.refineproj.columns
         return jsonify({"columns":columns, "modeler":modeler}, headers= {'Cache-Control' : 'no-cache'})
     else:
-        refineproj = source.get_or_create_ORProject()
+        refineproj = dataset.source.get_or_create_ORProject()
         headers= {'Cache-Control' : 'no-cache'}
 
         basemodeler = DEFAULT_SOURCE_MAPPING
@@ -175,27 +174,27 @@ def field(datasetname, sourcename):
         return jsonify({"columns": refineproj.refineproj.columns, 'modeler':basemodeler}, headers=headers)
 
 
-@blueprint.route('/datasets/<datasetname>/model/<sourcename>/fieldcheck/<columnname>', methods=['GET'])
+@blueprint.route('/datasets/<datasetname>/model/fieldcheck/<columnname>', methods=['GET'])
 @api_json_errors
-def field_polling_check(datasetname, sourcename, columnname):
+def field_polling_check(datasetname, columnname):
     """
     GET to check if the run is complete
     """
+    dataset = get_dataset(datasetname)
 
-    source = get_source(sourcename)
-    if self.data:
+    if dataset.data:
         #we have a model.  Get the model info
         return jsonify({"error":"not yet implemented"})
     else:
-        refineproj = source.get_or_create_ORProject()
+        refineproj = dataset.source.get_or_create_ORProject()
         # this is awkward.  the class should be extended
         return jsonify(refineproj.refineproj.columns)
 
 
 
-@blueprint.route('/datasets/<datasetname>/model/<sourcename>/fieldcheck/<columnkey>', methods=['POST'])
+@blueprint.route('/datasets/<datasetname>/model/fieldcheck/<columnkey>', methods=['POST'])
 @api_json_errors
-def field_polling_post(datasetname, sourcename, columnkey):
+def field_polling_post(datasetname, columnkey):
     """
     post to check to verify that the column is good
     """
@@ -208,12 +207,10 @@ def field_polling_post(datasetname, sourcename, columnkey):
     dataset = get_dataset(datasetname)
 
     if not require.dataset.update(dataset):
-        return jsonify({"errors":["Can not create new dataset.  Permission denied"]})
+        return jsonify({"errors":["Permission denied"]})
 
     try:
         columnsettings = api_form_data()
-
-        source = get_source(sourcename)
 
         #use this later if async run is necessary
         #runop = Run(columnsettings['columnval'], dataset, source)
@@ -221,10 +218,10 @@ def field_polling_post(datasetname, sourcename, columnkey):
         #db.session.commit()
 
         #check_column.apply_async(args=[source.id, columnkey, columnsettings['columnval'], runop.id], countdown=1)
-        resultval = check_column(source.id, columnkey, columnsettings['columnval'])
+        resultval = check_column(dataset.source.id, columnkey, columnsettings['columnval'])
 
         if len(resultval['errors']) == 0:
-            return jsonify({"Success":True})
+            return jsonify({"success":True})
         else:
             return jsonify(resultval)
     except Exception, e:
@@ -236,12 +233,12 @@ def field_polling_post(datasetname, sourcename, columnkey):
 
 
 #probably shouldn't be a GET
-@blueprint.route('/datasets/<datasetname>/applymodel/<sourcename>')
+@blueprint.route('/datasets/<datasetname>/applymodel')
 @api_json_errors
-def apply_default_model(datasetname, sourcename):
-    source = get_source(sourcename)
+def apply_default_model(datasetname):
+
     dataset = get_dataset(datasetname)
-    if not source or not dataset:
+    if not dataset.source or not dataset:
         return jsonify({"errors":["Invalid URL.  Cannot find source or dataset"]})
 
     if dataset.ORoperations:
@@ -249,19 +246,18 @@ def apply_default_model(datasetname, sourcename):
         print dataset.ORoperations
         source.applyORInstructions(dataset.ORoperations)
 
-    source.addData(dataset.data)
+    dataset.source.addData(dataset.data)
 
     db.session.commit()
 
-    #refresh from the DB to verify
-    source = get_source(sourcename)
-
-    return jsonify(source,headers= {'Cache-Control' : 'no-cache'})
 
 
-@blueprint.route('/datasets/<datasetname>/applymodel/<sourcename>', methods=['POST', 'PUT'])
+    return jsonify(dataset.source, headers= {'Cache-Control' : 'no-cache'})
+
+
+@blueprint.route('/datasets/<datasetname>/applymodel', methods=['POST', 'PUT'])
 @api_json_errors
-def save_default_model(datasetname, sourcename):
+def save_default_model(datasetname):
 
     dataset = get_dataset(datasetname)
     if not require.dataset.update(dataset):
@@ -273,9 +269,8 @@ def save_default_model(datasetname, sourcename):
     if not sourcemeta or not sourcemodeler:
         return jsonify({"errors":["Invalid Arguments"]})
 
-    source = Source.by_id(sourcemeta['id'])
 
-    if not source:
+    if not dataset.source:
         return jsonify({"errors":["Could not find the source"]})
 
 
@@ -304,13 +299,13 @@ def save_default_model(datasetname, sourcename):
     dataset.data = r
 
     #also need to get the operations of the OR and save it to 
-    ORoperations = source.getORInstructions()
+    ORoperations = dataset.source.getORInstructions()
     dataset.ORoperations = {"data": ORoperations}
 
     db.session.commit()
 
 
-    return jsonify({"Success":True})
+    return jsonify({"success":True})
 
 
 
@@ -324,7 +319,7 @@ def model(datasetname, sourcename):
     dataset = get_dataset(datasetname)
     etag_cache_keygen(dataset)
     if not dataset.source:
-        return False
+        return jsonify(False)
     else:
         #figure out what they need over there?
         return jsonify(dataset.source)
@@ -436,45 +431,41 @@ def update_model_createnew(datasetname):
 
 
 
-@blueprint.route('/datasets/<datasetname>/sources/<sourcename>', methods=['DELETE'])
+@blueprint.route('/datasets/<datasetname>/sources', methods=['DELETE'])
 @api_json_errors
-def delete(datasetname, sourcename):
+def delete(datasetname):
     try:
         dataset = get_dataset(datasetname)
         require.dataset.update(dataset)
 
-        source = get_source(sourcename)
-        db.session.delete(source)
+        db.session.delete(dataset.source)
         db.session.commit()
         clear_index_cache()
 
-        q = Dataset.all_by_account(current_user).all()
-        
-        returnset = []
-        for obj in q:
-            tempobj = obj.as_dict()
-            tempobj['sources'] = obj.sources.all()
-            returnset.append(tempobj) 
 
         #drop solr index
         #solr.drop_index(source.name)
-        return jsonify(returnset)
+        return jsonify(True)
     except Exception, e:
         return jsonify({"errors":[e]})
     # require.dataset.update(dataset)
 
 
-@blueprint.route('/datasets/<datasetname>/model/<sourcename>/ORoperations')
+@blueprint.route('/datasets/<datasetname>/model/ORoperations')
 @api_json_errors
-def ORoperations(datasetname, sourcename):
+def ORoperations(datasetname):
     try:
-        source = get_source(sourcename)
-        ORinstructions = source.getORInstructions()
+        dataset = get_dataset(datasetname)
+
+        ORinstructions = dataset.source.getORInstructions()
         return jsonify(ORinstructions, headers= {'Cache-Control' : 'no-cache'})
     except Exception, e:
         return jsonify({"error":"Could not fetch the ORinstructions" + str(e)})
 
 
+
+
+#### Default source mapping for cubes
 DEFAULT_SOURCE_MAPPING = {
                             "country_level0": {
                               "attributes": {

@@ -69,7 +69,7 @@ def upgrade(migrate_engine):
 
     source = Table('source', meta,
                     Column('id', Integer, primary_key=True),
-                    Column('name', Unicode(255), unique=True),
+                    Column('name', Unicode(255)),
                     Column('url', Unicode),
                     Column('created_at', DateTime, default=datetime.utcnow),
                     Column('updated_at', DateTime, default=datetime.utcnow,

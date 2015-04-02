@@ -71,9 +71,9 @@ class Dataset(db.Model):
             return
         self.label = data.get('label')
         if (data.get('name', None)):
-            self.name = slugify(str(data.get('name')), max_length=50)
+            self.name = slugify(str(data.get('name')), max_length=30)
         else:
-            self.name = slugify(str(data.get('label')), max_length=50)
+            self.name = slugify(str(data.get('label')), max_length=30)
 
         self.description = data.get('description')
         self.ORoperations = data.get('ORoperations', {})

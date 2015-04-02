@@ -244,7 +244,8 @@ def dashboard(format='html'):
     """
     disable_cache()
     require.account.logged_in()
-    return profile(current_user.name)
+    print current_user
+    return profile(current_user.fullname)
 
 
 @blueprint.route('/scoreboard')
@@ -387,28 +388,22 @@ def do_reset():
     return redirect(url_for('account.settings'))
 
 
-@blueprint.route('/account/<name>')
-def profile(name):
+@blueprint.route('/account/<pk_id>')
+def profile(pk_id):
     """ Generate a profile page for a user (from the provided name) """
 
     # Get the account, if it's none we return a 404
-    profile = obj_or_404(Account.by_name(name))
+    profile = obj_or_404(Account.by_id(pk_id))
 
     # Set a context boo if email/twitter should be shown, it is only shown
     # to administrators and to owner (account is same as context account)
     show_info = (current_user and current_user.admin) or \
                 (current_user == profile)
 
-    # ..or if the user has chosen to make it public
-    show_email = show_info or profile.public_email
-    show_twitter = show_info or profile.public_twitter
 
     # Collect and sort the account's datasets and views
-    profile_datasets = sorted(profile.datasets, key=lambda d: d.label)
-    profile_views = sorted(profile.views, key=lambda d: d.label)
+    #profile_datasets = sorted(profile.datasets, key=lambda d: d.label)
+    #profile_views = sorted(profile.views, key=lambda d: d.label)
 
     # Render the profile
-    return render_template('account/profile.html', profile=profile,
-                           show_email=show_email, show_twitter=show_twitter,
-                           profile_datasets=profile_datasets,
-                           profile_views=profile_views)
+    return render_template('account/profile.html', profile=profile)
