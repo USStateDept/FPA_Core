@@ -11,6 +11,7 @@ Requirements
 * Erlang_ >= 17.5
 * Java_ >= 1.7
 * `Apache Solr`_ >= 4.0.0
+* GoogleRefine_ = 2.1
 
 .. _Python: http://www.python.org/
 .. _PostgreSQL: http://www.postgres.org/
@@ -18,6 +19,7 @@ Requirements
 .. _Erlang: http://www.erlang.org/download.html
 .. _Java: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 .. _Apache Solr: http://lucene.apache.org/solr/
+.. _GoogleRefine: https://code.google.com/p/google-refine/downloads/list?can=1
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _pip: http://pypi.python.org/pypi/pip
 
