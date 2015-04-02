@@ -91,8 +91,6 @@ class Dataset(db.Model):
                 print e
 
 
-    def createSource(self, data):
-        return
 
 
     @property 

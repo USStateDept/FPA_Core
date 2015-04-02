@@ -50,7 +50,8 @@ class RefineProj:
                 responsetext = fp.read()
         elif source.rawfile:
             fp = source.rawfile.load_file()
-            responsetext = fp.read()
+            s = fp.read()
+            responsetext = str(s.decode("utf-8-sig"))
         else:
             return None
 

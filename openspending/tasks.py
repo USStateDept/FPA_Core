@@ -124,10 +124,11 @@ def load_source(source_id, sample=False):
         if not source:
             return log.error("No such source: %s", source_id)
 
-        if not source.data['mapping']:
+        if not source.dataset.mapping:
             return log.error("Dataset has no mapping.")
 
         source.model.generate()
+        
         importer = ORImporter(source)
         if sample:
             importer.run(dry_run=True, max_lines=1000, max_errors=1000)

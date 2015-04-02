@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import io
 
 from sqlalchemy.orm import relationship, backref, reconstructor
 from sqlalchemy.schema import Column, ForeignKey
@@ -58,7 +59,16 @@ class Source(db.Model):
 
     def get_ORexport(self):
         refineproj = RefineProj(source=self)
-        return refineproj.refineproj.export() 
+
+        sourcefile_export = refineproj.refineproj.export() 
+        #remove BOM from the source file
+        s = sourcefile_export.read()
+        u = s.decode("utf-8-sig")
+        sourcefile = io.StringIO()
+        sourcefile.write(u)
+        #need to reset the buffer position
+        sourcefile.seek(0)
+        return sourcefile
 
     # def saveORInstructions(self):
     #     #get the new ioperations from OR and save them int he database
@@ -102,7 +112,8 @@ class Source(db.Model):
         if not self.dataset:
             print "not dataset attached"
             return
-        if len(self.dataset.mapping.get('data', {}).keys()) > 0:
+        print "HERE IS MY MAPPING", self.dataset.mapping
+        if len(self.dataset.mapping.get('mapping', {}).keys()) > 0:
             print "building the model", self.name
             self.model = Model(self)
 
@@ -127,7 +138,7 @@ class Source(db.Model):
         if self.successfully_loaded:
             return False
         # It needs mapping to be loadable
-        if not len(self.dataset.mapping.get('data', {}).keys()):
+        if not len(self.dataset.mapping.get('mapping', {}).keys()):
             return False
         # There can be no errors in the analysis of the source
 

@@ -98,7 +98,7 @@ class BaseImporter(object):
         """
         Return a list of unique keys for the dataset
         """
-        return [k for k, v in self.source.mapping.iteritems()
+        return [k for k, v in self.dataset.mapping.get('mapping', {}).iteritems()
                 if v.get('key', False)]
 
     def process_line(self, line):
@@ -106,7 +106,7 @@ class BaseImporter(object):
             log.info('Imported %s lines' % self.row_number)
 
         try:
-            data = convert_types(self.source.mapping, line)
+            data = convert_types(self.dataset.mapping.get('mapping', {}), line)
             if not self.dry_run:
                 self.source.model.load(data)
             else:
@@ -184,6 +184,7 @@ class ORImporter(BaseImporter):
     def lines(self):
         #let's create a uniqueness to this
         fh = self.source.get_ORexport()
+
         #we can use messytables earlier in the process as prefuncs
         #at this point we are use that everyting should line up
         sourcefile_csv = csv.DictReader(fh, delimiter="\t")
@@ -195,66 +196,3 @@ class ORImporter(BaseImporter):
             row.update({"uniqueid":str(counter)})
             yield row
 
-
-class BudgetDataPackageImporter(BaseImporter):
-    """
-    A special Budget Data Package importer is needed (instead of the CSV
-    importer) because we need to manipulate the lines a little bit before
-    loading them. Manipulation includes renaming id, splitting cofog into
-    three fields (six if we count the labels) etc.
-    """
-
-    @property
-    def lines(self):
-        fh = urlopen(self.source.url)
-        row_set = CSVRowSet('data', fh, window=3)
-        headers = list(row_set.sample)[0]
-        headers = [c.value for c in headers]
-        row_set.register_processor(headers_processor(headers))
-        row_set.register_processor(offset_processor(1))
-
-        for row in row_set:
-            row_dict = dict([(c.column, c.value) for c in row])
-            # Rename id to row_id
-            row_dict['row_id'] = row_dict.pop('id')
-            # Set time as empty string to use the default value
-            row_dict['time'] = ''
-
-            # Transform COFOG field into six fields with code and label as
-            # the same value
-            cofog = row_dict.pop('cofog', None)
-            if cofog:
-                row_dict['cofog1code'] = self.cofog_code(cofog, level=1)
-                row_dict['cofog1label'] = self.cofog_code(cofog, level=1)
-                row_dict['cofog2code'] = self.cofog_code(cofog, level=2)
-                row_dict['cofog2label'] = self.cofog_code(cofog, level=2)
-                row_dict['cofog3code'] = self.cofog_code(cofog, level=3)
-                row_dict['cofog3label'] = self.cofog_code(cofog, level=3)
-
-            # Transform gfsm expense field into three fields
-            gfsmexpense = row_dict.pop('gfsmexpense', None)
-            if gfsmexpense:
-                row_dict['gfsmexpense1'] = self.gfsm_code(gfsmexpense, level=1)
-                row_dict['gfsmexpense2'] = self.gfsm_code(gfsmexpense, level=2)
-                row_dict['gfsmexpense3'] = self.gfsm_code(gfsmexpense, level=3)
-
-            # Transform gfsm revenue field into three fields
-            gfsmrevenue = row_dict.pop('gfsmrevenue', None)
-            if gfsmrevenue:
-                row_dict['gfsmrevenue1'] = self.gfsm_code(gfsmrevenue, level=1)
-                row_dict['gfsmrevenue2'] = self.gfsm_code(gfsmrevenue, level=2)
-                row_dict['gfsmrevenue3'] = self.gfsm_code(gfsmrevenue, level=3)
-            yield row_dict
-
-    def cofog_code(self, code, level=1):
-        """
-        Compute the cofog code for a particular level
-        """
-        code_bits = code.split('.')
-        return '.'.join(code_bits[:level])
-
-    def gfsm_code(self, code, level=1):
-        """
-        Compute the GFSM code for a particular level
-        """
-        return code[:level]

@@ -353,10 +353,6 @@ def update_model_createnew(datasetname):
 
 
     if len(request.files) == 1:
-
-        
-        
-
         upload_source_path = sourcefiles.save(request.files['sourcefile'])
         sourcefile = SourceFile(rawfile = upload_source_path)
         db.session.add(sourcefile)
@@ -378,46 +374,46 @@ def update_model_createnew(datasetname):
 
 
 
-# @blueprint.route('/datasets/<datasetname>/model', methods=['POST', 'PUT'])
-# @api_json_errors
-# def update_model(datasetname, sourcename):
+@blueprint.route('/datasets/<datasetname>/runmodel', methods=['POST', 'PUT'])
+@api_json_errors
+def update_model(datasetname):
 
-#     #we just got everything now let's save it
-#     sourcemeta = request.get_json().get("meta", None)
-#     sourcemodeler = request.get_json().get("modeler", None)
-#     #validate that we have everything here
+    #we just got everything now let's save it
+    sourcemeta = request.get_json().get("meta", None)
+    sourcemodeler = request.get_json().get("modeler", None)
+    #validate that we have everything here
 
-#     r = {"mapping":sourcemodeler}
+    r = {"mapping":sourcemodeler}
 
-#     #let's handle the compounds
-#     for item in r['mapping'].values():
-#         if item['type'] == "compound":
-#             for attitem in item['attributes'].values():
-#                 attitem['column'] = item['column']
+    #let's handle the compounds
+    for item in r['mapping'].values():
+        if item['type'] == "compound":
+            for attitem in item['attributes'].values():
+                attitem['column'] = item['column']
 
-#     #if not hasattr(r['mapping'], 'theid'):
-#     r['mapping']['theid'] = {
-#                               "default_value": "",
-#                               "description": "Unique ID",
-#                               "datatype": "string",
-#                               "key": True,
-#                               "label": "UniqueID",
-#                               "column": "uniqueid",
-#                               "type": "attribute",
-#                               "form": {
-#                                 "label": "Unique Identifier"
-#                                 }
-#                             }
+    #if not hasattr(r['mapping'], 'theid'):
+    r['mapping']['theid'] = {
+                              "default_value": "",
+                              "description": "Unique ID",
+                              "datatype": "string",
+                              "key": True,
+                              "label": "UniqueID",
+                              "column": "uniqueid",
+                              "type": "attribute",
+                              "form": {
+                                "label": "Unique Identifier"
+                                }
+                            }
 
-#     source = get_source(sourcename)
-#     source.addData(r)
-#     db.session.commit()
+    dataset = get_dataset(datasetname)
+    dataset.source.addData(r)
+    db.session.commit()
 
 
-#     load_source(source.id)
-#     #add async request to load data
+    load_source(dataset.source.id)
+    #add async request to load data
 
-#     return jsonify({"Success":True})
+    return jsonify({"Success":True})
 
     #using colinder
     # require.dataset.update(dataset)

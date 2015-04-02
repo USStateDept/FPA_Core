@@ -36,7 +36,7 @@ class Model(TableHandler):
         """
         self.dimensions = []
         self.measures = []
-        for dim, data in self.source.mapping.items():
+        for dim, data in self.source.dataset.mapping.get('mapping', {}).items():
             if data.get('type') == 'measure' or dim == 'amount':
                 self.measures.append(Measure(self, dim, data))
                 continue
@@ -89,7 +89,7 @@ class Model(TableHandler):
         self.meta = MetaData()
         self.meta.bind = self.bind
         
-        self._init_table(self.meta, self.source.name, 'entry',
+        self._init_table(self.meta, self.source.dataset.name, 'entry',
                          id_type=Unicode(42))
         for field in self.fields:
             field.column = field.init(self.meta, self.table)
@@ -106,7 +106,7 @@ class Model(TableHandler):
                 self.table.append_constraint(ForeignKeyConstraint(
                     [dim.name + '_id'], [dim.table.name + '.id'],
                     # use_alter=True,
-                    name='fk_' + self.source.name + '_' + dim.name
+                    name='fk_' + self.source.dataset.name + '_' + dim.name
                 ))
         self._generate_table()
         self._is_generated = True
@@ -122,7 +122,7 @@ class Model(TableHandler):
         than SQL auto-increment because it is stable across mutltiple
         loads and thus creates stable URIs for entries.
         """
-        uniques = [self.source.name]
+        uniques = [self.source.dataset.name]
         for field in self.fields:
             if not field.key:
                 continue
