@@ -86,6 +86,8 @@ def get_complex_cube(star_name, cubes):
     
     star_cube = coalesce_cubes(star_cube, cubes_meta)
 
+    print "here is star cube", star_cube
+
 
     return Cube(name=star_cube['name'],
                             fact=star_cube['fact'],
@@ -183,18 +185,20 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
     #search for "Country_level0" or country_level0 or any other labels we might apply in case not consistent in data loading
     #before we do amny edits to the master_meta
-    candidates = ["Country_level0.label", "country_level0.label", "geometry_level0.label"]
+    candidates = ["country_level0.gid", "country_level0.countryid"]
     leftjoin_field = None
     for joinfield in master_meta['dimensions']:
-        if joinfield.name.split('__')[1] + ".label" in candidates:
-            leftjoin_field = joinfield.name+ ".label" 
+        if joinfield.name.split('__')[1] + ".gid" in candidates:
+            print "FOUND ONE!!!!!!!!!!!!"
+            leftjoin_field = joinfield.name+ ".gid" 
             break
 
     for cube_meta in cubes_metadata:
         rightjoin_field = None
         for joinfield2 in cube_meta['dimensions']:
-            if joinfield2.name.split('__')[1] + ".label" in candidates:
-                rightjoin_field = joinfield2.name+ ".label" 
+            print "this hsould have countryid in it", joinfield2
+            if joinfield2.name.split('__')[1] + ".countryid" in candidates:
+                rightjoin_field = joinfield2.name+ ".countryid" 
                 break
 
         if not rightjoin_field:
