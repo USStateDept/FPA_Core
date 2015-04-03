@@ -480,7 +480,7 @@ DEFAULT_SOURCE_MAPPING = {
                                 },
                                 "countryid": {  
                                    "column":"countryid",
-                                   "datatype":"id",
+                                   "datatype":"integer",
                                    "default_value":""
                                 }
                               },

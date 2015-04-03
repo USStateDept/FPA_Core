@@ -86,8 +86,6 @@ def get_complex_cube(star_name, cubes):
     
     star_cube = coalesce_cubes(star_cube, cubes_meta)
 
-    print "here is star cube", star_cube
-
 
     return Cube(name=star_cube['name'],
                             fact=star_cube['fact'],
@@ -189,14 +187,12 @@ def coalesce_cubes(master_meta, cubes_metadata):
     leftjoin_field = None
     for joinfield in master_meta['dimensions']:
         if joinfield.name.split('__')[1] + ".gid" in candidates:
-            print "FOUND ONE!!!!!!!!!!!!"
             leftjoin_field = joinfield.name+ ".gid" 
             break
 
     for cube_meta in cubes_metadata:
         rightjoin_field = None
         for joinfield2 in cube_meta['dimensions']:
-            print "this hsould have countryid in it", joinfield2
             if joinfield2.name.split('__')[1] + ".countryid" in candidates:
                 rightjoin_field = joinfield2.name+ ".countryid" 
                 break

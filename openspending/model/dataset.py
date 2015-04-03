@@ -71,9 +71,9 @@ class Dataset(db.Model):
             return
         self.label = data.get('label')
         if (data.get('name', None)):
-            self.name = slugify(str(data.get('name')), max_length=30)
+            self.name = slugify(str(data.get('name')), max_length=30, separator="_")
         else:
-            self.name = slugify(str(data.get('label')), max_length=30)
+            self.name = slugify(str(data.get('label')), max_length=30, separator="_")
 
         self.description = data.get('description')
         self.ORoperations = data.get('ORoperations', {})
@@ -118,9 +118,9 @@ class Dataset(db.Model):
         #not to update name
         self.label = data.get('label')
         if (data.get('name', None)):
-            self.name = slugify(str(data.get('name')), max_length=50)
+            self.name = slugify(str(data.get('name')), max_length=30, separator="_")
         else:
-            self.name = slugify(str(data.get('label')), max_length=50)
+            self.name = slugify(str(data.get('label')), max_length=30, separator="_")
         self.description = data.get('description')
         self.dataType = data.get('dataType')
         self.dataorg = DataOrg.by_id(data.get('dataorg'))

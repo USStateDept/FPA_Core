@@ -1,5 +1,5 @@
 from sqlalchemy.schema import Column
-from sqlalchemy.types import UnicodeText, Float
+from sqlalchemy.types import UnicodeText, Float, Integer
 
 
 class Attribute(object):
@@ -38,6 +38,7 @@ class Attribute(object):
             'constant': UnicodeText,
             'date': UnicodeText,
             'float': Float,
+            'integer': Integer,
         }
         type_ = types.get(self.datatype, UnicodeText)
         self.column = Column(self.name, type_)

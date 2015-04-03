@@ -367,9 +367,9 @@ class GeometryDimension(Dimension, TableHandler):
 
 
         if not resultitem:
-            dim['countryid'] = "None"
+            dim['countryid'] = None
         else:
-            dim['countryid'] = str(resultitem[0])
+            dim['countryid'] = resultitem[0]
 
         return dim
 
