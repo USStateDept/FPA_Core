@@ -158,7 +158,7 @@ def convert_types(mapping, row):
 
         # handle AttributeDimensions, Measures and DateDimensions.
         # this is clever, but possibly not always true.
-        if 'column' in meta and meta['type'] != 'compound':
+        if 'column' in meta and meta['type'] not in  ('compound','geometry'):
             try:
                 out[dimension] = _cast(row, meta, dimension)
             except Invalid, i:

@@ -2,6 +2,7 @@ from sqlalchemy.schema import Column
 from sqlalchemy.types import Integer
 from sqlalchemy.sql.expression import select, func
 
+from openspending.core import db
 from openspending.model.attribute import Attribute
 from openspending.model.common import TableHandler, ALIAS_PLACEHOLDER
 from openspending.model.constants import DATE_CUBES_TEMPLATE
@@ -260,6 +261,173 @@ class CompoundDimension(Dimension, TableHandler):
 
     def __repr__(self):
         return "<CompoundDimension(%s:%s)>" % (self.name, self.attributes)
+
+
+
+
+#this needs to be done
+
+
+class GeometryDimension(Dimension, TableHandler):
+
+    """ A compound dimension is an outer table on the star schema, i.e. an
+    associated table that is referenced from the fact table. It can have
+    any number of attributes but in the case of OpenSpending it will not
+    have sub-dimensions (i.e. snowflake schema).
+    """
+
+    def __init__(self, model, name, data):
+        Dimension.__init__(self, model, name, data)
+        self.taxonomy = data.get('taxonomy', name)
+
+        self.attributes = []
+        for name, attr in data.get('attributes', {}).items():
+            self.attributes.append(Attribute(self, name, attr))
+
+
+        # TODO: possibly use a LRU later on?
+        self._pk_cache = {}
+
+    def join(self, from_clause):
+        """ This will return a query fragment that can be used to establish
+        an aliased join between the fact table and the dimension table.
+        """
+        return from_clause.join(
+            self.alias, self.alias.c.id == self.column_alias)
+
+    def drop(self, bind):
+        """ Drop the dimension table and all data within it. """
+        self._drop(bind)
+        del self.column
+
+    @property
+    def column_alias(self):
+        """ This an aliased pointer to the FK column on the fact table. """
+        return self.model.alias.c[self.column.name]
+
+    @property
+    def selectable(self):
+        return self.alias
+
+    def __getitem__(self, name):
+        for attr in self.attributes:
+            if attr.name == name:
+                return attr
+        raise KeyError()
+
+    def init(self, meta, fact_table, make_table=True):
+        column = Column(self.name + '_id', Integer, index=True)
+        fact_table.append_column(column)
+        if make_table is True:
+            self._init_table(meta, self.model.source.dataset.name, self.name)
+            for attr in self.attributes:
+                attr.column = attr.init(meta, self.table)
+            alias_name = self.name.replace('_', ALIAS_PLACEHOLDER)
+            self.alias = self.table.alias(alias_name)
+        return column
+
+    def generate(self, meta, entry_table):
+        """ Create the table and column associated with this dimension
+        if it does not already exist and propagate this call to the
+        associated attributes.
+        """
+        for attr in self.attributes:
+            attr.generate(meta, self.table)
+        self._generate_table()
+
+    def load(self, bind, row):
+        """ Load a row of data into this dimension by upserting the attribute
+        values. """
+        dim = dict()
+        for attr in self.attributes:
+            attr_data = row[attr.name]
+            dim.update(attr.load(bind, attr_data))
+        name = dim['name']
+        dim = self._match_countries(dim)
+        if name in self._pk_cache:
+            pk = self._pk_cache[name]
+        else:
+            pk = self._upsert(bind, dim, ['name'])
+            self._pk_cache[name] = pk
+        return {self.column.name: pk}
+
+
+    def _match_countries(self, dim):
+        #comes in as this {'name': u'anguilla', 'label': u'Anguilla'}
+        #need to go out tlike this {'name': u'anguilla', 'label': u'Anguilla', 'countryid': '1'}
+
+        result = db.engine.execute("SELECT country_level0.gid as gid \
+                                    FROM public.geometry__country_level0 as country_level0 \
+                                    WHERE country_level0.name_long = '%s' \
+                                    OR country_level0.short_name = '%s';" %(dim['label'], dim['label'],))
+        resultitem = result.first()
+        if not resultitem:
+            #check the altnames table for an item
+            pass
+
+
+        if not resultitem:
+            dim['countryid'] = "None"
+        else:
+            dim['countryid'] = str(resultitem[0])
+
+        return dim
+
+    def members(self, conditions="1=1", limit=None, offset=0):
+        """ Get a listing of all the members of the dimension (i.e. all the
+        distinct values) matching the filter in ``conditions``. This can also
+        be used to find a single individual member, e.g. a dimension value
+        identified by its name. """
+        query = select([self.alias], conditions,
+                       limit=limit, offset=offset,
+                       distinct=True)
+        rp = self.model.bind.execute(query)
+        while True:
+            row = rp.fetchone()
+            if row is None:
+                break
+            member = dict(row.items())
+            member['taxonomy'] = self.taxonomy
+            yield member
+
+    def num_entries(self, conditions="1=1"):
+        """ Return the count of entries on the model fact table having the
+        dimension set to a value matching the filter given by ``conditions``.
+        """
+        joins = self.join(self.model.alias)
+        query = select([func.count(func.distinct(self.column_alias))],
+                       conditions, joins)
+        rp = self.model.bind.execute(query)
+        return rp.fetchone()[0]
+
+    def to_cubes(self, mappings, joins):
+        """ Convert this dimension to a ``cubes`` dimension. """
+        attributes = ['id'] + [a.name for a in self.attributes]
+        fact_table = self.model.table.name
+        joins.append({
+            'master': '%s.%s' % (fact_table, self.name + '_id'),
+            'detail': '%s.id' % self.table.name
+        })
+        for a in attributes:
+            mappings['%s.%s' % (self.name, a)] = '%s.%s' % (self.table.name, a)
+
+        return {
+            'levels': [{
+                'name': self.name,
+                'label': self.label,
+                'key': 'name',
+                'attributes': attributes
+            }]
+        }
+
+    def __len__(self):
+        rp = self.model.bind.execute(self.alias.count())
+        return rp.fetchone()[0]
+
+    def __repr__(self):
+        return "<GeometryDimension(%s:%s)>" % (self.name, self.attributes)
+
+
 
 
 class DateDimension(CompoundDimension):

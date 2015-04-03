@@ -387,8 +387,10 @@ def update_model(datasetname):
 
     #let's handle the compounds
     for item in r['mapping'].values():
-        if item['type'] == "compound":
+        if item['type'] in  ("compound", "geometry"):
             for attitem in item['attributes'].values():
+                if attitem['column'] == 'countryid':
+                    pass
                 attitem['column'] = item['column']
 
     #if not hasattr(r['mapping'], 'theid'):
@@ -475,9 +477,14 @@ DEFAULT_SOURCE_MAPPING = {
                                   "column": None,
                                   "datatype": "string",
                                   "default_value": ""
+                                },
+                                "countryid": {  
+                                   "column":"countryid",
+                                   "datatype":"id",
+                                   "default_value":""
                                 }
                               },
-                              "type": "compound",
+                              "type": "geometry",
                               "description": None,
                               "label": None,
                               "form": {

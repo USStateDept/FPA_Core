@@ -16,7 +16,7 @@ from openspending.lib.util import hash_values
 
 from openspending.model.common import decode_row, TableHandler
 from openspending.model.dimension import (CompoundDimension, DateDimension,
-                                          AttributeDimension, Measure)
+                                          AttributeDimension, Measure, GeometryDimension)
 
 log = logging.getLogger(__name__)
 
@@ -45,6 +45,8 @@ class Model(TableHandler):
                 dimension = DateDimension(self, dim, data)
             elif data.get('type') in ['value', 'attribute']:
                 dimension = AttributeDimension(self, dim, data)
+            elif data.get('type') == 'geometry' or dim == 'geometry':
+                dimension = GeometryDimension(self, dim, data)
             else:
                 dimension = CompoundDimension(self, dim, data)
             self.dimensions.append(dimension)
