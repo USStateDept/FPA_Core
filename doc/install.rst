@@ -128,6 +128,8 @@ replacing the default schema with one from OpenSpending.::
 
     $ cp -R apache-solr-<version>/* ./solr/
     $ ln -sf <full path to openspending>/solr/schema.xml ./solr/example/solr/collection1/conf/
+    
+    edit ./solr/example/solr/collection1/core.properties to say name=openspending
 
 .. _Solr tarball: http://www.apache.org/dyn/closer.cgi/lucene/solr/
 
