@@ -47,10 +47,10 @@ class SourceFile(db.Model):
 
 
     def __repr__(self):
-        return "<SourceFile(%r, %r)>" % (self.id, self.rawfile,)
+        return "<SourceFile(%r, %r)>" % (self.id, sourcefiles.url(self.rawfile),)
 
     def __unicode__(self):
-        return "<SourceFile(%r, %r)>" % (self.id, self.rawfile,)
+        return "<SourceFile(%r, %r)>" % (self.id, sourcefiles.url(self.rawfile),)
 
 
     def load_file(self):

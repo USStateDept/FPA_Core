@@ -231,7 +231,8 @@ class Source(db.Model):
             "rawfile": str(self.rawfile),
             "dataset": self.dataset.name,
             "created_at": self.created_at,
-            "ORid": self.ORid
+            "ORid": self.ORid,
+            "prefuncs": self.dataset.prefuncs.keys()
         }
 
     def __unicode__(self):

@@ -2,6 +2,7 @@ import logging
 import sys
 import traceback
 from slugify import slugify
+import json
 
 from flask import Blueprint, request
 from flask.ext.login import current_user
@@ -331,42 +332,67 @@ def model(datasetname):
 @blueprint.route('/datasets/<datasetname>/model', methods=['POST', 'PUT'])
 @api_json_errors
 def update_model_createnew(datasetname):
+    #refactor to include the update
 
     dataset = get_dataset(datasetname)
 
 
     #source will have name and URL
-    source = api_form_data()
+    sourceapi = api_form_data()
 
-    if not source['name']:
-        return jsonify({"errors":["You must enter a data name " + str(e)]})
+    if not sourceapi['name']:
+        sourceapi['name'] = dataset.name
+        #return jsonify({"errors":["You must enter a data name " + str(e)]})
 
     #verify that name is unique and URL is real
     #model = {'source': source}
-    schema = source_schema(ValidationState(source))
+    schema = source_schema(ValidationState(sourceapi))
     try:
-        data = schema.deserialize(source)
+        data = schema.deserialize(sourceapi)
     except Invalid, e:
         #print message in thefuture
         return jsonify({"errors":["Invalid field " + str(e)]})
 
+    basesource = dataset.source
 
 
     if len(request.files) == 1:
         upload_source_path = sourcefiles.save(request.files['sourcefile'])
+
         sourcefile = SourceFile(rawfile = upload_source_path)
         db.session.add(sourcefile)
 
-        source = Source(dataset=dataset, name=data['name'], url=None, rawfile=sourcefile)
+        if basesource:
+            basesource.rawfile = upload_source_path
+            source = basesource
+        else:
+            source = Source(dataset=dataset, name=data['name'], url=None, rawfile=sourcefile)
+            db.session.add(source)
+
         #handle file
+    elif data.get('url', None):
+        if basesource:
+            basesource.name = data['name']
+            basesource.url = data['url']
+            #trigger reload
+        else:
+            source = Source(dataset=dataset, name=data['name'], url=data['url'])
+            db.session.add(source)
     else:
+        source = basesource
 
-        source = Source(dataset=dataset, name=data['name'], url=data['url'])
 
+        #check if source exists
+    if sourceapi.get('prefuncs', None):
+        prefuncs = json.loads(sourceapi['prefuncs'])
+        dbsave = {}
+        for p in prefuncs:
+            dbsave[p] = p 
+        dataset.prefuncs = dbsave
 
     #dataset.managers.append(current_user)
     
-    db.session.add(source)
+    
     db.session.commit()
 
     return jsonify(source)
