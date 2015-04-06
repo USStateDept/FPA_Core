@@ -311,10 +311,10 @@ def save_default_model(datasetname):
 
 
 
-@blueprint.route('/datasets/<datasetname>/model', defaults={'sourcename': None})
-@blueprint.route('/datasets/<datasetname>/model/<sourcename>')
+@blueprint.route('/datasets/<datasetname>/model', methods=['GET'])
+#@blueprint.route('/datasets/<datasetname>/model/<sourcename>')
 @api_json_errors
-def model(datasetname, sourcename):
+def model(datasetname):
     #if not sourcename then we are saving the defaults for dataset
     
     dataset = get_dataset(datasetname)

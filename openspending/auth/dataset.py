@@ -8,7 +8,9 @@ def create():
 
 
 def read(dataset):
-    return update(dataset)
+	#use this to control everything
+	return True
+    #return update(dataset)
 
 
 def update(dataset):
