@@ -60,6 +60,37 @@ class SourceFile(db.Model):
             print "cannot find the rawfile"
 
 
+    def to_json_dump(self):
+        """ Returns a JSON representation of an SQLAlchemy-backed object.
+        """
+
+        json = {}
+        json['fields'] = {}
+        json['pk'] = getattr(self, 'id')
+        json['model'] = "SourceFile"
+
+        fields = ['rawfile', 'source_id']
+        #get file contents and wrap it
+
+        for field in fields:
+            json['fields'][field] = getattr(self, field)
+
+     
+        return json
+
+    @classmethod
+    def import_json_dump(cls, theobj):
+        fields = ['rawfile', 'source_id']
+        classobj = cls()
+        for field in fields:
+            setattr(classobj, field, theobj['fields'][field])
+
+        db.session.add(classobj)
+        db.session.commit()
+
+        return classobj.id
+
+
 
     @classmethod
     def all(cls):
@@ -67,6 +98,10 @@ class SourceFile(db.Model):
         Find all sourcefiles
         """
         return db.session.query(cls)
+
+    @classmethod
+    def by_id(cls, id):
+        return db.session.query(cls).filter_by(id=id).first()
 
     def as_dict(self):
         """

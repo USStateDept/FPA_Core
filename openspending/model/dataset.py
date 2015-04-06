@@ -91,6 +91,39 @@ class Dataset(db.Model):
                 print e
 
 
+    def to_json_dump(self):
+        """ Returns a JSON representation of an SQLAlchemy-backed object.
+        """
+
+        json = {}
+        json['fields'] = {}
+        json['pk'] = getattr(self, 'id')
+        json['model'] = "Dataset"
+
+        fields = ['name', 'label', 'description', 
+                 'source_id', 'mapping', 'ORoperations', 'prefuncs', 'dataType','published','loaded', 'tested','dataorg_id']
+
+        for field in fields:
+            json['fields'][field] = getattr(self, field)
+
+     
+        return json
+
+
+    @classmethod
+    def import_json_dump(cls, theobj):
+        fields = ['name', 'label', 'description', 
+                 'source_id', 'mapping', 'ORoperations', 'prefuncs', 'dataType','published','loaded', 'tested','dataorg_id']
+        classobj = cls()
+        for field in fields:
+            setattr(classobj, field, theobj['fields'][field])
+
+        db.session.add(classobj)
+        db.session.commit()
+
+        return classobj.id
+
+
 
 
     @property 
@@ -170,4 +203,13 @@ class Dataset(db.Model):
     @classmethod
     def by_name(cls, name):
         return db.session.query(cls).filter_by(name=name).first()
+
+
+    @classmethod
+    def by_label(cls, label):
+        return db.session.query(cls).filter_by(label=label).first()
+
+    @classmethod
+    def by_id(cls, id):
+        return db.session.query(cls).filter_by(id=id).first()
 

@@ -7,7 +7,7 @@ import urlparse, urllib
 
 from openspending.lib import json
 
-from openspending.model import Source, Dataset, Account
+from openspending.model import Source, Dataset, Account, DataOrg, SourceFile
 from openspending.core import db
 
 from openspending.preprocessors.ORhelper import testORLoad
@@ -19,6 +19,10 @@ from openspending.command.archive import get_url_filename
 
 from openspending.validation.model import validate_model
 from openspending.validation.model import Invalid
+
+from openspending.core import sourcefiles
+
+from werkzeug import FileStorage
 
 
 from openspending.importer import ORImporter
@@ -44,35 +48,53 @@ def shell_account():
 
 def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=True, meta_only=False, file_dir = None):
 
+    print "Working on ", sourcejson['fields']['indicator']
+
+    if sourcejson['fields']['status'] in ['Data Source Verified']:
+        print "You need to update the meta data"
+        return (None, False)
+
+
+    dataorg = DataOrg.by_name(dataproviderjson['fields']['title'])
+
+    dataorgMeta = {
+        'description': dataproviderjson['fields']['description'], 
+        'label': dataproviderjson['fields']['title']
+    }
+
+    if not dataorg:
+        dataorg = DataOrg(dataorgMeta)
+        db.session.add(dataorg)
+
+    #dataorg will update with id here
+    db.session.commit()
+
     #get or create dataset
-    dataset = Dataset.by_name(dataproviderjson['fields']['title'])
+    dataset = Dataset.by_label(sourcejson['fields']['indicator'])
+
+    description = "http://databank.edip-maps.net/admin/etldata/dataconnection/" + str(sourcejson['pk']) + "/"
 
     modelDataset = {'dataset': 
             {
-                'label': dataproviderjson['fields']['title'],
-                #slugify the name
-                'name': dataproviderjson['fields']['title'],
-                'description': dataproviderjson['fields']['description'],
-                'currency': None,
-                'category': None,
-                'currency': None,
-                'serp_title': dataproviderjson['fields']['title'],
-                'serp_teaser': dataproviderjson['fields']['description']
-
+                'label': sourcejson['fields']['indicator'],
+                'name': sourcejson['fields']['indicator'],
+                'description': description,
+                'dataType': sourcejson['fields']['data_type'],
+                'dataorg_id': dataorg.id
             }
         }
 
     if not dataset:
         #create one
 
-        dataset = Dataset(modelDataset)
-        dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
-        dataset.data = dataproviderjson['fields'].get('mapping',{})
+        dataset = Dataset(modelDataset['dataset'])
+        #dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
+        #dataset.data = dataproviderjson['fields'].get('mapping',{})
         db.session.add(dataset)
 
     else:
-        dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
-        dataset.data = dataproviderjson['fields'].get('mapping',{})
+        #dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
+        #dataset.data = dataproviderjson['fields'].get('mapping',{})
         dataset.update(modelDataset['dataset'])
 
 
@@ -81,13 +103,14 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
 
     systemaccount = Account.by_id(1)
 
-    if sourcejson['fields'].get('indicator', None):
-        tempsource = Source.by_source_name(sourcejson['fields'].get('indicator'))
-        if tempsource:
-            tempsource.delete()
-    else:
-        print "your source does not have a title"
-        return (None, False)
+    if dataset.source:
+        try:
+            dataset.source.delete()
+        except Exception, e:
+            print "could not delete source", e
+
+    source = None
+
 
     #check if we have a file uploaded first
     if not sourcejson['fields']['webservice'] and not sourcejson['fields']['downloadedFile']:
@@ -96,63 +119,64 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
 
     if sourcejson['fields']['downloadedFile'] and file_dir and not sourcejson['fields']['webservice']:
         #convert to a file:///name
-        filename = sourcejson['fields']['downloadedFile'].split("/")[1]
-        sourcejson['fields']['webservice'] = urlparse.urljoin('file:', urllib.pathname2url(os.path.join(file_dir,filename )))
+        #create a source file
+        with open(os.path.join(file_dir, sourcejson['fields']['downloadedFile']), 'rb') as fh:
+            wuezfile = FileStorage(stream=fh)
+            upload_source_path = sourcefiles.save(wuezfile)
+            sourcefile = SourceFile(rawfile = upload_source_path)
+            db.session.add(sourcefile)
+        try:
+            source = Source(dataset=dataset, name=dataset.name, url=None, rawfile=sourcefile)
+        except Exception, e:
 
+            print "Could not load source rawfile", e
+            return(None, False)
 
+    else:
+        try:
+            source = Source(dataset=dataset, name=dataset.name, url=sourcejson['fields']['webservice'], rawfile=None)
+            
+        except Exception, e:
+            print "Could not load source webservice", e
+            return(None, False)
 
-    if not sourcejson['fields']['webservice']:
-        print "you don't have a webservice (or a file in the future)"
+    if not source:
         return (None, False)
 
-    source = Source(dataset=dataset, 
-                    creator=systemaccount, 
-                    url=sourcejson['fields'].get('webservice'), 
-                    name=sourcejson['fields'].get('indicator'),
-                    prefuncs = dataproviderjson['fields'].get("prefuncs", {}))
-
-
-
-    # print "###############raw prefuncs", dataproviderjson['fields'].get("prefuncs")
-    # if len(dataproviderjson['fields'].get("prefuncs", {}).keys()):
-    #     source.prefuncs = dataproviderjson['fields'].get("prefuncs", {})
-
     db.session.add(source)
-
     db.session.commit()
 
-    if sourcejson['fields']['downloadedFile']:
-        sys.exit()
+    return (source, True)
 
 
 
-    if len(dataset.ORoperations.keys()):
-        source.applyORInstructions(dataset.ORoperations)
-        source.ORoperations = dataset.ORoperations
-    else:
-        print "can not apply the ORoperations"
+    # if len(dataset.ORoperations.keys()):
+    #     source.applyORInstructions(dataset.ORoperations)
+    #     source.ORoperations = dataset.ORoperations
+    # else:
+    #     print "can not apply the ORoperations"
     
-    #probably need to make sure this is here before we add the dynamic model
-    db.session.commit()
+    # #probably need to make sure this is here before we add the dynamic model
+    # db.session.commit()
 
-    if len(dataset.data.keys()):
-        source.addData(dataset.data)
-    else:
-        if not meta_only:
-            print "there was no field mapping.  Failed", dataset.label
-            return (source, False)
+    # if len(dataset.data.keys()):
+    #     source.addData(dataset.data)
+    # else:
+    #     if not meta_only:
+    #         print "there was no field mapping.  Failed", dataset.label
+    #         return (source, False)
 
-    if meta_only:
-        return (source, True)
+    # if meta_only:
+    #     return (source, True)
     
 
-    importer = ORImporter(source)
-    #dry run this
-    importer.run(dry_run=dry_run)
-    if importer._run.successful_sample:
-        return (source, True)
-    else:
-        return (source, False)
+    # importer = ORImporter(source)
+    # #dry run this
+    # importer.run(dry_run=dry_run)
+    # if importer._run.successful_sample:
+    #     return (source, True)
+    # else:
+    #     return (source, False)
 
 
 

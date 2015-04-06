@@ -40,8 +40,15 @@ class MetadataOrg(db.Model):
 
 
 
-    def __init__(self):
-        pass
+    def __init__(self, metadata = None):
+        if not metadata:
+            return
+        self.label = metadata.get('label')
+        self.description = metadata.get('description')
+        self.contactName = metadata.get('contactName')
+        self.contactEmail = metadata.get('contactEmail')
+        self.accessLevel = metadata.get('accessLevel')
+        self.bureauCode = metadata.get('bureauCode')
         
 
 
@@ -76,6 +83,37 @@ class MetadataOrg(db.Model):
             'lastUpdated' : self.lastUpdated
         }
 
+    def to_json_dump(self):
+        """ Returns a JSON representation of an SQLAlchemy-backed object.
+        """
+
+        json = {}
+        json['fields'] = {}
+        json['pk'] = getattr(self, 'id')
+        json['model'] = "MetadataOrg"
+
+        fields = ['label','description','contactName','contactEmail','accessLevel','bureauCode']
+
+        for field in fields:
+            json['fields'][field] = getattr(self, field)
+
+     
+        return json
+
+    @classmethod
+    def import_json_dump(cls, theobj):
+        fields = ['label','description','contactName','contactEmail','accessLevel','bureauCode']
+        classobj = cls()
+        for field in fields:
+            setattr(classobj, field, theobj['fields'][field])
+
+        db.session.add(classobj)
+        db.session.commit()
+        return classobj.id
+
+
+        #return the id
+
 
     @classmethod
     def get_all_admin(cls, order=True):
@@ -85,9 +123,22 @@ class MetadataOrg(db.Model):
             q = q.order_by(cls.label.asc())
         return q
 
+
+    @classmethod
+    def all(cls, order=True):
+        """ Query available datasets based on dataset visibility. """
+        q = db.session.query(cls)
+        if order:
+            q = q.order_by(cls.label.asc())
+        return q
+
     @classmethod
     def by_name(cls, label):
         return db.session.query(cls).filter_by(label=label).first()
+
+    @classmethod
+    def by_id(cls, id):
+        return db.session.query(cls).filter_by(id=id).first()
 
 
 #TODO

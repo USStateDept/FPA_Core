@@ -122,9 +122,41 @@ class Source(db.Model):
         refineproj.refineproj.delete()
 
         #delete the source data from the tables
+        if self.model:
+            self.model.drop()
 
         db.session.delete(self)
         db.session.commit()
+
+
+
+    def to_json_dump(self):
+        """ Returns a JSON representation of an SQLAlchemy-backed object.
+        """
+
+        json = {}
+        json['fields'] = {}
+        json['pk'] = getattr(self, 'id')
+        json['model'] = "Source"
+
+        fields = ['name', 'url', 'ORid']
+
+        for field in fields:
+            json['fields'][field] = getattr(self, field)
+
+     
+        return json
+
+    @classmethod
+    def import_json_dump(cls, theobj):
+        fields = ['name', 'url', 'ORid']
+        classobj = cls()
+        for field in fields:
+            setattr(classobj, field, theobj['fields'][field])
+
+        db.session.add(classobj)
+        db.session.commit()
+        return classobj.id
 
 
     @property

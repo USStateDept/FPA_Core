@@ -46,8 +46,16 @@ class DataOrg(db.Model):
 
 
 
-    def __init__(self):
-        pass
+    def __init__(self, dataorg=None):
+        if not dataorg:
+            return
+        self.label = dataorg.get('label')
+        self.description = dataorg.get('description')
+        self.ORTemplate = dataorg.get('ORTemplate', {})
+        self.mappingTemplate = dataorg.get('mappingTemplate', {})
+        self.prefuncs = dataorg.get('prefuncs', {})
+        self.lastUpdated = datetime.utcnow()
+        self.metadataorg = dataorg.get('metadataorg')
 
 
 
@@ -56,6 +64,37 @@ class DataOrg(db.Model):
         invalidation. """
         self.updated_at = datetime.utcnow()
         db.session.add(self)
+
+    def to_json_dump(self):
+        """ Returns a JSON representation of an SQLAlchemy-backed object.
+        """
+
+        json = {}
+        json['fields'] = {}
+        json['pk'] = getattr(self, 'id')
+        json['model'] = "DataOrg"
+
+        fields = ['label','description','ORTemplate','mappingTemplate','prefuncs','metadataorg_id']
+
+        for field in fields:
+            json['fields'][field] = getattr(self, field)
+
+     
+        return json
+
+    @classmethod
+    def import_json_dump(cls, theobj):
+        
+        fields = ['label','description','ORTemplate','mappingTemplate','prefuncs','metadataorg_id']
+        classobj = cls()
+        for field in fields:
+            setattr(classobj, field, theobj['fields'][field])
+            #classobj.set(field, theobj['fields'][field])
+
+        db.session.add(classobj)
+        db.session.commit()
+
+        return classobj.id
 
 
 
@@ -91,6 +130,14 @@ class DataOrg(db.Model):
 
     @classmethod
     def get_all(cls, order=True):
+        """ Query available datasets based on dataset visibility. """
+        q = db.session.query(cls)
+        if order:
+            q = q.order_by(cls.label.asc())
+        return q
+
+    @classmethod
+    def all(cls, order=True):
         """ Query available datasets based on dataset visibility. """
         q = db.session.query(cls)
         if order:

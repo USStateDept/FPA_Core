@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, Flask, Response, request, g, current_app
+from flask import request, g, current_app
 from functools import wraps
 
 from cubes.workspace import Workspace
