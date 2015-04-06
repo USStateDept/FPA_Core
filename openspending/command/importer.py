@@ -22,7 +22,11 @@ from openspending.validation.model import Invalid
 
 from openspending.core import sourcefiles
 
+from settings import UPLOADED_FILES_DEST
+
 from werkzeug import FileStorage
+
+from shutil import copyfile
 
 
 from openspending.importer import ORImporter
@@ -49,10 +53,6 @@ def shell_account():
 def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=True, meta_only=False, file_dir = None):
 
     print "Working on ", sourcejson['fields']['indicator']
-
-    if sourcejson['fields']['status'] in ['Data Source Verified']:
-        print "You need to update the meta data"
-        return (None, False)
 
 
     dataorg = DataOrg.by_name(dataproviderjson['fields']['title'])
@@ -120,8 +120,14 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
     if sourcejson['fields']['downloadedFile'] and file_dir and not sourcejson['fields']['webservice']:
         #convert to a file:///name
         #create a source file
-        with open(os.path.join(file_dir, sourcejson['fields']['downloadedFile']), 'rb') as fh:
-            wuezfile = FileStorage(stream=fh)
+
+        filename = sourcejson['fields']['downloadedFile'].replace("rawdata/", "")
+
+        #copy file over to another folder and open it
+        copyfile(os.path.join(file_dir, filename), os.path.join(UPLOADED_FILES_DEST, filename))
+
+        with open(os.path.join(UPLOADED_FILES_DEST, filename), 'rb') as fh:
+            wuezfile = FileStorage(stream=fh, name=filename)
             upload_source_path = sourcefiles.save(wuezfile)
             sourcefile = SourceFile(rawfile = upload_source_path)
             db.session.add(sourcefile)
@@ -312,14 +318,6 @@ def add_import_commands(manager):
 
 
 
-
-    @manager.option('-n', '--dry-run', dest='dry_run', action='store_true',
-                    help="Perform a dry run, don't load any data.")
-    @manager.option('-i', '--index', dest='build_indices', action='store_true',
-                    help="Suppress Solr index build.")
-    @manager.option('--raise-on-error', action="store_true",
-                    dest='raise_errors', default=False,
-                    help='Get full traceback on first error.')
     @manager.option('-f', '--file-dir',
                     dest='file_dir',
                     help='File Dir of the uploaded Files')
@@ -352,6 +350,12 @@ def add_import_commands(manager):
                 results['skipped'] += 1
                 print "skipping unspecified organizations", datasetprovider['fields'].get("title", None)
                 continue
+
+            if dataconnection['fields'].get('status',None) not in ['Data Source Verified']:
+                results['skipped'] += 1
+                print "skipping becuase of status"
+                continue
+
 
 
 

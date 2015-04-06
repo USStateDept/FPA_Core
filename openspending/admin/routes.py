@@ -17,7 +17,7 @@ from werkzeug.security import generate_password_hash
 
 from jinja2 import Markup
 
-from settings import UPLOADS_FOLDER
+from settings import UPLOADED_FILES_DEST
 
 
 #import copy
@@ -92,7 +92,7 @@ class SourceFileView(sqla.ModelView):
     form_args = {
         'rawfile': {
             'label': 'File',
-            'base_path': UPLOADS_FOLDER
+            'base_path': UPLOADED_FILES_DEST
         }
     }
 
