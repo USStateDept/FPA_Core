@@ -1,18 +1,20 @@
 
 
+SET BASEDIR=%CD%
 
-
-cd %CD%\openspending\static\dataloader\
+cd %BASEDIR%\openspending\static\dataloader\
 call npm install 
 call bower install
-call grunt build
+call grunt build --force
 
-cd %CD%\openspending\static\dataviewer\
+cd %BASEDIR%\openspending\static\dataviewer\
 call npm install 
 call bower install
-call grunt build
+call grunt build --force
 
-cd %CD%\openspending\static\viz\
+cd %BASEDIR%\openspending\static\viz\
 call bower install
+
+cd %BASEDIR%
 
 
