@@ -51,15 +51,15 @@ This should be pretty painless. Just run::
     $ pip install -r requirements.txt -e .
 
 
-Additionally to the core repository, you will need to install submodules::
-
-    $ git submodule init
-    $ git submodule update
-
 You will need to install psycopg.  Get the wheel from 
 http://www.lfd.uci.edu/~gohlke/pythonlibs/#psycopg::
 
     $ pip install C:\path\to\psycopg2.whl
+
+You may want to use the compiled binaries form http://www.lfd.uci.edu/~gohlke/pythonlibs/#sqlalchemy
+as this includes the C speedups.  Without compiled it will just run pure python.  The speedups will be used in production.
+
+    $ pip install C:\path\to\sqlalchemy.whl
 
 Create a database if you do not have one already. We recommend using Postgres
 but you can use anything compatible with SQLAlchemy. For postgres you would do::
@@ -75,6 +75,17 @@ URL is set::
 
     # TCP
     SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{pass}@localhost/openspending'
+
+
+Additionally to the core repository, you will need to install submodules for that static components::
+
+    $ git submodule init
+    $ git submodule update
+
+Then you can install the requirements of the static packages and build them by running the following::
+
+    $ static_reqs.bat
+    $ staticbuild.bat
 
 
 The ```OPENSPENDING_SETTINGS``` environment variable is used to point to the 
