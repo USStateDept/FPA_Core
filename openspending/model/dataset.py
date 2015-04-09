@@ -160,6 +160,9 @@ class Dataset(db.Model):
 
 
     def as_dict(self):
+        load_status = "Need Source"
+        if self.source:
+            load_status = self.source.load_status
         return {
             'label': self.label,
             'name': self.name,
@@ -167,8 +170,11 @@ class Dataset(db.Model):
             'dataType': self.dataType,
             'dataorg': self.dataorg_id,
             'has_data': self.has_data,
-            'source': self.source_id
+            'source': self.source_id,
+            'status': load_status
         }
+
+
 
     @classmethod
     def all_by_account(cls, account, order=True):

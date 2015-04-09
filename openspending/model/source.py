@@ -181,7 +181,7 @@ class Source(db.Model):
         # It needs mapping to be loadable
         if not len(self.dataset.mapping.get('mapping', {}).keys()):
             return False
-        # There can be no errors in the analysis of the source
+
 
         #replace with logs
         # if 'error' in self.analysis:
@@ -189,14 +189,31 @@ class Source(db.Model):
         # All is good... proceed
         return True
 
+    @property 
+    def load_status(self):
+        if self.successfully_loaded:
+            return "Successfully Loaded no errors"
+        elif self.is_running:
+            return "Currently Running"
+        elif self.attempted_load:
+            return "Attempted Load a few errors"
+        elif self.loadable:
+            return "Ready to load"
+        else:
+            return "Needs mapping info"
+    
+
     @property
-    def successfully_sampled(self):
+    def attempted_load(self):
         """
         Returns True if any of this source's runs have been
         successfully sampled (a complete sample run). This shows
         whether the source is ready to be imported into the database
         """
-        return True in [r.successful_sample for r in self.runs]
+        if self.runs.first():
+            return True
+        else:
+            return False
 
     @property
     def is_running(self):
