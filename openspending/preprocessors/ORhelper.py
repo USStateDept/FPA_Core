@@ -6,7 +6,7 @@ import codecs
 import time
 import csv
 import urllib
-from openspending.preprocessors.processing_funcs import AVAILABLE_FUNCTIONS as preprocessor_funcs
+from openspending.preprocessors import processing_funcs
 
 class RefineProj:
 
@@ -62,7 +62,7 @@ class RefineProj:
         #preprocessing functions
         if (len(source.dataset.prefuncs.keys()) > 0):
             #apply preprocessors
-            for func in preprocessor_funcs:
+            for func in source.dataset.prefuncs.keys():
                 tempmethod = getattr(processing_funcs, func, None)
                 if tempmethod:
                     responsetext = tempmethod(responsetext)

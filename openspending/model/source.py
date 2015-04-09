@@ -54,6 +54,16 @@ class Source(db.Model):
         # if (dataset.mapping):
         #     self.addData(dataset.mapping)
 
+    def reload_openrefine(self):
+        try:
+            refineproj = self.get_or_create_ORProject()
+            refineproj.refineproj.delete()
+        except Exception, e:
+            print "tried to delete OR but failed.  Probably doesn't exist"
+        self.ORid = None
+        self.ORid = self.get_or_create_ORProject().refineproj.project_id
+
+
     def get_or_create_ORProject(self):
         return RefineProj(source=self)
 
@@ -112,7 +122,6 @@ class Source(db.Model):
         if not self.dataset:
             print "not dataset attached"
             return
-        print "HERE IS MY MAPPING", self.dataset.mapping
         if len(self.dataset.mapping.get('mapping', {}).keys()) > 0:
             print "building the model", self.name
             self.model = Model(self)
@@ -167,7 +176,7 @@ class Source(db.Model):
         probably should.
         """
         # It shouldn't be loaded again into the database
-        if self.successfully_loaded:
+        if not self.dataset:
             return False
         # It needs mapping to be loadable
         if not len(self.dataset.mapping.get('mapping', {}).keys()):

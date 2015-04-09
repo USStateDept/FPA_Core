@@ -7,6 +7,8 @@ from openspending.model.attribute import Attribute
 from openspending.model.common import TableHandler, ALIAS_PLACEHOLDER
 from openspending.model.constants import DATE_CUBES_TEMPLATE
 
+from openspending.validation.data import InvalidData
+
 
 class Dimension(object):
 
@@ -362,8 +364,20 @@ class GeometryDimension(Dimension, TableHandler):
                                     OR country_level0.short_name = '%s';" %(dim['label'], dim['label'],))
         resultitem = result.first()
         if not resultitem:
+            result = db.engine.execute("SELECT \
+                                          geometry__country_level0.gid\
+                                        FROM \
+                                          public.geometry__alt_names, \
+                                          public.geometry__country_level0\
+                                        WHERE \
+                                          geometry__alt_names.country_level0_id = geometry__country_level0.gid AND\
+                                          (geometry__alt_names.altname IN ('%s','%s'));" %(dim['label'], dim['label'].lower(),))
+            resultitem = result.first() 
             #check the altnames table for an item
-            pass
+        
+        if not resultitem:
+            raise InvalidData("country_level0", "country name",
+                  "geometry", dim['label'], "Could not find the column")
 
 
         if not resultitem:

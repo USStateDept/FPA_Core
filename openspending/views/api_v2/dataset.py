@@ -240,7 +240,7 @@ def field_polling_post(datasetname, columnkey):
 def apply_default_model(datasetname):
 
     dataset = get_dataset(datasetname)
-    if not dataset.source or not dataset:
+    if not dataset.dataorg or not dataset:
         return jsonify({"errors":["Invalid URL.  Cannot find source or dataset"]})
 
     if dataset.ORoperations:
@@ -365,6 +365,7 @@ def update_model_createnew(datasetname):
         if basesource:
             basesource.rawfile = upload_source_path
             source = basesource
+            source.reload_openrefine()
         else:
             source = Source(dataset=dataset, name=data['name'], url=None, rawfile=sourcefile)
             db.session.add(source)
@@ -372,14 +373,18 @@ def update_model_createnew(datasetname):
         #handle file
     elif data.get('url', None):
         if basesource:
-            basesource.name = data['name']
-            basesource.url = data['url']
+            source = basesource
+            source.name = data['name']
+            source.url = data['url']
+            source.reload_openrefine()
+            #maybe reload the OpenRefine?
             #trigger reload
         else:
             source = Source(dataset=dataset, name=data['name'], url=data['url'])
             db.session.add(source)
     else:
         source = basesource
+        source.reload_openrefine()
 
 
         #check if source exists
@@ -441,7 +446,7 @@ def update_model(datasetname):
     load_source(dataset.source.id)
     #add async request to load data
 
-    return jsonify({"Success":True})
+    return jsonify({"success":True})
 
     #using colinder
     # require.dataset.update(dataset)

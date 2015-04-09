@@ -124,6 +124,7 @@ ATTRIBUTE_TYPES = {
     'id': IdentifierAttributeType(),
     'float': FloatAttributeType(),
     'date': DateAttributeType()
+    #'geometry': GeometryAttributeType()
     }
 
 def _cast(row, meta, attribute_name):

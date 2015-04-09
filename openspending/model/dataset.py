@@ -128,7 +128,7 @@ class Dataset(db.Model):
 
     @property 
     def has_data(self):
-        if self.source:
+        if self.source_id:
             return True
         else:
             return False
