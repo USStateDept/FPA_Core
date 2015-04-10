@@ -26,7 +26,8 @@ CELERY_ALWAYS_EAGER = False
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-OPENREFINE_SERVER = "http://127.0.0.1:3333"
+OPENREFINE_PUBLIC = "http://findopenrefine.edip-maps.net"
+OPENREFINE_SERVER = "http://10.0.0.37:3333"
 
 DEFAULT_FILE_STORAGE = 'filesystem'
 

@@ -13,7 +13,7 @@ from openspending.model.common import MutableDict, JSONType
 #from openspending.model.account import Account
 from openspending.model.model import Model
 
-from settings import OPENREFINE_SERVER
+from settings import OPENREFINE_PUBLIC
 
 from openspending.preprocessors.ORhelper import RefineProj
 
@@ -259,7 +259,7 @@ class Source(db.Model):
             "rawfile": str(self.rawfile),
             "dataset": self.dataset.name,
             "created_at": self.created_at,
-            "ORURL": OPENREFINE_SERVER + "/?project=" + str(self.ORid),
+            "ORURL": OPENREFINE_PUBLIC + "/project?project=" + str(self.ORid),
             "prefuncs": self.dataset.prefuncs.keys()
         }
 
