@@ -15,6 +15,7 @@ from cubes.extensions import extensions
 from google.refine import refine
 
 from openspending import default_settings
+from settings import OPENREFINE_SERVER
 from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
 #from flask.ext.superadmin import Admin, model
@@ -72,7 +73,7 @@ def create_app(**config):
 
 
     #do app.config in the future
-    refine_server = refine.RefineServer(server="http://127.0.0.1:3333")
+    refine_server = refine.RefineServer(server=OPENREFINE_SERVER)
 
 
 

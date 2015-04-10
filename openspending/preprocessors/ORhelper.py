@@ -7,12 +7,13 @@ import time
 import csv
 import urllib
 from openspending.preprocessors import processing_funcs
+from settings import OPENREFINE_SERVER
 
 class RefineProj:
 
 
     def __init__(self, source=None):
-        self.refine_server = refine.Refine(server="http://127.0.0.1:3333")
+        self.refine_server = refine.Refine(server=OPENREFINE_SERVER)
         #the source object will have the project_id of OR
         #if project_id does not exist then createOR
 
@@ -25,7 +26,7 @@ class RefineProj:
         if not source.ORid:
             self.refineproj = self.createOR(source)
         else:
-            self.refineproj = refine.RefineProject(server="http://127.0.0.1:3333", project_id=str(int(self.source.ORid)))
+            self.refineproj = refine.RefineProject(server=OPENREFINE_SERVER, project_id=str(int(self.source.ORid)))
 
 
 
@@ -145,7 +146,7 @@ class RefineProj:
 
     def deleteOR(refineproj=None):
         if not refineproj:
-            refiner = refine.RefineProject(server="http://localhost:3333", project_id=int(self.openrefine_projectnumber))
+            refiner = refine.RefineProject(server=OPENREFINE_SERVER, project_id=int(self.openrefine_projectnumber))
         else:
             refiner = refineproj
         refiner.delete()
@@ -202,7 +203,7 @@ def testORLoad(sourceurl=None, fileobj=None):
     #store raw file here with barn
 
     try:
-        refine_server = refine.Refine(server="http://127.0.0.1:3333")
+        refine_server = refine.Refine(server=OPENREFINE_SERVER)
         refineproj = refine_server.new_project(project_file=filepath,project_name="testerhere", separator=',',
                 #store_blank_rows=True,
                 #store_blank_cells_as_nulls=True
