@@ -3,31 +3,49 @@
 {% block page_title %}Welcome{% endblock %}
 
 {% block scripts %}
-  <script type="text/javascript" src="{{static_path('openspendingjs/lib/vendor/raphael-min.js')}}"></script>
-  <script type="text/javascript" src="{{static_path('openspendingjs/lib/vendor/kartograph/kartograph.min.js')}}"></script>
-  <script type="text/javascript" src="{{static_path('openspendingjs/lib/vendor/chroma.js')}}"></script>
-  <script type="text/javascript" src="{{static_path('js/choropleth.js')}}"></script>
+
 {% endblock %}
 
 {% block banner %}
-  <div class="row">
-    <div class="span7">
-      <div id="fp-map" class="choropleth" data-map-width="550" data-colorscale="#83bf5b,#92c76f,#a1cf83,#b0d797,#bfdfab,#cee7bf,#ddefd3,#ecf7e7,#ffffff"></div>
-    </div>
-    <div class="span5">
-      <h1>{% trans %}It's our money!{% endtrans %}</h1>
-      <p class="blurb">{% trans %}By understanding how governments spend money <strong>in our name</strong> can we have a say in how that money will affect our own lives.{% endtrans %}
-      <div class="row">
-        <div class="statistics span5">
-          <p>{% trans dataset_count=datasets.count() %}{{ dataset_count }} datasets{% endtrans %}</p>
-        </div>
-      </div>
-    </div>
-  </div>
+
 {% endblock %}
 
 {% block content %}
-
+  <div class="row">
+    <div class="span7">
+      <br /><br />
+      <div>
+        There are currently three components to FIND listed below.  These will all be tied together once we have the design worked out.
+      </div>
+      <h3>
+        <a href="/admin" target="_blank">Data Model Management</a>
+      </h3>
+      <div>
+        This has the database model in lists and fields.  It is used to understand how each of the models are associated to each other.
+      </div>
+      <h3>
+        <a href="/static/dataloader/build/index.html" target="_blank">Data Loading</a>
+      </h3>
+      <div>
+        This is used to load data into the system from various resources (URL or file upload).
+      </div>
+      <h3>
+        <a href="/static/dataviewer/build/index.html">Dataviewer (Data API URL generator)</a>
+      </h3>
+      <div>
+        This is used to develop the API calls, filter, and preview the data.  When the link for the data is generated, you can use it in the <a href="/static/viz/index.html" target="_blank">FPA viz section</a> to create visualizations.  See info below on on the visualization section. 
+      </div>
+      <h3>
+        <a href="/static/viz/index.html" target="_blank">Data Visualization</a> 
+      </h3>
+      <div>
+        This is used to visualize data from links or any other CSV format.  Each indicator will have a page that automatically loads certain visualizations using this section.  The visualizations will be loaded from stored JSON settings, as shown beside the "Fetch Options" button.  Users with manager/admin rights will be able to extend these views to customize them for each indicator.  Regular users (anonymous and registered) will be able to extend and it will be saved in a different section to become a "User Story" or "Data story".   
+      </div>
+      <div>
+        The main component is that JSON can be saved with all of the settings of the user for the visualization to be recreated, customized, and saved in the database for future use.
+      </div>
+    </div>
+  </div>
 
 
 
