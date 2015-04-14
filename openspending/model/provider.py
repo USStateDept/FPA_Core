@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 from cubes.providers import ModelProvider
-from cubes.model import Cube, Measure, MeasureAggregate, create_dimension
-from cubes.backends.sql.store import SQLStore, OPTION_TYPES
+from cubes.model import Cube, Measure, MeasureAggregate, Dimension
+#from cubes.backends.sql.store import SQLStore, OPTION_TYPES
+#from cubes.stores import Store
+from cubes.sql.store import SQLStore, OPTION_TYPES
 from cubes.errors import NoSuchCubeError, NoSuchDimensionError
 from cubes.common import coalesce_options
 from cubes.logging import get_logger
@@ -10,6 +13,8 @@ from openspending.model import Dataset, Source
 from openspending.lib.helpers import get_dataset
 
 from openspending.lib.cubes_util import getGeomCube
+
+from settings import SQLALCHEMY_DATABASE_URI
 
 
 
@@ -22,8 +27,9 @@ class OpenSpendingModelProvider(ModelProvider):
     def requires_store(self):
         return True
 
-
-    def cube(self, name, locale=None, metaonly = False):
+    #metaonly = False
+    def cube(self, name, locale=None, namespace=None, metaonly=None):
+        print "just not doing this=========================="
 
         if name == "geometry":
             return getGeomCube(self, metaonly)
@@ -39,23 +45,29 @@ class OpenSpendingModelProvider(ModelProvider):
         fact_table = dataset.source.model.table.name
 
         aggregates = [MeasureAggregate('num_entries',
-                                       label='Numer of entries',
+                                       label='Number of entries',
                                        function='count')]
         measures = []
+    #         "wma": partial(_window_function_factory, window_function=weighted_moving_average, label='Weighted Moving Avg. of {measure}'),
+    # "sma": partial(_window_function_factory, window_function=simple_moving_average, label='Simple Moving Avg. of {measure}'),
+    # "sms": partial(_window_function_factory, window_function=simple_moving_sum, label='Simple Moving Sum of {measure}'),
+        aggregation_funcs = ["wma", "sma", "sms"]
+
         for measure in dataset.source.model.measures:
             cubes_measure = Measure(measure.name, label=measure.label)
             measures.append(cubes_measure)
-            aggregate = MeasureAggregate(measure.name,
-                                         label=measure.label,
-                                         measure=measure.name,
-                                         function='sum')
-            aggregates.append(aggregate)
+            for agg_func in aggregation_funcs:
+                aggregate = MeasureAggregate(measure.name + "_" + agg_func,
+                                             label=measure.label  + agg_func,
+                                             measure=measure.name,
+                                             function=agg_func)
+                aggregates.append(aggregate)
 
         dimensions = []
         for dim in dataset.source.model.dimensions:
             meta = dim.to_cubes(mappings, joins)
             meta.update({'name': dim.name, 'label': dim.label})
-            dimensions.append(create_dimension(meta))
+            dimensions.append(Dimension.from_metadata(meta))
 
 
 
@@ -91,6 +103,7 @@ class OpenSpendingModelProvider(ModelProvider):
         raise NoSuchDimensionError('No global dimensions in OS', name)
 
     def list_cubes(self):
+        print "doing this fine------------------------------"
         cubes = []
         for dataset in Dataset.all():
             if not len(dataset.mapping):
@@ -102,27 +115,49 @@ class OpenSpendingModelProvider(ModelProvider):
             })
         return cubes
 
+    def has_cube(self, cube_ref):
+        if Dataset.by_name(cube_ref):
+            return True
+
+    # def default_metadata(self):
+    #     return {}
+
+    # def cube_features(self):
+    #     features = {}
+    #     # Replace only the actions, as we are not just a simple proxy.
+    #     features["actions"] = ["aggregate", "facts", "fact", "cell", "members"]
+
+    #     return features
+
+
 
 class OpenSpendingStore(SQLStore):
+
+
+
     related_model_provider = "openspending"
 
     def model_provider_name(self):
         return self.related_model_provider
 
     def __init__(self, **options):
-        super(SQLStore, self).__init__(**options)
+        super(OpenSpendingStore, self).__init__(url=SQLALCHEMY_DATABASE_URI, **options)
         options = dict(options)
+        self.options = options
         self.options = coalesce_options(options, OPTION_TYPES)
-        self.logger = get_logger()
-        self.schema = None
-        self._metadata = None
+        # self.logger = get_logger()
+        self.related_model_provider = self.model_provider_name()
+        # #self.schema = None
+        # self._metadata = None
+        print self.schema
 
-    @property
-    def connectable(self):
-        return db.engine
+    # @property
+    # def connectable(self):
+    #     return db.engine
         
-    @property
-    def metadata(self):
-        if self._metadata is None:
-            self._metadata = db.MetaData(bind=self.connectable)
-        return self._metadata
+    # @property
+    # def metadata(self):
+    #     if self._metadata is None:
+    #         self._metadata = db.MetaData(bind=self.connectable)
+    #     return self._metadata
+

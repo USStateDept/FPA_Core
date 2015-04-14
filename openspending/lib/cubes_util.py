@@ -4,14 +4,13 @@ from functools import wraps
 
 from cubes.workspace import Workspace
 from cubes.auth import NotAuthorized
-from cubes.browser import Cell, cuts_from_string, SPLIT_DIMENSION_NAME
 from cubes.errors import *
 from cubes.server.utils import *
 from cubes.server.errors import *
 from cubes.server.local import *
 from cubes.server.decorators import prepare_cell
 from cubes.calendar import CalendarMemberConverter
-from cubes.model import Cube, create_dimension
+from cubes.model import Cube, Dimension
 
 from contextlib import contextmanager
 
@@ -85,6 +84,9 @@ def get_complex_cube(star_name, cubes):
             cubes_meta.append(cube_joiner_meta)
     
     star_cube = coalesce_cubes(star_cube, cubes_meta)
+
+    print "\n\n", star_cube['joins']
+    print "\n\n", star_cube['mappings']
 
 
     return Cube(name=star_cube['name'],
@@ -570,7 +572,7 @@ def getGeomCube(provider, metaonly):
 
     dimensions = []
     for dim in dim_metas:
-        dimensions.append(create_dimension(dim))
+        dimensions.append(Dimension.from_metadata(dim))
 
 
 

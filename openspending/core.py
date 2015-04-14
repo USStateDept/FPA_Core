@@ -11,7 +11,7 @@ from flaskext.uploads import UploadSet, IMAGES, configure_uploads
 import formencode_jinja2
 from celery import Celery
 from cubes import Workspace
-from cubes.extensions import extensions
+#from cubes.extensions import extensions
 from google.refine import refine
 
 from openspending import default_settings
@@ -65,13 +65,14 @@ def create_app(**config):
     from openspending.lib.solr_util import configure as configure_solr
     configure_solr(app.config)
 
-    from openspending.model.provider import OpenSpendingStore
-    extensions.store.extensions['openspending'] = OpenSpendingStore
+    #from openspending.model.provider import OpenSpendingStore
+    #extensions.store.extensions['openspending'] = OpenSpendingStore
     app.cubes_workspace = Workspace()
     #db_url = app.config.get('SQLALCHEMY_DATABASE_URI')
-    app.cubes_workspace.register_default_store('openspending')
+    
+    app.cubes_workspace.register_default_store('OpenSpendingStore')
 
-
+    
     #do app.config in the future
     refine_server = refine.RefineServer(server=OPENREFINE_SERVER)
 

@@ -55,6 +55,12 @@ setup(
         'console_scripts': [
             'ostool = openspending.command:main',
             'openspending = openspending.command:main'
+        ],
+        'cubes.stores': [
+            'OpenSpendingStore = openspending.model.provider:OpenSpendingStore'
+        ],
+        'cubes.providers': [
+            'openspending = openspending.model.provider:OpenSpendingModelProvider'
         ]
     },
 
