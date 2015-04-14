@@ -65,7 +65,7 @@ def create_app(**config):
     from openspending.lib.solr_util import configure as configure_solr
     configure_solr(app.config)
 
-    #from openspending.model.provider import OpenSpendingStore
+    # from openspending.model.provider import OpenSpendingStore
     #extensions.store.extensions['openspending'] = OpenSpendingStore
     app.cubes_workspace = Workspace()
     #db_url = app.config.get('SQLALCHEMY_DATABASE_URI')

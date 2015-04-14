@@ -27,9 +27,8 @@ class OpenSpendingModelProvider(ModelProvider):
     def requires_store(self):
         return True
 
-    #metaonly = False
+
     def cube(self, name, locale=None, namespace=None, metaonly=None):
-        print "just not doing this=========================="
 
         if name == "geometry":
             return getGeomCube(self, metaonly)
@@ -51,7 +50,7 @@ class OpenSpendingModelProvider(ModelProvider):
     #         "wma": partial(_window_function_factory, window_function=weighted_moving_average, label='Weighted Moving Avg. of {measure}'),
     # "sma": partial(_window_function_factory, window_function=simple_moving_average, label='Simple Moving Avg. of {measure}'),
     # "sms": partial(_window_function_factory, window_function=simple_moving_sum, label='Simple Moving Sum of {measure}'),
-        aggregation_funcs = ["wma", "sma", "sms"]
+        aggregation_funcs = ["sum", "min", "max", "avg"]
 
         for measure in dataset.source.model.measures:
             cubes_measure = Measure(measure.name, label=measure.label)
@@ -103,7 +102,6 @@ class OpenSpendingModelProvider(ModelProvider):
         raise NoSuchDimensionError('No global dimensions in OS', name)
 
     def list_cubes(self):
-        print "doing this fine------------------------------"
         cubes = []
         for dataset in Dataset.all():
             if not len(dataset.mapping):
@@ -116,6 +114,8 @@ class OpenSpendingModelProvider(ModelProvider):
         return cubes
 
     def has_cube(self, cube_ref):
+        if cube_ref == "geometry":
+            return True
         if Dataset.by_name(cube_ref):
             return True
 
@@ -137,8 +137,7 @@ class OpenSpendingStore(SQLStore):
 
     related_model_provider = "openspending"
 
-    def model_provider_name(self):
-        return self.related_model_provider
+
 
     def __init__(self, **options):
         super(OpenSpendingStore, self).__init__(url=SQLALCHEMY_DATABASE_URI, **options)
@@ -146,10 +145,13 @@ class OpenSpendingStore(SQLStore):
         self.options = options
         self.options = coalesce_options(options, OPTION_TYPES)
         # self.logger = get_logger()
-        self.related_model_provider = self.model_provider_name()
         # #self.schema = None
         # self._metadata = None
-        print self.schema
+
+    @property 
+    def model_provider_name(self):
+        return self.related_model_provider
+
 
     # @property
     # def connectable(self):
