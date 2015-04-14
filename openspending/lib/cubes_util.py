@@ -4,14 +4,13 @@ from functools import wraps
 
 from cubes.workspace import Workspace
 from cubes.auth import NotAuthorized
-from cubes.browser import Cell, cuts_from_string, SPLIT_DIMENSION_NAME
 from cubes.errors import *
 from cubes.server.utils import *
 from cubes.server.errors import *
 from cubes.server.local import *
 from cubes.server.decorators import prepare_cell
 from cubes.calendar import CalendarMemberConverter
-from cubes.model import Cube, create_dimension
+from cubes.model import Cube, Dimension
 
 from contextlib import contextmanager
 
@@ -74,6 +73,7 @@ def get_complex_cube(star_name, cubes):
     #skipping authorization without "authorized_cube" func
     #the workspace.cube function will raiseerror if cube is not found
     star_cube_raw = current_app.cubes_workspace.cube(star_name, locale=g.locale, metaonly=True)
+
     star_cube = add_table_identifier(star_cube_raw, seperator="__")
 
 
@@ -151,16 +151,25 @@ def sort_on_deps(joinslist, detail_table):
 
 def add_table_identifier(meta_data, seperator="__"):
     for item in ['aggregates', 'measures', 'dimensions']:
+
         for dim in meta_data[item]:
+            try:
+                if dim.ref == "num_entries":
+                    continue
+            except:
+                pass
             dim.name = meta_data['name'] + seperator + dim.name
-            try:
+            if item == 'measures':
                 dim.ref = meta_data['name'] + seperator + dim.ref
-            except:
-                pass
-            try:
+            elif hasattr(dim, 'attributes'):
+                for attr in dim.attributes:
+                    attr.ref = meta_data['name'] + seperator + attr.ref
+            elif item == 'aggregates':
                 dim.measure = meta_data['name'] + seperator + dim.measure
-            except:
-                pass
+                dim.ref = meta_data['name'] + seperator + dim.ref
+            else:
+                print "!!!!!!!!!!!!!!somethin gese is hpapening"
+
     master_meta_new = {}
     for mapkey in meta_data['mappings']:
        master_meta_new[meta_data['name'] + "__" + mapkey] = meta_data['mappings'][mapkey]
@@ -190,6 +199,8 @@ def coalesce_cubes(master_meta, cubes_metadata):
             leftjoin_field = joinfield.name+ ".gid" 
             break
 
+    has_num_entries = False
+
     for cube_meta in cubes_metadata:
         rightjoin_field = None
         for joinfield2 in cube_meta['dimensions']:
@@ -204,6 +215,17 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
         #add in all of the components to the master_meta
         for item in ['aggregates', 'measures', 'dimensions']:
+            #let's take out the country_level0 one
+            if item == 'aggregates':
+                #remove num_entries for this
+                for aggitem_index in range(len(cube_meta[item])):
+                    if cube_meta[item][aggitem_index].name == "num_entries":
+                        if has_num_entries:
+                            cube_meta[item].pop(aggitem_index)
+                        else:
+                            has_num_entries = True
+                        break
+
             master_meta[item] = master_meta[item] + cube_meta[item]
 
         master_meta['mappings'].update(cube_meta['mappings'])
@@ -570,7 +592,7 @@ def getGeomCube(provider, metaonly):
 
     dimensions = []
     for dim in dim_metas:
-        dimensions.append(create_dimension(dim))
+        dimensions.append(Dimension.from_metadata(dim))
 
 
 

@@ -78,8 +78,6 @@ def aggregate_cubes(star_name):
         raise RequestError("You can only join 5 cubes together at one time")  
 
     g.cube = get_complex_cube(star_name, cubes)
-
-    print "gcube here", g.cube
     
 
     g.browser = current_app.cubes_workspace.browser(g.cube)
@@ -87,6 +85,7 @@ def aggregate_cubes(star_name):
 
 
     cube = g.cube
+
 
     output_format = validated_parameter(request.args, "format",
                                         values=["json", "csv"],
@@ -130,7 +129,6 @@ def aggregate_cubes(star_name):
                                  page_size=g.page_size,
                                  order=g.order)
 
-    print "Result here", result
 
     # Hide cuts that were generated internally (default: don't)
     if current_app.slicer.hide_private_cuts:
@@ -143,7 +141,6 @@ def aggregate_cubes(star_name):
     else:
         g.prettyprint = current_app.slicer.prettyprint
 
-    print "doing sutff here", output_format
     if output_format == "json":
         return jsonify(result)
     elif output_format != "csv":
