@@ -254,7 +254,7 @@ def getGeomCube(provider, metaonly):
                   "name": "geometry",
                   "info": {},
                   "label": "Base Geometry",
-                  'fact_table': "geometry__country_level0",
+                  'fact_table': "geometry__time",
                   "description": "The Base Geometry Table",
                   "aggregates": [],
                   "measures": [],
@@ -262,6 +262,41 @@ def getGeomCube(provider, metaonly):
                 }
 
     dim_metas = [
+                    {
+                      "name": "year",
+                      "info": {},
+                      "label": "Year",
+                      "default_hierarchy_name": "year",
+                      "levels": [
+                        {
+                          "name": "year",
+                          "info": {},
+                          "label": "Year",
+                          "key": "year",
+                          "label_attribute": "year",
+                          "order_attribute": "year",
+                          "attributes": [
+                            {
+                              "name": "year",
+                              "info": {},
+                              "label": "year",
+                              "ref": "geometry__time.year",
+                              "locales": []
+                            }
+                          ]
+                        }
+                        ],
+                      "hierarchies": [
+                        {
+                          "name": "year",
+                          "info": {},
+                          "label": "Year",
+                          "levels": [
+                            "year"
+                          ]
+                        }, 
+                      ]
+                    },
                     {
                       "name": "country_level0",
                       "info": {},
@@ -454,7 +489,7 @@ def getGeomCube(provider, metaonly):
                               "locales": []
                             }
                           ]
-                        }
+                        } 
                       ],
                       "hierarchies": [
                         {
@@ -572,9 +607,12 @@ def getGeomCube(provider, metaonly):
 
 
 
-    #joins = [{"master": u"geometry__entry.country_level0_id", "detail": u"geometry__country_level0.id"}] 
-    joins = []
+    joins = [{"master": u"geometry__time.gid", "detail": u"geometry__country_level0.gid"}] 
+    #joins = []
     mappings = {
+                u'time.year' : u"geometry__time.year",
+                u"time.id" : u"geometry__time.id",
+                u"time.gid" : u"geometry__time.gid",
                 u"country_level0.dos_level1": u"geometry__country_level0.dos_level1", 
                 u"country_level0.dod_level1": u"geometry__country_level0.dod_level1",
                 u"country_level0.incomegroup_level1": u"geometry__country_level0.incomegroup_level1", 
