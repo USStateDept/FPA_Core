@@ -58,6 +58,62 @@ class Dimension(object):
         return hasattr(self, attribute)
 
 
+
+class GeomTimeAttribute(Dimension, Attribute):
+
+    """ A simple dimension that does not create its own values table
+    but keeps its values directly as columns on the facts table. This is
+    somewhat unusual for a star schema but appropriate for properties such as
+    transaction identifiers whose cardinality roughly equals that of the facts
+    table.
+    """
+
+    def __init__(self, model, name, data):
+        Attribute.__init__(self, model, name, data)
+        Dimension.__init__(self, model, name, data)
+
+    def __repr__(self):
+        return "<AttributeDimension(%s)>" % self.name
+
+    def members(self, conditions="1=1", limit=None, offset=0):
+        """ Get a listing of all the members of the dimension (i.e. all the
+        distinct values) matching the filter in ``conditions``. """
+        query = select([self.column_alias], conditions,
+                       limit=limit, offset=offset, distinct=True)
+        rp = self.model.bind.execute(query)
+        while True:
+            row = rp.fetchone()
+            if row is None:
+                break
+            yield row[0]
+
+
+    def load(self, bind, value):
+        return {self.column.name: value}
+
+    def num_entries(self, conditions="1=1"):
+        """ Return the count of entries on the model fact table having the
+        dimension set to a value matching the filter given by ``conditions``.
+        """
+        query = select([func.count(func.distinct(self.column_alias))],
+                       conditions)
+        rp = self.model.bind.execute(query)
+        return rp.fetchone()[0]
+
+    def to_cubes(self, mappings, joins):
+        """ Convert this dimension to a ``cubes`` dimension. """
+        mappings['%s.%s' % (self.name, self.name)] = unicode(self.column)
+        return {
+            'levels': [{
+                'name': self.name,
+                'label': self.label,
+                'key': self.name,
+                'attributes': [self.name]
+            }]
+        }
+
+
+
 class AttributeDimension(Dimension, Attribute):
 
     """ A simple dimension that does not create its own values table

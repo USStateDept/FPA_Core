@@ -298,6 +298,19 @@ def save_default_model(datasetname):
                                 }
                             }
 
+
+    r['mapping']['geom_time_id'] = {
+                              "default_value": "",
+                              "description": "Geometry Time ID",
+                              "datatype": "integer",
+                              "label": "Geometry Time ID",
+                              "column": "geom_time_id",
+                              "type": "geom_time_id",
+                              "form": {
+                                "label": "Geometry-Time ID"
+                                }
+                            }
+
     dataset.data = r
 
     #also need to get the operations of the OR and save it to 
@@ -437,6 +450,21 @@ def update_model(datasetname):
                                 "label": "Unique Identifier"
                                 }
                             }
+
+    r['mapping']['geom_time_id'] = {
+                              "default_value": "",
+                              "description": "Geometry Time ID",
+                              "datatype": "integer",
+                              "label": "Geometry Time ID",
+                              "column": "geom_time_id",
+                              "type": "geom_time_id",
+                              "form": {
+                                "label": "Geometry-Time ID"
+                                }
+                            }
+
+
+
 
     dataset = get_dataset(datasetname)
     dataset.source.addData(r)

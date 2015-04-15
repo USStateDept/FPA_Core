@@ -178,7 +178,55 @@ class CSVImporter(BaseImporter):
 
 from openspending.preprocessors import processing_funcs
 
+
+
 class ORImporter(BaseImporter):
+
+    def _match_country_id(self, country_level0):
+        # country_level0 has name and label
+        result = db.engine.execute("SELECT country_level0.gid as gid \
+                                    FROM public.geometry__country_level0 as country_level0 \
+                                    WHERE country_level0.name_long = '%s' \
+                                    OR country_level0.short_name = '%s';" %(country_level0['label'], country_level0['label'],))
+        gid = result.first()
+        if not gid:
+            result = db.engine.execute("SELECT \
+                                          geometry__country_level0.gid\
+                                        FROM \
+                                          public.geometry__alt_names, \
+                                          public.geometry__country_level0\
+                                        WHERE \
+                                          geometry__alt_names.country_level0_id = geometry__country_level0.gid AND\
+                                          (geometry__alt_names.altname IN ('%s','%s'));" %(country_level0['label'], country_level0['label'].lower(),))
+            gid = result.first() 
+            #check the altnames table for an item
+
+        if not gid:
+            return 0
+        else:
+            return gid[0]
+
+    def _match_time_geom(self, gid, date):
+        
+        #time is datetime
+
+        if not gid:
+            return 0
+
+        #find the date
+
+        result = db.engine.execute("SELECT \
+                                      geometry__time.id \
+                                    FROM \
+                                      public.geometry__time \
+                                    WHERE geometry__time.gid = %s \
+                                    AND geometry__time.year = %s" %(gid, date.year,))
+
+        geom_date_id = result.first()
+        if geom_date_id:
+            return geom_date_id[0]
+        else:
+            return 0
 
     @property
     def lines(self):
@@ -193,6 +241,50 @@ class ORImporter(BaseImporter):
         counter = 0
         for row in sourcefile_csv:
             counter += 1
+            #update the value of the uniqueid
             row.update({"uniqueid":str(counter)})
+            row.update({"geom_time_id": "0"})
+
             yield row
+
+    def process_line(self, line):
+        if self.row_number % 1000 == 0:
+            log.info('Imported %s lines' % self.row_number)
+
+        try:
+# {u'geom_time_id': u'0', u'country_level0': {u'countryid': u'Caribbean small stat
+# es', u'name': u'caribbean-small-states', u'label': u'Caribbean small states'}, u
+# 'amount': 27.1328588135588, u'theid': u'71', u'time': datetime.date(1977, 1, 1)}
+
+            data = convert_types(self.dataset.mapping.get('mapping', {}), line)
+            gid = self._match_country_id(data['country_level0'])
+            data['geom_time_id'] = str(self._match_time_geom(gid, data['time']))
+
+            if not data['geom_time_id']:
+                self.log_exception(
+                    ValueError("Could not find country time combo"),
+                    error="%s is not a unique key" % data['country_level0']['label'])           
+
+            if not self.dry_run:
+                self.source.model.load(data)
+            else:
+                # Check uniqueness
+                unique_value = ', '.join([unicode(data[k]) for k in self.key])
+                if unique_value in self.unique_check:
+                    # Log the error (with the unique key represented as
+                    # a dictionary)
+                    self.log_exception(
+                        ValueError("Unique key constraint not met"),
+                        error="%s is not a unique key" % unique_value)
+                self.unique_check[unique_value] = True
+        except Invalid as invalid:
+            for child in invalid.children:
+                self.log_invalid_data(child)
+            if self.raise_errors:
+                raise
+        except Exception as ex:
+            self.log_exception(ex)
+            if self.raise_errors:
+                raise
+
 
