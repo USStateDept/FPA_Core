@@ -5,23 +5,14 @@ Installation and Setup
 Requirements
 ------------
 
-* Python_ >= 2.7, with pip_ and virtualenv_   
-* PostgreSQL_ >= 8.4, PostGIS >= 2.0
-* RabbitMQ_ >= 2.6.1
-* Erlang_ >= 17.5
-* Java_ >= 1.7
-* `Apache Solr`_ = 4.x
-* GoogleRefine_ = 2.1
+* [Python](http://www.python.org/) == 2.7, with [pip](http://pypi.python.org/pypi/pip) and [virtualenv](http://pypi.python.org/pypi/virtualenv)  
+* [PostgreSQL](http://www.postgres.org/) == 9.3, PostGIS >= 2.0
+* [RabbitMQ](http://www.rabbitmq.com/) >= latest
+* [Erlang](http://www.erlang.org/download.html) >= latest
+* [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) == 1.7
+* [`Apache Solr`](http://lucene.apache.org/solr/) = 4.x - NOT 5.0
+* [GoogleRefine](https://code.google.com/p/google-refine/downloads/list?can=1) = 2.1 - NOT latest
 
-.. _Python: http://www.python.org/
-.. _PostgreSQL: http://www.postgres.org/
-.. _RabbitMQ: http://www.rabbitmq.com//
-.. _Erlang: http://www.erlang.org/download.html
-.. _Java: http://www.oracle.com/technetwork/java/javase/downloads/index.html
-.. _Apache Solr: http://lucene.apache.org/solr/
-.. _GoogleRefine: https://code.google.com/p/google-refine/downloads/list?can=1
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _pip: http://pypi.python.org/pypi/pip
 
 Installation
 ------------
