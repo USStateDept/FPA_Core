@@ -1,0 +1,10 @@
+Mako==1.0.1
+MarkupSafe==0.23
+PyYAML==3.11
+SQLAlchemy==0.9.9
+Unidecode==0.04.17
+alembic==0.7.5.post2
+dataset==0.5.6
+psycopg2==2.5.5
+python-slugify==1.0.1
+six==1.9.0
