@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_title %}Welcome{% endblock %}
+{% block page_title %}US State Department FIND{% endblock %}
 
 {% block scripts %}
 
@@ -11,42 +11,172 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="span7">
-      <br /><br />
-      <div>
-        There are currently three components to FIND listed below.  These will all be tied together once we have the design worked out.
+      <!-- Main component for a primary marketing message or call to action-->
+      <div class="row jumbotron bg-light">
+        <h1>Explore Indicators, Effortlessly</h1>
+        <p>Come for the Indicator, stay for the data. Modify and enhance the data how you want.</p>
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+            <p class="search-group">
+              <div class="form-group has-feedback">
+                <input type="text" placeHolder="Search for your desired indicator" class="main-search"><span class="glyphicon glyphicon-search form-control-feedback"></span>
+              </div>
+            </p>
+          </div>
+          <!--i.fa.fa-search-->
+          <!--span.glyphicon.glyphicon-search.form-control-feedback-->
+          <div class="col-md-2"></div>
+        </div>
+        <p>Examples: <a>Nutrition</a>, <a>Popular Growth</a>, <span>or </span><a>Angola</a>
+          <!--a.btn.btn-lg.btn-primary(href='../../components/#navbar', role='button') View navbar docs &raquo;-->
+        </p>
       </div>
-      <h3>
-        <a href="/admin" target="_blank">Data Model Management</a>
-      </h3>
-      <div>
-        This has the database model in lists and fields.  It is used to understand how each of the models are associated to each other.
+      <div class="row">
+        <div class="col-md-6">
+          <div class="well bg-container">
+            <h3>Welcome to FIND</h3>
+            <div class="row">
+              <div class="col-md-3"><img src="http://placehold.it/125x125"></div>
+              <div class="col-md-9">
+                <p></p>Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.<br><br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="well bg-container">
+                <h3>Literacy rates</h3>
+                <div class="row">
+                  <div class="col-md-3"><img src="http://placehold.it/125x125"></div>
+                  <div class="col-md-9">
+                    <p>Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="well bg-container">
+                <h3>Infant and Child Death Rates</h3>
+                <div class="row">
+                  <div class="col-md-3"><img src="http://placehold.it/125x125"></div>
+                  <div class="col-md-9">
+                    <p>In the past 50 years, infant and child death rates in the developing world have been reduced by 50 percent, and health conditions around the world have improved more during this period than in all previous human history.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <h3>
-        <a href="/static/dataloader/build/index.html" target="_blank">Data Loading</a>
-      </h3>
-      <div>
-        This is used to load data into the system from various resources (URL or file upload).
+      <div class="row bg-medium footer">
+        <div class="well bg-medium font-light">
+          <h1>Your favorite Indicators displayed in all types of graphs and charts</h1>
+          <div class="col-md-4 font-dark">
+            <div class="well bg-container">
+              <h3>Latest Updates</h3>
+              <div class="row">
+                <div class="col-md-3"><img src="http://placehold.it/76x76"></div>
+                <div class="col-md-9">
+                  <p>Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3"><img src="http://placehold.it/76x76"></div>
+                <div class="col-md-9">
+                  <p>Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3"><img src="http://placehold.it/76x76"></div>
+                <div class="col-md-9">
+                  <p>Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3"><img src="http://placehold.it/76x76"></div>
+                <div class="col-md-9">
+                  <p>Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8 font-dark">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="well bg-container">
+                  <h3>Scatter plots</h3>
+                  <div class="row">
+                    <div class="col-md-6"><img src="http://placehold.it/150x150"></div>
+                    <div class="col-md-6">
+                      <p>Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="well bg-container">
+                  <h3>Line Chart, Series</h3>
+                  <div class="row">
+                    <div class="col-md-6"><img src="http://placehold.it/150x150"></div>
+                    <div class="col-md-6">
+                      <p>In the past 50 years, infant and child death rates in the developing world have been reduced by 50 percent, and health.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="well bg-container">
+                  <h3>Line Charts</h3>
+                  <div class="row">
+                    <div class="col-md-6"><img src="http://placehold.it/150x150"></div>
+                    <div class="col-md-6">
+                      <p>Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="well bg-container">
+                  <h3>Maps</h3>
+                  <div class="row">
+                    <div class="col-md-6"><img src="http://placehold.it/150x150"></div>
+                    <div class="col-md-6">
+                      <p>In the past 50 years, infant and child death rates in the developing world have been reduced by 50 percent, and health.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <h3>
-        <a href="/static/dataviewer/build/index.html">Dataviewer (Data API URL generator)</a>
-      </h3>
-      <div>
-        This is used to develop the API calls, filter, and preview the data.  When the link for the data is generated, you can use it in the <a href="/static/viz/index.html" target="_blank">FPA viz section</a> to create visualizations.  See info below on on the visualization section. 
+      <div class="row bg-dark font-light footer-links">
+        <div class="well bg-dark">
+          <div class="col-md-5">&copy; 2015 All Rights Reserved</div>
+          <div class="col-md-7">
+            <ul class="nav nav-pills">
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Accessibility</a></li>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">Help            </a></li><i class="fa fa-chevron-up"></i>
+            </ul>
+          </div>
+        </div>
       </div>
-      <h3>
-        <a href="/static/viz/index.html" target="_blank">Data Visualization</a> 
-      </h3>
-      <div>
-        This is used to visualize data from links or any other CSV format.  Each indicator will have a page that automatically loads certain visualizations using this section.  The visualizations will be loaded from stored JSON settings, as shown beside the "Fetch Options" button.  Users with manager/admin rights will be able to extend these views to customize them for each indicator.  Regular users (anonymous and registered) will be able to extend and it will be saved in a different section to become a "User Story" or "Data story".   
-      </div>
-      <div>
-        The main component is that JSON can be saved with all of the settings of the user for the visualization to be recreated, customized, and saved in the database for future use.
-      </div>
-    </div>
-  </div>
-
 
 
 {% endblock %}
