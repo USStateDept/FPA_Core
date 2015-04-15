@@ -86,7 +86,6 @@ def get_complex_cube(star_name, cubes):
     
     star_cube = coalesce_cubes(star_cube, cubes_meta)
 
-
     return Cube(name=star_cube['name'],
                             fact=star_cube['fact'],
                             aggregates=star_cube['aggregates'],
@@ -163,12 +162,15 @@ def add_table_identifier(meta_data, seperator="__"):
                 dim.ref = meta_data['name'] + seperator + dim.ref
             elif hasattr(dim, 'attributes'):
                 for attr in dim.attributes:
-                    attr.ref = meta_data['name'] + seperator + attr.ref
+                    if attr.ref == "geom_time_id":
+                        attr.ref = meta_data['name'] + seperator + "entry." +  attr.ref
+                    else:
+                        attr.ref = meta_data['name'] + seperator + attr.ref
             elif item == 'aggregates':
                 dim.measure = meta_data['name'] + seperator + dim.measure
                 dim.ref = meta_data['name'] + seperator + dim.ref
             else:
-                print "!!!!!!!!!!!!!!somethin gese is hpapening"
+                print "Could not find the type of dimension"
 
     master_meta_new = {}
     for mapkey in meta_data['mappings']:
@@ -176,6 +178,7 @@ def add_table_identifier(meta_data, seperator="__"):
     meta_data['mappings'] = master_meta_new
 
     meta_data['mappings'][meta_data['name'] + '__amount'] = meta_data['name'] + '__entry.amount'
+
     meta_data['mappings'].update(meta_data['mappings'])
 
 
@@ -192,11 +195,11 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
     #search for "Country_level0" or country_level0 or any other labels we might apply in case not consistent in data loading
     #before we do amny edits to the master_meta
-    candidates = ["country_level0.gid", "country_level0.countryid"]
+    candidates = ["year.id", "time.id", 'geom_time_id.geom_time_id']
     leftjoin_field = None
     for joinfield in master_meta['dimensions']:
-        if joinfield.name.split('__')[1] + ".gid" in candidates:
-            leftjoin_field = joinfield.name+ ".gid" 
+        if joinfield.name.split('__')[1] + ".id" in candidates:
+            leftjoin_field = joinfield.name+ ".id" 
             break
 
     has_num_entries = False
@@ -204,8 +207,8 @@ def coalesce_cubes(master_meta, cubes_metadata):
     for cube_meta in cubes_metadata:
         rightjoin_field = None
         for joinfield2 in cube_meta['dimensions']:
-            if joinfield2.name.split('__')[1] + ".countryid" in candidates:
-                rightjoin_field = joinfield2.name+ ".countryid" 
+            if joinfield2.name.split('__')[1] + ".geom_time_id" in candidates:
+                rightjoin_field = joinfield2.name.split('__')[0] + "__entry.geom_time_id" 
                 break
 
         if not rightjoin_field:
@@ -233,7 +236,7 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
         #join_dict example {"master": "test_geom__Country_level0.label", "detail":"geometry__country_level0.label"}
         master_meta['joins']  = master_meta['joins'] + \
-            [{"master": leftjoin_field, "detail":rightjoin_field}] + \
+            [{"master": leftjoin_field, "detail":rightjoin_field, "method": "master"}] + \
             figure_out_deps(cube_meta['joins'], rightjoin_field.split(".")[0])
 
 
@@ -254,7 +257,7 @@ def getGeomCube(provider, metaonly):
                   "name": "geometry",
                   "info": {},
                   "label": "Base Geometry",
-                  'fact_table': "geometry__country_level0",
+                  'fact_table': "geometry__time",
                   "description": "The Base Geometry Table",
                   "aggregates": [],
                   "measures": [],
@@ -262,6 +265,41 @@ def getGeomCube(provider, metaonly):
                 }
 
     dim_metas = [
+                    {
+                      "name": "time",
+                      "info": {},
+                      "label": "Time",
+                      "default_hierarchy_name": "time",
+                      "levels": [
+                        {
+                          "name": "time",
+                          "info": {},
+                          "label": "Time",
+                          "key": "year",
+                          "label_attribute": "year",
+                          "order_attribute": "year",
+                          "attributes": [
+                            {
+                              "name": "year",
+                              "info": {},
+                              "label": "Year",
+                              "ref": "geometry__time.year",
+                              "locales": []
+                            }
+                          ]
+                        }
+                        ],
+                      "hierarchies": [
+                        {
+                          "name": "time",
+                          "info": {},
+                          "label": "Time",
+                          "levels": [
+                            "time"
+                          ]
+                        }, 
+                      ]
+                    },
                     {
                       "name": "country_level0",
                       "info": {},
@@ -454,7 +492,7 @@ def getGeomCube(provider, metaonly):
                               "locales": []
                             }
                           ]
-                        }
+                        } 
                       ],
                       "hierarchies": [
                         {
@@ -572,9 +610,13 @@ def getGeomCube(provider, metaonly):
 
 
 
-    #joins = [{"master": u"geometry__entry.country_level0_id", "detail": u"geometry__country_level0.id"}] 
-    joins = []
+    joins = [{"master": u"geometry__time.gid", "detail": u"geometry__country_level0.gid"}] 
+    #joins = []
     mappings = {
+                u'time.year' : u"geometry__time.year",
+                u'geometry__year' : u"geometry__time.year",
+                u"time.id" : u"geometry__time.id",
+                u"time.gid" : u"geometry__time.gid",
                 u"country_level0.dos_level1": u"geometry__country_level0.dos_level1", 
                 u"country_level0.dod_level1": u"geometry__country_level0.dod_level1",
                 u"country_level0.incomegroup_level1": u"geometry__country_level0.incomegroup_level1", 
