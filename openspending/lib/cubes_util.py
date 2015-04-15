@@ -236,7 +236,7 @@ def coalesce_cubes(master_meta, cubes_metadata):
 
         #join_dict example {"master": "test_geom__Country_level0.label", "detail":"geometry__country_level0.label"}
         master_meta['joins']  = master_meta['joins'] + \
-            [{"master": leftjoin_field, "detail":rightjoin_field}] + \
+            [{"master": leftjoin_field, "detail":rightjoin_field, "method": "master"}] + \
             figure_out_deps(cube_meta['joins'], rightjoin_field.split(".")[0])
 
 
