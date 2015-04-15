@@ -15,6 +15,8 @@ from openspending.views.api_v2.common import blueprint
 
 from openspending.lib.cubes_util import *
 from cubes.server.utils import *
+from cubes.formatters import JSONLinesGenerator, csv_generator
+from cubes.browser import SPLIT_DIMENSION_NAME
 from cubes.server.decorators import prepare_cell
 
 
@@ -161,13 +163,13 @@ def aggregate_cubes(star_name):
         header = None
 
     fields = result.labels
-    generator = CSVGenerator(result,
+    generator = csv_generator(result,
                              fields,
                              include_header=bool(header),
                              header=header)
-
+    
     headers = {"Content-Disposition": 'attachment; filename="aggregate.csv"'}
-    return Response(generator.csvrows(),
+    return Response(generator,
                     mimetype='text/csv',
                     headers=headers)
 

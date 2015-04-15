@@ -1,6 +1,7 @@
 from datetime import datetime
+import uuid
 from sqlalchemy.orm import reconstructor, relationship, backref
-from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.schema import Column, ForeignKey, Table
 from sqlalchemy.types import Integer, Unicode, Boolean, DateTime
 from sqlalchemy import BigInteger
 from sqlalchemy.sql.expression import false, or_
@@ -10,8 +11,7 @@ from flask.ext.login import current_user
 
 from openspending.core import db
 
-from openspending.model.source import Source
-from openspending.model.dataorg import DataOrg
+from openspending.model import Dataset
 from openspending.model import Account
 from openspending.model.common import (MutableDict, JSONType,
                                        DatasetFacetMixin)
@@ -56,7 +56,6 @@ class Dataview(db.Model):
     account = relationship(Account, backref=backref("dataviews", uselist=False))
 
     cloned_dataview_id = Column(Integer, ForeignKey('dataview.id'))
-    cloned_dataview = relationship(self, backref=backref("clones", lazy='dynamic'))
 
     settings = Column(MutableDict.as_mutable(JSONType), default=dict)
 
@@ -67,28 +66,10 @@ class Dataview(db.Model):
             return
         self.title = data.get("title")
         self.description = data.get("description")
-        if current_user:
+        if current_user.is_authenticated():
             self.account = current_user
         self.settings = data.get("settings", {})
-        self.cloned_dataview = data.get("cloned_dataview", None)
-
-
-
-    @classmethod
-    def clone_view(cls, theobj):
-
-        fields = ['title', 'description',  
-                 'settings', 'datasets', 'settings']
-        classobj = cls()
-        for field in fields:
-            setattr(classobj, field, getattr(theobj, field))
-
-        classobj.cloned_dataview = theobj
-
-        db.session.add(classobj)
-        db.session.commit()
-
-        return classobj
+        self.cloned_dataview_id = data.get("cloned_dataview_id", None)
 
 
 
@@ -105,13 +86,28 @@ class Dataview(db.Model):
 
     def as_dict(self):
         return {
-            'title': self.label,
-            'description': self.name,
-            'settings': self.description,
-            'account_id': self.account_id
+            'title': self.title,
+            'description': self.description,
+            'settings': self.settings,
+            'urlhash' : self.urlhash
         }
 
 
+    @classmethod
+    def clone_dataview(cls, theobj):
+
+        fields = ['title', 'description',  
+                 'settings', 'datasets', 'settings']
+        classobj = cls()
+        for field in fields:
+            setattr(classobj, field, getattr(theobj, field))
+
+        classobj.cloned_dataview_id = theobj.id
+
+        db.session.add(classobj)
+        db.session.commit()
+
+        return classobj
 
     @classmethod
     def all_by_account(cls, account, order=True):
@@ -124,11 +120,11 @@ class Dataview(db.Model):
         """ Query available datasets based on dataset visibility. """
         q = db.session.query(cls)
         if order:
-            q = q.order_by(cls.label.asc())
+            q = q.order_by(cls.title.asc())
         return q
 
     @classmethod
-    def by_urlhash(cls, name):
+    def by_urlhash(cls, urlhash):
         return db.session.query(cls).filter_by(urlhash=urlhash).first()
 
 
