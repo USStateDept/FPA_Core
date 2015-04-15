@@ -73,7 +73,7 @@ class GeomTimeAttribute(Dimension, Attribute):
         Dimension.__init__(self, model, name, data)
 
     def __repr__(self):
-        return "<AttributeDimension(%s)>" % self.name
+        return "<GeomTimeAttribute(%s)>" % self.name
 
     def members(self, conditions="1=1", limit=None, offset=0):
         """ Get a listing of all the members of the dimension (i.e. all the
