@@ -93,6 +93,10 @@ class Account(db.Model):
         return db.session.query(cls).filter_by(id=id).first()
 
     @classmethod
+    def all(cls):
+        return db.session.query(cls)
+
+    @classmethod
     def by_email(cls, email):
         return db.session.query(cls).filter_by(email=email).first()
 

@@ -41,3 +41,12 @@ UPLOADED_FILES_DEST = os.path.realpath('.') + '/datauploads/'
 #domain whitelist 
 EMAIL_WHITELIST = ['state.gov', 'whitehouse.gov']
 
+
+#approved hosts for proxy
+APPROVED_HOSTS = ["localhost:3333", "path_to_google_refine"]
+
+
+LOCKDOWNUSER = "someusername"
+LOCKDOWNPASSWORD = "somepassword"
+
+LOCKDOWN_FORCE = False

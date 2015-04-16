@@ -1,5 +1,5 @@
 import logging
-from flask import Flask
+from flask import Flask, redirect
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.babel import Babel
@@ -11,11 +11,15 @@ from flaskext.uploads import UploadSet, IMAGES, configure_uploads
 import formencode_jinja2
 from celery import Celery
 from cubes import Workspace
+#from flask.ext.httpauth import HTTPDigestAuth
+from flask.ext.login import current_user
+from flask import request
 #from cubes.extensions import extensions
 from google.refine import refine
 
 from openspending import default_settings
-from settings import OPENREFINE_SERVER
+from settings import OPENREFINE_SERVER 
+from settings import LOCKDOWN_FORCE
 from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
 #from flask.ext.superadmin import Admin, model
@@ -34,8 +38,12 @@ login_manager = LoginManager()
 cache = Cache()
 mail = Mail()
 assets = Environment()
+#auth = HTTPDigestAuth()
 
 sourcefiles = UploadSet('sourcefiles', extensions=('txt', 'rtf', 'odf', 'ods', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'json', 'xml'))
+
+
+
 
 
 def create_app(**config):
@@ -60,6 +68,14 @@ def create_app(**config):
     assets.init_app(app)
     login_manager.init_app(app)
     configure_uploads(app, (sourcefiles,))
+
+    @app.before_request
+    def require_basic_auth(*args, **kwargs):
+        
+        if not current_user.is_authenticated() and request.path != "/lockdown" and LOCKDOWN_FORCE:
+            return redirect("/lockdown", code=302)
+
+
 
     # HACKY SHIT IS HACKY
     from openspending.lib.solr_util import configure as configure_solr
