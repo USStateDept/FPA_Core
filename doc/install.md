@@ -31,7 +31,7 @@ dependencies from the rest of your system.::
 Now activate the environment. Your prompt will be prefixed with the name of
 the environment.::
 
-    $ source ./pyenv/bin/activate
+    $ source ./pyenv/Scripts/activate
 
 Ensure that any in shell you use to complete the installation you have run the 
 preceding command.
