@@ -31,7 +31,7 @@ dependencies from the rest of your system.::
 Now activate the environment. Your prompt will be prefixed with the name of
 the environment.::
 
-    $ source ./pyenv/bin/activate
+    $ source ./pyenv/Scripts/activate
 
 Ensure that any in shell you use to complete the installation you have run the 
 preceding command.
@@ -55,7 +55,7 @@ as this includes the C speedups.  Without compiled it will just run pure python.
 Create a database if you do not have one already. We recommend using Postgres
 but you can use anything compatible with SQLAlchemy. For postgres you would do::
 
-    $ createdb -E utf-8 --owner {your-database-user} openspending
+    $ createdb -E utf-8 -U {your-database-user} openspending
 
 Having done that, you can copy configuration templates::
 
