@@ -5,6 +5,7 @@ from openspending.model.account import Account  # NOQA
 from openspending.model.metadataorg import MetadataOrg
 from openspending.model.dataorg import DataOrg
 from openspending.model.dataset import Dataset
+from openspending.model.dataview import Dataview
 from openspending.model.source import Source
 from openspending.model.log_record import LogRecord  # NOQA
 from openspending.model.run import Run  # NOQA
