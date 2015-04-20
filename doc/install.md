@@ -59,7 +59,7 @@ but you can use anything compatible with SQLAlchemy. For postgres you would do::
 
 Having done that, you can copy configuration templates::
 
-    $ cp settings.py_tmpl settings.py
+    $ copy settings.py_tmpl settings.py
 
 Edit the configuration files to make sure you're pointing to a valid database 
 URL is set::
