@@ -268,13 +268,13 @@ def getGeomCube(provider, metaonly):
                     {
                       "name": "time",
                       "info": {},
-                      "label": "Time",
+                      "label": "Year",
                       "default_hierarchy_name": "time",
                       "levels": [
                         {
                           "name": "time",
                           "info": {},
-                          "label": "Time",
+                          "label": "Year",
                           "key": "year",
                           "label_attribute": "year",
                           "order_attribute": "year",
@@ -293,12 +293,14 @@ def getGeomCube(provider, metaonly):
                         {
                           "name": "time",
                           "info": {},
-                          "label": "Time",
+                          "label": "Year",
                           "levels": [
                             "time"
                           ]
                         }, 
-                      ]
+                      ],
+                      "is_flat": False,
+                      "has_details": False
                     },
                     {
                       "name": "country_level0",

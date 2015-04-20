@@ -117,7 +117,7 @@ def aggregate_cubes(star_name):
         for ddstring in ddlist:
             drilldown += ddstring.split("|")
 
-
+    #this handles cuts
     prepare_cell(restrict=False)
 
     prepare_cell("split", "split")

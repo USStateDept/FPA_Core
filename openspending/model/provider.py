@@ -75,7 +75,7 @@ class OpenSpendingModelProvider(ModelProvider):
                                 "aggregates":aggregates,
                                 "measures":measures,
                                 #change these when they get addeed to the model
-                                "label":dataset.name,
+                                "label":dataset.label,
                                 "description":"non null description",
                                 "dimensions":dimensions,
                                 "store":self.store,
@@ -109,7 +109,7 @@ class OpenSpendingModelProvider(ModelProvider):
             cubes.append({
                 #change here too
                 'name': dataset.name,
-                'label': dataset.name
+                'label': dataset.label
             })
         return cubes
 
