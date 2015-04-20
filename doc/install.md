@@ -69,7 +69,8 @@ URL is set::
 
 
 Additionally to the core repository, you will need to install submodules for that static components::
-
+    
+    $ git config --global url.https://github.com/.insteadOf git://github.com/
     $ git submodule init
     $ git submodule update
 
