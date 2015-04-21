@@ -23,7 +23,7 @@ def grantadmin(username):
 
 
 @manager.command
-def createuser(username):
+def createuser():
     """ Create a new user """
     from openspending.core import db
     from openspending.model import Account
@@ -31,13 +31,13 @@ def createuser(username):
     import getpass
     from werkzeug.security import check_password_hash, generate_password_hash
 
-    if Account.by_name(username):
-        raise CommandException("Account `%s` alraedy exists." % username)
+
 
     account = Account()
-    account.name = username
     account.fullname  = raw_input("User Full name: ")
     account.email  = raw_input("User email: ")
+    if Account.by_email(account.email):
+        raise CommandException("Account `%s` already exists." % account.email)
     pass1 = getpass.getpass("Password: ")
     pass2 = getpass.getpass("Password again: ")
     if pass1 != pass2:

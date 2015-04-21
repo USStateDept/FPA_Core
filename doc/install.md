@@ -134,7 +134,10 @@ Start Solr with the full path to the folder as a parameter: ::
     $ java -Dsolr.velocity.enabled=false -jar start.jar
 
 
+Create Admin User
+----------
+
 Set up admin account by running the following with your virtualenv activated
 
-    $ ostool createuser
+    $ ostool user createuser
 
