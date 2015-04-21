@@ -135,5 +135,6 @@ Start Solr with the full path to the folder as a parameter: ::
 
 
 Set up admin account by running the following with your virtualenv activated
+
     $ ostool createuser
 
