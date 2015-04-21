@@ -21,10 +21,10 @@ First, check out the source code from the repository, e.g. via git on
 the command line::
 
     $ git clone https://github.com/USStateDept/FPA_Core.git
-    $ cd openspending
+    $ cd FPA_Core
 
 We also highly recommend you use a virtualenv_ to isolate the installed 
-dependencies from the rest of your system.::
+dependencies from the rest of your system.  This should be done in the repository root directory::
 
     $ virtualenv ./pyenv --distribute
 
@@ -115,12 +115,6 @@ instance of RabbitMQ installed and running and then execute::
 
     $ celery -A openspending.tasks worker -l info
 
-You can validate the functioning of the communication between the backend and
-frontend components using the ping action::
-
-    $ curl -q http://localhost:5000/__ping__ >/dev/null
-
-This should result in "Pong." being printed to the background daemon's console.
 
 Setup Solr
 ----------
@@ -129,23 +123,17 @@ Create a configuration home directory to use with Solr. This is most easily
 done by copying the Solr example configuration from the `Solr tarball`_, and 
 replacing the default schema with one from OpenSpending.::
 
-    $ cp -R apache-solr-<version>/* ./solr/
-    $ ln -sf <full path to openspending>/solr/schema.xml ./solr/example/solr/collection1/conf/
+    $ copy apache-solr-<version>/* C:/solr
+    $ copy <full path to openspending>/solr/schema.xml ./solr/example/solr/collection1/conf/
     
     edit ./solr/example/solr/collection1/core.properties to say name=openspending
 
-.. _Solr tarball: http://www.apache.org/dyn/closer.cgi/lucene/solr/
-
 Start Solr with the full path to the folder as a parameter: ::
 
-    $ (cd solr/example && java -Dsolr.velocity.enabled=false -jar start.jar)
+    $ cd C:\solr
+    $ java -Dsolr.velocity.enabled=false -jar start.jar
 
 
-Create an Admin User
---------------------
-
-On the web user interface, register as a normal user. Once signed up, go into 
-the database and do (replacing your-name with your login name)::
-
-  UPDATE "account" SET admin = true WHERE "name" = 'username';
+Set up admin account by running the following with your virtualenv activated
+    $ ostool createuser
 
