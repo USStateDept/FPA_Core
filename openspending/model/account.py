@@ -86,6 +86,9 @@ class Account(db.Model):
         if self.password:
             h.update(self.password)
         return h.hexdigest()
+ 
+    def is_anonymous(self):
+        return False
 
 
     @classmethod

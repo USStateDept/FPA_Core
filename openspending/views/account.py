@@ -63,9 +63,8 @@ def login_perform():
     if account is not None and account.verified == True:
         if check_password_hash(account.password, request.form.get('password')):
             login_user(account, remember=True)
-            print account
             flash_success(_("Welcome back, %(fullname)s!", fullname=account.fullname))
-            return redirect(url_for('account.dashboard'))
+            return redirect(url_for('home.index'))
     flash_error(_("Incorrect user name or password!"))
     return login()
 
@@ -178,6 +177,22 @@ def verify():
 
     return redirect(url_for('home.index'))
 
+
+
+@blueprint.route('/logout')
+def logout():
+    disable_cache()
+    logout_user()
+    flash_success(_("You have been logged out."))
+    return redirect(url_for('home.index'))
+
+
+
+
+
+
+
+########################### OPENSPENDING ROUTES TO BE USED OR REMOVED################
 
 
 
@@ -317,13 +332,6 @@ def complete(format='json'):
         'count': count
     })
 
-
-@blueprint.route('/logout')
-def logout():
-    disable_cache()
-    logout_user()
-    flash_success(_("You have been logged out."))
-    return redirect(url_for('home.index'))
 
 
 

@@ -13,6 +13,7 @@ from flask_admin import form
 #from wtforms.ext.sqlalchemy.orm import converts
 
 from openspending.model import Account
+from openspending.auth import require
 from werkzeug.security import generate_password_hash
 
 from jinja2 import Markup
@@ -53,8 +54,9 @@ class AccountView(sqla.ModelView):
         #if db.session.query(User).filter_by(login=self.login.data).count() > 0:
         #    raise ValidationError('Duplicate username')
 
+
     def is_accessible(self):
-        return True
+        return require.account.is_admin()
 
 
 
@@ -96,85 +98,75 @@ class SourceFileView(sqla.ModelView):
         }
     }
 
+    def is_accessible(self):
+        return require.account.is_admin()
+
+
+class MetadataOrgView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+class DataOrgView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+class DatasetView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+class SourceView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+class RunView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+class LogRecordView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+class DataviewView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
 
 
 
-#class DatasetView(sqla.ModelView):
-
-    # def _list_thumbnail(view, context, model, name):
-    #     if not model.rawfile:
-    #         return ''
-
-    #     return Markup('<img />')
-
-    #     # return Markup('<img src="%s">' % url_for('static',
-    #     #                                          filename=form.thumbgen_filename(model.path)))
-
-    # column_formatters = {
-    #     'rawfile': _list_thumbnail
-    # }
 
 
-    # form_overrides = {
-    #     'rawfile': form.FileUploadField
-    # }
-
-    # # Pass additional parameters to 'path' to FileUploadField constructor
-    # form_args = {
-    #     'rawfile': {
-    #         'label': 'File',
-    #         'base_path': UPLOADS_FOLDER
-    #     }
-    # }
-
-
-
-
-
-    
-
-
-
-# class SourceModel(ModelAdmin):
-#     list_display = ('name',)
-#     list_per_page = 100
-
-#     search_fields = ('name',)
-
-#     def save_model(self, instance, form, adding=False):
-#         form.populate_obj(instance)
-#         if adding:
-#             self.session.add(instance)
-#         self.session.commit()
-#         return instance
 
 
 def register_admin(flaskadmin, db):
 
-    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord
+    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview
     
 
 
-
-    #flaskadmin.add_view(MyAdminView(category='Test'))
-
-    flaskadmin.add_view(sqla.ModelView(Dataset, db.session))
-    flaskadmin.add_view(sqla.ModelView(DataOrg, db.session))
-    flaskadmin.add_view(sqla.ModelView(Source, db.session))
-    flaskadmin.add_view(sqla.ModelView(MetadataOrg, db.session))
     flaskadmin.add_view(AccountView(Account, db.session, endpoint='useraccount'))
-    flaskadmin.add_view(sqla.ModelView(Run, db.session))
+
+    flaskadmin.add_view(DataviewView(Dataview, db.session))
+
+    flaskadmin.add_view(MetadataOrgView(MetadataOrg, db.session))
+
+    flaskadmin.add_view(DataOrgView(DataOrg, db.session))
+
+    flaskadmin.add_view(DatasetView(Dataset, db.session))
+    
+    flaskadmin.add_view(SourceView(Source, db.session))
+
     flaskadmin.add_view(SourceFileView(SourceFile, db.session,endpoint='sourcefileadmin'))
-    flaskadmin.add_view(sqla.ModelView(LogRecord, db.session))
+    
+    flaskadmin.add_view(RunView(Run, db.session))
 
-    # flaskadmin.register(Source, SourceModel, session=db.session)
+    flaskadmin.add_view(LogRecordView(LogRecord, db.session))
 
-    # flaskadmin.register(Dataset, session=db.session)
-    # flaskadmin.register(DataOrg, session=db.session)
-    # flaskadmin.register(MetadataOrg, session=db.session)
-    # flaskadmin.register(Account, AccountModel, session=db.session, endpoint="accountadmin" )
-    # flaskadmin.register(Run, session=db.session)
-    # flaskadmin.register(SourceFile, session=db.session, endpoint='sourcefileadmin')
 
 
     return flaskadmin
@@ -329,3 +321,55 @@ def register_admin(flaskadmin, db):
 #         return self.render('superadmin/tablelist.html',
 #                             table_headers = HEADERS,
 #                             tablerows = returnset)
+
+
+
+#class DatasetView(sqla.ModelView):
+
+    # def _list_thumbnail(view, context, model, name):
+    #     if not model.rawfile:
+    #         return ''
+
+    #     return Markup('<img />')
+
+    #     # return Markup('<img src="%s">' % url_for('static',
+    #     #                                          filename=form.thumbgen_filename(model.path)))
+
+    # column_formatters = {
+    #     'rawfile': _list_thumbnail
+    # }
+
+
+    # form_overrides = {
+    #     'rawfile': form.FileUploadField
+    # }
+
+    # # Pass additional parameters to 'path' to FileUploadField constructor
+    # form_args = {
+    #     'rawfile': {
+    #         'label': 'File',
+    #         'base_path': UPLOADS_FOLDER
+    #     }
+    # }
+
+
+
+
+
+    
+
+
+
+# class SourceModel(ModelAdmin):
+#     list_display = ('name',)
+#     list_per_page = 100
+
+#     search_fields = ('name',)
+
+#     def save_model(self, instance, form, adding=False):
+#         form.populate_obj(instance)
+#         if adding:
+#             self.session.add(instance)
+#         self.session.commit()
+#         return instance
+

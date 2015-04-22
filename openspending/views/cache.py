@@ -24,6 +24,7 @@ def disable_cache():
 
 def cache_response(resp):
     if not hasattr(request, '_http_cache') \
+            or not getattr(request, "_http_cache", True) \
             or request.method not in ['GET', 'HEAD', 'OPTIONS'] \
             or resp.status_code > 399 \
             or resp.is_streamed \
