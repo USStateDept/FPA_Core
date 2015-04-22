@@ -1,0 +1,101 @@
+doctype html
+html(lang='en')
+  include ./includes/head.jade
+  body.app
+    include ./includes/navigation.jade
+    .container
+      // Main component for a primary marketing message or call to action
+      .row
+        p
+      .row
+        p
+      .row
+        div.btn-group.btn-group-justified(role="group" aria-label="...")
+          div.btn-group(role="group")
+            button.btn.btn-default(type="button") Categories
+          div.btn-group(role="group")
+            button.btn.btn-default(type="button") Countries
+      .row
+        p
+      .row.jumbotron.bg-none
+        .row
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.afghanistan()
+              h4 Afghanitan
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.albania()
+              h4 Albania
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.algeria()
+              h4 Algeria
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.andorra()
+              h4 Andorra
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.angola()
+              h4 Angola
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.antigua()
+              h4 Antigua & Barbuda
+        .row
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.argentina()
+              h4 Argentina
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.armenia()
+              h4 Armenia
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.australia()
+              h4 Australia
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.austria()
+              h4 Austria
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.azerbaijan()
+              h4 Azerbaijan
+          .col-md-2.col-sm-4.col-xs-6
+            div.well.category-wrapper()
+              div.well.category.bahamas()
+              h4 Bahamas
+      .row.bg-medium.footer
+        .well.bg-medium.font-light
+          h1 Start with a chart style and add your indicator          
+          .col-md-12.font-dark
+            .row
+              .col-md-4
+                div.well.bg-container
+                  h3 Scatter plots
+                  .row
+                    .col-md-6
+                      img(src='app/images/chart_scatter.png')
+                    .col-md-6
+                      p Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.
+              .col-md-4
+                div.well.bg-container
+                  h3 Line Chart, Series
+                  .row
+                    .col-md-6
+                      img(src='app/images/chart_pie.png')
+                    .col-md-6
+                      p In the past 50 years, infant and child death rates in the developing world have been reduced by 50 percent, and health.
+              .col-md-4
+                div.well.bg-container
+                  h3 Curve Charts
+                  .row
+                    .col-md-6
+                      img(src='app/images/chart_curved.png')
+                    .col-md-6
+                      p Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.
+                        
+      include ./includes/footer.jade

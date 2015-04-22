@@ -1,0 +1,5 @@
+/node_modules
+/dist/*
+/FINDsrc/bower_components/*
+/FINDsrc/npm-debug.log
+.DS_Store
