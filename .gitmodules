@@ -10,6 +10,3 @@
 [submodule "openspending/static/dataviewer"]
 	path = openspending/static/dataviewer
 	url = https://github.com/USStateDept/cubes_dataviewer.git
-[submodule "openspending/static/openspendingjs"]
-	path = openspending/static/openspendingjs
-	url = https://github.com/openspending/openspendingjs.git
