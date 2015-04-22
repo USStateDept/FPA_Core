@@ -5,6 +5,7 @@ from functools import wraps
 from cubes.workspace import Workspace
 from cubes.auth import NotAuthorized
 from cubes.errors import *
+from cubes.cells import cuts_from_string, Cell, cut_from_dict
 from cubes.server.utils import *
 from cubes.server.errors import *
 from cubes.server.local import *
@@ -13,6 +14,54 @@ from cubes.calendar import CalendarMemberConverter
 from cubes.model import Cube, Dimension
 
 from contextlib import contextmanager
+
+DEFAULT_TIMECUT = "geometry__time:1990-2015"
+
+
+def prepare_cell_cubes_ext(argname="cut", target="cell", restrict=False):
+    """Sets `g.cell` with a `Cell` object from argument with name `argname`"""
+    # Used by prepare_browser_request and in /aggregate for the split cell
+
+
+    # TODO: experimental code, for now only for dims with time role
+    converters = {
+        "time": CalendarMemberConverter(workspace.calendar)
+    }
+
+
+    #if geometry__time not in cuts, then add default date range
+    #has geometry__time
+    has_geom_time = False
+    cuts = []
+    for cut_string in request.args.getlist(argname):
+      try:
+        if cut_string.split(":")[0] == "geometry__time":
+          has_geom_time = True
+      except:
+        pass
+
+      cuts += cuts_from_string(g.cube, cut_string,
+                                   role_member_converters=converters)
+
+    if not has_geom_time:
+        #add the time cut by default
+        cuts += cuts_from_string(g.cube, DEFAULT_TIMECUT,
+                             role_member_converters=converters)
+
+
+    if cuts:
+        cell = Cell(g.cube, cuts)
+    else:
+        cell = None
+
+    if restrict:
+        if workspace.authorizer:
+            cell = workspace.authorizer.restricted_cell(g.auth_identity,
+                                                        cube=g.cube,
+                                                        cell=cell)
+    setattr(g, target, cell)
+
+                              
 
 
 

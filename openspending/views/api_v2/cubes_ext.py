@@ -13,12 +13,12 @@ from openspending.lib.hypermedia import drilldowns_apply_links
 from openspending.views.cache import etag_cache_keygen
 from openspending.views.api_v2.common import blueprint
 
+#imports prepare_cell_cubes_ext
 from openspending.lib.cubes_util import *
 from cubes.server.utils import *
 from cubes.formatters import JSONLinesGenerator, csv_generator
 from cubes.browser import SPLIT_DIMENSION_NAME
 from cubes.server.decorators import prepare_cell
-
 
 
 
@@ -97,6 +97,7 @@ def aggregate_cubes(star_name):
                                       values=["names", "labels", "none"],
                                       default="labels")
 
+
     fields_str = request.args.get("fields")
     if fields_str:
         fields = fields_str.lower().split(',')
@@ -117,8 +118,8 @@ def aggregate_cubes(star_name):
         for ddstring in ddlist:
             drilldown += ddstring.split("|")
 
-    #this handles cuts
-    prepare_cell(restrict=False)
+    #this handles cuts with geometry__time
+    prepare_cell_cubes_ext(restrict=False)
 
     prepare_cell("split", "split")
 
