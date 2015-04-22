@@ -23,7 +23,7 @@ for row in geomtable.all():
         sys.exit(1)
     #gid
     for year in yearrange:
-        timetable.upsert(dict(id=count, year=year, gid=gid), ['year', 'gid'])
+        timetable.upsert(dict(id=count, year=year, gid=gid), ['time', 'gid'])
         count += 1
 
 

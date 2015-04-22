@@ -4,42 +4,15 @@ DATE_CUBES_TEMPLATE = {
     "levels": [
         {
             "name": "year",
-            "label": "Year"
-        },
-        {
-            "name": "quarter",
-            "label": "Quarter"
-        },
-        {
-            "name": "month",
-            "label": "Month"
-        },
-        {
-            "name": "week",
-            "label": "Week"
-        },
-        {
-            "name": "day",
-            "label": "Day",
-            "key": "name",
-            "attributes": ['day', 'name']
+            "label": "Year",
+            #"key": "time"
         }
     ],
     "hierarchies": [
         {
-            "name": "weekly",
-            "label": "Weekly",
-            "levels": ["year", "week"]
-        },
-        {
-            "name": "daily",
-            "label": "Daily",
-            "levels": ["year", "month", "day"]
-        },
-        {
-            "name": "monthly",
-            "label": "Monthly",
-            "levels": ["year", "quarter", "month"]
+            "name": "year",
+            "label": "Year",
+            "levels": ["year"]
         }
     ]
 }

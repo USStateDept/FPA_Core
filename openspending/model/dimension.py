@@ -560,7 +560,7 @@ class DateDimension(CompoundDimension):
             'master': '%s.%s' % (fact_table, self.name + '_id'),
             'detail': '%s.id' % self.table.name
         })
-        for a in ['name', 'year', 'quarter', 'month', 'week', 'day']:
+        for a in ['year']:
             mappings['%s.%s' % (self.name, a)] = '%s.%s' % (self.table.name, a)
         return DATE_CUBES_TEMPLATE.copy()
 

@@ -275,15 +275,15 @@ def getGeomCube(provider, metaonly):
                           "name": "time",
                           "info": {},
                           "label": "Year",
-                          "key": "year",
-                          "label_attribute": "year",
-                          "order_attribute": "year",
+                          "key": "time",
+                          "label_attribute": "time",
+                          "order_attribute": "time",
                           "attributes": [
                             {
-                              "name": "year",
+                              "name": "time",
                               "info": {},
                               "label": "Year",
-                              "ref": "geometry__time.year",
+                              "ref": "geometry__time.time",
                               "locales": []
                             }
                           ]
