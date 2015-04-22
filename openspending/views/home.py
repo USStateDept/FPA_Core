@@ -41,7 +41,7 @@ def lockdown_perform():
 def index():
     datasets = Dataset.all_by_account(current_user)
     num_entries = dataset_entries(None)
-    return render_template('home/index.html', datasets=datasets,
+    return render_template('home/index.jade', datasets=datasets,
                            num_entries=num_entries)
 
 

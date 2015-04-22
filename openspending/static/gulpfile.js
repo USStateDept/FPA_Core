@@ -41,9 +41,9 @@ var app_dir = {
     tests: __dirname + "/tests/",
     dist: __dirname + "/dist/",
     css: "**/*.css",
-    js: "app/**/*.js",
-    images: "app/images",
-    html: "**/*.htm"
+    js: "**/*.js",
+    images: "images",
+    html: "**/*.html"
 };
 
 //Default gulp task
@@ -64,7 +64,7 @@ gulp.task('dist-delete', function(cb) {
 gulp.task('dist-copy-clean', function() {
     console.log(">>>>>>>> cleaning up the dist folder");
     //ignore jade, styl, and css inside the js folder
-    return gulp.src([app_dir.src + '**', '!' + app_dir.src + '**/*.jade', '!' + app_dir.src + '**/*.styl', '!' + app_dir.src + 'app/js/*.css'])
+    return gulp.src([app_dir.src + '**', '!' + app_dir.src + '**/*.jade', '!' + app_dir.src + '**/*.styl', '!' + app_dir.src + 'js/*.css'])
         .pipe(gulp.dest(app_dir.dist))
 });
 
