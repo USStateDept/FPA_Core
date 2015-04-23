@@ -152,6 +152,6 @@ gulp.task('autoprefix-css', ['compile-stylus'], function() {
 
 gulp.task('watch', function() {
     // watch jade and style
-    gulp.watch(app_dir.src + '**/*.jade', ['compile-jade']);
-    gulp.watch(app_dir.src + '**/*.styl', ['autoprefix-css']);
+    gulp.watch(app_dir.src + '**/*.jade', ['compile-jade', 'dist-uglify-js']);
+    gulp.watch(app_dir.src + '**/*.styl', ['compile-stylus', 'autoprefix-css', 'dist-minify-css']);
 });

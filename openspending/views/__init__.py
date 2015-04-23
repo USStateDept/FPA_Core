@@ -10,6 +10,7 @@ from openspending.views.i18n import get_locale
 from openspending.views.account import blueprint as account
 from openspending.views.sourcefile import blueprint as sourcefile
 from openspending.views.indicators import blueprint as indicators
+from openspending.views.feedback import blueprint as feedback
 # from openspending.views.badge import blueprint as badge
 # from openspending.views.view import blueprint as view
 # from openspending.views.editor import blueprint as editor
@@ -31,6 +32,7 @@ def register_views(app, babel):
     app.register_blueprint(account)
     app.register_blueprint(sourcefile)
     app.register_blueprint(indicators)
+    app.register_blueprint(feedback)
     # app.register_blueprint(badge)
     # app.register_blueprint(view)
     # app.register_blueprint(editor)

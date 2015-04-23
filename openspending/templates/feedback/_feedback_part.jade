@@ -1,0 +1,19 @@
+link(href='{{ static_path("dist/css/feedback.css") }}' , rel='stylesheet')
+script(src="{{ static_path('dist/bower_components/jquery-cookie/jquery.cookie.js') }}")
+script(src="{{ static_path('dist/js/feedback.js') }}")
+span.expandbtn.expanded >>
+div.popupcontainer
+	div.warningmessage
+		p Welcome to the new FIND site.  We are working hard to get all of the components.  If you have any suggestions, please fill out the form below.
+		p This will only popup once, but the button will always be here.
+	form(id="feedbackform")
+		label(for="email") Email (Optional)
+		input(name="email")
+
+		label(for="name") Name (Optional)
+		input(name="name")
+
+		label(for="message") Suggestion/Comment
+		textarea(name="message", type="textarea")
+
+		input(type="submit", id="feedbackbtn", value="Send Message")

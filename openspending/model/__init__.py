@@ -13,3 +13,5 @@ from openspending.model.source import Source  # NOQA
 #from openspending.model.view import View  # NOQA
 from openspending.model.sourcefile import SourceFile
 from openspending.model.log_record import LogRecord
+from openspending.model.feedback import Feedback
+
