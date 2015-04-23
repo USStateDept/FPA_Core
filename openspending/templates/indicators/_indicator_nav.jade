@@ -1,8 +1,9 @@
 .row
 div.btn-group.btn-group-justified(role="group" aria-label="...")
   div.btn-group(role="group")
-    button.btn.btn-default(type="button") 
-        a(href="{{ url_for('indicators.categories') }}") Categories
+    a(href="{{ url_for('indicators.categories') }}") 
+        button.btn.btn-default(type="button") Categories
+        
   div.btn-group(role="group")
-    button.btn.btn-default(type="button") 
-        a(href="{{ url_for('indicators.countries') }}") Countries
+    a(href="{{ url_for('indicators.countries') }}") 
+        button.btn.btn-default(type="button") Countries
