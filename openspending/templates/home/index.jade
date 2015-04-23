@@ -32,10 +32,10 @@
              
     p
       | Or browse by: 
-      a Country
+      a(href=" {{ url_for('indicators.countries') }}") Country
       | , 
       span or 
-      a Indicator
+      a(href=" {{ url_for('indicators.categories') }}") Country
       //a.btn.btn-lg.btn-primary(href='../../components/#navbar', role='button') View navbar docs &raquo;
   
   .row
