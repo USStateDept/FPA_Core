@@ -48,3 +48,27 @@ def categories(format='html'):
         #                    del_filter=del_filter)
 
 
+
+
+
+@blueprint.route('/indicators/countries')
+#@blueprint.route('/datasets.<fmt:format>')
+def countries(format='html'):
+    """ Get the datasets indicators list by category"""
+
+
+    #get a list of countries and associated images for their flags
+
+
+
+
+    return render_template('indicators/list-countries.jade')
+        # , page=page,
+        #                    query=query,
+        #                    language_options=language_options,
+        #                    territory_options=territory_options,
+        #                    category_options=category_options,
+        #                    add_filter=add_filter,
+        #                    del_filter=del_filter)
+
+
