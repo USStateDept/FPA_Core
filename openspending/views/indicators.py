@@ -10,11 +10,10 @@ from flask import Response
 from flask.ext.login import current_user
 
 from openspending.core import db
-from openspending.model import Dataset
+from openspending.model import Tags
 from openspending.lib.csvexport import write_csv
 from openspending.lib.jsonexport import jsonify
 from openspending.lib.indices import cached_index
-from openspending.lib.helpers import url_for, get_dataset
 from openspending.reference.country import COUNTRIES
 from openspending.views.cache import etag_cache_keygen, disable_cache
 
@@ -31,21 +30,12 @@ blueprint = Blueprint('indicators', __name__)
 #@blueprint.route('/datasets.<fmt:format>')
 def categories(format='html'):
     """ Get the datasets indicators list by category"""
+    tags = []
+    for tag in Tags.all_by_category().all():
+        tags.append(tag.as_dict())
 
-
-    #get a list of the indicators by category
-
-    #set up template
-
-
-    return render_template('indicators/categories.jade')
-        # , page=page,
-        #                    query=query,
-        #                    language_options=language_options,
-        #                    territory_options=territory_options,
-        #                    category_options=category_options,
-        #                    add_filter=add_filter,
-        #                    del_filter=del_filter)
+    return render_template('indicators/categories.jade',
+                            tags=tags)
 
 
 
