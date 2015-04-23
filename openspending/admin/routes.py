@@ -137,6 +137,11 @@ class DataviewView(sqla.ModelView):
     def is_accessible(self):
         return require.account.is_admin()
 
+class FeedbackView(sqla.ModelView):
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
 
 
 
@@ -145,7 +150,7 @@ class DataviewView(sqla.ModelView):
 
 def register_admin(flaskadmin, db):
 
-    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview
+    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview, Feedback
     
 
 
@@ -166,6 +171,8 @@ def register_admin(flaskadmin, db):
     flaskadmin.add_view(RunView(Run, db.session))
 
     flaskadmin.add_view(LogRecordView(LogRecord, db.session))
+
+    flaskadmin.add_view(FeedbackView(Feedback, db.session))
 
 
 
