@@ -38,7 +38,7 @@ def categories(format='html'):
     #set up template
 
 
-    return render_template('indicators/categories.html')
+    return render_template('indicators/categories.jade')
         # , page=page,
         #                    query=query,
         #                    language_options=language_options,

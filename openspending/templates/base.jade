@@ -1,0 +1,27 @@
+doctype html
+{% from "_util.html" import google_analytics with context %}
+html(lang='en')
+  include includes/head
+  body.app
+    include includes/navigation.jade
+
+    div.banner
+      div.container
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        div.container
+          div
+            {% for category, message in messages %}
+            div.alert.alert-{{ category }} {{ message }}
+
+          {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% block banner %}{% endblock %}
+
+    div.container(role="main") 
+      {% block content %}{% endblock %}
+
+
+                        
+    include includes/footer.jade

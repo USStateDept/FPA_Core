@@ -1,0 +1,111 @@
+{% extends "base.jade" %}
+
+{% block page_title %}Indicators - Categories{% endblock %}
+
+{% block scripts %}
+
+
+
+{% endblock %}
+
+{% block banner %}
+
+{% endblock %}
+
+{% block content %}
+
+.container
+  // Main component for a primary marketing message or call to action
+  .row
+    p
+  .row
+    p
+  .row
+    div.btn-group.btn-group-justified(role="group" aria-label="...")
+      div.btn-group(role="group")
+        button.btn.btn-default(type="button") Categories
+      div.btn-group(role="group")
+        button.btn.btn-default(type="button") Countries
+  .row
+    p
+  .row.jumbotron.bg-none
+    .row
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-70()
+          h4 Human Assistance
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-10()
+          h4 Peace & Security
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-20()
+          h4 Democracy, Human Rights, and Governance
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-50()
+          h4 Economic Development
+    .row
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-40()
+          h4 Education and Social Services
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-30()
+          h4 Health
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-90()
+          h4 Multi-Sector
+      .col-md-3.col-xs-6
+        div.well.category-wrapper()
+          div.well.category.icon-category-60()
+          h4 Environment
+    .row
+      .col-md-3.col-xs-12
+        div.well.category-wrapper()
+          div.well.category.icon-category-80()
+          h4 Program Managment
+  .row.bg-medium.footer
+    .well.bg-medium.font-light
+      h1 Start with a chart style and add your indicator          
+      .col-md-12.font-dark
+        .row
+          .col-md-4
+            div.well.bg-container
+              h3 Scatter plots
+              .row
+                .col-md-6
+                  img(src="{{ static_path('dist/images/chart_scatter.png') }}")
+                .col-md-6
+                  p Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.
+          .col-md-4
+            div.well.bg-container
+              h3 Line Chart, Series
+              .row
+                .col-md-6
+                  img(src="{{ static_path('dist/images/chart_pie.png') }}")
+                .col-md-6
+                  p In the past 50 years, infant and child death rates in the developing world have been reduced by 50 percent, and health.
+          .col-md-4
+            div.well.bg-container
+              h3 Curve Charts
+              .row
+                .col-md-6
+                  img(src="{{ static_path('dist/images/chart_curved.png') }}")
+                .col-md-6
+                  p Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.
+                    
+
+
+
+{% endblock %}
+
+
+
+
+
+
+

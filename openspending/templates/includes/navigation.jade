@@ -7,15 +7,36 @@ nav.navbar.navbar-default.navbar-fixed-top
         span.icon-bar   
         span.icon-bar     
         span.icon-bar
-      a.navbar-brand(href='#') FIND
+      a.navbar-brand(href="{{ url_for('home.index') }}") FIND
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
         li.active
-          a(href='#') INDICATOR
+          a(href="{{ url_for('indicators.categories') }}") INDICATOR
         li
           a(href='#about') USER STORIES
       ul.nav.navbar-nav.navbar-right
-        li
-          a(href='#about') Login
-        li
-          a(href='#about') Register
+        {% if logged_in %}
+        li.dropdown
+          a.dropdown-toggle(data-toggle='dropdown')
+           img(src="{{ current_user.email | gravatar(size=20) }}", alt="{{ current_user.fullname }}")
+          strong {{ current_user.fullname }}
+          ul.dropdown-menu.account-dropdown
+            li
+              a(href="{{ url_for('account.dashboard') }}") Dashboard
+            li
+              a(href="{{ url_for('account.settings') }}") Settings
+            {% if current_user.is_admin %}
+            li.divider
+            li
+              a(href="{{ url_for('account.scoreboard') }}") User scoreboard
+            {% endif %}
+            li.divider
+            li
+              a(href="{{url_for('account.logout')}}") Logout
+          {% else %}
+          li
+            a(href="{{url_for('account.login')}}") Login/Register (USG Only)
+          {% endif %}
+
+
+
