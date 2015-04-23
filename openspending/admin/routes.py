@@ -20,6 +20,8 @@ from jinja2 import Markup
 
 from settings import UPLOADED_FILES_DEST
 
+from slugify import slugify
+
 
 #import copy
 
@@ -142,6 +144,21 @@ class FeedbackView(sqla.ModelView):
     def is_accessible(self):
         return require.account.is_admin()
 
+class TagsView(sqla.ModelView):
+
+    form_excluded_columns = ('slug_label','category',)
+
+    column_list = ('slug_label', 'label','category','dataset_count',)
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+    # Model handlers
+    def on_model_change(self, form, model, is_created=False):
+    #def create_model(self, form):
+        model.slug_label = slugify(str(model.label), separator="_")
+        return
+
 
 
 
@@ -150,7 +167,7 @@ class FeedbackView(sqla.ModelView):
 
 def register_admin(flaskadmin, db):
 
-    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview, Feedback
+    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview, Feedback, Tags
     
 
 
@@ -173,6 +190,8 @@ def register_admin(flaskadmin, db):
     flaskadmin.add_view(LogRecordView(LogRecord, db.session))
 
     flaskadmin.add_view(FeedbackView(Feedback, db.session, endpoint='feedbackadmin'))
+
+    flaskadmin.add_view(TagsView(Tags, db.session, endpoint='tagsadmin'))
 
 
 

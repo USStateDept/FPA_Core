@@ -2,11 +2,6 @@
 
 {% block page_title %}Indicators - Categories{% endblock %}
 
-{% block scripts %}
-
-
-
-{% endblock %}
 
 {% block banner %}
 
@@ -24,45 +19,13 @@
   .row
     p
   .row.jumbotron.bg-none
-    .row
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-70()
-          h4 Human Assistance
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-10()
-          h4 Peace & Security
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-20()
-          h4 Democracy, Human Rights, and Governance
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-50()
-          h4 Economic Development
-    .row
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-40()
-          h4 Education and Social Services
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-30()
-          h4 Health
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-90()
-          h4 Multi-Sector
-      .col-md-3.col-xs-6
-        div.well.category-wrapper()
-          div.well.category.icon-category-60()
-          h4 Environment
-    .row
-      .col-md-3.col-xs-12
-        div.well.category-wrapper()
-          div.well.category.icon-category-80()
-          h4 Program Managment
+    {% for tag in tags %}
+    .col-md-3.col-xs-6.row_block_display
+      div.well.category-wrapper(id="{{ tag.slug_label }}")
+        div.well.category(class="icon-{{ tag.slug_label }}")
+        h4 {{ tag.label }} ({{ tag.dataset_count }})
+    {% endfor %}
+
   .row.bg-medium.footer
     .well.bg-medium.font-light
       h1 Start with a chart style and add your indicator          
@@ -95,6 +58,12 @@
                     
 
 
+
+{% endblock %}
+
+{% block footer_scripts %}
+
+script(src="{{ static_path('dist/js/indicators_categories.js') }}")
 
 {% endblock %}
 
