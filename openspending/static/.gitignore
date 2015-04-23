@@ -1,5 +1,4 @@
 /node_modules
-/dist/*
 /FINDsrc/bower_components/*
 bower_components
 /FINDsrc/npm-debug.log
