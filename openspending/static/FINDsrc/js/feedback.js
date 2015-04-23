@@ -23,6 +23,37 @@
         }
 
 
+
+        $("#feedbackform").submit(function(ev){
+            $("#feedbackbtn").hide();
+ 
+            var data = $(this).serialize() + "&url=" + window.location.href;
+            $.ajax({
+                type: 'POST',
+                url: '/feedback',
+                data: data,
+                cache: false,
+                success: function(res){
+                    if (res.success){
+                        $(".popupcontainer").html("Thank you for your feedback.");
+                    }
+                    else{
+                        $(".popupcontainer").html("Sorry we hit an error.  This will be noted and fixed");
+                    }
+
+                    
+                },
+                error: function(){
+                    $(".popupcontainer").html("Sorry we hit an error.  This will be noted and fixed");
+                }
+            });
+            ev.preventDefault();
+            return false;
+
+
+        });
+
+
     });
 
 })(jQuery);

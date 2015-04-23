@@ -172,7 +172,7 @@ def register_admin(flaskadmin, db):
 
     flaskadmin.add_view(LogRecordView(LogRecord, db.session))
 
-    flaskadmin.add_view(FeedbackView(Feedback, db.session))
+    flaskadmin.add_view(FeedbackView(Feedback, db.session, endpoint='feedbackadmin'))
 
 
 
