@@ -1,0 +1,17 @@
+{
+  "name": "FIND-UI",
+  "version": "1.0.0",
+  "homepage": "https://github.com/USStateDept/FIND-UI",
+  "description": "FIND-UI bower",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4"
+  }
+}

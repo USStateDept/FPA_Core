@@ -19,7 +19,7 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
 
-    <link href="{{ static_path('app/css/app.css') }}" rel="stylesheet">
+    <link href="{{ static_path('dist/css/app.css') }}" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -62,6 +62,10 @@
       {% block content %}{% endblock %}
     </div>
 
+    <footer>
+      {% include '_footer.html' %}
+    </footer>
+
 
 
     <!-- Bootstrap core JavaScript
@@ -70,7 +74,7 @@
     <script src="{{ static_path('bower_components/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ static_path('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug-->
-    <script src="{{ static_path('app/js/lib/ie10-viewport-bug-workaround.js') }}"></script>
+    <script src="{{ static_path('dist/js/lib/ie10-viewport-bug-workaround.js') }}"></script>
 
   </body>
 </html>
@@ -91,22 +95,3 @@
 
 
 
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-
-  </head>
-  <body class="app">
-    <!-- Fixed navbar-->
-
-    <div class="container">
-    </div>
-    <!-- /container-->
-    <!--
-    Bootstrap core JavaScript
-    ==================================================
-    -->
-
-  </body>
-</html>

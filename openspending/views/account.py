@@ -54,7 +54,7 @@ def load_user_from_request(request):
 def login():
     """ Render the login/registration page. """
     disable_cache()
-    return render_template('account/login.html')
+    return render_template('account/login.jade')
 
 
 @blueprint.route('/login', methods=['POST', 'PUT'])

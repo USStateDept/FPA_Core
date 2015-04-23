@@ -1,0 +1,6 @@
+/node_modules
+/FINDsrc/bower_components/*
+bower_components
+/FINDsrc/npm-debug.log
+npm-debug.log
+.DS_Store

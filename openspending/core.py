@@ -106,6 +106,8 @@ def create_app(**config):
 def create_web_app(**config):
     app = create_app(**config)
 
+    app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+
     from openspending.views import register_views
     register_views(app, babel)
 
