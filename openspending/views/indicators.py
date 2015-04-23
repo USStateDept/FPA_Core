@@ -38,6 +38,28 @@ def categories(format='html'):
                             tags=tags)
 
 
+@blueprint.route('/indicators/categories/datasets')
+#@blueprint.route('/datasets.<fmt:format>')
+def datasets_by_tag():
+    """ Get the datasets indicators list by category"""
+
+    slugarg = request.args.get("slug_label", None)
+
+    tag_result = Tags.datasets_by_tag(slug_label=slugarg)
+
+    if not tag_result:
+        print "could not find the tag"
+        return
+    datasets = []
+    for dataset in tag_result.datasets:
+        if dataset.source.loadable:
+            datasets.append(dataset.as_dict())
+
+
+    return render_template('indicators/_categories_datasets.jade',
+                            datasets=datasets)
+
+
 
 
 

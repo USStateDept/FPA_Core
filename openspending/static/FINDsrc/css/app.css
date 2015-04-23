@@ -230,6 +230,7 @@ body {
 .app .category-wrapper {
   border-radius: 15px;
   border: 1px solid #d8d8d8;
+  cursor: pointer;
 }
 .app .afghanistan {
   background: url("http://www.sciencekids.co.nz/images/pictures/flags96/Afghanistan.jpg") center center no-repeat;

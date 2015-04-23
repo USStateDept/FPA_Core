@@ -69,11 +69,20 @@ class Tags(db.Model):
 
     @property 
     def dataset_count(self):
-        return len(self.datasets)
+        datasets = []
+        #rebuilds hte model.  Need to skip this in favor of a dataset obj
+        for dataset in self.datasets:
+            if dataset.source.loadable:
+                datasets.append(dataset)
+        return len(datasets)
 
     @classmethod
     def all_by_category(cls, category="categories"):
         return db.session.query(cls).filter_by(category=category)
+
+    @classmethod
+    def datasets_by_tag(cls, category="categories", slug_label=None):
+        return db.session.query(cls).filter_by(category=category).filter_by(slug_label=slug_label).first()
 
 
     def as_dict(self):

@@ -2,11 +2,6 @@
 
 {% block page_title %}Indicators - Categories{% endblock %}
 
-{% block scripts %}
-
-
-
-{% endblock %}
 
 {% block banner %}
 
@@ -26,7 +21,7 @@
   .row.jumbotron.bg-none
     {% for tag in tags %}
     .col-md-3.col-xs-6.row_block_display
-      div.well.category-wrapper()
+      div.well.category-wrapper(id="{{ tag.slug_label }}")
         div.well.category(class="icon-{{ tag.slug_label }}")
         h4 {{ tag.label }} ({{ tag.dataset_count }})
     {% endfor %}
@@ -63,6 +58,12 @@
                     
 
 
+
+{% endblock %}
+
+{% block footer_scripts %}
+
+script(src="{{ static_path('dist/js/indicators_categories.js') }}")
 
 {% endblock %}
 
