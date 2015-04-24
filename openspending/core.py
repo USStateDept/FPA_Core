@@ -24,6 +24,7 @@ from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
 #from flask.ext.superadmin import Admin, model
 import flask_admin as admin
+from flask import g
 import flask_whooshalchemy as whoosearch
 
 logging.basicConfig(level=logging.DEBUG)
@@ -75,7 +76,8 @@ def create_app(**config):
         
         if not current_user.is_authenticated() and request.path != "/lockdown" and LOCKDOWN_FORCE:
             return redirect("/lockdown", code=302)
-
+        from openspending.model.search import SearchForm
+        g.search_form = SearchForm()
 
 
     # HACKY SHIT IS HACKY

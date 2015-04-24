@@ -24,8 +24,12 @@
       .col-md-8
         p.search-group
           div.form-group.has-feedback
-            input.main-search(type='text' placeHolder='Find a country or indicator')
-            span.glyphicon.glyphicon-search.form-control-feedback
+            form(name="search", method="POST", action="{{ url_for('search.search_post') }}")
+              {{ g.search_form.hidden_tag() }}
+              {{ g.search_form.search(size=20) }}
+              input(type="submit", value="Search")
+            //input.main-search(type='text' ')
+            //span.glyphicon.glyphicon-search.form-control-feedback
       //i.fa.fa-search
       //span.glyphicon.glyphicon-search.form-control-feedback
       .col-md-2

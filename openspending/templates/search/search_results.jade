@@ -1,0 +1,29 @@
+{% extends "base.jade" %}
+
+{% block page_title %}Search Results{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+{% block content %}
+h1 Search results for "{{ query }}":
+  {% for dataset in results %}
+  div.searchresult
+    a(href="#") {{ dataset.label }}
+  {% endfor %}
+
+
+{% endblock %}
+
+{% block footer_scripts %}
+
+{% endblock %}
+
+
+
+
+
+
+
