@@ -103,6 +103,6 @@ class Tags(db.Model):
         return tag
 
     def __repr__(self):
-        return '<Tag(%r,%r)>' % (self.name, self.category)
+        return '<Tag(%r,%r)>' % (self.label, self.category)
 
 

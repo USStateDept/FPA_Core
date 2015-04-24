@@ -24,6 +24,7 @@ class DataOrg(db.Model):
     generate necessary queries.
     """
     __tablename__ = 'dataorg'
+    __searchable__ = ['label', 'description']
 
     id = Column(Integer, primary_key=True)
     label = Column(Unicode(2000))

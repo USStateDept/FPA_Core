@@ -24,6 +24,7 @@ from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
 #from flask.ext.superadmin import Admin, model
 import flask_admin as admin
+import flask_whooshalchemy as whoosearch
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -118,6 +119,9 @@ def create_web_app(**config):
     flaskadmin = admin.Admin(app, name='FIND Admin')
     #flaskadmin = Admin(app, url='/admin', name='admin2')
     register_admin(flaskadmin, db)
+
+    from openspending.model import Dataset
+    whoosearch.whoosh_index(app,Dataset)
 
     return app
 
