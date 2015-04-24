@@ -26,8 +26,9 @@
           div.form-group.has-feedback
             form(name="search", method="POST", action="{{ url_for('search.search_post') }}")
               {{ g.search_form.hidden_tag() }}
-              {{ g.search_form.search(size=20) }}
-              input(type="submit", value="Search")
+              {{ g.search_form.search(type='text', placeholder='Find a country or indicator', class="main-search") }}
+              span.glyphicon.glyphicon-search.form-control-feedback
+              //input(type="submit", value="Search")
             //input.main-search(type='text' ')
             //span.glyphicon.glyphicon-search.form-control-feedback
       //i.fa.fa-search

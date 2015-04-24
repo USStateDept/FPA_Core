@@ -81,8 +81,8 @@ def create_app(**config):
 
 
     # HACKY SHIT IS HACKY
-    from openspending.lib.solr_util import configure as configure_solr
-    configure_solr(app.config)
+    # from openspending.lib.solr_util import configure as configure_solr
+    # configure_solr(app.config)
 
     # from openspending.model.provider import OpenSpendingStore
     #extensions.store.extensions['openspending'] = OpenSpendingStore

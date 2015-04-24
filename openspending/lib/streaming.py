@@ -1,7 +1,7 @@
 import json
 import math
 
-from openspending.lib import solr_util as solr
+#from openspending.lib import solr_util as solr
 from openspending.lib.browser import Browser
 from openspending.lib.csvexport import write_csv
 from openspending.lib.jsonexport import write_browser_json
@@ -34,35 +34,7 @@ class StreamingResponse(object):
             yield entry
 
     def entries_iterator(self, initial_page=None):
-        if initial_page is None:
-            initial_page = self.start_page
-        i = initial_page - 1
-        total_count = 0
-        while True:
-            i += 1
-            b = self.get_browser(i)
-            try:
-                b.execute()
-            except solr.SolrException as e:
-                yield json.dumps({'errors': [unicode(e)]})
-                raise StopIteration
-
-            count = 0
-            for entry in self.make_entries(b.get_entries()):
-                count += 1
-                if total_count == 0 and count <= self.start_offset:
-                    continue
-                total_count += 1
-                if total_count > self.params['pagesize']:
-                    raise StopIteration
-                yield entry
-
-            if count < self.pagesize:
-                # There are no more results for the next page
-                raise StopIteration
-            if total_count >= self.params['pagesize']:
-                # We have enough results
-                raise StopIteration
+        raise NotImplemented("errror")
 
 
 class CSVStreamingResponse(StreamingResponse):

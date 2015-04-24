@@ -1,7 +1,6 @@
 from openspending.validation.data import convert_types
 from openspending.model.dataset import Dataset
 from openspending.core import db
-from openspending.lib import solr_util as solr
 
 from datetime import datetime
 import os
@@ -100,16 +99,3 @@ def clean_db(app):
     db.drop_all(app=app)
     shutil.rmtree(app.config.get('UPLOADS_DEFAULT_DEST'))
 
-
-def clean_solr():
-    '''Clean all entries from Solr.'''
-    s = solr.get_connection()
-    s.delete_query('*:*')
-    s.commit()
-
-
-def clean_and_reindex_solr():
-    '''Clean Solr and reindex all entries in the database.'''
-    clean_solr()
-    for dataset in db.session.query(Dataset):
-        solr.build_index(dataset.name)
