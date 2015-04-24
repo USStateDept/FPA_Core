@@ -2,7 +2,7 @@ import json
 from collections import defaultdict
 
 from openspending.model.dataset import Dataset
-from openspending.lib import solr_util as solr
+#from openspending.lib import solr_util as solr
 from openspending.lib import util
 
 
@@ -68,8 +68,7 @@ class Browser(object):
         return self.entries
 
     def query(self):
-        data = solr.get_connection().raw_query(**_build_query(self.params))
-        return json.loads(data)
+        raise NotImplemented("error")
 
 
 def _build_query(params):

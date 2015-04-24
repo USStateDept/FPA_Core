@@ -25,6 +25,7 @@ class Dataset(db.Model):
 
     """
     __tablename__ = 'dataset'
+    __searchable__ = ['label', 'description']
 
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(255), unique=True)
@@ -218,4 +219,7 @@ class Dataset(db.Model):
     @classmethod
     def by_id(cls, id):
         return db.session.query(cls).filter_by(id=id).first()
+
+
+
 

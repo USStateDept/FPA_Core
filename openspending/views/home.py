@@ -4,7 +4,6 @@ from flask.ext.babel import gettext
 
 from openspending.views.i18n import set_session_locale
 from openspending.model.dataset import Dataset
-from openspending.lib.solr_util import dataset_entries
 from openspending.views.cache import disable_cache
 from openspending.model import Account
 
@@ -40,9 +39,16 @@ def lockdown_perform():
 @blueprint.route('/')
 def index():
     datasets = Dataset.all_by_account(current_user)
-    num_entries = dataset_entries(None)
-    return render_template('home/index.jade', datasets=datasets,
-                           num_entries=num_entries)
+    return render_template('home/index.jade', datasets=datasets)
+
+
+@blueprint.route('/favicon.ico')
+def favicon():
+    return redirect('/static/img/favicon.ico', code=301)
+
+
+######################OPENSPENDING STUFF#########################
+
 
 
 @blueprint.route('/set-locale', methods=['POST'])
@@ -60,10 +66,6 @@ def version():
     from openspending._version import __version__
     return __version__
 
-
-@blueprint.route('/favicon.ico')
-def favicon():
-    return redirect('/static/img/favicon.ico', code=301)
 
 
 @blueprint.route('/__ping__')

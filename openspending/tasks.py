@@ -5,7 +5,6 @@ from openspending.core import create_app, create_celery
 from openspending.core import db
 from openspending.model.source import Source
 from openspending.importer.analysis import analyze_csv
-from openspending.lib.solr_util import build_index
 from openspending.importer import CSVImporter,  ORImporter
 
 import csv
@@ -136,11 +135,6 @@ def load_source(source_id, sample=False):
             importer.run()
             #index_dataset.delay(source.dataset.name)
 
-
-@celery.task(ignore_result=True)
-def index_dataset(dataset_name):
-    with flask_app.app_context():
-        build_index(dataset_name)
 
 
 @celery.task(ignore_result=True)

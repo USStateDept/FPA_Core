@@ -15,8 +15,6 @@ from openspending.preprocessors.ORhelper import testORLoad
 from openspending.importer import CSVImporter
 from openspending.importer.analysis import analyze_csv
 
-from openspending.command.archive import get_url_filename
-
 from openspending.validation.model import validate_model
 from openspending.validation.model import Invalid
 

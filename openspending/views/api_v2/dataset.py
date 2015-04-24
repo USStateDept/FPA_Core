@@ -13,7 +13,6 @@ from restpager import Pager
 from openspending.core import db, sourcefiles
 from openspending.model import Dataset, Source, Run, DataOrg, SourceFile
 from openspending.auth import require
-from openspending.lib import solr_util as solr
 from openspending.lib.jsonexport import jsonify
 from openspending.lib.helpers import get_dataset, get_source
 from openspending.lib.indices import clear_index_cache

@@ -24,6 +24,8 @@ from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
 #from flask.ext.superadmin import Admin, model
 import flask_admin as admin
+from flask import g
+import flask_whooshalchemy as whoosearch
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -74,12 +76,13 @@ def create_app(**config):
         
         if not current_user.is_authenticated() and request.path != "/lockdown" and LOCKDOWN_FORCE:
             return redirect("/lockdown", code=302)
-
+        from openspending.model.search import SearchForm
+        g.search_form = SearchForm()
 
 
     # HACKY SHIT IS HACKY
-    from openspending.lib.solr_util import configure as configure_solr
-    configure_solr(app.config)
+    # from openspending.lib.solr_util import configure as configure_solr
+    # configure_solr(app.config)
 
     # from openspending.model.provider import OpenSpendingStore
     #extensions.store.extensions['openspending'] = OpenSpendingStore
@@ -118,6 +121,9 @@ def create_web_app(**config):
     flaskadmin = admin.Admin(app, name='FIND Admin')
     #flaskadmin = Admin(app, url='/admin', name='admin2')
     register_admin(flaskadmin, db)
+
+    from openspending.model import Dataset
+    whoosearch.whoosh_index(app,Dataset)
 
     return app
 
