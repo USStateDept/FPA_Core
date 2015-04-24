@@ -5,7 +5,7 @@ from flask.ext.assets import ManageAssets
 
 from openspending.core import create_web_app
 from openspending.assets import assets
-from openspending.command import user, db, archive, importer, dbimport
+from openspending.command import user, db, importer, dbimport, search
 
 log = logging.getLogger(__name__.split('.')[0])
 
@@ -19,8 +19,8 @@ manager.add_option('-q', '--quiet',
                    help='Decrease the logging level')
 
 manager.add_command('user', user.manager)
+manager.add_command('search', search.manager)
 manager.add_command('db', db.manager)
-manager.add_command('archive', archive.manager)
 manager.add_command('assets', ManageAssets(assets))
 
 importer.add_import_commands(manager)
