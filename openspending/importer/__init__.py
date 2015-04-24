@@ -183,11 +183,14 @@ from openspending.preprocessors import processing_funcs
 class ORImporter(BaseImporter):
 
     def _match_country_id(self, country_level0):
-        # country_level0 has name and label
+
+
+        searchstring = country_level0['label'].replace("'", "''")
+
         result = db.engine.execute("SELECT country_level0.gid as gid \
                                     FROM public.geometry__country_level0 as country_level0 \
                                     WHERE country_level0.name_long = '%s' \
-                                    OR country_level0.short_name = '%s';" %(country_level0['label'], country_level0['label'],))
+                                    OR country_level0.short_name = '%s';" %(searchstring, searchstring,))
         gid = result.first()
         if not gid:
             result = db.engine.execute("SELECT \
@@ -197,9 +200,9 @@ class ORImporter(BaseImporter):
                                           public.geometry__country_level0\
                                         WHERE \
                                           geometry__alt_names.country_level0_id = geometry__country_level0.gid AND\
-                                          (geometry__alt_names.altname IN ('%s','%s'));" %(country_level0['label'], country_level0['label'].lower(),))
-            gid = result.first() 
-            #check the altnames table for an item
+                                          (geometry__alt_names.altname IN ('%s','%s'));" %(searchstring, searchstring.lower(),))
+            gid = result.first()
+
 
         if not gid:
             return 0
@@ -220,7 +223,7 @@ class ORImporter(BaseImporter):
                                     FROM \
                                       public.geometry__time \
                                     WHERE geometry__time.gid = %s \
-                                    AND geometry__time.year = %s" %(gid, date.year,))
+                                    AND geometry__time.time = %s" %(gid, date.year,))
 
         geom_date_id = result.first()
         if geom_date_id:

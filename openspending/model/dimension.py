@@ -414,10 +414,12 @@ class GeometryDimension(Dimension, TableHandler):
         #comes in as this {'name': u'anguilla', 'label': u'Anguilla'}
         #need to go out tlike this {'name': u'anguilla', 'label': u'Anguilla', 'countryid': '1'}
 
+        searchstring = dim['label'].replace("'", "''")
+
         result = db.engine.execute("SELECT country_level0.gid as gid \
                                     FROM public.geometry__country_level0 as country_level0 \
                                     WHERE country_level0.name_long = '%s' \
-                                    OR country_level0.short_name = '%s';" %(dim['label'], dim['label'],))
+                                    OR country_level0.short_name = '%s';" %(searchstring, searchstring,))
         resultitem = result.first()
         if not resultitem:
             result = db.engine.execute("SELECT \
@@ -427,7 +429,7 @@ class GeometryDimension(Dimension, TableHandler):
                                           public.geometry__country_level0\
                                         WHERE \
                                           geometry__alt_names.country_level0_id = geometry__country_level0.gid AND\
-                                          (geometry__alt_names.altname IN ('%s','%s'));" %(dim['label'], dim['label'].lower(),))
+                                          (geometry__alt_names.altname IN ('%s','%s'));" %(searchstring, searchstring.lower(),))
             resultitem = result.first() 
             #check the altnames table for an item
         
