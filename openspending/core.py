@@ -92,16 +92,16 @@ def create_app(**config):
     app.cubes_workspace.register_default_store('OpenSpendingStore')
 
     
-    #do app.config in the future
-    refine_server = refine.RefineServer(server=OPENREFINE_SERVER)
+    # #do app.config in the future
+    # refine_server = refine.RefineServer(server=OPENREFINE_SERVER)
 
 
 
-    try:
-        test = refine_server.get_version()
-    except Exception, e:
-        print "Could not find OpenRefine.  Components could be broken"
-        print "The error", e
+    # try:
+    #     test = refine_server.get_version()
+    # except Exception, e:
+    #     print "Could not find OpenRefine.  Components could be broken"
+    #     print "The error", e
 
     return app
 
