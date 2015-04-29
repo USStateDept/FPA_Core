@@ -118,17 +118,21 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
     if sourcejson['fields']['downloadedFile'] and file_dir and not sourcejson['fields']['webservice']:
         #convert to a file:///name
         #create a source file
+        try:
 
-        filename = sourcejson['fields']['downloadedFile'].replace("rawdata/", "")
+            filename = sourcejson['fields']['downloadedFile'].replace("rawdata/", "")
 
-        #copy file over to another folder and open it
-        copyfile(os.path.join(file_dir, filename), os.path.join(UPLOADED_FILES_DEST, filename))
+            #copy file over to another folder and open it
+            copyfile(os.path.join(file_dir, filename), os.path.join(UPLOADED_FILES_DEST, filename))
 
-        with open(os.path.join(UPLOADED_FILES_DEST, filename), 'rb') as fh:
-            wuezfile = FileStorage(stream=fh, name=filename)
-            upload_source_path = sourcefiles.save(wuezfile)
-            sourcefile = SourceFile(rawfile = upload_source_path)
-            db.session.add(sourcefile)
+            with open(os.path.join(UPLOADED_FILES_DEST, filename), 'rb') as fh:
+                wuezfile = FileStorage(stream=fh, name=filename)
+                upload_source_path = sourcefiles.save(wuezfile)
+                sourcefile = SourceFile(rawfile = upload_source_path)
+                db.session.add(sourcefile)
+        except Exception ,e:
+            print "!!!!!Error failed", e
+            return (None, False)
         try:
             source = Source(dataset=dataset, name=dataset.name, url=None, rawfile=sourcefile)
         except Exception, e:
@@ -356,17 +360,26 @@ def add_import_commands(manager):
 
 
 
-
+            errored_rows = []
             #if we get here then we can try load a source
-            sourceobj, loadresult = load_from_databank(dataconnection, datasetprovider, file_dir=file_dir, dry_run=True, meta_only=True)
+            try:
+                sourceobj, loadresult = load_from_databank(dataconnection, datasetprovider, file_dir=file_dir, dry_run=True, meta_only=True)
+            except Exception, e:
+                print "!!!!!!!!!!!There was an error", e
+                loadresult = False
             if loadresult:
                 results['success'] +=1
             else:
                 results['added_needs_work'] += 1
+                errored_rows.append(dataconnection)
+
 
 
         print "\n\nHere are results:"
         print results
+        print "\n\n Here are my errored rows"
+        for d in errored_rows:
+            print d
 
 
 
