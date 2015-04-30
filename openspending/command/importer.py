@@ -127,12 +127,14 @@ def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=Tr
             filename = sourcejson['fields']['downloadedFile'].replace("rawdata/", "")
 
             #copy file over to another folder and open it
-            copyfile(os.path.join(file_dir, filename), os.path.join(UPLOADED_FILES_DEST, filename))
+            #copyfile(os.path.join(file_dir, filename), os.path.join(UPLOADED_FILES_DEST, filename))
 
-            with codecs.open(os.path.join(UPLOADED_FILES_DEST, filename), 'rb') as fh:
-                wuezfile = FileStorage(stream=fh, name=filename)
+            orig_filepath = os.path.join(file_dir, filename)
+
+            with codecs.open(orig_filepath, 'rb') as fh:
+                wuezfile = FileStorage(stream=fh)
                 #upload_source_path = sourcefiles.save(wuezfile, name=filename, folder=UPLOADED_FILES_DEST)
-                upload_source_path = sourcefiles.save(wuezfile)
+                upload_source_path = sourcefiles.save(wuezfile, name=filename)
                 sourcefile = SourceFile(rawfile = upload_source_path)
                 db.session.add(sourcefile)
         except Exception ,e:
