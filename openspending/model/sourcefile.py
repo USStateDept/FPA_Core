@@ -7,6 +7,17 @@ from sqlalchemy.types import Integer, Unicode, DateTime
 from openspending.core import db, sourcefiles
 from openspending.model import Source
 
+from os.path import splitext
+
+#from csvkit import convert as xlsconvert
+
+import StringIO
+
+
+
+import xlrd
+import csv
+
 
 
 
@@ -53,7 +64,11 @@ class SourceFile(db.Model):
         return "<SourceFile(%r, %r)>" % (self.id, sourcefiles.url(self.rawfile),)
 
 
+    def get_path(self):
+        return sourcefiles.path(self.rawfile).replace("\\", "/")
+
     def load_file(self):
+
         try:
             return open(sourcefiles.path(self.rawfile), 'rb')
         except Exception, e:

@@ -129,12 +129,18 @@ class Source(db.Model):
             self.model = Model(self)
 
     def delete(self):
-        refineproj = self.get_or_create_ORProject()
-        refineproj.refineproj.delete()
+        try:
+            refineproj = self.get_or_create_ORProject()
+            refineproj.refineproj.delete()
+        except Exception, e:
+            print "doesn't have ORid", e
 
         #delete the source data from the tables
-        if self.model:
-            self.model.drop()
+        try:
+            if self.model:
+                self.model.drop()
+        except Exception, e:
+            print "doesn't have model", e
 
         db.session.delete(self)
         db.session.commit()
