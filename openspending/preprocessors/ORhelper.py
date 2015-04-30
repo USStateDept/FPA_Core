@@ -10,7 +10,6 @@ import csv
 import urllib
 from openspending.preprocessors import processing_funcs
 from settings import OPENREFINE_SERVER
-import chardet
 
 from os.path import splitext
 
