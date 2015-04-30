@@ -60,7 +60,8 @@ def login():
 @blueprint.route('/login', methods=['POST', 'PUT'])
 def login_perform():
     account = Account.by_email(request.form.get('login'))
-    if account is not None and account.verified == True:
+    #if account is not None and account.verified == True:
+    if account is not None:
         if check_password_hash(account.password, request.form.get('password')):
             login_user(account, remember=True)
             flash_success(_("Welcome back, %(fullname)s!", fullname=account.fullname))
