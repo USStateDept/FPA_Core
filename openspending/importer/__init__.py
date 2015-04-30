@@ -190,7 +190,8 @@ class ORImporter(BaseImporter):
         result = db.engine.execute("SELECT country_level0.gid as gid \
                                     FROM public.geometry__country_level0 as country_level0 \
                                     WHERE country_level0.name_long = '%s' \
-                                    OR country_level0.short_name = '%s';" %(searchstring, searchstring,))
+                                    OR country_level0.name_short = '%s' \
+                                    OR country_level0.label = '%s';" %(searchstring, searchstring,searchstring,))
         gid = result.first()
         if not gid:
             result = db.engine.execute("SELECT \
