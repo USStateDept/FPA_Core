@@ -8,10 +8,19 @@ from openspending.model import Dataset
 
 from slugify import slugify
 
+TAG_OPTIONS = [
+    ("categories", "Categories"),
+    ("subcategories", "Sub-Categories"),
+    ("keyword", "Keywords"),
+]
+
+
+
 
 
 TAG_CATEGORIES = {
     "categories": "Categories",
+    "subcategories": "Sub-Categories",
     "keyword": "Keywords",
 }
 

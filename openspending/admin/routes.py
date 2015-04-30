@@ -4,7 +4,7 @@
 #from flask.ext.superadmin.model.base import BaseModelAdmin
 from flask.ext import wtf
 from flask_admin.contrib import sqla
-from wtforms.fields import StringField, PasswordField, BooleanField
+from wtforms.fields import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import Required, ValidationError
 from flask import flash
 from flask_admin import form
@@ -19,6 +19,8 @@ from werkzeug.security import generate_password_hash
 from jinja2 import Markup
 
 from settings import UPLOADED_FILES_DEST
+
+from openspending.model.tags import TAG_OPTIONS
 
 from slugify import slugify
 
@@ -65,8 +67,6 @@ class AccountView(sqla.ModelView):
     # Model handlers
     def on_model_change(self, form, model, is_created=False):
     #def create_model(self, form):
-
-        print "running this for some reason", model
         if form.data['password1'] != None:
             model.password = generate_password_hash(form.data['password1'])
         return
@@ -146,6 +146,10 @@ class FeedbackView(sqla.ModelView):
 
 class TagsView(sqla.ModelView):
 
+    form_extra_fields = {
+        "type": SelectField(u'Type', choices=TAG_OPTIONS)
+    }
+
     form_excluded_columns = ('slug_label','category',)
 
     column_list = ('slug_label', 'label','category','dataset_count',)
@@ -153,9 +157,12 @@ class TagsView(sqla.ModelView):
     def is_accessible(self):
         return require.account.is_admin()
 
+
     # Model handlers
     def on_model_change(self, form, model, is_created=False):
     #def create_model(self, form):
+
+        model.category = form.data['type']
         model.slug_label = slugify(str(model.label), separator="_")
         return
 
