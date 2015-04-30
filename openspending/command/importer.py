@@ -4,7 +4,6 @@ import sys
 import os
 import urllib2
 import codecs
-import chardet
 import urlparse, urllib
 import traceback
 
