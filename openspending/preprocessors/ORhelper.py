@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from google.refine import refine
 import tempfile
 import os
@@ -8,6 +10,83 @@ import csv
 import urllib
 from openspending.preprocessors import processing_funcs
 from settings import OPENREFINE_SERVER
+import chardet
+
+from os.path import splitext
+
+#from csvkit import convert as xlsconvert
+
+import StringIO
+
+import openpyxl
+import xlrd
+import csv
+
+
+
+def convert_to_utf(item):
+    try:
+        return str(item)
+    except:
+        try:
+            return item.decode('utf-8', 'ignore')
+        except:
+            return item
+
+def convert_files_to_csv(rawfilepath):
+    """
+    static raw files and convert them to csv strings
+    """
+
+    # JSON, xlsx, xls, csv
+
+    extension = splitext(rawfilepath)[1]
+    print rawfilepath
+
+    if extension in [".xls"]:
+        wb = xlrd.open_workbook(rawfilepath)
+        sh = wb.sheet_by_index(0)
+
+        your_csv_file = StringIO.StringIO()
+        #wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+
+        for rownum in xrange(sh.nrows):
+            temparray = []
+            for colnum in xrange(sh.ncols):
+                item = convert_to_utf(sh.cell_value(rowx=rownum, colx=colnum))
+                temparray.append(item)
+            your_csv_file.write(",".join(temparray) + '\n')
+
+        your_csv_file.seek(0)
+        return your_csv_file.getvalue()
+    elif extension in [".xlsx"]:
+        wb = openpyxl.load_workbook(rawfilepath, use_iterators=True)
+        ws = wb.worksheets[0]
+
+
+        your_csv_file = StringIO.StringIO()
+        #wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+
+        for row in ws.iter_rows(row_offset=0):
+            temparray = []
+            for c in row:
+                item = convert_to_utf(c.value)
+                temparray.append(item)
+            your_csv_file.write(",".join(temparray) + '\n')
+            #wr.writerow(temparray)
+
+        your_csv_file.seek(0)
+        print "returing the value here, we can fix this"
+        return your_csv_file.getvalue()
+
+    elif extension in ['.csv']:
+        with open(rawfilepath, 'rb') as fl:
+            return fl.read()
+    else:
+        print "ERROR Could not read"
+        return None
+
+
 
 class RefineProj:
 
@@ -35,6 +114,7 @@ class RefineProj:
 
 
 
+
     #depending on how long this takes, it could be a celery call
     def createOR(self, source):
 
@@ -50,14 +130,22 @@ class RefineProj:
                 fp = urllib.urlopen(source.url)
                 responsetext = fp.read()
         elif source.rawfile:
-            fp = source.rawfile.load_file()
-            s = fp.read()
-            responsetext = str(s.decode("utf-8-sig"))
+            responsetext = convert_files_to_csv(source.rawfile.get_path())
+            # fp = source.rawfile.get_path()
+            # s = fp.read()
+            try:
+                responsetext = str(responsetext)
+            except:
+                try:
+                    responsetext = str(responsetext.decode('utf-8', 'ignore'))
+                except:
+                    pass
         else:
             return None
 
         if not responsetext:
             return None
+
 
 
         #preprocessing functions
