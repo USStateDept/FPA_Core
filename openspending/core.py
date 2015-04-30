@@ -2,8 +2,6 @@ import logging
 from flask import Flask, redirect
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
-from flask.ext.babel import Babel
-from flaskext.gravatar import Gravatar
 from flask.ext.cache import Cache
 from flask.ext.mail import Mail
 from flask.ext.assets import Environment
@@ -15,7 +13,7 @@ from cubes import Workspace
 from flask.ext.login import current_user
 from flask import request
 #from cubes.extensions import extensions
-from google.refine import refine
+#from google.refine import refine
 
 from openspending import default_settings
 from settings import OPENREFINE_SERVER 
@@ -35,7 +33,6 @@ logging.getLogger('markdown').setLevel(logging.WARNING)
 
 
 db = SQLAlchemy()
-babel = Babel()
 login_manager = LoginManager()
 cache = Cache()
 mail = Mail()
@@ -64,7 +61,6 @@ def create_app(**config):
     ])
 
     db.init_app(app)
-    babel.init_app(app)
     cache.init_app(app)
     mail.init_app(app)
     assets.init_app(app)
@@ -80,42 +76,22 @@ def create_app(**config):
         g.search_form = SearchForm()
 
 
-    # HACKY SHIT IS HACKY
-    # from openspending.lib.solr_util import configure as configure_solr
-    # configure_solr(app.config)
-
-    # from openspending.model.provider import OpenSpendingStore
-    #extensions.store.extensions['openspending'] = OpenSpendingStore
     app.cubes_workspace = Workspace()
-    #db_url = app.config.get('SQLALCHEMY_DATABASE_URI')
     
     app.cubes_workspace.register_default_store('OpenSpendingStore')
 
-    
-    # #do app.config in the future
-    # refine_server = refine.RefineServer(server=OPENREFINE_SERVER)
-
-
-
-    # try:
-    #     test = refine_server.get_version()
-    # except Exception, e:
-    #     print "Could not find OpenRefine.  Components could be broken"
-    #     print "The error", e
 
     return app
 
 
 def create_web_app(**config):
+    print "RUNNING CREATE WEB APP"
     app = create_app(**config)
 
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
     from openspending.views import register_views
-    register_views(app, babel)
-
-    Gravatar(app, size=200, rating='g',
-             default='retro', use_ssl=True)
+    register_views(app)
 
     from openspending.admin.routes import register_admin
     flaskadmin = admin.Admin(app, name='FIND Admin')
@@ -129,6 +105,7 @@ def create_web_app(**config):
 
 
 def create_celery(app):
+    print "RNNING CELERY NOW"
     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
     TaskBase = celery.Task

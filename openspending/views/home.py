@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, flash
 from flask.ext.login import current_user, login_user, logout_user
 from flask.ext.babel import gettext
 
-from openspending.views.i18n import set_session_locale
 from openspending.model.dataset import Dataset
 from openspending.views.cache import disable_cache
 from openspending.model import Account
@@ -50,15 +49,6 @@ def favicon():
 ######################OPENSPENDING STUFF#########################
 
 
-
-@blueprint.route('/set-locale', methods=['POST'])
-def set_locale():
-    disable_cache()
-    locale = request.form.get('locale')
-
-    if locale is not None:
-        set_session_locale(locale)
-    return ''
 
 
 @blueprint.route('/__version__')
