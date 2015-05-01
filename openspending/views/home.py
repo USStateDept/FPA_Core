@@ -59,8 +59,4 @@ def version():
 
 @blueprint.route('/__ping__')
 def ping():
-    disable_cache()
-    from openspending.tasks import ping
-    ping.delay()
-    flash(gettext("Sent ping!"), 'success')
-    return redirect('/')
+    return 'pong' 
