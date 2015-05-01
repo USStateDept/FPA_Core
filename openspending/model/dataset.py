@@ -165,13 +165,6 @@ class Dataset(db.Model):
         else:
             self.name = slugify(str(data.get('label')), max_length=30, separator="_")
 
-        #check if name is already taken
-        if Dataset.by_name(self.name):
-            for x in range(10):
-                newname = self.name + "_" + str(x)
-                if not Dataset.by_name(newname):
-                    self.name = newname
-                    break
             
         self.description = data.get('description')
         self.dataType = data.get('dataType')

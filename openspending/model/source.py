@@ -31,6 +31,8 @@ class Source(db.Model):
 
     ORid = Column(BigInteger)
 
+    model_cache = None
+
 
 
 
@@ -44,6 +46,8 @@ class Source(db.Model):
         #backref to SourceFile
         self.rawfile = rawfile
         self.name = name
+
+        self.model_cache = None
 
         if self.rawfile or self.url:
             self.ORid = self.get_or_create_ORProject().refineproj.project_id
@@ -118,13 +122,14 @@ class Source(db.Model):
         self.dataset.mapping = mapping.copy()
         self._load_model()
 
-    @property
+
+    @property 
     def model(self):
-        if self.model:
-            return self.model
-        else:
+        if not self.model_cache:
             self._load_model()
-            return self.model
+            return self.model_cache
+        else:
+            return self.model_cache
 
 
     #@reconstructor
@@ -135,7 +140,7 @@ class Source(db.Model):
             return
         if len(self.dataset.mapping.get('mapping', {}).keys()) > 0:
             print "building the model", self.name
-            self.model = Model(self)
+            self.model_cache = Model(self)
 
     def delete(self):
         try:
