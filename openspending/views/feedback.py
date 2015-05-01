@@ -7,7 +7,6 @@ import json
 
 from flask import Blueprint, request
 from flask.ext.login import current_user
-from flask.ext.babel import gettext as _
 from colander import SchemaNode, String, Invalid
 from restpager import Pager
 

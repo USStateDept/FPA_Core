@@ -3,7 +3,6 @@ import logging
 from urlparse import urljoin
 
 from flask import current_app
-from flask.ext.babel import gettext as _
 
 log = logging.getLogger(__name__)
 
@@ -11,7 +10,7 @@ log = logging.getLogger(__name__)
 def get_widget(name, force=False):
     """ Get a dict to describe various properties of a named widget. """
     if not force and name not in list_widgets():
-        raise ValueError(_("No widget named '%s' exists.") % name)
+        raise ValueError("No widget named")
 
     base_url = current_app.config.get('WIDGETS_BASE')
     prefix = urljoin(base_url, name)

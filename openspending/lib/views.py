@@ -5,7 +5,6 @@ import logging
 from datetime import datetime
 
 from flask import request
-from flask.ext.babel import gettext as _
 
 from openspending.model.dataset import Dataset
 from openspending.lib import widgets
@@ -34,7 +33,7 @@ class View(object):
         self.entity = view.get('entity').lower().strip()
         self.filters = view.get('filters', {})
         self.name = view.get('name') or 'untitled'
-        self.label = view.get('label') or _('Untitled')
+        self.label = view.get('label')
         self.dimension = view.get('dimension')
         self.drilldown = view.get('drilldown',
                                   view.get('breakdown'))

@@ -5,7 +5,6 @@ import json
 
 from flask import Blueprint, request
 from flask.ext.login import current_user
-from flask.ext.babel import gettext as _
 
 from openspending.core import db
 

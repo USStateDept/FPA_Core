@@ -2,7 +2,6 @@ import logging
 
 from flask import Blueprint, render_template, redirect, request
 from flask.ext.login import current_user
-from flask.ext.babel import gettext as _
 from werkzeug.exceptions import BadRequest
 
 from openspending.core import db, sourcefiles
@@ -31,4 +30,4 @@ def upload():
         db.session.add(sourcefile)
         db.session.commit()
 
-    return render_template('badge/index.html')
+    return render_template('home/index.jade')

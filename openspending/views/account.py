@@ -1,7 +1,6 @@
 import colander
 from flask import Blueprint, render_template, request, redirect
 from flask.ext.login import current_user, login_user, logout_user
-from flask.ext.babel import gettext as _
 from flask import current_app
 from sqlalchemy.sql.expression import desc, func, or_
 from werkzeug.security import check_password_hash, generate_password_hash

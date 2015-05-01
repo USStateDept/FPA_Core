@@ -2,8 +2,6 @@ import logging
 
 from flask import request
 from flask.ext.login import current_user
-# from flask.ext.babel import gettext as _
-from solr import SolrException
 
 from openspending.auth import require
 from openspending.model.dataset import Dataset

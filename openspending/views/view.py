@@ -3,7 +3,6 @@ import logging
 from werkzeug.exceptions import BadRequest
 from flask import Blueprint, render_template, request, redirect
 from flask.ext.login import current_user
-from flask.ext.babel import gettext as _
 import colander
 
 from openspending.core import db
@@ -37,7 +36,7 @@ class JSONSchemaType(colander.SchemaType):
 def valid_widget_name(widget):
     if widget in widgets.list_widgets():
         return True
-    return _("Invalid widget type: %(widget)s", widget=widget)
+    return "Invalid widget type: " + widget
 
 
 class CreateView(colander.MappingSchema):
