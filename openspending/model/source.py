@@ -118,9 +118,18 @@ class Source(db.Model):
         self.dataset.mapping = mapping.copy()
         self._load_model()
 
+    @property
+    def model(self):
+        if self.model:
+            return self.model
+        else:
+            self._load_model()
+            return self.model
 
-    @reconstructor
+
+    #@reconstructor
     def _load_model(self):
+        print "building the model"
         if not self.dataset:
             print "not dataset attached"
             return
