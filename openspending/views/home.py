@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, flash
 from flask.ext.login import current_user, login_user, logout_user
-from flask.ext.babel import gettext
 
 from openspending.model.dataset import Dataset
 from openspending.views.cache import disable_cache

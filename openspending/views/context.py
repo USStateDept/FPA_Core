@@ -35,23 +35,13 @@ def get_active_section():
 
 @home.app_context_processor
 def template_context_processor():
-    locale = get_locale()
     data = {
         'DEBUG': current_app.config.get('DEBUG'),
         'static_path': static_path,
         'url_for': url_for,
-        'site_url': url_for('home.index').rstrip('/'),
-        'number_symbols_group': locale.number_symbols.get('group'),
-        'number_symbols_decimal': locale.number_symbols.get('decimal'),
-        'site_title': current_app.config.get('SITE_TITLE'),
         'section_active': get_active_section(),
         'logged_in': auth.account.logged_in(),
-        'current_user': current_user,
-        'can': auth,
-        'legacy_views': {
-            'available': request._ds_available_views,
-            'active': request._ds_view,
-        }
+        'current_user': current_user
     }
     return data
 

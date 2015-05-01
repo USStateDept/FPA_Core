@@ -2,15 +2,10 @@ import logging
 
 from flask import request, g
 
-from openspending.core import cache
+#from openspending.core import cache
 from openspending.auth import require
-from openspending.lib.util import cache_hash
 from openspending.lib.jsonexport import jsonify
-from openspending.lib.csvexport import write_csv
-from openspending.lib.paramparser import AggregateParamParser
-from openspending.inflation.aggregation import aggregate as inf_aggregate
-from openspending.lib.hypermedia import drilldowns_apply_links
-from openspending.views.cache import etag_cache_keygen
+#from openspending.views.cache import etag_cache_keygen
 from openspending.views.api_v2.common import blueprint
 
 #imports prepare_cell_cubes_ext

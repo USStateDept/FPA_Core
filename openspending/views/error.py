@@ -24,6 +24,6 @@ def handle_error(exc):
         status = exc.code
         title = exc.name
         headers = exc.get_headers(request.environ)
-    html = render_template('error.html', message=message,
+    html = render_template('error.jade', message=message,
                            title=title, status=status)
     return Response(html, status=status, headers=headers)

@@ -1,0 +1,12 @@
+{% extends "base.jade" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+h2.page-header
+	small Error {{ status }}
+dev.alert-message.block-message.error
+	strong {{ message }}
+
+{% endblock %}

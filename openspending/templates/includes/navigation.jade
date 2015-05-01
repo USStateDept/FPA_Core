@@ -18,8 +18,7 @@ nav.navbar.navbar-default.navbar-fixed-top
         {% if logged_in %}
         li.dropdown
           a.dropdown-toggle(data-toggle='dropdown')
-           img(src="{{ current_user.email | gravatar(size=20) }}", alt="{{ current_user.fullname }}")
-          strong {{ current_user.fullname }}
+            strong {{ current_user.fullname }}
           ul.dropdown-menu.account-dropdown
             li
               a(href="{{ url_for('account.dashboard') }}") Dashboard

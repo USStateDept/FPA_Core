@@ -64,7 +64,7 @@ def login_perform():
     if account is not None:
         if check_password_hash(account.password, request.form.get('password')):
             login_user(account, remember=True)
-            flash_success(_("Welcome back, %(fullname)s!", fullname=account.fullname))
+            flash_success("Welcome back, " + account.fullname + "!")
             return redirect(url_for('home.index'))
     flash_error(_("Incorrect user name or password!"))
     return login()

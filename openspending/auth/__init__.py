@@ -3,10 +3,7 @@ from werkzeug.exceptions import Forbidden
 
 # These have to be imported for the permission system to work
 import account  # NOQA
-import badge  # NOQA
 import dataset  # NOQA
-import view  # NOQA
-
 
 class Requirement(object):
 
