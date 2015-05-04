@@ -109,7 +109,7 @@ def dataorgs():
                                                                         "subcategories": {}
                                                                     }
                     outputschema['data']['categories']['total'] += 1
-                category = tag.label
+                category = tag.slug_label
             elif tag.category == "subcategories":
             #     if outputschema['data']['categories']['data'].get(tag.slug_label, None):
             #         if outputschema['data']['categories']['data'][tag.slug_label]['subcategories'].get(tag.slug_label, None):
@@ -127,7 +127,7 @@ def dataorgs():
             #                                                             "subcategories": {}
             #                                                         }
             #         outputschema['data']['categories']['total'] += 1
-                subcategory = tag.label
+                subcategory = tag.slug_label
 
 
         indicatorschema = {

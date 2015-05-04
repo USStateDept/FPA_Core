@@ -370,11 +370,14 @@ def update_model_createnew(datasetname):
     if len(request.files) == 1:
         upload_source_path = sourcefiles.save(request.files['sourcefile'])
 
+
         sourcefile = SourceFile(rawfile = upload_source_path)
         db.session.add(sourcefile)
 
         if basesource:
-            basesource.rawfile = upload_source_path
+            if basesource.rawfile:
+                basesource.rawfile.delete()
+            basesource.rawfile = sourcefile
             source = basesource
             source.reload_openrefine()
         else:
