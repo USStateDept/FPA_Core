@@ -14,6 +14,7 @@ from openspending.lib.findui import jsonp
 #, Source, Run, DataOrg, SourceFile
 # from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
+import json
 # from openspending.lib.indices import clear_index_cache
 # from openspending.views.cache import etag_cache_keygen
 # from openspending.views.context import api_form_data
@@ -141,10 +142,6 @@ def dataorgs():
 
     #outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
 
-
-
-
-
-
-    return jsonify(outputschema)
+    return json.dumps(outputschema)
+    #return jsonify(outputschema)
 
