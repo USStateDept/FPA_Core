@@ -59,23 +59,18 @@ def dataorgs():
                         "numpages": numpages,
                         "data":
                             {
-                                "categories":collections.OrderedDict({
+                                "categories":{
                                     "total":0,
-                                    "data":{
-                                    }
-                                }),
-                                "sources":collections.OrderedDict({
+                                    "data":collections.OrderedDict({})
+                                },
+                                "sources":{
                                     "total":0,
-                                    "data":{
-
-                                    }
-                                }),
-                                "indicators":collections.OrderedDict({
+                                    "data":collections.OrderedDict({})
+                                },
+                                "indicators":{
                                     "total":0,
-                                    "data":{
-
-                                    }
-                                })
+                                    "data":collections.OrderedDict({})
+                                }
                             }
                     }
 
@@ -140,7 +135,7 @@ def dataorgs():
                             "category":category,
                             "subcategory":subcategory
                         }
-        outputschema['data']['indicators'][keyname] = indicatorschema
+        outputschema['data']['indicators']['data'][keyname] = indicatorschema
         outputschema['data']['indicators']['total'] += 1
 
     #outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
