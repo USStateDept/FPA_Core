@@ -42,10 +42,11 @@ def dataorgs():
 
     limit = request.args.get('limit', None)
 
+    query_all = Dataset.all(order=True)
+
     if limit:
         query_all = query_all.limit(int(limit))
 
-    query_all = Dataset.all(order=True)
     numpages = 1
     page = 1
     if page_num:
