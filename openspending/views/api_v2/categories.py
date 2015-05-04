@@ -45,10 +45,10 @@ def dataorgs():
         query_all = query_all.limit(limit)
 
     query_all = Dataset.all(order=True)
-    total_indicators = query_all.count()
     numpages = 1
     page = 1
     if page_num:
+        total_indicators = query_all.count()
         query_all = query_all.offset(int(page_num) * int(perpage)).limit(int(perpage))
         numpages = int(float(total_indicators)/float(perpage)) + 1
         page = page_num
@@ -79,14 +79,22 @@ def dataorgs():
                     }
 
 
-    #get the first category and subcategory and DataOrg iterate through all categories
-
-    for indicator in query_all:
+    for indicator in query_all.all():
         keyname = indicator.name
         dataorg = getattr(indicator, "dataorg", None)
         if not dataorg:
             dataorg = "None"
         else:
+
+            if outputschema['data']['sources']['data'].get(dataorg.label, None):
+                outputschema['data']['sources']['data'][dataorg.label]['indicators'].append(indicator.name)
+            else:
+                outputschema['data']['sources']['data'][dataorg.label] = {
+                                                                    'label': dataorg.label,
+                                                                    'indicators': [indicator.name]
+                                                                }
+                outputschema['data']['sources']['total'] += 1
+
             dataorg = dataorg.label
         tags = getattr(indicator, "tags", [])
         subcategory = "None"
@@ -94,8 +102,33 @@ def dataorgs():
 
         for tag in tags:
             if tag.category == "categories":
+                if outputschema['data']['categories']['data'].get(tag.slug_label, None):
+                    outputschema['data']['categories']['data'][tag.slug_label]['indicators'].append(indicator.name)
+                else:
+                    outputschema['data']['categories']['data'][tag.slug_label] = {
+                                                                        'label': tag.label,
+                                                                        'indicators': [indicator.name],
+                                                                        "subcategories": {}
+                                                                    }
+                    outputschema['data']['categories']['total'] += 1
                 category = tag.label
             elif tag.category == "subcategories":
+            #     if outputschema['data']['categories']['data'].get(tag.slug_label, None):
+            #         if outputschema['data']['categories']['data'][tag.slug_label]['subcategories'].get(tag.slug_label, None):
+            #             outputschema['data']['categories']['data'][tag.slug_label]['subcategories'][tag.slug_label]['indicators'].append(indicator.name)
+            #         else:
+            #             outputschema['data']['categories']['data'][tag.slug_label]['subcategories'][tag.slug_label] = {
+            #                                                                                                             "label": tag.label,
+            #                                                                                                             "indicators": [indicator.name]
+            #                                                                                                             }
+            #         ['indicators'].append(indicator.name)
+            #     else:
+            #         outputschema['data']['categories']['data'][tag.slug_label] = {
+            #                                                             'label': tag.label,
+            #                                                             'indicators': [indicator.name],
+            #                                                             "subcategories": {}
+            #                                                         }
+            #         outputschema['data']['categories']['total'] += 1
                 subcategory = tag.label
 
 
@@ -108,6 +141,10 @@ def dataorgs():
                         }
         outputschema['data']['indicators'][keyname] = indicatorschema
         outputschema['data']['indicators']['total'] += 1
+
+    outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
+
+
 
 
 
