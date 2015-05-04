@@ -43,7 +43,7 @@ def dataorgs():
     limit = request.args.get('limit', None)
 
     if limit:
-        query_all = query_all.limit(limit)
+        query_all = query_all.limit(int(limit))
 
     query_all = Dataset.all(order=True)
     numpages = 1
