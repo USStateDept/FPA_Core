@@ -17,7 +17,7 @@ import StringIO
 
 import xlrd
 import csv
-
+import os
 
 
 
@@ -92,6 +92,18 @@ class SourceFile(db.Model):
 
      
         return json
+
+
+    def delete(self):
+        try:
+            os.remove(self.get_path())
+        except Exception, e:
+            print "ERROR", e
+
+        db.session.delete(self)
+        db.session.commit()
+
+
 
     @classmethod
     def import_json_dump(cls, theobj):
