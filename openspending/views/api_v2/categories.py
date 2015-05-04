@@ -3,6 +3,7 @@ import sys
 import traceback
 from slugify import slugify
 import json
+import collections
 
 from flask import Blueprint, request
 #from flask.ext.login import current_user
@@ -58,23 +59,23 @@ def dataorgs():
                         "numpages": numpages,
                         "data":
                             {
-                                "categories":{
+                                "categories":collections.OrderedDict({
                                     "total":0,
                                     "data":{
                                     }
-                                },
-                                "sources":{
-                                    "total":0,
-                                    "data":{
-
-                                    }
-                                },
-                                "indicators":{
+                                }),
+                                "sources":collections.OrderedDict({
                                     "total":0,
                                     "data":{
 
                                     }
-                                }
+                                }),
+                                "indicators":collections.OrderedDict({
+                                    "total":0,
+                                    "data":{
+
+                                    }
+                                })
                             }
                     }
 
@@ -142,7 +143,7 @@ def dataorgs():
         outputschema['data']['indicators'][keyname] = indicatorschema
         outputschema['data']['indicators']['total'] += 1
 
-    outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
+    #outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
 
 
 
