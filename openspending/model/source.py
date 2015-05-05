@@ -276,7 +276,7 @@ class Source(db.Model):
             "id": self.id,
             "name": self.name,
             "url": self.url,
-            "rawfile": str(self.rawfile),
+            "rawfile": self.rawfile.as_dict(),
             "dataset": self.dataset.name,
             "created_at": self.created_at,
             "ORURL": OPENREFINE_PUBLIC + "/project?project=" + str(self.ORid),
