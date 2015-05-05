@@ -238,15 +238,20 @@ def field_polling_post(datasetname, columnkey):
 def apply_default_model(datasetname):
 
     dataset = get_dataset(datasetname)
+
     if not dataset.dataorg or not dataset:
-        return jsonify({"errors":["Invalid URL.  Cannot find source or dataset"]})
+        return jsonify({"errors":["Invalid URL.  Could not find dataorg"]})
 
-    if dataset.ORoperations:
-        print "******"
-        print dataset.ORoperations
-        source.applyORInstructions(dataset.ORoperations)
+    dataorg = dataset.dataorg
 
-    dataset.source.addData(dataset.data)
+    if not dataorg.ORTemplate or not dataorg.mappingTemplate:
+        return jsonify({"errors":["Dataorg has no template"]})
+
+    dataset.source.applyORInstructions(dataorg.ORTemplate)
+
+
+    dataset.mapping = dataorg.mappingTemplate
+
 
     db.session.commit()
 
@@ -260,60 +265,26 @@ def apply_default_model(datasetname):
 def save_default_model(datasetname):
 
     dataset = get_dataset(datasetname)
-    if not require.dataset.update(dataset):
-        return jsonify({"errors":["Can not create new source.  Permission denied"]})
 
-    sourcemeta = request.get_json().get("meta", None)
-    sourcemodeler = request.get_json().get("modeler", None)
-    
-    if not sourcemeta or not sourcemodeler:
-        return jsonify({"errors":["Invalid Arguments"]})
+    if not dataset.mapping or not dataset.source:
+        return jsonify({"errors":["No mapping for this dataset"]})
+
+    if not dataset.dataorg:
+        return jsonify({"errors":['Has no dataorg']})
 
 
-    if not dataset.source:
-        return jsonify({"errors":["Could not find the source"]})
 
+    #get the OR instructions from dataset
+    ORinstructions = dataset.source.getORInstructions()
 
-    r = {"mapping":sourcemodeler}
+    #get the OR instructions from dataset
+    mapping = dataset.mapping
 
-    #let's handle the compounds
-    for item in r['mapping'].values():
-        if item['type'] == "compound":
-            for attitem in item['attributes'].values():
-                attitem['column'] = item['column']
+    dataorg = dataset.dataorg
 
-    #if not hasattr(r['mapping'], 'theid'):
-    r['mapping']['theid'] = {
-                              "default_value": "",
-                              "description": "Unique ID",
-                              "datatype": "string",
-                              "key": True,
-                              "label": "UniqueID",
-                              "column": "uniqueid",
-                              "type": "attribute",
-                              "form": {
-                                "label": "Unique Identifier"
-                                }
-                            }
+    dataorg.ORTemplate = {"data": ORinstructions}
+    dataorg.mappingTemplate = mapping
 
-
-    r['mapping']['geom_time_id'] = {
-                              "default_value": "",
-                              "description": "Geometry Time ID",
-                              "datatype": "integer",
-                              "label": "Geometry Time ID",
-                              "column": "geom_time_id",
-                              "type": "geom_time_id",
-                              "form": {
-                                "label": "Geometry-Time ID"
-                                }
-                            }
-
-    dataset.data = r
-
-    #also need to get the operations of the OR and save it to 
-    ORoperations = dataset.source.getORInstructions()
-    dataset.ORoperations = {"data": ORoperations}
 
     db.session.commit()
 
