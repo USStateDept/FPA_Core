@@ -517,7 +517,7 @@ DEFAULT_SOURCE_MAPPING = {
                               },
                               "type": "geometry",
                               "description": None,
-                              "label": None,
+                              "label": "Country",
                               "form": {
                                 "label": "Country Name"
                                 }
@@ -526,7 +526,7 @@ DEFAULT_SOURCE_MAPPING = {
                               "default_value": "",
                               "description": None,
                               "datatype": "float",
-                              "label": None,
+                              "label": "Value",
                               "column": None,
                               "type": "measure",
                               "form": {
@@ -550,7 +550,7 @@ DEFAULT_SOURCE_MAPPING = {
                               "description": None,
                               "format": None,
                               "column": None,
-                              "label": None,
+                              "label": "Date",
                               "datatype": "date",
                               "type": "date",
                               "form": {
