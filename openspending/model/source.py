@@ -109,6 +109,10 @@ class Source(db.Model):
     def getORInstructions(self):
         #get the new ioperations from OR and save them int he database
         refineproj = RefineProj(source=self)
+        print refineproj
+        print refineproj.refineproj
+        print refineproj.refineproj.get_operations()
+
         return refineproj.refineproj.get_operations()
         
     def getPreFuncs(self):
@@ -272,11 +276,15 @@ class Source(db.Model):
         return db.session.query(cls)
 
     def as_dict(self):
+        rawfile = None
+        if self.rawfile:
+            rawfile = self.rawfile.as_dict()
+
         return {
             "id": self.id,
             "name": self.name,
             "url": self.url,
-            "rawfile": str(self.rawfile),
+            "rawfile": rawfile,
             "dataset": self.dataset.name,
             "created_at": self.created_at,
             "ORURL": OPENREFINE_PUBLIC + "/project?project=" + str(self.ORid),

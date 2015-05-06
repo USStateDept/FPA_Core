@@ -134,7 +134,7 @@ class SourceFile(db.Model):
         """
         dict
         """
-        badge = {
+        return {
             "id": self.id,
-            "rawfile": self.rawfile
+            "url": sourcefiles.url(self.rawfile)
         }
