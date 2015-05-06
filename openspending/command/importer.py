@@ -394,37 +394,59 @@ def add_import_commands(manager):
 
 
 
-    # @manager.option('-n', '--dry-run', dest='dry_run', action='store_true',
-    #                 help="Perform a dry run, don't load any data.")
-    # @manager.option('-i', '--index', dest='build_indices', action='store_true',
-    #                 help="Suppress Solr index build.")
-    # @manager.option('--raise-on-error', action="store_true",
-    #                 dest='raise_errors', default=False,
-    #                 help='Get full traceback on first error.')
-    # @manager.option('jsondata', nargs=argparse.REMAINDER,
-    #                 help="JSON data from databank.edip-maps.net")
-    # @manager.command
-    # def loaddatabankjson(**args):
-    #     """ Load a JSON dump from  """
-    #     if len(args['jsondata']) == 0:
-    #         print "you need to identify the json file from the python manage.py dumpdata etldata command"
-    #         sys.exit(1)
 
-    #     #parse the json
 
-    #     #iterate through the json to find the etldata.dataconnections
-    #         #find which method to try
+    @manager.option('jsondata', nargs=argparse.REMAINDER,
+                    help="JSON data from databank.edip-maps.net")
+    @manager.command
+    def importdataorgs(**args):
+        """ Load a JSON dump from  """
+        import json
 
-    #         #add preprocessors if necessary using the type format
+        from openspending.model import Dataset, DataOrg
 
-    #         #Load into OR
+        jsonpath = args.get('jsondata', None)[0]
+        print jsonpath
 
-    #         #check that it is there
+        try:
+            f = open(jsonpath, 'rb')
+        except Exception, e:
+            print "failed to open", jsonpath
+            print e
+            sys.exit()
 
-    #         #delete it
+        djangodump = json.load(f)
 
-    #     #print report
+        f.close()
 
 
 
+        metadata = [] 
+        dataconnections = []
+        for obj in djangodump:
+          if obj['model'] == "etldata.metadata":
+               metadata.append(obj)
+          elif obj['model'] == "etldata.dataconnection":
+            dataconnections.append(obj)
 
+
+        for dataobj in dataconnections:
+            datasetflask = Dataset.by_label(dataobj['fields']['indicator'])
+            if not datasetflask:
+                print "Could not find ", dataobj['fields']['indicator']
+                continue
+            print "\nworking on ", datasetflask
+
+            for met in metadata:
+                if dataobj['fields']['metadata'] == met['pk']:
+                    dataorgobj = DataOrg.by_name(met['fields']['title'])
+                    if not dataorgobj:
+                        #create new one
+                        datasetflask = DataOrg({"label":met['fields']['title'], "description":met['fields']['description']})
+                        db.session.add(datasetflask)
+                        datasetflask.dataorg = datasetflask
+                        print "created a new one"
+                    else:
+                        datasetflask.dataorg = dataorgobj
+                        print "adding to existing"
+                    db.session.commit()
