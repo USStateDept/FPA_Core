@@ -90,11 +90,12 @@ class FloatAttributeType(AttributeType):
     """ Accept floating point values with commas as thousands
     delimiters (anglo-saxon style). """
 
-    RE = re.compile(r'^[0-9-\,]*(\.[0-9]*[Ee]?\+?[0-9]*)?$')
+    RE = re.compile(r'^[0-9-\,]*(\.[0-9]*[Ee]?\+?[0-9-]*)?$')
 
     def cast(self, row, meta):
         value = self._column_or_default(row, meta)
         if not self.RE.match(value):
+            print "here is the value that failed", value
             raise ValueError("Numbers must only contain digits, periods, "
                              "dashes and commas")
         return float(unicode(value).replace(",", ""))
