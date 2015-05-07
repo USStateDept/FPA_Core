@@ -433,16 +433,19 @@ class GeometryDimension(Dimension, TableHandler):
                                           (geometry__alt_names.altname IN ('%s','%s'));" %(searchstring, searchstring.lower(),))
             resultitem = result.first() 
             #check the altnames table for an item
-        
-        if not resultitem:
-            raise InvalidData("country_level0", "country name",
-                  "geometry", dim['label'], "Could not find the column")
 
-
-        if not resultitem:
-            dim['countryid'] = None
+        if resultitem:
+            countrygid_val = resultitem[0]
         else:
-            dim['countryid'] = resultitem[0]
+            countrygid_val = 0
+        
+        # if not resultitem:
+        #     raise InvalidData("country_level0", "country name",
+        #           "geometry", dim['label'], "Could not find the column")
+
+
+        
+        dim['countryid'] = countrygid_val
 
         return dim
 
