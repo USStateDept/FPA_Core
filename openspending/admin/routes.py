@@ -167,7 +167,14 @@ class TagsView(sqla.ModelView):
         return
 
 
+class TagManagerView(sqla.ModelView):
+    def is_accessible(self):
+        return require.account.is_admin()
 
+
+class MetaDataManagerView(sqla.ModelView):
+    def is_accessible(self):
+        return require.account.is_admin()
 
 
 
@@ -178,27 +185,31 @@ def register_admin(flaskadmin, db):
     
 
 
-    flaskadmin.add_view(AccountView(Account, db.session, endpoint='useraccount'))
+    flaskadmin.add_view(AccountView(Account, db.session, endpoint='useraccount', category="Manager", name="User Management"))
 
-    flaskadmin.add_view(DataviewView(Dataview, db.session))
+    flaskadmin.add_view(FeedbackView(Feedback, db.session, endpoint='feedbackadmin', category="Manager", name="Feedback"))
 
-    flaskadmin.add_view(MetadataOrgView(MetadataOrg, db.session))
+    flaskadmin.add_view(TagManagerView(Tags, db.session, endpoint='tagmanager', category="Manager", name="Tag Indicators"))
 
-    flaskadmin.add_view(DataOrgView(DataOrg, db.session))
+    flaskadmin.add_view(MetaDataManagerView(Dataset, db.session, endpoint='metadatamanager', category="Manager", name="Indicator Meta Data"))
 
-    flaskadmin.add_view(DatasetView(Dataset, db.session))
+    flaskadmin.add_view(DataviewView(Dataview, db.session, category='SysAdmin'))
+
+    flaskadmin.add_view(MetadataOrgView(MetadataOrg, db.session, category='SysAdmin'))
+
+    flaskadmin.add_view(DataOrgView(DataOrg, db.session, category='DataLoading'))
+
+    flaskadmin.add_view(DatasetView(Dataset, db.session, category='DataLoading'))
     
-    flaskadmin.add_view(SourceView(Source, db.session))
+    flaskadmin.add_view(SourceView(Source, db.session, category='DataLoading'))
 
-    flaskadmin.add_view(SourceFileView(SourceFile, db.session,endpoint='sourcefileadmin'))
+    flaskadmin.add_view(SourceFileView(SourceFile, db.session,endpoint='sourcefileadmin', category='DataLoading'))
     
-    flaskadmin.add_view(RunView(Run, db.session))
+    flaskadmin.add_view(RunView(Run, db.session, category='DataLoading'))
 
-    flaskadmin.add_view(LogRecordView(LogRecord, db.session))
+    flaskadmin.add_view(LogRecordView(LogRecord, db.session, category='DataLoading'))
 
-    flaskadmin.add_view(FeedbackView(Feedback, db.session, endpoint='feedbackadmin'))
-
-    flaskadmin.add_view(TagsView(Tags, db.session, endpoint='tagsadmin'))
+    flaskadmin.add_view(TagsView(Tags, db.session, endpoint='tagsadmin', category='SysAdmin'))
 
 
 
