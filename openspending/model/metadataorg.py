@@ -100,6 +100,10 @@ class MetadataOrg(db.Model):
      
         return json
 
+    @property 
+    def dataset_count(self):
+        return len(self.datasets)
+
     @classmethod
     def import_json_dump(cls, theobj):
         fields = ['label','description','contactName','contactEmail','accessLevel','bureauCode']

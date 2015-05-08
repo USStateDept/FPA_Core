@@ -420,7 +420,8 @@ class GeometryDimension(Dimension, TableHandler):
                                     FROM public.geometry__country_level0 as country_level0 \
                                     WHERE country_level0.name_long = '%s' \
                                     OR country_level0.short_name = '%s' \
-                                    OR country_level0.label = '%s';" %(searchstring, searchstring,searchstring,))
+                                    OR country_level0.label = '%s' \
+                                    OR country_level0.formal_en = '%s';" %(searchstring, searchstring,searchstring, searchstring,))
         resultitem = result.first()
         if not resultitem:
             result = db.engine.execute("SELECT \

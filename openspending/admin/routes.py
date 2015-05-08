@@ -4,10 +4,15 @@
 #from flask.ext.superadmin.model.base import BaseModelAdmin
 from flask.ext import wtf
 from flask_admin.contrib import sqla
-from wtforms.fields import StringField, PasswordField, BooleanField, SelectField
+from wtforms.fields import StringField, PasswordField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import Required, ValidationError
 from flask import flash
 from flask_admin import form
+
+from flask_admin.model.form import InlineFormAdmin
+from flask_admin.contrib.sqla.form import InlineModelConverter
+from flask_admin.contrib.sqla.fields import InlineModelFormList
+from flask_admin.form import RenderTemplateWidget
 #from flask.ext.superadmin.model.backends.sqlalchemy.orm import AdminModelConverter as _AdminModelConverter
 #from flask.ext import superadmin
 #from wtforms.ext.sqlalchemy.orm import converts
@@ -23,6 +28,7 @@ from settings import UPLOADED_FILES_DEST
 from openspending.model.tags import TAG_OPTIONS
 
 from slugify import slugify
+
 
 
 #import copy
@@ -167,12 +173,139 @@ class TagsView(sqla.ModelView):
         return
 
 
-class TagManagerView(sqla.ModelView):
+class TagByTagView(sqla.ModelView):
+
+    form_excluded_columns = ('slug_label','category', 'children', 'category')
+
+    form_extra_fields = {
+        "type": SelectField(u'Type', choices=TAG_OPTIONS)
+    }
+
+    form_columns = ('label', 'type', 'weight', 'datasets', )
+
+
+    form_widget_args = {
+        'label':{
+            'style': 'width:600px'
+        },
+        'type': {
+            'style': 'width:600px;'
+        },
+        'weight':{
+            'style': 'width:600px'
+        },
+        'datasets':{
+            'style': 'width:600px'
+        }
+    }
+
+    column_list = ('label', 'category', 'weight', 'dataset_count',)
+
+
+    can_delete = False
+    can_create = False
+
+    # Model handlers
+    def on_model_change(self, form, model, is_created=False):
+    #def create_model(self, form):
+
+        model.category = form.data['type']
+        model.slug_label = slugify(str(model.label), separator="_")
+        return
+
     def is_accessible(self):
         return require.account.is_admin()
 
 
-class MetaDataManagerView(sqla.ModelView):
+class TagByIndicatorView(sqla.ModelView):
+
+    form_columns = ('label', 'description', 'tags')
+
+
+    form_widget_args = {
+        'label':{
+            'style': 'width:600px'
+        },
+        'description': {
+            'rows': 10,
+            'style': 'width:600px;'
+        },
+        'tags':{
+            'style': 'width:600px'
+        }
+    }
+
+    column_list = ('label', 'tags_str')
+
+    column_searchable_list = ('label',)
+
+    can_delete = False
+    can_create = False
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+
+
+
+class IndicatorManagerView(sqla.ModelView):
+
+    can_delete = False
+    can_create = False
+
+    column_searchable_list = ('label',)
+
+    column_list = ('label', 'name', 'description', 'update_at', 'metadataorg', )
+
+    form_columns = ('label', 'description', 'metadataorg')
+
+    form_overrides = dict(description=TextAreaField)
+
+    form_widget_args = {
+        'label':{
+            'style': 'width:600px'
+        },
+        'description': {
+            'rows': 10,
+            'style': 'width:600px;'
+        }
+    }
+
+
+
+
+    def is_accessible(self):
+        return require.account.is_admin()
+
+
+class MetadataOrgManagerView(sqla.ModelView):
+
+    can_delete = False
+    can_create = True
+
+    column_searchable_list = ('label',)
+
+    column_list = ('label', 'description', 'dataset_count',)
+
+    form_excluded_columns = ('lastUpdated',)
+
+    #form_columns = ('label', 'description', )
+
+    form_overrides = dict(description=TextAreaField)
+
+    form_widget_args = {
+        'label':{
+            'style': 'width:600px'
+        },
+        'description': {
+            'rows': 10,
+            'style': 'width:600px;'
+        }
+    }
+
+
+
+
     def is_accessible(self):
         return require.account.is_admin()
 
@@ -189,9 +322,13 @@ def register_admin(flaskadmin, db):
 
     flaskadmin.add_view(FeedbackView(Feedback, db.session, endpoint='feedbackadmin', category="Manager", name="Feedback"))
 
-    flaskadmin.add_view(TagManagerView(Tags, db.session, endpoint='tagmanager', category="Manager", name="Tag Indicators"))
+    flaskadmin.add_view(TagByTagView(Tags, db.session, endpoint='tagbytag', category="Tagging", name="Tag By Tag"))
 
-    flaskadmin.add_view(MetaDataManagerView(Dataset, db.session, endpoint='metadatamanager', category="Manager", name="Indicator Meta Data"))
+    flaskadmin.add_view(TagByIndicatorView(Dataset, db.session, endpoint='tagbyindicator', category="Tagging", name="Tag By Indicator"))
+
+    flaskadmin.add_view(IndicatorManagerView(Dataset, db.session, endpoint='indicatormanager', category="Meta Data", name="Indicator Meta Data"))
+
+    flaskadmin.add_view(MetadataOrgManagerView(MetadataOrg, db.session, endpoint='metadatamanager', category="Meta Data", name="Meta Data Orgs"))
 
     flaskadmin.add_view(DataviewView(Dataview, db.session, category='SysAdmin'))
 

@@ -10,6 +10,7 @@ from openspending.core import db
 
 from openspending.model.source import Source
 from openspending.model.dataorg import DataOrg
+from openspending.model.metadataorg import MetadataOrg
 #from openspending.model import Source, Account, DataOrg
 from openspending.model.common import (MutableDict, JSONType,
                                        DatasetFacetMixin)
@@ -59,6 +60,10 @@ class Dataset(db.Model):
 
     dataorg_id = Column(Integer, ForeignKey('dataorg.id'))
     dataorg = relationship(DataOrg,
+                           backref=backref('datasets', lazy='dynamic'))
+
+    metadataorg_id = Column(Integer, ForeignKey('metadataorg.id'))
+    metadataorg = relationship(MetadataOrg,
                            backref=backref('datasets', lazy='dynamic'))
 
     #TODO
@@ -143,6 +148,13 @@ class Dataset(db.Model):
         else:
             return False
 
+    @property 
+    def tags_str(self):
+        output = []
+        for t in self.tags:
+            output.append(str(t))
+        return ",".join(output)
+
 
         
 
@@ -155,7 +167,7 @@ class Dataset(db.Model):
 
 
     def __repr__(self):
-        return "<Dataset(%r,%r)>" % (self.id, self.name)
+        return "%s (%s)" % (self.label, self.id, )
 
     def update(self, data):
         #not to update name
