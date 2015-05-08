@@ -129,6 +129,24 @@ class BaseImporter(object):
             if self.raise_errors:
                 raise
 
+    def log_invalid_countrytime(self, data):
+        log_record = LogRecord(self._run, LogRecord.CATEGORY_DATA,
+                               logging.ERROR, "could not find the country " + str(data['label']))
+        log_record.attribute = "Country"
+        log_record.column = "Country"
+        log_record.value = str(data['label'])
+        log_record.data_type = "Country"
+
+        db.session.add(log_record)
+        db.session.commit()
+
+        print "Could not find country", str(data['label'])
+
+        #log.warn(msg)
+        #self._log(log_record)
+
+
+
     def log_invalid_data(self, invalid):
         log_record = LogRecord(self._run, LogRecord.CATEGORY_DATA,
                                logging.ERROR, invalid.msg)
@@ -264,10 +282,9 @@ class ORImporter(BaseImporter):
             gid = self._match_country_id(data['country_level0'])
             data['geom_time_id'] = str(self._match_time_geom(gid, data['time']))
 
-            if not data['geom_time_id']:
-                self.log_exception(
-                    ValueError("Could not find country time combo"),
-                    error="%s is not a unique key" % data['country_level0']['label'])           
+            # if not data['geom_time_id'] or data['geom_time_id'] == "0":
+            #     logger = {'label': data['country_level0']['label']}
+            #     self.log_invalid_countrytime(logger)         
 
             if not self.dry_run:
                 self.source.model.load(data)
@@ -277,6 +294,7 @@ class ORImporter(BaseImporter):
                 if unique_value in self.unique_check:
                     # Log the error (with the unique key represented as
                     # a dictionary)
+                    print "unique error probelm???????????????????"
                     self.log_exception(
                         ValueError("Unique key constraint not met"),
                         error="%s is not a unique key" % unique_value)

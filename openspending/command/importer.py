@@ -28,6 +28,8 @@ from werkzeug import FileStorage
 
 from shutil import copyfile
 
+from openspending.tasks import check_column, load_source
+
 
 from openspending.importer import ORImporter
 
@@ -393,6 +395,38 @@ def add_import_commands(manager):
 
 
 
+    @manager.command
+    def reload_all(**args):
+        """Reload all sources with mapping.  This will take a while"""
+
+        datasets = Dataset.all().all()
+        ids = []
+        for dataset in datasets:
+            ids.append(dataset.id)
+
+        total = 0
+        ran = 0
+
+        for id in ids:
+            dataset = Dataset.by_id(id)
+            total +=1
+            #has mapping and source
+            if dataset.mapping and dataset.source:
+                print "working on ", dataset
+                load_source(dataset.source.id)
+                ran +=1
+
+        print "Ran", ran, "out of", total
+
+
+
+        #get all datasets
+
+        #iterate through them
+
+        # if mapping exists
+            #then do a load_source function from tasks.py
+
 
 
 
@@ -401,6 +435,11 @@ def add_import_commands(manager):
     @manager.command
     def importdataorgs(**args):
         """ Load a JSON dump from  """
+
+        print "You probably shouldn't be using this.  If you're sure chage the code to import sources.  Make sure it doesn't override what exists in teh DB"
+        sys.exit()
+
+
         import json
 
         from openspending.model import Dataset, DataOrg

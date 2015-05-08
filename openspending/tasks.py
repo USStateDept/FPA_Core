@@ -126,6 +126,9 @@ def load_source(source_id, sample=False):
         if not source.dataset.mapping:
             return log.error("Dataset has no mapping.")
 
+        #we should drop this first to make sure everything loads corrctly
+        source.model.drop()
+
         source.model.generate()
         
         importer = ORImporter(source)

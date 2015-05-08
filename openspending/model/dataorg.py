@@ -40,9 +40,9 @@ class DataOrg(db.Model):
 
 
 
-    metadataorg_id = Column(Integer, ForeignKey('metadataorg.id'))
-    metadataorg = relationship(MetadataOrg,
-                           backref=backref('dataorgs', lazy='dynamic'))
+    #metadataorg_id = Column(Integer, ForeignKey('metadataorg.id'))
+    # metadataorg = relationship(MetadataOrg,
+    #                        backref=backref('dataorgs', lazy='dynamic'))
 
 
 

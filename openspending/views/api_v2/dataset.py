@@ -439,6 +439,8 @@ def update_model(datasetname):
 
 
     dataset = get_dataset(datasetname)
+    dataset.mapping = r
+    dataset.ORoperations = {'data': dataset.source.getORInstructions()}
     dataset.source.addData(r)
     db.session.commit()
 

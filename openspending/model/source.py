@@ -109,10 +109,6 @@ class Source(db.Model):
     def getORInstructions(self):
         #get the new ioperations from OR and save them int he database
         refineproj = RefineProj(source=self)
-        print refineproj
-        print refineproj.refineproj
-        print refineproj.refineproj.get_operations()
-
         return refineproj.refineproj.get_operations()
         
     def getPreFuncs(self):

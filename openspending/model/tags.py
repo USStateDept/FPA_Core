@@ -9,8 +9,8 @@ from openspending.model import Dataset
 from slugify import slugify
 
 TAG_OPTIONS = [
-    ("categories", "Categories"),
-    ("subcategories", "Sub-Categories"),
+    ("spsd", "SPSD Categories"),
+    ("subspsd", "Sub-SPSD Categories"),
     ("keyword", "Keywords"),
 ]
 
@@ -19,8 +19,8 @@ TAG_OPTIONS = [
 
 
 TAG_CATEGORIES = {
-    "categories": "Categories",
-    "subcategories": "Sub-Categories",
+    "spsd": "SPSD Categories",
+    "subspsd": "Sub-SPSD Categories",
     "keyword": "Keywords",
 }
 
@@ -66,6 +66,14 @@ class Tags(db.Model):
                             secondary=tags_dataset_table,
                             backref=backref('tags', lazy='dynamic'))
 
+    weight = Column(Integer)
+
+    parent_id = Column(Integer, ForeignKey('tags.id'))
+
+    children = relationship("Tags",
+                    lazy="dynamic",
+                    join_depth=2)
+
     #self.name = slugify(str(data.get('label')), max_length=30, separator="_")
 
 
@@ -81,8 +89,7 @@ class Tags(db.Model):
         datasets = []
         #rebuilds hte model.  Need to skip this in favor of a dataset obj
         for dataset in self.datasets:
-            if dataset.source.loadable:
-                datasets.append(dataset)
+            datasets.append(dataset)
         return len(datasets)
 
     @classmethod
@@ -112,6 +119,6 @@ class Tags(db.Model):
         return tag
 
     def __repr__(self):
-        return '<Tag(%r,%r)>' % (self.label, self.category)
+        return '%s (%s)' % (self.label, self.category)
 
 
