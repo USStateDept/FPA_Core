@@ -17,7 +17,7 @@
     $(".main-search").keyup(function() {
 
         var value = $(".main-search")[0].value;
-        var url = "http://finddev.edip-maps.net/api/3/search";
+        var url = "/api/3/search";
         model.searchValue(value);
         if (value.length < 2) {
             model.searchResults.removeAll();

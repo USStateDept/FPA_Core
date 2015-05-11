@@ -277,6 +277,7 @@
                 var cloneIndicator = _.clone(indicatorsAll.data[indicatorId], true);
 
                 cloneIndicator.source = categoryLabel;
+                cloneIndicator.id = indicatorId;
                 return cloneIndicator;
 
             });

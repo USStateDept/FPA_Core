@@ -26,7 +26,7 @@
 
     window.loadIndicatorData = function(indicatorId, handlerFunc) {
 
-        var urlTemplate = "http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@name&format=json"
+        var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@name&format=json"
         var url = urlTemplate.replace("{indicator_id}", indicatorId);
         //url = "data/gdp_per_capita.json";
         //gdp_per_capita

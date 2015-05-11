@@ -78,6 +78,8 @@ def dataorgs():
 
 
     for indicator in query_all.all():
+        if not getattr(indicator, "mapping", None):
+            continue
         keyname = indicator.name
         dataorg = getattr(indicator, "dataorg", None)
         if not dataorg:
