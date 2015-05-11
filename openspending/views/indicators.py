@@ -30,12 +30,11 @@ blueprint = Blueprint('indicators', __name__)
 #@blueprint.route('/datasets.<fmt:format>')
 def categories(format='html'):
     """ Get the datasets indicators list by category"""
-    tags = []
-    for tag in Tags.all_by_category().all():
-        tags.append(tag.as_dict())
+    # tags = []
+    # for tag in Tags.all_by_category().all():
+    #     tags.append(tag.as_dict())
 
-    return render_template('indicators/categories.jade',
-                            tags=tags)
+    return render_template('indicators/indicator.jade')
 
 
 @blueprint.route('/indicators/categories/datasets')
