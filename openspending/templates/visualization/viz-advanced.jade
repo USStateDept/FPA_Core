@@ -1,0 +1,220 @@
+doctype html
+html(lang='en')
+  include ./includes/head.jade  
+  link(href='app/css/visualization.css', rel='stylesheet')
+  link(href='app/css/jquery.multiselect.css', rel='stylesheet')
+  body.app
+    include ./includes/navigation.jade
+    .container
+      .row
+        p
+      .row
+        p
+      .row
+        .col-md-12
+          div(role='tabpanel')
+              ul#vizTabs.nav.nav-tabs.nav-justified(role='tablist')                                 
+                //- li(role='presentation')
+                //-   a(href='#by-category', aria-controls='by-category', role='tab', data-toggle='tab')
+                //-     h4
+                //-       span(data-bind="visible:!selectionTracker().indicator") 1. Select Indicator
+                //-       span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
+                //-       span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
+                //-     .row
+                //-       .col-md-12.col-sm-12.col-lg-12
+                //-         div.btn-group(data-toggle='buttons')
+                //-           label.btn.btn-primary.btn-category.active(data-bind="click:function(){showView('category')}")
+                //-             input#by-category-radio(type='radio', name='options', autocomplete='off')
+                //-             |  By Category
+                //-           label.btn.btn-primary.btn-source(data-bind="click:function(){showView('source')}")
+                //-             input#by-alpha-radio(type='radio', name='options', autocomplete='off', checked='true')
+                //-             |  By Source
+                //-           label.btn.btn-primary.btn-alphabetic(data-bind="click:function(){showView('alphabetic')}")
+                //-             input#by-alpha-radio(type='radio', name='options', autocomplete='off', checked='true')
+                //-             |  A - Z
+                li.active(role='presentation')
+                  a(href='#select-indicator', aria-controls='vizualize', role='tab', data-toggle='tab')
+                    h4
+                      span(data-bind="visible:!selectionTracker().indicator") 1. Select Indicator
+                      span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
+                      span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
+                li(role='presentation')
+                  a(href='#select-vizualization', aria-controls='select-vizualization', role='tab', data-toggle='tab')
+                    h4
+                      span(data-bind="visible:!selectionTracker().vizualization") 2. Choose Vizualization
+                      span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
+                      span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
+                li.disabled(role='presentation')
+                  a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab')
+                    h4 3.
+                      span() &nbsp; Vizualize
+              .tab-content
+                .row
+                  p
+                .row
+                  p
+                //- BY TEST
+                #select-indicator.tab-pane.active(role='tabpanel')                  
+                  .row
+                    .col-md-1
+                      .tabbable.tabs-left
+                        ul.nav.nav-tabs
+                          li
+                            a(href='#tab-category', data-toggle='tab') Category
+                          li.active
+                            a(href='#tab-source', data-toggle='tab') Sources        
+                          li
+                            a(href='#tab-alphabetic', data-toggle='tab') A - Z
+                          li
+                            a(href='#tab-countries', data-toggle='tab') Countries
+                    .col-md-11
+                        .tab-content
+                          #tab-category.tab-pane
+                            .row(data-bind="foreach:categoriesModel")
+                              .col-sm-4.col-md-4.col-sm-2.flip
+                                .card
+                                  .face.front
+                                    div.well.category-wrapper()
+                                      span.badge(data-bind="html:length")
+                                      div(data-bind="attr:{class:'icon-category-' + label.replace(\" \",\"-\").toLowerCase() + ' well category'}")
+                                      h4(data-bind="html:label")
+                                  .face.back
+                                    div.list-group()
+                                      a.list-group-item.active(href="#" data-bind="html:label")
+                                      span(data-bind="foreach:indicators")
+                                        a.list-group-item(href="#" data-bind='click:$root.selectIndicator,html:label,attr:{"data-content":"<strong>Source : </strong>" + source}' data-html="true")                              
+                            //- .row
+                            //-   .col-sm-4.col-md-4.col-sm-2.flip
+                            //-     .card
+                            //-       .face.front
+                            //-         div.well.category-wrapper()
+                            //-           span.badge 3
+                            //-           div.well.category.icon-category-70()
+                            //-           h4 Human Assistance
+                            //-       .face.back
+                            //-         div.list-group()
+                            //-           a.list-group-item.active(href="#") Human Assistance
+                            //-           .panel-group(role='tablist')
+                            //-             .panel.panel-default
+                            //-                 .panel-heading(data-bind='click:expandCategory' role='tab', data-toggle='collapse', href='#collapseListGroup1', aria-expanded='false')
+                            //-                   h4.panel-title()
+                            //-                     a Sub Catergory
+                            //-                     span.pull-right.glyphicon.glyphicon-circle-arrow-right()
+                            //-                     span.pull-right.glyphicon.glyphicon-circle-arrow-down()
+                            //-                 #collapseListGroup1.panel-collapse.collapse(role='tabpanel', aria-expanded='false')
+                            //-                   ul.list-group
+                            //-                     li.list-group-item 
+                            //-                       a(href="#" data-bind='click:selectIndicator' data-content="MCP" title="Source") Indicator 1
+                            //-                     |           
+                            //-                     li.list-group-item
+                            //-                       a(href="#" data-bind='click:selectIndicator' data-content="MCP" title="Source") Indicator B
+                            //-                     |           
+                            //-                     li.list-group-item
+                            //-                       a(href="#" data-bind='click:selectIndicator' data-content="MCP" title="Source") Indicator III
+                            //-           a.list-group-item(href="#" data-bind='click:selectIndicator' data-content="MCP" title="Source") Protection, Assistance and Solutions
+                            //-           a.list-group-item(href="#" data-bind='click:selectIndicator' data-content="World Bank" title="Source") Disaster Readiness
+                            //-           a.list-group-item(href="#" data-bind='click:selectIndicator' data-content="test abcdef" title="Source") Migration Management
+                                 
+                          #tab-source.tab-pane.active
+                            .row(data-bind="foreach:sourcesModel")
+                              .col-sm-4.col-md-4.flip
+                                .card
+                                  .face.front
+                                    div.well.category-wrapper()
+                                      span.badge(data-bind="html:length")
+                                      div.well.category.icon-category-70()
+                                      h4(data-bind="html:label")
+                                  .face.back
+                                    div.list-group()
+                                      a.list-group-item.active(href="#" data-bind="html:label")
+                                      span(data-bind="foreach:indicators")
+                                        a.list-group-item(href="#" data-bind='click:$root.selectIndicator,html:label,attr:{"data-content":"<strong>Category : </strong>" + category}'  data-html="true")
+                              //- .col-sm-4.col-md-4.flip
+                              //-     .card
+                              //-       .face.front
+                              //-         div.well.category-wrapper()
+                              //-           span.badge 2
+                              //-           div.well.category.icon-category-80()
+                              //-           h4 UNCP
+                              //-       .face.back
+                              //-         div.list-group()
+                              //-           a.list-group-item.active(href="#" data-bind='click:selectIndicator' data-content="MCP" title="Source") Program Management
+                              //-           a.list-group-item(href="#" data-bind='click:selectIndicator' data-content="MCP" title="Source") Program Design and Learning
+                              //-           a.list-group-item(href="#" data-bind='click:selectIndicator' data-content="MCP" title="Source") Administration and Oversight        
+                          #tab-alphabetic.tab-pane
+                            .row
+                              .col-md-12
+                                input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Filter")
+                            div.list-group.row(data-bind="foreach:indicatorsModel")
+                              a.list-group-item.col-md-4(href="#" data-bind='click:$root.selectIndicator,html:label,attr:{"data-content":"<strong>Category : </strong>" + category + "<br><strong>Source : </strong>" + source,"data-indicatorid":id}' data-html="true")
+                          #tab-countries.tab-pane
+                            .row
+                              .col-md-12
+                                input.pull-left(data-bind="event:{keyup:filterCountries}" placeHolder="Filter")
+                            .row
+                              p
+                            .row(data-bind="foreach:countriesModel")
+                              .col-md-3.col-sm-4.col-xs-6
+                                div.well.category-wrapper(data-bind='click:$root.selectCountry')
+                                  div.well.category(data-bind="style:{background:'url(app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
+                                  h4(data-bind="html:label")
+                //- TAB 2
+                #select-vizualization.tab-pane(role='tabpanel')
+                  .row
+                    .col-sm-4.col-md-4
+                      div.well.category-wrapper(data-bind='click:function(){selectVizualization("bar")}')
+                        div.well.category.noun-bar-45998()
+                        h4 Bar
+                    //- .col-sm-4.col-md-4
+                    //-   div.well.category-wrapper(data-bind='click:function(){selectVizualization("Scatter Plot")}' )
+                    //-     div.well.category.noun-scatter-105477()
+                    //-     h4 Scatter
+                    .col-sm-4.col-md-4
+                      div.well.category-wrapper(data-bind='click:function(){selectVizualization("line")}')
+                        div.well.category.noun-line-105490()
+                        h4 Line
+
+                //-TAB 3
+                #vizualize.tab-pane(role='tabpanel')
+                  .row
+                    .col-md-2                      
+                      div.ui-widget
+                        label(for="years-label") Years
+                        input#years-label(readonly)
+                      div#slider-years
+                      //- div.ui-widget
+                      //-   label(for="regions") Regions
+                      //-   input#regions
+                      div.ui-widget(style="display:none")
+                        p#callback.message.success Callback target
+                        select(multiple='multiple', size='5')
+                            optgroup(label='Europe')
+                              option(value='Germany') Germany
+                              | &#x9;
+                              option(value='France') France
+                              | &#x9;
+                              option(value='France') Sweden
+                            optgroup(label='Asia')
+                              option(value='Pakistan') Pakistan
+                            optgroup(label='Australia')
+                              option(value='Australia') Australia
+                              option(value='Australia') New Zealand
+                    .col-md-10
+                      div#viz-container
+  
+                        
+      include ./includes/footer.jade
+link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
+
+script(src='bower_components/jquery-ui/jquery-ui.js')
+script(src='app/js/lib/jquery-ui.multiselect.min.js')
+script(src='bower_components/lodash/lodash.min.js')
+script(src='//code.highcharts.com/highcharts.js')
+script(src='//code.highcharts.com/modules/exporting.js')
+script(src='bower_components/knockout/dist/knockout.js')  
+script(src='app/js/visualization/config.js')
+script(src='app/js/visualization/loader.js')
+script(src='app/js/visualization/highcharts-json.js')
+script(src='app/js/visualization/visualization.js')
+
+

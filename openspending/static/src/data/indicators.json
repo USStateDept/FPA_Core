@@ -1,0 +1,283 @@
+{
+
+    "data": {
+
+        "categories": {
+
+            "total": 9,
+
+            "data": {
+
+                "cat01": {
+                    "label": "Education and Social Services",
+                    "indicators": ["ind001", "ind002"],
+                    "subcategories": {
+                        "subcat1": {
+                            "label": "Subcategory 1",
+                            "indicators": ["ind003"]
+                        },
+                        "subcat2": {
+                            "label": "Subcategory 2",
+                            "indicators": ["ind001"]
+                        }
+                    }
+                },
+
+                "cat02": {
+                    "label": "Health",
+                    "indicators": ["ind001", "ind002"],
+                    "subcategories": {
+
+                    }
+                },
+
+                "cat03": {
+                    "label": "Economic Growth",
+                    "indicators": ["ind001", "ind002"],
+                    "subcategories": {
+
+                    }
+                },
+
+                "cat04": {
+                    "label": "Democracy, Human Rights and Governance",
+                    "indicators": ["ind001", "ind002"],
+                    "subcategories": {
+
+                    }
+                },
+
+                "cat05": {
+                    "label": "Peace and Security",
+                    "indicators": ["ind001", "ind002"],
+                    "subcategories": {
+
+                    }
+                },
+
+
+                "cat06": {
+                    "label": "Humanitarian Assistance",
+                    "indicators": ["ind001", "ind002"],
+                    "subcategories": {
+
+                    }
+                },
+
+                "cat07": {
+                    "label": "Cross-sectoral",
+                    "indicators": ["ind001", "ind002"],
+                    "subcategories": {
+
+                    }
+                }
+
+            }
+        },
+
+        "sources": {
+
+            "total": 22,
+
+            "data": {
+                "src01": {
+                    "label": "MCP",
+                    "indicators": ["ind001", "indi02"]
+                },
+                "src02": {
+                    "label": "MCC",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src03": {
+                    "label": "CIA Factbook",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src04": {
+                    "label": "World Development Indicators",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src05": {
+                    "label": "UNICEF",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src06": {
+                    "label": "DHS, MICS",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src07": {
+                    "label": "Freedom House",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src08": {
+                    "label": "World Bank (WDI)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src09": {
+                    "label": "FAO",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src10": {
+                    "label": "Global Findex (World Bank)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src11": {
+                    "label": "IFC/IFAD (PDF)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src12": {
+                    "label": "U.S. Census Bureau",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src13": {
+                    "label": "World Economic Forum (Global Gender Gap Report)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src14": {
+                    "label": "UNESCO Institute for Statistics (UIS)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src15": {
+                    "label": "U.N. International Strategy for Disaster Reduction (UNISDR)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src16": {
+                    "label": "U.S. Energy Information Administration (EIA)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src17": {
+                    "label": "DHS - 5yrs",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src18": {
+                    "label": "DHS",
+                    "indicators": ["ind003", "ind006"]
+                },
+
+                "src19": {
+                    "label": "World Health Organization",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src20": {
+                    "label": "WHO (World Malaria Report)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src21": {
+                    "label": "IFC Doing Business",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src22": {
+                    "label": "UNODC",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src23": {
+                    "label": "U.S. Trade Representative",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src24": {
+                    "label": "U.S. Department of State",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src25": {
+                    "label": "Trends in Maternal Mortality Report (UN Estimates)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src26": {
+                    "label": "International Telecommunication Union, World Telecommunication/ICT Development Report and database, and World Bank estimates.",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src27": {
+                    "label": "World Intellectual Property Organization (WIPO), World Intellectual Property Indicators and www.wipo.int/econ_stat",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src28": {
+                    "label": "Living Standards Measurement Surveys (LSMS)",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src29": {
+                    "label": "National Science Foundation, Science and Engineering Indicators",
+                    "indicators": ["ind003", "ind006"]
+                },
+                "src30": {
+                    "label": "United Nations Educational, Scientific, and Cultural Organization (UNESCO) Institute for Statistics.",
+                    "indicators": ["ind003", "ind006"]
+                }
+
+
+            }
+        },
+
+        "indicators": {
+
+            "total": 350,
+
+            "data": {
+
+                "ind001": {
+                    "label": "Rate of infants born low birth weight",
+                    "description": "Rate of infants born low birth weight description",
+                    "source": "src04",
+                    "category": "cat02"
+                },
+
+                "ind002": {
+                    "label": "Economic gender gap [MCP SCALING]",
+                    "description": "Economic gender gap [MCP SCALING] desc",
+                    "source": "src01",
+                    "category": "cat03"
+                },
+
+                "ind003": {
+                    "label": "Control of Corruption [MCC Adjusted]",
+                    "description": "Control of Corruption [MCC Adjusted] desc",
+                    "source": "src02",
+                    "category": "cat04"
+                },
+
+                "ind004": {
+                    "label": "Measles Immunization Coverage",
+                    "description": "Measles Immunization Coverage desc",
+                    "source": "src04",
+                    "category": "cat02"
+                },
+
+                "ind005": {
+                    "label": "Estimate of health coverage",
+                    "description": "Estimate of health coverage desc",
+                    "source": "src08",
+                    "category": "cat02"
+                },
+
+                "ind006": {
+                    "label": "Poverty headcount ratio at $2 a day (PPP)",
+                    "description": "Poverty headcount ratio at $2 a day (PPP) desc",
+                    "source": "src04",
+                    "category": "cat03"
+                },
+
+                "ind007": {
+                    "label": "Domestic Food Price Index",
+                    "description": "Domestic Food Price Index desc",
+                    "source": "src09",
+                    "category": "cat07"
+                },
+
+                "ind008": {
+                    "label": "Food Security [CDA Index]",
+                    "description": "Food Security [CDA Index] description",
+                    "source": "src01",
+                    "category": "cat06"
+                },
+
+                "ind009": {
+                    "label": "Counter Narcotics [CDA Index]",
+                    "label": "Counter Narcotics [CDA Index] desc",
+                    "source": "src01",
+                    "category": "cat05"
+                }
+
+            }
+
+        }
+    }
+
+}

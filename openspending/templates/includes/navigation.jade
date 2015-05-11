@@ -11,14 +11,15 @@ nav.navbar.navbar-default.navbar-fixed-top
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
         li
-          a(href="{{ url_for('indicators.categories') }}") INDICATORS
+          a(href="{{ url_for('viz.visualization') }}") INDICATORS
         li
           a(href='#about') USER STORIES
       ul.nav.navbar-nav.navbar-right
         {% if logged_in %}
         li.dropdown
           a.dropdown-toggle(data-toggle='dropdown')
-            strong {{ current_user.fullname }}
+            strong 
+            //{{ current_user.fullname }}
           ul.dropdown-menu.account-dropdown
             li
               a(href="{{ url_for('account.dashboard') }}") Dashboard

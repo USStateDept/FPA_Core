@@ -40,7 +40,8 @@ def cubes_model(star_name):
 
     hier_limits = None
     # Copy from the application context
-    g.json_record_limit = current_app.slicer.json_record_limit
+    #g.json_record_limit = current_app.slicer.json_record_limit
+    g.json_record_limit = 10000
     if "prettyprint" in request.args:
         g.prettyprint = str_to_bool(request.args.get("prettyprint"))
     else:
@@ -133,7 +134,8 @@ def aggregate_cubes(star_name):
         result.cell = result.cell.public_cell()
 
     # Copy from the application context
-    g.json_record_limit = current_app.slicer.json_record_limit
+    #g.json_record_limit = current_app.slicer.json_record_limit
+    g.json_record_limit = 10000
     if "prettyprint" in request.args:
         g.prettyprint = str_to_bool(request.args.get("prettyprint"))
     else:

@@ -78,6 +78,8 @@ def dataorgs():
 
 
     for indicator in query_all.all():
+        if not getattr(indicator, "mapping", None):
+            continue
         keyname = indicator.name
         dataorg = getattr(indicator, "dataorg", None)
         if not dataorg:
@@ -99,7 +101,7 @@ def dataorgs():
         category = "None"
 
         for tag in tags:
-            if tag.category == "categories":
+            if tag.category == "spsd":
                 if outputschema['data']['categories']['data'].get(tag.slug_label, None):
                     outputschema['data']['categories']['data'][tag.slug_label]['indicators'].append(indicator.name)
                 else:
