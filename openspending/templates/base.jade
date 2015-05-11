@@ -2,6 +2,7 @@ doctype html
 {% from "_util.html" import google_analytics with context %}
 html(lang='en')
   include includes/head
+  {% block optional_head %}{% endblock %}
   body.app
     include includes/navigation.jade
 
