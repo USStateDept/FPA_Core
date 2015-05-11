@@ -1,0 +1,6 @@
+.app input:focus,
+.app select:focus,
+.app textarea:focus,
+.app button:focus {
+  outline: none;
+}

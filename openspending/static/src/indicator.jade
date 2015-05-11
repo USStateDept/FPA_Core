@@ -1,0 +1,228 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    meta(name='description', content='')
+    meta(name='author', content='')
+    link(rel='icon', href='favicon.ico')
+    title FIND UI
+    // Bootstrap core CSS
+    link(href='bower_components/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', rel='stylesheet')      
+    //Customa and over rides
+    link(href='app/css/app.css', rel='stylesheet')
+    // Just for debugging purposes. Don't actually copy these 2 lines!
+    //if lt IE 9
+      script(src='../../assets/js/ie8-responsive-file-warning.js')
+    script(src='../../assets/js/ie-emulation-modes-warning.js')
+    // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')  
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+    link(href='//fonts.googleapis.com/css?family=Roboto:500,300,400&subset=cyrillic,cyrillic-ext,latin,greek', rel='stylesheet')
+  body.app
+    // Fixed navbar
+    nav.navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+            span.sr-only Toggle navigation       
+            span.icon-bar   
+            span.icon-bar     
+            span.icon-bar
+          a.navbar-brand(href='#') FIND
+        #navbar.navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li.active
+              a(href='#') INDICATOR
+            li
+              a(href='#about') USER STORIES           
+            //- li.dropdown
+            //-   a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
+            //-     | Dropdown 
+            //-     span.caret
+            //-   ul.dropdown-menu(role='menu')
+            //-     li
+            //-       a(href='#') Action      
+            //-     li
+            //-       a(href='#') Another action   
+            //-     li
+            //-       a(href='#') Something else here
+            //-     li.divider
+            //-     li.dropdown-header Nav header
+            //-     li
+            //-       a(href='#') Separated link
+            //-     li
+            //-       a(href='#') One more separated link
+          //- ul.nav.navbar-nav.navbar-right
+          //-   li
+          //-     a(href='../navbar/') Default
+          //-   li
+          //-     a(href='../navbar-static-top/') Static top
+          //-   li.active
+          //-     a(href='./')
+          //-       | Fixed top 
+          //-       span.sr-only (current)
+        // /.nav-collapse
+    .container
+      // Main component for a primary marketing message or call to action
+      
+      .row.jumbotron.bg-light
+        p &nbsp;
+        h1 Explore Indicators, Effortlessly
+        //-p
+          //-| Come for the Indicator, stay for the data. Modify and enhance the data how you want.
+        .row
+          .col-md-2
+          .col-md-8
+            p.search-group
+              div.form-group.has-feedback
+                input.main-search(type='text' placeHolder='Find a country or indicator')
+                span.glyphicon.glyphicon-search.form-control-feedback
+          //i.fa.fa-search
+          //span.glyphicon.glyphicon-search.form-control-feedback
+          .col-md-2
+                 
+        p
+          | Or browse by: 
+          a Country
+          | , 
+          span or 
+          a Indicator
+          //a.btn.btn-lg.btn-primary(href='../../components/#navbar', role='button') View navbar docs &raquo;
+      
+      .row
+        .col-md-6
+          div.well.bg-container
+            h3 Welcome to FIND
+            .row
+              .col-md-3
+                  img(src='http://placehold.it/125/A64444')
+              .col-md-9
+                p
+                | Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                | Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                | Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                | Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                | Explore country-level indicators from a variety of sources and sectors. Visualize and compare the data to better understand the context. Share what you discover.
+                | Explore country-level indicators from a variety of sources and sectors.
+                br
+                br
+        .col-md-6
+          .row
+            .col-md-12
+              div.well.bg-container
+                h3 Literacy rates
+                .row
+                  .col-md-3
+                    img(src='http://placehold.it/125/A64444')
+                  .col-md-9
+                    p Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.
+          .row
+            .col-md-12
+              div.well.bg-container
+                h3 Infant and Child Death Rates
+                .row
+                  .col-md-3
+                    img(src='http://placehold.it/125/A64444')
+                  .col-md-9
+                    p In the past 50 years, infant and child death rates in the developing world have been reduced by 50 percent, and health conditions around the world have improved more during this period than in all previous human history.
+
+      .row.bg-medium.footer
+        .well.bg-medium.font-light
+          h1 Data Stories
+          .col-md-4.font-dark
+            div.well.bg-container
+              h3 Latest Updates
+              .row
+                .col-md-3
+                  img(src='http://placehold.it/76/A64444')
+                .col-md-9
+                  p Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.
+              .row
+                .col-md-3
+                  img(src='http://placehold.it/76/A64444')
+                .col-md-9
+                  p Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.
+              .row
+                .col-md-3
+                  img(src='http://placehold.it/76/A64444')
+                .col-md-9
+                  p Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.
+              .row
+                .col-md-3
+                  img(src='http://placehold.it/76/A64444')
+                .col-md-9
+                  p Synergizes communities. Visualize and compare the data to better understand the context. Share what you discover.
+          .col-md-8.font-dark
+            .row
+              .col-md-6
+                div.well.bg-container
+                  h3 Scatter plots
+                  .row
+                    .col-md-6
+                      img(src='app/images/chart_scatter.png')
+                    .col-md-6
+                      p Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.
+              .col-md-6
+                div.well.bg-container
+                  h3 Line Chart, Series
+                  .row
+                    .col-md-6
+                      img(src='app/images/chart_pie.png')
+                    .col-md-6
+                      p In the past 50 years, infant and child death rates in the developing world have been reduced by 50 percent, and health.
+            .row
+              .col-md-6
+                div.well.bg-container
+                  h3 Curve Charts
+                  .row
+                    .col-md-6
+                      img(src='app/images/chart_curved.png')
+                    .col-md-6
+                      p Literacy rates are up 33 percent worldwide in the last 25 years, and primary school enrollment has tripled in that period.
+              .col-md-6
+                div.well.bg-container.map-bg
+                  h3 Maps
+                  .row
+                    .col-md-12(style="visibility:hidden")
+                      br
+                      br
+                      br
+                      br
+                    .row
+                      .col-md-12
+                        p This is an introduction text. It has a fixed size and custom line height, so you can experiment with it.
+      .row.bg-dark.font-light.footer-links
+        .well.bg-dark
+          .col-md-5
+            | &copy; 2015 All Rights Reserved
+          .col-md-7
+            ul.nav.nav-pills
+              li
+                a(href="#") Home
+              li
+                a(href="#") About
+              li
+                a(href="#") Privacy Policy
+              li
+                a(href="#") Accessibility
+              li
+                a(href="#") Contact Us
+              li
+                a(href="#") Help            
+              i.fa.fa-chevron-up
+
+
+    // /container
+    //
+      Bootstrap core JavaScript
+      ==================================================
+    // Placed at the end of the document so the pages load faster
+    script(src='bower_components/jquery/dist/jquery.min.js')
+    script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+    // IE10 viewport hack for Surface/desktop Windows 8 bug
+    script(src='app/js/lib/ie10-viewport-bug-workaround.js')

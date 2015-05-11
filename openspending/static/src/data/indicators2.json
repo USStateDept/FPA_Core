@@ -1,0 +1,1820 @@
+{
+    "numpages": 1,
+    "data": {
+        "indicators": {
+            "total": 255,
+            "data": {
+                "access_to_credit_strength_of_l": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/325/",
+                    "label": "Access to Credit (strength of legal rights, depth of credit information)"
+                },
+                "access_to_electricity": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/346/",
+                    "label": "Access to electricity"
+                },
+                "access_to_land": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/613/",
+                    "label": "Access to Land"
+                },
+                "account_at_a_formal_financial_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/615/",
+                    "label": "Account at a formal financial institution"
+                },
+                "account_at_a_formal_financial": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/616/",
+                    "label": "Account at a formal financial institution, female"
+                },
+                "adults_in_the_lower_40_of_inco": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/617/",
+                    "label": "Adults in the lower 40% of income with an account a formal financial institution"
+                },
+                "adults_using_mobile_money_in_t": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/618/",
+                    "label": "Adults using mobile money in the past year"
+                },
+                "automated_teller_machines_atms": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/619/",
+                    "label": "Automated teller machines (ATMs) (per 100,000 adults)"
+                },
+                "average_or_median_availability": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/577/",
+                    "label": "Average (or median) availability of a set of selected essential medicines (%) in private health facilities"
+                },
+                "average_or_median_availability_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/422/",
+                    "label": "Average (or median) availability of a set of selected essential medicines (%) in public health facilities"
+                },
+                "carbon_stock_in_living_forest": {
+                    "category": "environment",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/384/",
+                    "label": "Carbon stock in living forest biomass "
+                },
+                "cash_surplus_deficit": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/352/",
+                    "label": "Cash surplus/deficit"
+                },
+                "cash_surplus_deficit_mcp_scali": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/512/",
+                    "label": "Cash surplus/deficit [MCP SCALING]"
+                },
+                "chemical_and_biological_weapon": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/667/",
+                    "label": "Chemical and Biological Weapons Control [MCP SCALING]"
+                },
+                "child_health": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/457/",
+                    "label": "Child Health"
+                },
+                "child_malnutrition_weight_for": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/423/",
+                    "label": "Child Malnutrition (weight for age, children under 5)"
+                },
+                "children_5yrs_with_diarrhea_re": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/654/",
+                    "label": "Children < 5yrs with diarrhea receiving Oral re-hydration salt (ORS)"
+                },
+                "civil_liberties": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/306/",
+                    "label": "Civil Liberties"
+                },
+                "civil_liberties_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/313/",
+                    "label": "Civil Liberties [MCP SCALING]"
+                },
+                "conflict_history_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/668/",
+                    "label": "Conflict History [MCP SCALING]"
+                },
+                "control_of_corruption": {
+                    "category": "None",
+                    "source": "World Bank",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/309/",
+                    "label": "Control of Corruption"
+                },
+                "control_of_corruption_mcc_adju": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/677/",
+                    "label": "Control of Corruption [MCC Adjusted]"
+                },
+                "control_of_corruption_mcp_scal": {
+                    "category": "None",
+                    "source": "World Bank",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/314/",
+                    "label": "Control of Corruption [MCP SCALING]"
+                },
+                "cost_of_business_start_up_proc": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/609/",
+                    "label": "Cost of business start-up procedures"
+                },
+                "cost_to_export": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/602/",
+                    "label": "Cost to export"
+                },
+                "cost_to_import": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/603/",
+                    "label": "Cost to import"
+                },
+                "criminalization_of_the_state": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/291/",
+                    "label": "Criminalization of the State"
+                },
+                "criminalization_of_the_state_m": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/671/",
+                    "label": "Criminalization of the State [MCP SCALING]"
+                },
+                "cumulative_drop_out_rate_to_th": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/398/",
+                    "label": "Cumulative drop-out rate to the last grade of primary education (%)"
+                },
+                "current_account_balance": {
+                    "category": "None",
+                    "source": "World Bank",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/333/",
+                    "label": "Current account balance"
+                },
+                "depth_of_credit_information": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/610/",
+                    "label": "Depth of Credit Information"
+                },
+                "dietary_energy_supply_adequacy": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/658/",
+                    "label": "Dietary Energy Supply Adequacy"
+                },
+                "documents_to_export": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/604/",
+                    "label": "Documents to export"
+                },
+                "documents_to_import": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/605/",
+                    "label": "Documents to import"
+                },
+                "domestic_credit_to_private_sec_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/351/",
+                    "label": "Domestic credit to private sector "
+                },
+                "domestic_credit_to_private_sec": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/514/",
+                    "label": "Domestic credit to private sector [MCP SCALING]"
+                },
+                "domestic_food_price_volatility": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/633/",
+                    "label": "Domestic Food Price Volatility Index"
+                },
+                "early_initiation_of_breastfeed": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/631/",
+                    "label": "Early initiation of breastfeeding (within 1 hour)"
+                },
+                "ease_of_doing_business_distanc": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/327/",
+                    "label": "Ease of Doing Business - distance to frontier score"
+                },
+                "ease_of_doing_business_mcp_sca": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/513/",
+                    "label": "Ease of Doing Business - [MCP SCALING]"
+                },
+                "economic_gender_gap": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/680/",
+                    "label": "Economic Gender Gap"
+                },
+                "economic_gender_gap_mcp_scalin": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/681/",
+                    "label": "Economic gender gap [MCP SCALING]"
+                },
+                "ecosystem_vitality_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/516/",
+                    "label": "Ecosystem Vitality [MCP SCALING]"
+                },
+                "education_expenditure_as_of_to": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/682/",
+                    "label": "Education expenditure, as % of total gov expenditure"
+                },
+                "education_gender_gap_mcp_scali": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/647/",
+                    "label": "Education gender gap [MCP SCALING] "
+                },
+                "electric_power_consumption": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/350/",
+                    "label": "Electric power consumption"
+                },
+                "electric_power_transmission_an_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/347/",
+                    "label": "Electric power transmission and distribution losses "
+                },
+                "electric_power_transmission_an": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/518/",
+                    "label": "Electric power transmission and distribution losses [MCP SCALING]"
+                },
+                "employees_agriculture_female": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/356/",
+                    "label": "Employees, agriculture, female"
+                },
+                "employees_agriculture_male": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/357/",
+                    "label": "Employees, agriculture, male"
+                },
+                "employees_industry_female": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/429/",
+                    "label": "Employees, industry, female"
+                },
+                "employees_industry_male": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/430/",
+                    "label": "Employees, industry, male"
+                },
+                "employees_services_female": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/431/",
+                    "label": "Employees, services, female"
+                },
+                "employees_services_male": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/432/",
+                    "label": "Employees, services, male"
+                },
+                "energy_imports_net": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/349/",
+                    "label": "Energy imports, net "
+                },
+                "energy_imports_net_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/519/",
+                    "label": "Energy imports, net [MCP SCALING]"
+                },
+                "energy_security_cda_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/689/",
+                    "label": "Energy Security [CDA Scaling]"
+                },
+                "enrollment_in_primary_educatio": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/399/",
+                    "label": "Enrollment in primary education"
+                },
+                "enrollment_in_secondary_educat": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/400/",
+                    "label": "Enrollment in secondary education"
+                },
+                "expenditure_on_education_in_us": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/402/",
+                    "label": "Expenditure on education, in US $ (Public spending on education, total (% of GDP))"
+                },
+                "expenditure_on_education_per_s": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/405/",
+                    "label": "Expenditure on education per student, in US $ (Public education expenditure per student (% of p.c. GDP), all levels)"
+                },
+                "expenditure_on_primary_school": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/403/",
+                    "label": "Expenditure on Primary School, Gov as % of total gov expenditure on education"
+                },
+                "expenditure_on_secondary_schoo": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/404/",
+                    "label": "Expenditure on Secondary School, Gov as % of total gov expenditure on education"
+                },
+                "export_sector_cda_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/688/",
+                    "label": "Export Sector [CDA Scaling]"
+                },
+                "exports_of_goods_and_services_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/353/",
+                    "label": "Exports of goods and services "
+                },
+                "exports_of_goods_and_services": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/520/",
+                    "label": "Exports of goods and services [MCP SCALING]"
+                },
+                "fiscal_policy_net_lending_net": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/338/",
+                    "label": "Fiscal Policy, net lending / net borrowing"
+                },
+                "fixed_broadband_internet_subsc": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/505/",
+                    "label": "Fixed broadband Internet subscribers"
+                },
+                "foreign_direct_investment_net_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/345/",
+                    "label": "Foreign direct investment, net inflows"
+                },
+                "foreign_direct_investment_net": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/521/",
+                    "label": "Foreign direct investment, net inflows [MCP SCALING]"
+                },
+                "forest_area": {
+                    "category": "environment",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/576/",
+                    "label": "Forest area "
+                },
+                "forest_area_percentage": {
+                    "category": "environment",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/686/",
+                    "label": "Forest area percentage"
+                },
+                "freedom_of_information": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/495/",
+                    "label": "Freedom of Information"
+                },
+                "freedom_of_the_press": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/590/",
+                    "label": "Freedom of the Press"
+                },
+                "freedom_of_the_press_media_fre": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/637/",
+                    "label": "Freedom of the Press (Media Freedom) [MCP SCALING]"
+                },
+                "gain_index": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/374/",
+                    "label": "GAIN Index"
+                },
+                "gdp_growth": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/640/",
+                    "label": "GDP Growth"
+                },
+                "gdp_per_capita": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/641/",
+                    "label": "GDP, per capita"
+                },
+                "gdp_per_capita_ppp": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/344/",
+                    "label": "GDP per capita, PPP "
+                },
+                "gdp_per_capita_ppp_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/522/",
+                    "label": "GDP per capita, PPP [MCP SCALING]"
+                },
+                "gdp_per_unit_of_energy_use": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/348/",
+                    "label": "GDP per unit of energy use "
+                },
+                "gdp_per_unit_of_energy_use_mcp": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/523/",
+                    "label": "GDP per unit of energy use [MCP SCALING]"
+                },
+                "gdp_total": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/642/",
+                    "label": "GDP, total"
+                },
+                "gender_in_the_economy": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/501/",
+                    "label": "Gender in the Economy"
+                },
+                "general_government_gross_debt": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/334/",
+                    "label": "General government gross debt"
+                },
+                "general_government_revenue": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/335/",
+                    "label": "General government revenue"
+                },
+                "general_government_total_expen": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/336/",
+                    "label": "General government total expenditure"
+                },
+                "gini_index": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/355/",
+                    "label": "GINI index"
+                },
+                "gini_index_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/524/",
+                    "label": "GINI index [MCP SCALING]"
+                },
+                "gni_per_capita_atlas_method_es": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/442/",
+                    "label": "GNI Per Capita (Atlas Method) Estimates and Thresholds"
+                },
+                "government_effectiveness": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/310/",
+                    "label": "Government Effectiveness"
+                },
+                "government_effectiveness_mcc_a": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/678/",
+                    "label": "Government Effectiveness [MCC Adjusted]"
+                },
+                "government_effectiveness_mcp_s": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/316/",
+                    "label": "Government Effectiveness [MCP SCALING]"
+                },
+                "government_spending_on_educati": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/690/",
+                    "label": "Government Spending on Education [CDA Scaling]"
+                },
+                "government_willingness_and_cap": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/323/",
+                    "label": "Government Willingness and Capacity to Counter Narcotics"
+                },
+                "gross_enrollment_rate_primary": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/648/",
+                    "label": "Gross enrollment rate, primary (%)"
+                },
+                "gross_enrollment_rate_secondar": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/649/",
+                    "label": "Gross enrollment rate, secondary (%)"
+                },
+                "gross_graduation_ratio_from_lo": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/406/",
+                    "label": "Gross graduation ratio from lower secondary education (%)"
+                },
+                "gross_graduation_ratio_from_pr": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/407/",
+                    "label": "Gross graduation ratio from primary education (%)"
+                },
+                "gross_intake_rate_first_grade": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/650/",
+                    "label": "Gross Intake Rate (first grade of primary)"
+                },
+                "gross_intake_ratio_to_the_last_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/408/",
+                    "label": "Gross intake ratio to the last grade of lower secondary general education (%)"
+                },
+                "gross_intake_ratio_to_the_last": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/409/",
+                    "label": "Gross intake ratio to the last grade of primary education (%)"
+                },
+                "gross_school_enrollment_second": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/540/",
+                    "label": "Gross School enrollment, secondary [MCP SCALING]"
+                },
+                "gross_school_enrollment_tertia": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/541/",
+                    "label": "Gross School enrollment, tertiary [MCP SCALING]"
+                },
+                "health_expenditure_out_of_pock_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/497/",
+                    "label": "Health expenditure, Out-of-pocket"
+                },
+                "health_expenditure_out_of_pock": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/538/",
+                    "label": "Health expenditure, Out-of-pocket [MCP SCALING]"
+                },
+                "health_expenditure_public": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/569/",
+                    "label": "Health Expenditure, Public"
+                },
+                "health_expenditure_public_mcp": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/527/",
+                    "label": "Health expenditure, public [MCP SCALING]"
+                },
+                "health_expenditure_total": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/425/",
+                    "label": "Health Expenditure, total"
+                },
+                "high_technology_exports": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/440/",
+                    "label": "High-technology exports "
+                },
+                "high_technology_exports_mcp_sc": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/528/",
+                    "label": "High-technology exports [MCP SCALING]"
+                },
+                "hiv_aids_related_deaths_in_adu": {
+                    "category": "health",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/388/",
+                    "label": "HIV-AIDS-related deaths in adults and children"
+                },
+                "hiv_estimated_children_0_14_li": {
+                    "category": "health",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/391/",
+                    "label": "HIV-Estimated children (0-14) living with HIV"
+                },
+                "hiv_incidence_rate_adults_15_4": {
+                    "category": "health",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/387/",
+                    "label": "HIV incidence rate, Adults (15 - 49)"
+                },
+                "hiv_people_living_with_hiv": {
+                    "category": "health",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/390/",
+                    "label": "HIV-People living with HIV"
+                },
+                "hiv_prevalence_rate_adults_15": {
+                    "category": "health",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/386/",
+                    "label": "HIV prevalence rate, Adults (15 - 49)"
+                },
+                "human_development_index": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/634/",
+                    "label": "Human Development Index"
+                },
+                "hyogo_framework_for_action_hfa": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/665/",
+                    "label": "Hyogo Framework for Action (HFA) Level of Progress"
+                },
+                "ifpri_global_hunger_index": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/371/",
+                    "label": "IFPRI Global Hunger Index"
+                },
+                "immunization_rates": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/564/",
+                    "label": "Immunization Rates"
+                },
+                "immunization_received_dpt3_vac": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/465/",
+                    "label": "Immunization, received DPT3 vaccine by 12 months of age"
+                },
+                "index_of_economic_freedom": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/331/",
+                    "label": "Index of Economic Freedom"
+                },
+                "inflation_consumer_prices": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/337/",
+                    "label": "Inflation, consumer prices "
+                },
+                "inflation_consumer_prices_mcp": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/530/",
+                    "label": "Inflation, consumer prices [MCP SCALING]"
+                },
+                "insecticide_treated_net_itn_ow": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/574/",
+                    "label": "Insecticide treated net (ITN) ownership by households"
+                },
+                "intellectual_property_rights_m": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/317/",
+                    "label": "Intellectual Property Rights [MCP SCALING]"
+                },
+                "internet_users": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/506/",
+                    "label": "Internet users"
+                },
+                "land_rights_and_access": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/500/",
+                    "label": "Land Rights and Access"
+                },
+                "life_expectancy_at_birth_femal": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/548/",
+                    "label": "Life expectancy at birth, female"
+                },
+                "life_expectancy_at_birth_male": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/549/",
+                    "label": "Life expectancy at birth, male"
+                },
+                "life_expectancy_at_birth_total": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/660/",
+                    "label": "Life expectancy at birth, total"
+                },
+                "life_expectancy_at_birth_total_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/531/",
+                    "label": "Life expectancy at birth, total [MCP SCALING]"
+                },
+                "literacy_rate_adult_female": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/556/",
+                    "label": "Literacy rate, adult female"
+                },
+                "literacy_rate_adult_male": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/557/",
+                    "label": "Literacy rate, adult male"
+                },
+                "literacy_rate_adult_total": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/558/",
+                    "label": "Literacy rate, adult total"
+                },
+                "literacy_rate_adult_total_mcp": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/532/",
+                    "label": "Literacy rate, adult total [MCP SCALING]"
+                },
+                "literacy_rate_of_15_24_year_ol": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/410/",
+                    "label": "Literacy Rate of 15-24 year old population"
+                },
+                "llece_3th_reading_mean": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/372/",
+                    "label": "LLECE 3th reading mean"
+                },
+                "llece_6th_reading_mean": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/373/",
+                    "label": "LLECE 6th reading mean"
+                },
+                "manufactures_exports": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/439/",
+                    "label": "Manufactures exports "
+                },
+                "manufactures_exports_mcp_scali": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/534/",
+                    "label": "Manufactures exports [MCP SCALING]"
+                },
+                "maternal_mortality_ratio_mcp_s": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/535/",
+                    "label": "Maternal mortality ratio [MCP SCALING]"
+                },
+                "maternal_mortality_ratio_mmr": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/546/",
+                    "label": "Maternal Mortality Ratio (MMR)"
+                },
+                "mcpr_modern_method_contracepti": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/473/",
+                    "label": "MCPR: Modern method contraceptive prevalence rate"
+                },
+                "measles_immunization_coverage": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/662/",
+                    "label": "Measles Immunization Coverage "
+                },
+                "mobile_cellular_subscriptions": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/499/",
+                    "label": "Mobile Cellular Subscriptions"
+                },
+                "mobile_cellular_subscriptions_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/498/",
+                    "label": "Mobile Cellular Subscriptions, total"
+                },
+                "modern_contraceptive_prevalenc": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/536/",
+                    "label": "Modern contraceptive prevalence [MCP SCALING]"
+                },
+                "money_laundering_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/318/",
+                    "label": "Money Laundering [MCP SCALING]"
+                },
+                "natural_resource_protection": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/553/",
+                    "label": "Natural Resource Protection"
+                },
+                "net_enrollment_rate_primary": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/411/",
+                    "label": "Net enrollment rate, primary (%)"
+                },
+                "net_enrollment_rate_secondary": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/412/",
+                    "label": "Net enrollment rate, secondary (%)"
+                },
+                "net_intake_rate_first_grade_of": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/651/",
+                    "label": "Net Intake Rate (First grade of primary)"
+                },
+                "newborn_mortality_rate_nmr": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/503/",
+                    "label": "Newborn Mortality Rate (NMR)"
+                },
+                "new_entrants_to_grade_1_of_pri": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/413/",
+                    "label": "New entrants to Grade 1 of primary education (number)"
+                },
+                "nuclear_proliferation_control": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/672/",
+                    "label": "Nuclear Proliferation Control [MCP SCALING]"
+                },
+                "number_of_children_of_primary": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/414/",
+                    "label": "Number of children of primary school age"
+                },
+                "number_of_children_of_secondar": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/415/",
+                    "label": "Number of children of secondary school age"
+                },
+                "number_of_out_of_school_adoles": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/416/",
+                    "label": "Number of out-of-school adolescents of lower secondary school age"
+                },
+                "number_of_out_of_school_childr": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/417/",
+                    "label": "Number of out-of-school children of primary school age"
+                },
+                "number_of_people_affected_by_n": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/365/",
+                    "label": "Number of people affected by natural disasters"
+                },
+                "patent_applications_residents": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/507/",
+                    "label": "Patent applications, residents"
+                },
+                "percent_of_births_attended_by": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/543/",
+                    "label": "Percent of Births Attended by a Skilled Doctor, Nurse or Midwife"
+                },
+                "percent_of_children_6_59_month": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/601/",
+                    "label": "Percent of children 6-59 months given Vit. A in the past 6 months"
+                },
+                "physical_integrity_index": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/290/",
+                    "label": "Physical Integrity Index"
+                },
+                "physical_integrity_index_mcp_s": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/673/",
+                    "label": "Physical Integrity Index [MCP SCALING]"
+                },
+                "physician_density": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/424/",
+                    "label": "Physician Density"
+                },
+                "pirls_reading_mean": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/368/",
+                    "label": "PIRLS reading mean"
+                },
+                "pisa_reading_mean": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/375/",
+                    "label": "PISA reading mean"
+                },
+                "point_of_sale_terminals_per_10": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/620/",
+                    "label": "Point-of-sale terminals (per 100,000 adults)"
+                },
+                "political_gender_gap": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/308/",
+                    "label": "Political Gender Gap"
+                },
+                "political_gender_gap_mcp_scali": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/638/",
+                    "label": "Political Gender Gap [MCP SCALING]"
+                },
+                "political_globalization_mcp_sc": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/674/",
+                    "label": "Political Globalization [MCP SCALING]"
+                },
+                "political_rights": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/307/",
+                    "label": "Political Rights"
+                },
+                "political_rights_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/319/",
+                    "label": "Political Rights [MCP SCALING]"
+                },
+                "political_stability_and_absenc_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/298/",
+                    "label": "Political Stability and Absence of Violence"
+                },
+                "political_stability_and_absenc": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/675/",
+                    "label": "Political Stability and Absence of Violence [MCP SCALING]"
+                },
+                "population": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/547/",
+                    "label": "Population"
+                },
+                "population_growth": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/550/",
+                    "label": "Population growth"
+                },
+                "poverty_headcount_ratio_at_1_2": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/354/",
+                    "label": "Poverty headcount ratio at $1.25 a day (PPP)"
+                },
+                "poverty_headcount_ratio_at_2_a": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/645/",
+                    "label": "Poverty headcount ratio at $2 a day (PPP)"
+                },
+                "povery_gap_at_1_25_a_day_ppp": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/614/",
+                    "label": "Povery gap at $1.25 a day (PPP)"
+                },
+                "prevalence_of_anemia_among_chi": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/595/",
+                    "label": "Prevalence of anemia among children 6-59 months"
+                },
+                "prevalence_of_anemia_among_wom": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/596/",
+                    "label": "Prevalence of anemia among women of reproductive age"
+                },
+                "prevalence_of_anemia_in_women": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/630/",
+                    "label": "Prevalence of anemia in women of reproductive age"
+                },
+                "prevalence_of_children_6_23_mo": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/480/",
+                    "label": "Prevalence of children 6-23 months receiving a minimum acceptable diet (MAD)"
+                },
+                "prevalence_of_children_who_are": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/593/",
+                    "label": "Prevalence of children who are overweight"
+                },
+                "prevalence_of_exclusive_breast": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/597/",
+                    "label": "Prevalence of exclusive breast feeding of children under six months of age"
+                },
+                "prevalence_of_stunted_children": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/664/",
+                    "label": "Prevalence of stunted children under five [MCP SCALING]"
+                },
+                "prevalence_of_stunted_children_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/482/",
+                    "label": "Prevalence of stunted children under five years of age"
+                },
+                "prevalence_of_undernourishment": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/385/",
+                    "label": "Prevalence of undernourishment"
+                },
+                "prevalence_of_underweight_chil": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/599/",
+                    "label": "Prevalence of underweight children"
+                },
+                "prevalence_of_underweight_wome": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/598/",
+                    "label": "Prevalence of underweight women"
+                },
+                "prevalence_of_wasted_children": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/485/",
+                    "label": "Prevalence of wasted children under five years of age"
+                },
+                "primary_education_completion_r": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/652/",
+                    "label": "Primary education completion ratio (Girls)"
+                },
+                "public_expenditure_on_primary": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/554/",
+                    "label": "Public Expenditure on Primary Education"
+                },
+                "public_spending_on_education_t": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/401/",
+                    "label": "Public spending on education, total (% of government expenditure)"
+                },
+                "pupil_teacher_ratio_in_primary": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/418/",
+                    "label": "Pupil-teacher ratio in primary education (headcount basis)"
+                },
+                "rate_of_infants_born_low_birth": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/685/",
+                    "label": "Rate of infants born low birth weight"
+                },
+                "regulatory_quality": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/441/",
+                    "label": "Regulatory Quality"
+                },
+                "regulatory_quality_mcc_adjuste": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/646/",
+                    "label": "Regulatory Quality [MCC Adjusted]"
+                },
+                "regulatory_quality_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/539/",
+                    "label": "Regulatory Quality [MCP SCALING]"
+                },
+                "research_and_development_expen": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/508/",
+                    "label": "Research and development expenditure"
+                },
+                "researchers_in_r_d": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/509/",
+                    "label": "Researchers in R&D"
+                },
+                "road_density": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/635/",
+                    "label": "Road Density"
+                },
+                "rule_of_law": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/311/",
+                    "label": "Rule of Law"
+                },
+                "rule_of_law_mcc_adjusted": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/679/",
+                    "label": "Rule of Law [MCC Adjusted]"
+                },
+                "rule_of_law_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/320/",
+                    "label": "Rule of Law [MCP SCALING]"
+                },
+                "sacmeq_reading_mean": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/376/",
+                    "label": "SACMEQ reading mean"
+                },
+                "sanitation_access_to_improved_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/426/",
+                    "label": "Sanitation - Access to improved sanitation facilities"
+                },
+                "sanitation_access_to_improved": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/529/",
+                    "label": "Sanitation - Access to improved sanitation facilities [MCP SCALING]"
+                },
+                "scientific_and_technical_journ": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/510/",
+                    "label": "Scientific and technical journal articles"
+                },
+                "secondary_education_enrollment": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/653/",
+                    "label": "Secondary education enrollment ratio (Girls)"
+                },
+                "security_apparatus": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/292/",
+                    "label": "Security Apparatus"
+                },
+                "security_apparatus_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/676/",
+                    "label": "Security Apparatus [MCP SCALING]"
+                },
+                "share_of_renewables_in_electri": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/494/",
+                    "label": "Share of renewables in electricity generation"
+                },
+                "strength_of_legal_rights": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/611/",
+                    "label": "Strength of Legal Rights"
+                },
+                "tb_case_detection_rate_all_for": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/452/",
+                    "label": "TB case detection rate (all forms), percent"
+                },
+                "tb_estimated_incidence_of_tb_a": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/443/",
+                    "label": "TB-Estimated incidence of TB (all forms) per 100 000 population"
+                },
+                "tb_estimated_incidence_of_tb_c_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/444/",
+                    "label": "TB-Estimated incidence of TB cases who are HIV-positive"
+                },
+                "tb_estimated_incidence_of_tb_c": {
+                    "category": "health",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/445/",
+                    "label": "TB-Estimated incidence of TB cases who are HIV-positive per 100 000 population"
+                },
+                "tb_estimated_mortality_of_tb_c": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/446/",
+                    "label": "TB-Estimated mortality of TB cases (all forms, excluding HIV) per 100 000 population"
+                },
+                "tb_estimated_number_of_inciden": {
+                    "category": "health",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/448/",
+                    "label": "TB-Estimated number of incident cases (all forms)"
+                },
+                "tb_estimated_number_of_mdr_tb": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/449/",
+                    "label": "TB-Estimated number of MDR-TB cases among all notified pulmonary TB cases"
+                },
+                "tb_estimated_prevalence_of_tb_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/450/",
+                    "label": "TB-Estimated prevalence of TB (all forms)"
+                },
+                "tb_estimated_prevalence_of_tb": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/451/",
+                    "label": "TB-Estimated prevalence of TB (all forms) per 100 000 population"
+                },
+                "telephone_lines": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/636/",
+                    "label": "Telephone lines"
+                },
+                "time_required_to_start_a_busin": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/608/",
+                    "label": "Time required to start a business"
+                },
+                "time_to_export": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/606/",
+                    "label": "Time to export"
+                },
+                "time_to_import": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/607/",
+                    "label": "Time to import"
+                },
+                "time_to_register_property": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/612/",
+                    "label": "Time to Register Property"
+                },
+                "total_fertility_rate": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/476/",
+                    "label": "Total Fertility Rate"
+                },
+                "total_population_displaced": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/421/",
+                    "label": "Total population displaced"
+                },
+                "total_primary_energy_consumpti": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/453/",
+                    "label": "Total Primary Energy Consumption per Capita"
+                },
+                "trade_policy": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/329/",
+                    "label": "Trade Policy"
+                },
+                "trade_policy_cda_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/687/",
+                    "label": "Trade Policy [CDA Scaling]"
+                },
+                "trafficking_in_persons_mcp_sca": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/321/",
+                    "label": "Trafficking in Persons [MCP SCALING]"
+                },
+                "under_five_mortality_rate_mcp": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/537/",
+                    "label": "Under-Five Mortality rate [MCP SCALING]"
+                },
+                "under_five_mortality_rate_u5mr": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/504/",
+                    "label": "Under Five Mortality Rate (U5MR)"
+                },
+                "unemployment_female": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/436/",
+                    "label": "Unemployment, female"
+                },
+                "unemployment_male": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/437/",
+                    "label": "Unemployment, male"
+                },
+                "unemployment_total": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/438/",
+                    "label": "Unemployment, total"
+                },
+                "unemployment_with_tertiary_edu_1": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/435/",
+                    "label": "Unemployment with tertiary education"
+                },
+                "unemployment_with_tertiary_edu_2": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/433/",
+                    "label": "Unemployment with tertiary education, female"
+                },
+                "unemployment_with_tertiary_edu": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/434/",
+                    "label": "Unemployment with tertiary education, male"
+                },
+                "unemployment_youth_female": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/339/",
+                    "label": "Unemployment, youth female"
+                },
+                "unemployment_youth_male": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/340/",
+                    "label": "Unemployment, youth male"
+                },
+                "unemployment_youth_total": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/341/",
+                    "label": "Unemployment, youth total"
+                },
+                "urban_population": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/551/",
+                    "label": "Urban population"
+                },
+                "urban_population_growth": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/552/",
+                    "label": "Urban population growth"
+                },
+                "violent_crimes": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/297/",
+                    "label": "Violent Crimes"
+                },
+                "violent_crimes_mcp_scaling": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/683/",
+                    "label": "Violent Crimes [MCP SCALING]"
+                },
+                "water_access_to_improved_water": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/427/",
+                    "label": "Water - Access to improved water source"
+                },
+                "weighted_adult_mortality_avera": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/542/",
+                    "label": "Weighted Adult Mortality Average, Total [MCP SCALING]"
+                },
+                "women_with_secondary_or_higher": {
+                    "category": "None",
+                    "source": "None",
+                    "subcategory": "None",
+                    "description": "http://databank.edip-maps.net/admin/etldata/dataconnection/561/",
+                    "label": "Women with secondary or higher education"
+                }
+            }
+        },
+        "sources": {
+            "total": 1,
+            "data": {
+                "World Bank": {
+                    "indicators": ["control_of_corruption", "control_of_corruption_mcp_scal", "current_account_balance"],
+                    "label": "World Bank"
+                }
+            }
+        },
+        "categories": {
+            "total": 2,
+            "data": {
+                "environment": {
+                    "indicators": ["carbon_stock_in_living_forest", "forest_area", "forest_area_percentage"],
+                    "subcategories": {},
+                    "label": "Environment"
+                },
+                "health": {
+                    "indicators": ["hiv_aids_related_deaths_in_adu", "hiv_estimated_children_0_14_li", "hiv_incidence_rate_adults_15_4", "hiv_people_living_with_hiv", "hiv_prevalence_rate_adults_15", "tb_estimated_incidence_of_tb_c", "tb_estimated_number_of_inciden"],
+                    "subcategories": {},
+                    "label": "Health"
+                }
+            }
+        }
+    },
+    "page": 1
+}
