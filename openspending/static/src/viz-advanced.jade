@@ -156,7 +156,7 @@ html(lang='en')
                             .row(data-bind="foreach:countriesModel")
                               .col-md-3.col-sm-4.col-xs-6
                                 div.well.category-wrapper(data-bind='click:$root.selectCountry')
-                                  div.well.category(data-bind="style:{background:'url(app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
+                                  div.well.category(data-bind="style:{background:'url( {{static_path("dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png")}}) center center no-repeat'}")
                                   h4(data-bind="html:label")
                 //- TAB 2
                 #select-vizualization.tab-pane(role='tabpanel')
