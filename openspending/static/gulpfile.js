@@ -37,13 +37,13 @@ var gulpLoadPlugins = require('gulp-load-plugins');
 var plugins = require('gulp-load-plugins')();
 
 var app_dir = {
-    src: __dirname + "/FINDsrc/",
+    src: __dirname + "/src/",
     tests: __dirname + "/tests/",
     dist: __dirname + "/dist/",
     css: "**/*.css",
-    js: "**/*.js",
-    images: "images",
-    html: "**/*.html"
+    js: "app/**/*.js",
+    images: "app/images",
+    html: "**/*.htm"
 };
 
 //Default gulp task
@@ -64,7 +64,7 @@ gulp.task('dist-delete', function(cb) {
 gulp.task('dist-copy-clean', function() {
     console.log(">>>>>>>> cleaning up the dist folder");
     //ignore jade, styl, and css inside the js folder
-    return gulp.src([app_dir.src + '**', '!' + app_dir.src + '**/*.jade', '!' + app_dir.src + '**/*.styl', '!' + app_dir.src + 'js/*.css'])
+    return gulp.src([app_dir.src + '**', '!' + app_dir.src + '**/*.jade', '!' + app_dir.src + '**/*.styl', '!' + app_dir.src + 'app/js/*.css'])
         .pipe(gulp.dest(app_dir.dist))
 });
 
@@ -152,6 +152,6 @@ gulp.task('autoprefix-css', ['compile-stylus'], function() {
 
 gulp.task('watch', function() {
     // watch jade and style
-    gulp.watch(app_dir.src + '**/*.jade', ['compile-jade', 'dist-uglify-js']);
-    gulp.watch(app_dir.src + '**/*.styl', ['compile-stylus', 'autoprefix-css', 'dist-minify-css']);
+    gulp.watch(app_dir.src + '**/*.jade', ['compile-jade']);
+    gulp.watch(app_dir.src + '**/*.styl', ['autoprefix-css']);
 });

@@ -3,32 +3,24 @@
     "version": "1.0.0",
     "description": "UI for FIND",
     "main": "index.js",
-
     "repository": {
         "type": "git",
         "url": "https://github.com/USStateDept/FIND-UI.git"
     },
-
     "keywords": [
         "FIND",
         "StateDept"
     ],
-
     "author": "eDiplomacy",
-
     "license": "ISC",
-
     "bugs": {
         "url": "https://github.com/USStateDept/FIND-UI/issues"
     },
-
     "homepage": "https://github.com/USStateDept/FIND-UI",
-
     "scripts": {
         "dist": "gulp dist-delete && gulp dist-copy-clean && gulp dist-minify",
         "watch": "gulp watch"
     },
-
     "devDependencies": {
         "karma": "^0.12.24",
         "karma-chrome-launcher": "^0.1.5",
@@ -36,13 +28,9 @@
         "karma-firefox-launcher": "^0.1.3",
         "karma-jasmine": "^0.2.3",
         "karma-phantomjs-launcher": "^0.1.4",
-
-
         "del": "^0.1.3",
         "gulp": "^3.8.1",
-
         "gulp-load-plugins": "^0.7.1",
-
         "gulp-autoprefixer": "0.0.7",
         "gulp-imagemin": "^0.6.1",
         "gulp-jade": "^0.6.0",
@@ -51,7 +39,6 @@
         "gulp-sourcemaps": "^1.2.8",
         "gulp-stylus": "^1.0.2",
         "gulp-uglify": "^0.3.0",
-
         "path": "^0.4.9"
     }
 }
