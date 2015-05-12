@@ -86,7 +86,11 @@
             var highChartsJson = model.activeData();
             highChartsJson.title.text = model.activeIndicator();
             //highChartsJson.subtitle.text = type;
+            highChartsJson.chart.type = type;
+            highChartsJson.yAxis.title.text = "";
+
             $('#viz-container').highcharts(model.activeData());
+
 
 
         },
