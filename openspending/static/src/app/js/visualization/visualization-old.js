@@ -85,10 +85,12 @@
 
             var highChartsJson = model.activeData();
             highChartsJson.title.text = model.activeIndicator();
+            //highChartsJson.subtitle.text = type;
             highChartsJson.chart.type = type;
             highChartsJson.yAxis.title.text = "";
-            //highChartsJson.subtitle.text = type;
+
             $('#viz-container').highcharts(model.activeData());
+
 
 
         },
@@ -279,6 +281,7 @@
                 var cloneIndicator = _.clone(indicatorsAll.data[indicatorId], true);
 
                 cloneIndicator.source = categoryLabel;
+                cloneIndicator.id = indicatorId;
                 return cloneIndicator;
 
             });
