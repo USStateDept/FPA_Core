@@ -11,7 +11,7 @@ Requirements
 * [PostgreSQL](http://www.postgres.org/) == [9.3.6](http://www.enterprisedb.com/postgresql-936-installers-win64?ls=Crossover&type=Crossover), [PostGIS](http://postgis.net/) == 2.1.5
 * [RabbitMQ](http://www.rabbitmq.com/) == [3.5.1](http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.1/rabbitmq-server-3.5.1.exe)
 * [Erlang](http://www.erlang.org/) == [OTP 17.5](http://www.erlang.org/download/otp_win64_17.5.exe)
-* [Java](http://www.oracle.com/technetwork/java/javase/overview/index.html) == [JRE 7u79](http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jre-7u79-windows-x64.exe)
+* [Java](http://www.oracle.com/technetwork/java/javase/overview/index.html) == [JRE 7u79](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html) Select jre-7u79-windows-x64.exe
 * [Google Refine](https://code.google.com/p/google-refine/) == [2.1](https://google-refine.googlecode.com/files/google-refine-2.1-r2136.zip) - NOT 2.5
 
 
