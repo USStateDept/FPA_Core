@@ -13,7 +13,9 @@ Sync Production files and database to a Dev Virtual Machine
   - Make sure your virtual machine repo is synced with the latest from FPA_Core with the following:
     ```
     git pull origin master
+    
     git submodule update
+    
     pip install -r requirements -e . --upgrade
     ```
   - Download all three files
