@@ -94,7 +94,7 @@ Run to set your environment variable::
 
     $ setenv.bat
 
-Initialize the database::
+Initialize the database.  The following command will run then give a warning at the end stating that the model does not match the database.  If you see the warning, it ran correctly.::
 
     $ ostool db init
 
