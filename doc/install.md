@@ -67,12 +67,6 @@ URL is set::
     # TCP
     SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{pass}@localhost/openspending'
 
-Additionally to the core repository, you will need to install submodules for the static components::
-    
-    $ git config --global url.https://github.com/.insteadOf git://github.com/
-    $ git submodule init
-    $ git submodule update
-
 Then you can install the requirements of the static packages (cloned to .\openspending\static\) and build them by running the following::
 
     $ static_reqs.bat
@@ -80,9 +74,10 @@ Then you can install the requirements of the static packages (cloned to .\opensp
 
 These two batch files alleviate the need to install the submodule repos independently.
 
-Edit settings.py to point to the Open Refine server::
+Edit settings.py to point to the OpenRefine server.  Public is if there is a proxy available for openspending as in production::
 
-    OPENREFINE_SERVER = 'http://127.0.0.1:3333'
+    OPENREFINE_PUBLIC = "http://localhost:3333"
+    OPENREFINE_SERVER = "http://localhost:3333"
 
 Run google-refine.exe
 
