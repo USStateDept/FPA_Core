@@ -1,0 +1,45 @@
+<div id="cubes_list" class="panel panel-default" >
+    <div class="panel-heading">
+        Filters and Drilldowns
+    </div>
+    <div class="loader">
+        <h3>{{ loading }}</h3>
+
+    </div>
+    <ng-include src="'filter/_filters_nav.tpl.html'"></ng-include>
+
+    <form class="form-horizontal" role="form">
+        <h2>Specify your data</h2>
+
+    <div class="form-group">
+
+        <label class="col-sm-2 control-label">Drilldowns (all availble fields)</label>
+
+        <div class="col-sm-3">
+        <select class="form-control"
+                ng-model="selecteddrilldowns" ng-change="changeDrilldown()">
+            <option ng-repeat="item in dimensionoptions" value="{{item.value}}">{{item.label}} - ({{item.value}})</option>
+        </select>
+        </div>
+
+        <div ng-show="selecteddrilldowns && hieroptions">
+            <label class="col-sm-2 control-label">Available Hierarchies (all available fields)</label>
+
+            <div class="col-sm-3">
+                <select class="form-control"
+                        ng-model="selectedhier">
+                    <option ng-repeat="item in hieroptions" value="{{item.value}}">{{item.label}} - ({{item.value}})</option>
+                </select>
+            </div>
+        </div>
+        <button ng-click="addDrilldown()">
+            Add Drilldown
+        </button>
+
+    </div>
+
+
+    </form>
+
+
+</div>

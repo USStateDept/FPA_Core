@@ -1,0 +1,28 @@
+<div class="form-group">
+
+    <h4>Cuts (this should actually repeat based on model)</h4>
+    <ng-include src="filter/_filters_nav.tpl.html"></ng-include>
+
+    <label class="col-sm-2 control-label">Operator</label>
+        <div class="col-sm-3">
+        <select class="form-control" value="is" 
+                ng-model="operator">
+            <option value="is">IS</option>
+            <option value="not">IS NOT</option>
+        </select>
+        </div>
+
+    <label class="col-sm-2 control-label">Dimensions (select all values here)</label>
+        <div class="col-sm-3">
+        <select class="form-control"
+                ng-model="valoptions" multiple>
+            <option ng-repeat="item in fieldoptions" value="{{item.name}}">{{item.label}}</option>
+        </select>
+        </div>
+
+
+    <button ng-click="onAddCut()">
+        Add new cut
+    </button>
+
+</div>

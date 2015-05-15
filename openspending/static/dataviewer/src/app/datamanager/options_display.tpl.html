@@ -1,0 +1,27 @@
+<div id="options_display" class="panel panel-default" >
+    <div class="panel-heading">
+        Indicator Options
+    </div>
+    <div class="list-group">
+        <div class="dataset_option" ng-repeat="cube in cubes">
+            <div ng-if="cube.name == 'geometry'">
+                <div>{{ cube.name }} </div>
+            </div>
+            <div ng-if="cube.name != 'geometry'">
+                <div>{{ cube.name }} <span style="color:red;cursor:pointer;" ng-click="removeDataset(cube.name)">[X]</span></div>
+                    <div style='margin-left:15px;'>Fields</div>
+                        <div style='margin-left:30px;' ng-repeat="field in cube.fields">{{ field }} <span style="color:red;cursor:pointer;" ng-click="removeField(cube.name, field)">[X]</span></div>
+                    <div style='margin-left:15px;'>Drilldowns</div>
+                        <div style='margin-left:30px;' ng-repeat="drilldown in cube.drilldowns">{{ drilldown }} <span style="color:red;cursor:pointer;" ng-click="removeDrilldown(cube.name, drilldown)">[X]</span></div>
+                    <div style='margin-left:15px;'>Cuts</div>
+                        <div style='margin-left:30px;' ng-repeat="(key, value) in cube.cuts">{{ key }} <span style="color:red;cursor:pointer;" ng-click="removeCut(cube.name, key)">[X]</span></div>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<div id="cubes_list" class="panel panel-default" >
+    <div class="panel-heading">
+        <div>Step 1 - Select the indicators</div>
+        <button ng-click="setFilters()">Step 2 - Define your data</button>
+    </div>
+    <div class="panel-body">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+            </span>
+            <input type="search" class="form-control search" placeholder="Search Cube" ng-model="query">
+        </div>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item"
+            ng-repeat="cube in cubes_options | filter:query"
+            href="#/cubes/{{cube.name}}">
+            {{cube.label || cube.name || "(no name)"}}
+            <small>({{cube.name || "no name"}})</small>
+        </a>
+    </div>
+</div>

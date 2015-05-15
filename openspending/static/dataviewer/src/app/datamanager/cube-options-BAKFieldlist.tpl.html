@@ -1,0 +1,36 @@
+<div id="cubes_list" class="panel panel-default" >
+    <div class="panel-heading">
+        Cube Option
+    </div>
+    <div class="loader">
+        <h3>{{ loading }}</h3>
+
+    </div>
+    <form class="form-horizontal" role="form">
+        <h2>Data model name: {{model.cube_name}}</h2>
+
+    <div class="form-group">
+
+        <label class="col-sm-2 control-label">Fields to use</label>
+
+        <div class="col-sm-3">
+        <select class="form-control"
+                ng-model="model.selectedfields" multiple>
+            <option ng-repeat="item in model.fieldoptions" value="{{item.value}}">{{item.label}} - ({{item.value}}</option>
+        </select>
+        </div>
+
+    </div>
+
+    <button ng-click="savedataset()">
+      Add Dataset
+    </button>
+
+
+    </form>
+
+    <small>
+        theresponse
+    </small>
+
+</div>
