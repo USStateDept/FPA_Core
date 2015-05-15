@@ -1,9 +1,6 @@
 [submodule "openspending/static/dataloader"]
 	path = openspending/static/dataloader
 	url = https://github.com/USStateDept/FPA_Dataloader.git
-[submodule "openspending/static/viz"]
-	path = openspending/static/viz
-	url = https://github.com/USStateDept/FPA_viz.git
 [submodule "openspending/static/dataviewer"]
 	path = openspending/static/dataviewer
 	url = https://github.com/USStateDept/cubes_dataviewer.git
