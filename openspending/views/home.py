@@ -21,7 +21,7 @@ class User():
     def is_anonymous(self):
         return False
     def get_id(self):
-        return 'all'
+        return 999999999
     @property
     def admin(self):
         False
