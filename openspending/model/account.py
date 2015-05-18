@@ -35,8 +35,28 @@ class AnonymousAccount(AnonymousUserMixin):
 login_manager.anonymous_user = AnonymousAccount
 
 
+
+
+class LockdownUser():
+    def is_authenticated(self):
+        return True
+    def is_active(self):
+        return True
+    def is_anonymous(self):
+        return False
+    def get_id(self):
+        return 999999999
+    @property
+    def admin(self):
+        False
+
+
+
+
 @login_manager.user_loader
 def load_account(account_id):
+    if account_id == 999999999 or account_id=='all':
+        return LockdownUser()
     return Account.by_id(account_id)
 
 

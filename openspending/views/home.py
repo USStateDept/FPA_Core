@@ -6,6 +6,7 @@ from openspending.core import login_manager
 from openspending.model.dataset import Dataset
 from openspending.views.cache import disable_cache
 from openspending.model import Account
+from openspending.model.account import LockdownUser,load_account
 
 from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD
 
@@ -13,22 +14,6 @@ from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD
 blueprint = Blueprint('home', __name__)
 
 
-class User():
-    def is_authenticated(self):
-        return True
-    def is_active(self):
-        return True
-    def is_anonymous(self):
-        return False
-    def get_id(self):
-        return 999999999
-    @property
-    def admin(self):
-        False
-
-@login_manager.user_loader
-def load_user(userid):
-    return User()
 
 
 
@@ -44,7 +29,7 @@ def lockdown_perform():
     password = request.form.get('password', '')
 
     if username.lower() == LOCKDOWNUSER and password == LOCKDOWNPASSWORD:
-        account = load_user('all')
+        account = load_account('all')
         #account = Account.all().first()
         login_user(account, remember=True)
         return redirect("/", code=302)

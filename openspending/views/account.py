@@ -62,6 +62,7 @@ def login_perform():
     #if account is not None and account.verified == True:
     if account is not None:
         if check_password_hash(account.password, request.form.get('password')):
+            logout_user()
             login_user(account, remember=True)
             flash_success("Welcome back, " + account.fullname + "!")
             return redirect(url_for('home.index'))

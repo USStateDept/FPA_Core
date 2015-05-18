@@ -69,7 +69,6 @@ def create_app(**config):
 
     @app.before_request
     def require_basic_auth(*args, **kwargs):
-        
         if not current_user.is_authenticated() and request.path not in ["/lockdown", "/__ping__"] and LOCKDOWN_FORCE:
             return redirect("/lockdown", code=302)
         from openspending.model.search import SearchForm

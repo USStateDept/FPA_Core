@@ -7,6 +7,7 @@ from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
 #from openspending.views.cache import etag_cache_keygen
 from openspending.views.api_v2.common import blueprint
+from openspending.views.error import api_json_errors
 
 #imports prepare_cell_cubes_ext
 from openspending.lib.cubes_util import *
@@ -22,6 +23,7 @@ log = logging.getLogger(__name__)
 
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_model", methods=["JSON", "GET"])
 @requires_complex_browser
+@api_json_errors
 #@log_request("aggregate", "aggregates")
 def cubes_model(star_name):
 
@@ -61,6 +63,7 @@ def cubes_model(star_name):
 
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_aggregate", methods=["JSON", "GET"])
 @requires_complex_browser
+@api_json_errors
 #@log_request("aggregate", "aggregates")
 def aggregate_cubes(star_name):
 
@@ -174,6 +177,7 @@ def aggregate_cubes(star_name):
 
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_facts", methods=["JSON", "GET"])
 @requires_complex_browser
+@api_json_errors
 #@log_request("facts", "fields")
 def cubes_facts(star_name):
     cubes_arg = request.args.get("cubes", None)
