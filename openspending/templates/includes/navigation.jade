@@ -15,20 +15,18 @@ nav.navbar.navbar-default.navbar-fixed-top
         li
           a(href='#about') USER STORIES
       ul.nav.navbar-nav.navbar-right
-        {% if logged_in %}
+        {% if logged_in and current_user.get_id() != 999999999 %}
         li.dropdown
           a.dropdown-toggle(data-toggle='dropdown')
             strong 
-            //{{ current_user.fullname }}
+            {{ current_user.fullname }}
           ul.dropdown-menu.account-dropdown
-            li
-              a(href="{{ url_for('account.dashboard') }}") Dashboard
-            li
-              a(href="{{ url_for('account.settings') }}") Settings
-            {% if current_user.is_admin %}
+            {% if current_user.admin %}
             li.divider
             li
-              a(href="{{ url_for('account.scoreboard') }}") User scoreboard
+              strong Admin Only
+              a(href="/admin") Admin Section
+              a(href="{{ url_for('findadmin.dataloader') }}") Data Loader
             {% endif %}
             li.divider
             li

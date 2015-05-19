@@ -15,11 +15,11 @@ blueprint = Blueprint('findadmin', __name__)
 
 
 
-@blueprint.route('/admin/dataloader', methods=['GET'])
-def login():
+@blueprint.route('/findadmin/dataloader', methods=['GET'])
+def dataloader():
     """ Render the login/registration page. """
     if not require.account.is_admin():
     	return redirect("/login", code=302)
     disable_cache()
-    return render_template('admin/index.html')
+    return render_template('findadmin/index.html')
 
