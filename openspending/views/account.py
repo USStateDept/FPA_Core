@@ -184,7 +184,7 @@ def verify():
 def logout():
     disable_cache()
     logout_user()
-    flash_success(_("You have been logged out."))
+    flash_success("You have been logged out.")
     return redirect(url_for('home.index'))
 
 

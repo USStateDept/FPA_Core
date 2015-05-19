@@ -12,6 +12,7 @@ from openspending.views.indicators import blueprint as indicators
 from openspending.views.feedback import blueprint as feedback
 from openspending.views.search import blueprint as search
 from openspending.views.viz import blueprint as viz
+from openspending.views.admin import blueprint as findadmin
 # from openspending.views.badge import blueprint as badge
 # from openspending.views.view import blueprint as view
 # from openspending.views.editor import blueprint as editor
@@ -37,7 +38,7 @@ def register_views(app):
     app.register_blueprint(feedback)
     app.register_blueprint(search)
     app.register_blueprint(viz)
-
+    app.register_blueprint(findadmin)
     # app.register_blueprint(badge)
     # app.register_blueprint(view)
     # app.register_blueprint(editor)
