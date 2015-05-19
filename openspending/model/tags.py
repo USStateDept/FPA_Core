@@ -60,7 +60,7 @@ class Tags(db.Model):
 
     label = Column(Unicode(500))
 
-    category = Column(Unicode(500), default="categories")
+    category = Column(Unicode(500), default=u"categories")
 
     datasets = relationship(Dataset,
                             secondary=tags_dataset_table,

@@ -13,6 +13,7 @@ class FakeSMTPServer(smtpd.SMTPServer):
 
     def __init__(*args, **kwargs):
         print "Running fake smtp server on port 25"
+        print "Check emaillog.log for email messages"
         smtpd.SMTPServer.__init__(*args, **kwargs)
 
     def process_message(*args, **kwargs):

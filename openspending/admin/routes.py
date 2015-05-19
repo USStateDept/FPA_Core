@@ -5,7 +5,7 @@
 from flask.ext import wtf
 from flask_admin.contrib import sqla
 from wtforms.fields import StringField, PasswordField, BooleanField, SelectField, TextAreaField
-from wtforms.validators import Required, ValidationError
+from wtforms.validators import DataRequired, ValidationError
 from flask import flash
 from flask_admin import form
 
@@ -43,8 +43,8 @@ class AccountView(sqla.ModelView):
     #form_overrides = dict(name=PasswordField)
 
     form_extra_fields = {
-        "password1": PasswordField('Password', validators=[Required()]),
-        "password2": PasswordField('Password (Again)', validators=[Required()])
+        "password1": PasswordField('Password', validators=[DataRequired()]),
+        "password2": PasswordField('Password (Again)', validators=[DataRequired()])
     }
 
     form_excluded_columns = ('password', 'datasets',)
