@@ -119,7 +119,7 @@ def register():
         # Check if passwords match, return error if not
         if not data['password1'] == data['password2']:
             raise colander.Invalid(AccountRegister.password1,
-                                   _("Passwords don't match!"))
+                                   "Passwords don't match!")
 
         # Create the account
         account = Account()
@@ -137,10 +137,10 @@ def register():
 
 
         # TO DO redirect to email sent page
-        return redirect(url_for('home.index'))
+        return redirect(url_for('account.email_message', id=account.id))
     except colander.Invalid as i:
         errors = i.asdict()
-    return render_template('account/login.html', form_fill=values,
+    return render_template('account/login.jade', form_fill=values,
                            form_errors=errors)
 
 
@@ -148,22 +148,16 @@ def register():
 def verify():
     disable_cache()
 
-    parser = DistinctParamParser(request.args)
-    params, errors = parser.parse()
-    if errors:
-        flash_error(_("Your login url is invalid"))
-        return render_template('account/verify.html')
-
     loginhash = request.args.get('login')
     if not loginhash:
-        flash_error(_("We cannot find a login string"))
-        return render_template('account/verify.html')
+        message = "We cannot find your unique URL"
+        return render_template('account/email_message.jade', message=message)
 
     account = Account.by_login_hash(loginhash)
 
     if not account:
-        flash_error(_("We cannot find your login string"))
-        return render_template('account/verify.html')
+        message = "We could not find your account"
+        return render_template('account/email_message.jade', message=message)
     
     #update to verify this user so they can 
     #use the password in the future
@@ -177,6 +171,31 @@ def verify():
 
 
     return redirect(url_for('home.index'))
+
+
+
+@blueprint.route('/accounts/email_message', methods=['GET'])
+def email_message():
+    disable_cache()
+
+    user_id = request.args.get('id')
+
+    useraccount = Account.by_id(user_id)
+
+    if not useraccount:
+        message = "There is no user with this account"
+        return render_template('account/email_message.jade', message=message)
+
+    if useraccount.verified or useraccount.admin:
+        message = "This Account is already verified or is an administrator of the system.  This operation is not possible."
+        return render_template('account/email_message.jade', message=message)
+
+    message_dict = sendhash(useraccount, gettext=True)
+    message = str(message_dict) + "<br/><br/><a href='" + message_dict['verifylink'] + "'><h3>Click to Verify</h3></a>"
+
+    return render_template('account/email_message.jade', message=message)
+
+
 
 
 

@@ -20,9 +20,9 @@ class FakeSMTPServer(smtpd.SMTPServer):
         messagebody = args[4]
         
         try:
-            f = open('c:/inetpub/smtpmail/log/emaillog.log', 'a')
+            f = open('emaillog.log', 'a')
         except:
-            f = open('c:/inetpub/smtpmail/log/emaillog.log', 'a')
+            f = open('emaillog.log', 'w')
         f.write("/************************************/\n")
         f.write(fromaddress + "\n")
         f.write(messagebody + "\n")
