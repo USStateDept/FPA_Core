@@ -26,4 +26,8 @@ def sendhash(account, gettext = False):
             "verifylink": generate_hashlink(account)
         }
         return returnobj
-    mail.send(msg)
+    try:
+        mail.send(msg)
+    except Exception ,e:
+        print "failed to send the message"
+        print e
