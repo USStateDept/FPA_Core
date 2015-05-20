@@ -63,11 +63,6 @@ Edit settings.py line
 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost/openspending'
 OPENREFINE_SERVER = 'http://127.0.0.1:3333'
 
-From root FPACore
-$ git config --global url.https://github.com/.insteadOf git://github.com/
-$ git submodule init
-$ git submodule update
-
 
 Install Node.js
 http://nodejs.org/dist/v0.12.3/x64/node-v0.12.3-x64.msi
