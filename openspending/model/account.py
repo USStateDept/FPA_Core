@@ -95,6 +95,10 @@ class Account(db.Model):
     def get_id(self):
         return self.id
 
+    def reset_loginhash(self):
+        self.login_hash = make_uuid()
+        
+
     @property
     def display_name(self):
         return self.fullname

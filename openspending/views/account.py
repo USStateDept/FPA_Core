@@ -113,19 +113,15 @@ def register():
             #resend the hash here to the email and notify the user
             raise colander.Invalid(
                 AccountRegister.email,
-                _("Login email already exists, please choose a "
-                  "different one"))
+                "Login Name already exists.  Click reset password.")
 
-        # Check if passwords match, return error if not
-        if not data['password1'] == data['password2']:
-            raise colander.Invalid(AccountRegister.password1,
-                                   _("Passwords don't match!"))
+
 
         # Create the account
         account = Account()
         account.fullname = data['fullname']
         account.email = data['email']
-        account.password = generate_password_hash(data['password1'])
+        
 
         db.session.add(account)
         db.session.commit()
@@ -137,46 +133,96 @@ def register():
 
 
         # TO DO redirect to email sent page
-        return redirect(url_for('home.index'))
+        return redirect(url_for('account.email_message', id=account.id))
     except colander.Invalid as i:
         errors = i.asdict()
-    return render_template('account/login.html', form_fill=values,
+    return render_template('account/login.jade', form_fill=values,
                            form_errors=errors)
 
 
-@blueprint.route('/accounts/verify', methods=['GET'])
+@blueprint.route('/account/verify', methods=['POST', 'GET'])
 def verify():
+
     disable_cache()
 
-    parser = DistinctParamParser(request.args)
-    params, errors = parser.parse()
-    if errors:
-        flash_error(_("Your login url is invalid"))
-        return render_template('account/verify.html')
+    if request.method == 'GET':
+        loginhash = request.args.get('login')
+        if not loginhash:
+            message = "We cannot find your unique URL"
+            return render_template('account/email_message.jade', message=message)
 
-    loginhash = request.args.get('login')
-    if not loginhash:
-        flash_error(_("We cannot find a login string"))
-        return render_template('account/verify.html')
 
-    account = Account.by_login_hash(loginhash)
+        account = Account.by_login_hash(loginhash)
 
-    if not account:
-        flash_error(_("We cannot find your login string"))
-        return render_template('account/verify.html')
+        if not account:
+            message = "We could not find your account"
+            return render_template('account/email_message.jade', message=message)
+
     
-    #update to verify this user so they can 
-    #use the password in the future
-    account.verified = True
-    db.session.commit()
+        #request.form.loginhash = {"data":loginhash}
+        values = {'loginhash': loginhash}
+        return render_template('account/verify.jade', account=account, form_fill=values)
+
+    else:
+
+        loginhash = request.form.get('loginhash')
+        if not loginhash:
+            message = "We cannot find your unique URL"
+            return render_template('account/email_message.jade', message=message)
+
+        account = Account.by_login_hash(loginhash)
+
+        if not account:
+            message = "We could not find your account"
+            return render_template('account/email_message.jade', message=message)
+
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+
+        # Check if passwords match, return error if not
+        if password1 != password2:
+            error = "Your passwords do not match"
+            return render_template('account/verify.jade', loginhash=loginhash, account=account, error=error)
+
+        account.password = generate_password_hash(password1)
+
+        account.verified = True
+        db.session.commit()
 
 
-    flash_success("You are now logged in")
-    login_user(account, remember=True)
+        flash_success("Password saved and you are now verified.  Thank you.")
+        login_user(account, remember=True)
 
 
 
-    return redirect(url_for('home.index'))
+        return redirect(url_for('home.index'))
+
+
+
+
+#Developemnt and beta only
+@blueprint.route('/accounts/email_message', methods=['GET'])
+def email_message():
+    disable_cache()
+
+    user_id = request.args.get('id')
+
+    useraccount = Account.by_id(user_id)
+
+    if not useraccount:
+        message = "There is no user with this account"
+        return render_template('account/email_message.jade', message=message)
+
+    if useraccount.admin:
+        message = "This operation is not possible for this user type"
+        return render_template('account/email_message.jade', message=message)
+
+    message_dict = sendhash(useraccount, gettext=True)
+    message = str(message_dict) + "<br/><br/><a href='" + message_dict['verifylink'] + "'><h3>Click to Verify</h3></a>"
+
+    return render_template('account/email_message.jade', message=message)
+
+
 
 
 
@@ -184,154 +230,8 @@ def verify():
 def logout():
     disable_cache()
     logout_user()
-    flash_success(_("You have been logged out."))
+    flash_success("You have been logged out.")
     return redirect(url_for('home.index'))
-
-
-
-
-
-
-
-########################### OPENSPENDING ROUTES TO BE USED OR REMOVED################
-
-
-
-@blueprint.route('/settings')
-def settings():
-    """ Change settings for the logged in user """
-    disable_cache()
-    require.account.update(current_user)
-    values = current_user.as_dict()
-    if current_user.public_email:
-        values['public_email'] = current_user.public_email
-    if current_user.public_twitter:
-        values['public_twitter'] = current_user.public_twitter
-    values['api_key'] = current_user.api_key
-    return render_template('account/settings.html',
-                           form_fill=values)
-
-
-@blueprint.route('/settings', methods=['POST', 'PUT'])
-def settings_save():
-    """ Change settings for the logged in user """
-    require.account.update(current_user)
-    errors, values = {}, dict(request.form.items())
-
-    try:
-        data = AccountSettings().deserialize(values)
-
-        # If the passwords don't match we notify the user
-        if not data['password1'] == data['password2']:
-            raise colander.Invalid(AccountSettings.password1,
-                                   _("Passwords don't match!"))
-
-        current_user.fullname = data['fullname']
-        current_user.email = data['email']
-        current_user.public_email = data['public_email']
-        if data['twitter'] is not None:
-            current_user.twitter_handle = data['twitter'].lstrip('@')
-            current_user.public_twitter = data['public_twitter']
-
-        # If a new password was provided we update it as well
-        if data['password1'] is not None and len(data['password1']):
-            current_user.password = generate_password_hash(
-                data['password1'])
-
-        # Do the actual update in the database
-        db.session.add(current_user)
-        db.session.commit()
-
-        # Let the user know we've updated successfully
-        flash_success(_("Your settings have been updated."))
-    except colander.Invalid as i:
-        # Load errors if we get here
-        errors = i.asdict()
-
-    return render_template('account/settings.html',
-                           form_fill=values,
-                           form_errors=errors)
-
-
-@blueprint.route('/dashboard')
-def dashboard(format='html'):
-    """
-    Show the user profile for the logged in user
-    """
-    disable_cache()
-    require.account.logged_in()
-    print current_user
-    return profile(current_user.fullname)
-
-
-@blueprint.route('/scoreboard')
-def scoreboard(format='html'):
-    """
-    A list of users ordered by their score. The score is computed by
-    by assigning every dataset a score (10 divided by no. of maintainers)
-    and then adding that score up for all maintainers.
-
-    This does give users who maintain a single dataset a higher score than
-    those who are a part of a maintenance team, which is not really what
-    we want (since that rewards single points of failure in the system).
-
-    But this is an adequate initial score and this will only be accessible
-    to administrators (who may be interested in findin these single points
-    of failures).
-    """
-    require.account.is_admin()
-
-    # Assign scores to each dataset based on number of maintainers
-    score = db.session.query(Dataset.id,
-                             (10 / func.count(Account.id)).label('sum'))
-    score = score.join('managers').group_by(Dataset.id).subquery()
-
-    # Order users based on their score which is the sum of the dataset
-    # scores they maintain
-    user_score = db.session.query(
-        Account.name, Account.email,
-        func.coalesce(func.sum(score.c.sum), 0).label('score'))
-    user_score = user_score.outerjoin(Account.datasets).outerjoin(score)
-    user_score = user_score.group_by(Account.name, Account.email)
-    # We exclude the system user
-    user_score = user_score.filter(Account.name != 'system')
-    user_score = user_score.order_by(desc('score'))
-
-    # Fetch all and assign to a context variable score and paginate them
-    # We paginate 42 users per page, just because that's an awesome number
-    scores = user_score.all()
-    page = Page(scores, items_per_page=42,
-                item_count=len(scores),
-                **dict(request.args.items()))
-
-    return render_template('account/scoreboard.html', page=page)
-
-
-@blueprint.route('/accounts/_complete')
-def complete(format='json'):
-    disable_cache()
-    parser = DistinctParamParser(request.args)
-    params, errors = parser.parse()
-    if errors:
-        return jsonify({'errors': errors}, status=400)
-    if not current_user.is_authenticated():
-        msg = _("You are not authorized to see that page")
-        return jsonify({'errors': msg}, status=403)
-
-    query = db.session.query(Account)
-    filter_string = params.get('q') + '%'
-    query = query.filter(or_(Account.name.ilike(filter_string),
-                             Account.fullname.ilike(filter_string)))
-    count = query.count()
-    query = query.limit(params.get('pagesize'))
-    query = query.offset(int((params.get('page') - 1) *
-                             params.get('pagesize')))
-    results = [dict(fullname=x.fullname, name=x.name) for x in list(query)]
-
-    return jsonify({
-        'results': results,
-        'count': count
-    })
 
 
 
@@ -363,56 +263,16 @@ def trigger_reset():
         flash_error(_("No user is registered under this address!"))
         return render_template('account/trigger_reset.html')
 
-    # Send the reset link to the email of this account
-    send_reset_link(account)
+    account.reset_loginhash()
+    db.session.commit()
 
-    # Let the user know that email with link has been sent
-    flash_success(_("You've received an email with a link to reset your "
-                    "password. Please check your inbox."))
+
+
+    # Send the reset link to the email of this account
+    sendhash(account)
+
 
     # Redirect to the login page
-    return redirect(url_for('account.login'))
+    return redirect(url_for('account.email_message', id=account.id))
 
 
-@blueprint.route('/account/reset')
-def do_reset():
-    email = request.args.get('email')
-    if email is None or not len(email):
-        flash_error(_("The reset link is invalid!"))
-        return redirect(url_for('account.login'))
-
-    account = Account.by_email(email)
-    if account is None:
-        flash_error(_("No user is registered under this address!"))
-        return redirect(url_for('account.login'))
-
-    if request.args.get('token') != account.token:
-        flash_error(_("The reset link is invalid!"))
-        return redirect(url_for('account.login'))
-
-    login_user(account)
-    flash_success(
-        _("Thanks! You have now been signed in - please change "
-                + "your password!"))
-    return redirect(url_for('account.settings'))
-
-
-@blueprint.route('/account/<pk_id>')
-def profile(pk_id):
-    """ Generate a profile page for a user (from the provided name) """
-
-    # Get the account, if it's none we return a 404
-    profile = obj_or_404(Account.by_id(pk_id))
-
-    # Set a context boo if email/twitter should be shown, it is only shown
-    # to administrators and to owner (account is same as context account)
-    show_info = (current_user and current_user.admin) or \
-                (current_user == profile)
-
-
-    # Collect and sort the account's datasets and views
-    #profile_datasets = sorted(profile.datasets, key=lambda d: d.label)
-    #profile_views = sorted(profile.views, key=lambda d: d.label)
-
-    # Render the profile
-    return render_template('account/profile.html', profile=profile)

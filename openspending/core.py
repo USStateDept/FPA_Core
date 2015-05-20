@@ -84,7 +84,6 @@ def create_app(**config):
 
 
 def create_web_app(**config):
-    print "RUNNING CREATE WEB APP"
     app = create_app(**config)
 
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
@@ -104,7 +103,6 @@ def create_web_app(**config):
 
 
 def create_celery(app):
-    print "RNNING CELERY NOW"
     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
     TaskBase = celery.Task
