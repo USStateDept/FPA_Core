@@ -5,14 +5,14 @@ head
   // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
   meta(name='description', content="{% block page_desc %}We're enabling anyone to explore, visualize and track government spending.{% endblock %}")
   meta(name='author', content='')
-  link(rel='icon', href='{{ static_path("dist/images/favicon.ico") }}')
+  link(rel='icon', href='{{ static_path("find-ui/dist/images/favicon.ico") }}')
   title {% block page_title %}{% endblock %} FIND
   // Bootstrap core CSS
-  link(href="{{ static_path('dist/bower_components/bootstrap/dist/css/bootstrap.min.css') }}", rel='stylesheet')
-  link(href="{{ static_path('dist/bower_components/animate.css/animate.min.css') }}", rel='stylesheet')
+  link(href="{{ static_path('find-ui/dist/bower_components/bootstrap/dist/css/bootstrap.min.css') }}", rel='stylesheet')
+  link(href="{{ static_path('find-ui/dist/bower_components/animate.css/animate.min.css') }}", rel='stylesheet')
   link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', rel='stylesheet')      
   //Customa and over rides
-  link(href='{{ static_path("dist/app/css/app.css") }}' , rel='stylesheet')
+  link(href='{{ static_path("find-ui/dist/app/css/app.css") }}' , rel='stylesheet')
   // Just for debugging purposes. Don't actually copy these 2 lines!
 
   //if lt IE 9
