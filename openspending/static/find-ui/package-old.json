@@ -5,7 +5,7 @@
     "main": "index.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/USStateDept/FPA_Core.git"
+        "url": "https://github.com/USStateDept/FIND-UI.git"
     },
     "keywords": [
         "FIND",
@@ -14,14 +14,21 @@
     "author": "eDiplomacy",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/USStateDept/FPA_Core/issues"
+        "url": "https://github.com/USStateDept/FIND-UI/issues"
     },
-    "homepage": "https://github.com/USStateDept/FPA_Core/tree/master/openspending/static/find-ui",
+    "homepage": "https://github.com/USStateDept/FIND-UI",
     "scripts": {
         "dist": "gulp dist-delete && gulp dist-copy-clean && gulp dist-minify",
         "watch": "gulp watch"
     },
     "devDependencies": {
+        "karma": "^0.12.24",
+        "karma-chrome-launcher": "^0.1.5",
+        "karma-dojo": "0.0.1",
+        "karma-firefox-launcher": "^0.1.3",
+        "karma-jasmine": "^0.2.3",
+        "karma-phantomjs-launcher": "^0.1.4",
+        "del": "^0.1.3",
         "gulp": "^3.8.1",
         "gulp-load-plugins": "^0.7.1",
         "gulp-autoprefixer": "0.0.7",
