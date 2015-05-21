@@ -12,7 +12,7 @@
 
 {% block content %}
 .container-full
-
+find
   .row.jumbotron.bg-dark
     p &nbsp;
     h1.tlt() Explore Indicators, Effortlessly
@@ -22,12 +22,22 @@
       .col-md-8
 
         p.search-group
-          div#sticky-anchor
-          div#sticky.form-group.has-feedback
+          #sticky-anchor
+          #sticky.form-group.has-feedback
             input.main-search(type='text' placeHolder='Find a country or indicator')
             span.glyphicon.glyphicon-search.form-control-feedback
-            div.main-search-results(data-bind="foreach:searchResults,visible:searchResults().length>0 && searchValue().length>=2")
+              .main-search-results(data-bind="foreach:searchResults,visible:searchResults().length>0 && searchValue().length>=2")
               span(data-bind="html:label,click:$root.selectIndicator")
+            .btn-group.btn-group-lg(data-toggle='buttons')
+              label.btn.btn-primary.active
+                input(type='radio' name='searchType') 
+                | All
+              label.btn.btn-primary
+                input(type='radio' name='searchType') 
+                | Countries
+              label.btn.btn-primary
+                input(type='radio' name='searchType')
+                | Indicators
     
       .col-md-2
 
@@ -35,7 +45,7 @@
 .container
   .row
     .col-md-12
-      div.well.bg-none.font-large.font-dark
+      .well.bg-none.font-large.font-dark
         //-h3 Welcome to FIND
         .row
           .col-md-12
@@ -54,7 +64,7 @@
         .item.active
           .row
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Literacy rates
                 .row
                   .col-md-3
@@ -62,7 +72,7 @@
                   .col-md-9
                     p Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Under Five Mortality Rate
                 .row
                   .col-md-3
@@ -72,7 +82,7 @@
         .item
           .row
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 GDP Growth
                 .row
                   .col-md-3
@@ -80,7 +90,7 @@
                   .col-md-9
                     p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Forest Area
                 .row
                   .col-md-3
@@ -90,7 +100,7 @@
         .item
           .row
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Foreign Direct Investment
                 .row
                   .col-md-3
@@ -98,7 +108,7 @@
                   .col-md-9
                     p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Population Growth
                 .row
                   .col-md-3

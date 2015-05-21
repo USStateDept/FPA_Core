@@ -95,3 +95,14 @@ When starting the system fresh do this
 1. Run openrefine.exe
 2. pyenv.bat from commandline
 3. runservers.bat
+
+===============================
+
+When reindexing search do this
+1. Run ostool search reindex
+
+================
+to reinstall cube do this
+
+1. pip uninstall cube
+2. pip install -r requirements.txt -e .
