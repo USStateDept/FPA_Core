@@ -55,7 +55,7 @@ gulp.task('dist-uglify-js', function() {
     console.log(">>>>>>>> Uglifying JS");
     return gulp.src(app_dir.dist + app_dir.js)
         .pipe(plugins.uglify())
-        .pipe(gulp.dest(app_dir.dist))
+        .pipe(gulp.dest(app_dir.dist + "/app"))
 });
 
 /*gulp.task('dist-minify-html', function() {
@@ -88,7 +88,7 @@ gulp.task('dist-minify-image', function() {
 // });
 
 //gulp.task('dist-minify', ['dist-minify-css', 'dist-uglify-js', 'dist-minify-html', 'dist-minify-image']);
-gulp.task('dist-minify', ['dist-minify-css', 'dist-uglify-js', 'dist-minify-html', 'dist-minify-image']);
+gulp.task('dist-minify', ['dist-minify-css', 'dist-uglify-js', /*'dist-minify-html',*/ /*'dist-minify-image'*/ ]);
 
 
 
