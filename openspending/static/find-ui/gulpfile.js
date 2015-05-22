@@ -5,7 +5,7 @@ var stylus = require('gulp-stylus');
 var jade = require('gulp-jade');
 
 var gulpLoadPlugins = require('gulp-load-plugins');
-
+var runSequence = require('gulp-run-sequence');
 
 var plugins = require('gulp-load-plugins')();
 
@@ -90,6 +90,10 @@ gulp.task('dist-minify-image', function() {
 //gulp.task('dist-minify', ['dist-minify-css', 'dist-uglify-js', 'dist-minify-html', 'dist-minify-image']);
 gulp.task('dist-minify', ['dist-minify-css', 'dist-uglify-js', /*'dist-minify-html',*/ /*'dist-minify-image'*/ ]);
 
+gulp.task('dist-minify-sequence', function() {
+    runSequence('dist-delete', 'dist-copy-clean', 'dist-minify-css', 'dist-uglify-js');
+});
+
 
 
 /*********Watch************/
@@ -120,11 +124,12 @@ gulp.task('autoprefix-css', ['compile-stylus'], function() {
         .pipe(plugins.autoprefixer(["last 2 versions"], {
             cascade: true
         }))
-        .pipe(gulp.dest(app_dir.src))
+        .pipe(gulp.dest(app_dir.dist))
 });
 
 gulp.task('watch', function() {
     // watch jade and style
     //gulp.watch(app_dir.src + '**/*.jade', ['compile-jade']);
     gulp.watch(app_dir.src + '**/*.styl', ['autoprefix-css']);
+    gulp.watch(app_dir.src + '**/*.js', ['dist-minify-sequence']);
 });

@@ -91,12 +91,10 @@
   background-color: #eae6e6;
 }
 .app .flip .category-wrapper {
-  -webkit-transition: 0.5s all;
   transition: 0.5s all;
 }
 .app .flip .category-wrapper:hover {
   box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-  -webkit-transform: scale(1.01);
   transform: scale(1.01);
 }
 .app .panel-group {
@@ -156,6 +154,8 @@
 }
 .tabs-left > .nav-tabs > li > a {
   margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+  -moz-border-radius: 4px 0 0 4px;
   border-radius: 4px 0 0 4px;
 }
 .tab-content > .tab-pane,

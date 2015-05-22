@@ -105,6 +105,15 @@ body {
 .app .jumbotron .search-group {
   color: #852224;
 }
+.app .jumbotron .btn-group {
+  width: 100%;
+  height: 60px;
+}
+.app .jumbotron .btn {
+  width: 33.33%;
+  height: 100%;
+  line-height: 40px;
+}
 .app .jumbotron .form-control-feedback {
   width: 60px;
   height: 68px;

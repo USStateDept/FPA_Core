@@ -12,6 +12,8 @@
 Sugguest A chart type based on variables
 Select defaults
 
+#Development
+npm run watch
 
 # Vizualizations Supported
 1. Bar
