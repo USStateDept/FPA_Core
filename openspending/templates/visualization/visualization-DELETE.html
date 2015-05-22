@@ -1,0 +1,199 @@
+{% extends "base.jade" %}
+
+{% block page_title %}Visualization{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+
+{% block optional_head %}
+  <link href="{{ static_path('find-ui/dist/app/css/visualization.css') }}" rel="stylesheet">
+  <link href="{{ static_path('find-ui/dist/app/css/jquery.multiselect.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+      <div class="row">
+        <p></p>
+      </div>
+      <div class="row">
+        <p></p>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div role="tabpanel">
+            <ul id="vizTabs" role="tablist" class="nav nav-tabs nav-justified">                                
+              <li role="presentation" class="active"><a href="#select-indicator" aria-controls="vizualize" role="tab" data-toggle="tab">
+                  <h4><span data-bind="visible:!selectionTracker().indicator">1. Select Indicator</span><span data-bind="html:activeIndicator,visible:selectionTracker().indicator" class="selected-tab-value"></span><span data-bind="click:clearIndicator,visible:selectionTracker().indicator" class="glyphicon glyphicon-remove"></span></h4></a></li>
+              <li role="presentation"><a href="#select-vizualization" aria-controls="select-vizualization" role="tab" data-toggle="tab">
+                  <h4><span data-bind="visible:!selectionTracker().vizualization">2. Choose Visualization</span><span data-bind="html:activeChart,visible:selectionTracker().vizualization" class="selected-tab-value"></span><span data-bind="click:clearChart,visible:selectionTracker().vizualization" class="glyphicon glyphicon-remove"></span></h4></a></li>
+              <li role="presentation" class="disabled"><a href="#vizualize" aria-controls="vizualize" role="tab" data-toggle="tab">
+                  <h4>3.<span>&nbsp; Visualize</span></h4></a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="row">
+                <p></p>
+              </div>
+              <div class="row">
+                <p></p>
+              </div>
+              <div id="select-indicator" role="tabpanel" class="tab-pane active">                 
+                <div class="row">
+                  <div class="col-md-1">
+                    <div class="tabbable tabs-left">
+                      <ul class="nav nav-tabs">
+                        <li><a href="#tab-category" data-toggle="tab">Category</a></li>
+                        <li class="active"><a href="#tab-source" data-toggle="tab">Sources        </a></li>
+                        <li><a href="#tab-alphabetic" data-toggle="tab">A - Z</a></li>
+                        <li><a href="#tab-countries" data-toggle="tab">Countries</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-md-11">
+                    <div class="tab-content">
+                      <div id="tab-category" class="tab-pane">
+                        <div data-bind="foreach:categoriesModel" class="row">
+                          <div class="col-sm-4 col-md-4 col-sm-2 flip">
+                            <div class="card">
+                              <div class="face front">
+                                <div class="well category-wrapper"><span data-bind="html:length" class="badge"></span>
+                                  <div data-bind="attr:{class:'icon-category-' + label.replace(&quot; &quot;,&quot;-&quot;).toLowerCase() + ' well category'}"></div>
+                                  <h4 data-bind="html:label"></h4>
+                                </div>
+                              </div>
+                              <div class="face back">
+                                <div class="list-group"><a href="#" data-bind="html:label" class="list-group-item active"></a><span data-bind="foreach:indicators"><a href="#" data-bind="click:$root.selectIndicator,html:label,attr:{&quot;data-content&quot;:&quot;&lt;strong&gt;Source : &lt;/strong&gt;&quot; + source}" data-html="true" class="list-group-item">                             </a></span></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="tab-source" class="tab-pane active">
+                        <div data-bind="foreach:sourcesModel" class="row">
+                          <div class="col-sm-4 col-md-4 flip">
+                            <div class="card">
+                              <div class="face front">
+                                <div class="well category-wrapper"><span data-bind="html:length" class="badge"></span>
+                                  <div class="well category icon-category-70"></div>
+                                  <h4 data-bind="html:label"></h4>
+                                </div>
+                              </div>
+                              <div class="face back">
+                                <div class="list-group"><a href="#" data-bind="html:label" class="list-group-item active"></a><span data-bind="foreach:indicators"><a href="#" data-bind="click:$root.selectIndicator,html:label,attr:{&quot;data-content&quot;:&quot;&lt;strong&gt;Category : &lt;/strong&gt;&quot; + category}" data-html="true" class="list-group-item"></a></span></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="tab-alphabetic" class="tab-pane">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <input data-bind="event:{keyup:filterIndicators}" placeHolder="Filter" class="pull-left">
+                          </div>
+                        </div>
+                        <div data-bind="foreach:indicatorsModel" class="list-group row"><a href="#" data-bind="click:$root.selectIndicator,html:label,attr:{&quot;data-content&quot;:&quot;&lt;strong&gt;Category : &lt;/strong&gt;&quot; + category + &quot;&lt;br&gt;&lt;strong&gt;Source : &lt;/strong&gt;&quot; + source,&quot;data-indicatorid&quot;:id}" data-html="true" class="list-group-item col-md-4"></a></div>
+                      </div>
+                      <div id="tab-countries" class="tab-pane">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <input data-bind="event:{keyup:filterCountries}" placeHolder="Filter" class="pull-left">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <p></p>
+                        </div>
+                        <div data-bind="foreach:countriesModel" class="row">
+                          <div class="col-md-3 col-sm-4 col-xs-6">
+                            <div data-bind="click:$root.selectCountry" class="well category-wrapper">
+                              <div data-bind="style:{background:'url(static/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}" class="well category"></div>
+                              <h4 data-bind="html:label"></h4>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="select-vizualization" role="tabpanel" class="tab-pane">
+                <div class="row">
+                  <div class="col-sm-4 col-md-4">
+                    <div data-bind="click:function(){selectVizualization(&quot;bar&quot;)}" class="well category-wrapper">
+                      <div class="well category noun-bar-45998"></div>
+                      <h4>Bar</h4>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-md-4">
+                    <div data-bind="click:function(){selectVizualization(&quot;line&quot;)}" class="well category-wrapper">
+                      <div class="well category noun-line-105490"></div>
+                      <h4>Line</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="vizualize" role="tabpanel" class="tab-pane">
+                <div class="row">
+                  <div class="col-md-2">                     
+                    <div class="ui-widget">
+                      <label for="years-label">Years</label>
+                      <input id="years-label" readonly>
+                    </div>
+                    <div id="slider-years"></div>
+                    <div style="display:none" class="ui-widget">
+                      <p id="callback" class="message success">Callback target</p>
+                      <select multiple="multiple" size="5">
+                        <optgroup label="Europe">
+                          <option value="Germany">Germany</option>&#x9;
+                          <option value="France">France</option>&#x9;
+                          <option value="France">Sweden</option>
+                        </optgroup>
+                        <optgroup label="Asia">
+                          <option value="Pakistan">Pakistan</option>
+                        </optgroup>
+                        <optgroup label="Australia">
+                          <option value="Australia">Australia</option>
+                          <option value="Australia">New Zealand</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-10">
+                    <div id="viz-container"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+{% endblock %}
+
+{% block footer_scripts %}
+
+
+<link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet">
+<script src="{{ static_path('find-ui/dist/bower_components/jquery-ui/jquery-ui.js') }} "></script>
+<script src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }} "></script>
+<script src="{{ static_path('find-ui/dist/bower_components/lodash/lodash.min.js') }} "></script>
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/modules/exporting.js"></script>
+<script src="{{ static_path('find-ui/dist/bower_components/knockout/dist/knockout.js') }} "> </script>
+<script src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }} "></script>
+<script src="{{ static_path('find-ui/dist/app/js/visualization/loader.js') }} "></script>
+<script src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }} "></script>
+<script src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }} "></script>
+
+
+
+{% endblock %}
+
+
+
+
+
+
