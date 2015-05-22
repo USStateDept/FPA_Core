@@ -1,1 +1,85 @@
-!function(){var a={searchResults:ko.observableArray([]),searchValue:ko.observable(""),selectIndicator:function(a){window.location.href="visualization#ind="+a.id}};ko.applyBindings(a),$(".main-search").keyup(function(){var r=$(".main-search")[0].value,s="/api/3/search";return a.searchValue(r),r.length<2?(a.searchResults.removeAll(),void 0):($.ajax({url:s,jsonp:"callback",dataType:"jsonp",data:{q:r},success:function(a){e(a,r)}}),void 0)});var e=function(e,r){a.searchResults.removeAll();var s=r.split(" ");for(id in e.data){var l={id:id,label:""},n=e.data[id],i=n;_.forEach(s,function(a){var e=new RegExp("("+a+")","gi");i=i.replace(e,"<strong style='color:red'>$1</strong>")}),l.label=i,a.searchResults.push(l)}}}();
+(function() {
+
+
+    var model = {
+        searchResults: ko.observableArray([]),
+
+        searchValue: ko.observable(""),
+
+        searchType: ko.observable("search-all"), //search-indicators, search-countries
+
+        selectIndicator: function(obj) {
+            window.location.href = "visualization#ind=" + obj.id
+            // alert("selected indicator")
+        }
+    }
+
+    ko.applyBindings(model);
+    //search event
+    $(".main-search").keyup(function() {
+
+        var value = $(".main-search")[0].value;
+        var url = "/api/3/search";
+        model.searchValue(value);
+        if (value.length < 2) {
+            model.searchResults.removeAll();
+            return;
+        }
+
+        $.ajax({
+            url: url,
+            jsonp: "callback",
+            dataType: "jsonp",
+            //dataType: "json",
+            data: {
+                q: value
+            },
+            success: function(response) {
+                searchHandler(response, value)
+            }
+        });
+
+    });
+
+    $("input:radio[name=searchGroup]").change(function() {
+
+        var value = $(this)[0].value;
+        model.searchType(value);
+    });
+
+
+    var searchHandler = function(response, value) {
+
+        //current search type
+        var searchType = model.searchType();
+
+        model.searchResults.removeAll();
+
+        var valuesArr = value.split(" ");
+
+        for (id in response.data) {
+            var resultItem = {
+                id: id,
+                label: ""
+            }
+            var originalLabel = response.data[id];
+            var label = originalLabel;
+
+            _.forEach(valuesArr, function(v) {
+                var regex = new RegExp('(' + v + ')', 'gi');
+
+                label = label.replace(regex, "<strong style='color:red'>$1</strong>")
+            })
+
+            resultItem.label = label;
+
+
+            model.searchResults.push(resultItem);
+        }
+
+    }
+
+
+
+
+}())

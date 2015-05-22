@@ -110,17 +110,17 @@ gulp.task('dist-minify-sequence', function() {
 
 gulp.task('compile-stylus', function() {
     console.log("COMPILING");
-    return gulp.src(app_dir.src + '**/*.styl')
+    return gulp.src(app_dir.dist + '**/*.styl')
         .pipe(plugins.stylus({
             errors: true,
             pretty: true
         }))
-        .pipe(gulp.dest(app_dir.src))
+        .pipe(gulp.dest(app_dir.dist))
 });
 
 gulp.task('autoprefix-css', ['compile-stylus'], function() {
     console.log("AUTO PREFIXING");
-    return gulp.src(app_dir.src + '**/*.css')
+    return gulp.src(app_dir.dist + '**/*.css')
         .pipe(plugins.autoprefixer(["last 2 versions"], {
             cascade: true
         }))
@@ -130,6 +130,6 @@ gulp.task('autoprefix-css', ['compile-stylus'], function() {
 gulp.task('watch', function() {
     // watch jade and style
     //gulp.watch(app_dir.src + '**/*.jade', ['compile-jade']);
-    gulp.watch(app_dir.src + '**/*.styl', ['autoprefix-css']);
-    gulp.watch(app_dir.src + '**/*.js', ['dist-minify-sequence']);
+    gulp.watch(app_dir.dist + '**/*.styl', ['autoprefix-css']);
+
 });
