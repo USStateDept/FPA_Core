@@ -14,7 +14,10 @@ class TestCase(FlaskTestCase):
             'TESTING': True,
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'CELERY_ALWAYS_EAGER': True,
-            'UPLOADS_DEFAULT_DEST': tempfile.mkdtemp()
+            'UPLOADS_DEFAULT_DEST': tempfile.mkdtemp(),
+            'LOCKDOWNUSER': 'test',
+            'LOCKDOWNPASSWORD': 'test',
+            'LOCKDOWN_FORCE': True
         })
         return app
 
