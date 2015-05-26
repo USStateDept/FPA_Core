@@ -22,7 +22,7 @@ from openspending.validation.model import Invalid
 
 from openspending.core import sourcefiles
 
-from settings import UPLOADED_FILES_DEST
+#from settings import UPLOADED_FILES_DEST
 
 from werkzeug import FileStorage
 

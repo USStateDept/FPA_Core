@@ -6,7 +6,7 @@ from flask.ext import wtf
 from flask_admin.contrib import sqla
 from wtforms.fields import StringField, PasswordField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError
-from flask import flash
+from flask import flash, current_app
 from flask_admin import form
 
 from flask_admin.model.form import InlineFormAdmin
@@ -23,7 +23,7 @@ from werkzeug.security import generate_password_hash
 
 from jinja2 import Markup
 
-from settings import UPLOADED_FILES_DEST
+#from settings import UPLOADED_FILES_DEST
 
 from openspending.model.tags import TAG_OPTIONS
 
@@ -99,6 +99,7 @@ class SourceFileView(sqla.ModelView):
     }
 
     # Pass additional parameters to 'path' to FileUploadField constructor
+    UPLOADED_FILES_DEST = current_app.config.get('UPLOADED_FILES_DEST', None)
     form_args = {
         'rawfile': {
             'label': 'File',

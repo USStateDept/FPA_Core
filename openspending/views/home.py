@@ -8,7 +8,9 @@ from openspending.views.cache import disable_cache
 from openspending.model import Account
 from openspending.model.account import LockdownUser,load_account
 
-from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD
+from flask import current_app
+
+#from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD
 
 
 blueprint = Blueprint('home', __name__)
@@ -27,6 +29,8 @@ def lockdown():
 def lockdown_perform():
     username = request.form.get('username', '')
     password = request.form.get('password', '')
+    LOCKDOWNUSER = current_app.config.get('LOCKDOWNUSER', 'test')
+    LOCKDOWNPASSWORD = current_app.config.get('LOCKDOWNPASSWORD', 'test')
 
     if username.lower() == LOCKDOWNUSER and password == LOCKDOWNPASSWORD:
         account = load_account('all')
