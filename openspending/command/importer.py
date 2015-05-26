@@ -250,84 +250,118 @@ def parseDBJSON(args):
 
 
 
+def zipFiles(filestozip):
 
+    # Open StringIO to grab in-memory ZIP contents
+    s = StringIO.StringIO()
+
+    # The zip compressor
+    zf = zipfile.ZipFile(s, "w")
+
+    for fileobj in filestozip:
+        zf.writestr(fileobj['label'], fileobj['content'].getvalue())
+
+
+    # Must close zip for all contents to be written
+    zf.close()
+    return s
+
+
+
+import zipfile
+import csv
+import io
+import requests
+
+from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD, LOCKDOWN_FORCE
 
 
 def add_import_commands(manager):
 
-    # @manager.option('--org', action="store", dest='specificorg', type=str,
-    #                 default=None, metavar='N',
-    #                 help="organization to load")
-    # @manager.option('jsondata', nargs=argparse.REMAINDER,
-    #                 help="JSON data from databank.edip-maps.net")
-    # @manager.command
-    # def testdatabankjson(**args):
-    #     """ Load a JSON dump from  """
-    #     specificorg = args.get("specificorg", None)
-    #     modelobjs = parseDBJSON(args)
+    @manager.option('-f', '--file-dir',
+                    dest='file_dir',
+                    help='File Dir to output the files')
+    @manager.command
+    def output_logs(**args):
+        filedir = args.get("file_dir", None)
+        log.info("Using filedir: %s", filedir)
+        if not filedir:
+            log.warn("Please specify an output dir")
+            sys.exit()
+        try:
+            f = open(os.path.join(filedir, "LogFiles.zip"), 'wb' )
+        except Exception, e:
+            log.warn("Could not open directory : %s", e)
+
+        zf = zipfile.ZipFile(f, "w")
+
+        for dataset in Dataset.all():
+            if dataset.source and dataset.source.runs.first():
+                datalogs = dataset.source.runs.first().records_as_json()
+            else:
+                log.info("Skipping : %s", dataset.name)
+                continue
+
+            if not len(datalogs):
+                log.info("No Datalog for : %s", dataset.name)
+                zf.writestr(dataset.name + "/loadinglog.csv", "All is well")
+                continue
+            
+            outputfile = io.BytesIO()
+            #figureout the headers
+
+            dw = csv.DictWriter(outputfile, delimiter= ',', extrasaction='ignore', fieldnames=datalogs[0].keys())
+            dw.writeheader()
+
+            for row in datalogs:
+                dw.writerow(row)
+            zf.writestr(dataset.name +  "/loadinglog.csv", outputfile.getvalue())
 
 
-    #     results = {"success":0, "errored":0, "skipped":0, "added_needs_work":0}
+            #write openrefine output
+            preloadvalue = dataset.source.getORFile().getvalue()
+            zf.writestr(dataset.name + "/preloadvalue.csv", preloadvalue)
+
+            url = "http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=" + dataset.name + "&drilldown=geometry__time|geometry__country_level0@name&format=csv"
 
 
-    #     #go through the dataconnections
-    #     for dataconnection in modelobjs["dataconnection"]:
+            # Fill in your details here to be posted to the login form.
+            if LOCKDOWN_FORCE:
+                payload = {
+                    'username': LOCKDOWNUSER,
+                    'password': LOCKDOWNPASSWORD
+                }
 
-    #         print "\n\n******************************************"
+                # Use 'with' to ensure the session context is closed after use.
+                with requests.Session() as s:
+                    try:
+                        p = s.post('http://localhost:5000/lockdown', data=payload)
 
-    #         if not dataconnection['fields'].get("data_type", None):
-    #             results['skipped'] +=1
-    #             continue
+                        # An authorised request.
+                        postloadvalue = s.get(url).content
+                    except Exception, e:
+                        log.warn("could not get authorized postload value " + str(e))
+            else:
 
-    #         #get the dataprovider json
-    #         datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
-    #         if not datasetprovider:
-    #             results['skipped'] += 1
-    #             print "could not find the meta attached to this", dataconnection['fields']['indicator']
-    #             continue
-    #         if specificorg and datasetprovider['fields'].get("title", "nothinghere") != specificorg:
-    #             results['skipped'] += 1
-    #             print "skipping unspecified organizations", datasetprovider['fields'].get("title", None)
-    #             continue
+                try:
+                    postloadvalue = requests.get(url).content
+                except Exception, e:
+                    log.warn("Could Not find post load content for " + dataset.name)
 
+            try:
+                zf.writestr(dataset.name + "/postloadvalue.csv", postloadvalue)
+            except Exception, e:
+                log.warn("could not write postload value")
 
-
-    #         if dataconnection['fields']['data_type'] == "API - CSV":
-    #             if dataconnection['fields']['webservice']:
-    #                 myresult = testORLoad(sourceurl=dataconnection['fields']['webservice'])
-    #                 if not myresult:
-    #                     results['errored'] +=1
-    #             else:
-    #                 results['skipped'] +=1
-    #             #attempt to load
-    #             pass
-    #         elif dataconnection['fields']['data_type'] == "API - JSON":
-    #             results['skipped'] +=1
-    #             #json preprocessor
-    #             pass
-    #         else:
-    #             results['skipped'] +=1
-    #             print "other not currently supported"
-    #             continue
+        zf.close()
+        f.close()
 
 
 
 
-    #         #if we get here then we can try load a source
-    #         sourceobj, loadresult = load_from_databank(dataconnection, datasetprovider, dry_run=True, meta_only=False)
-    #         if loadresult:
-    #             results['success'] +=1
-    #         else:
-    #             results['added_needs_work'] += 1
+        #put in folder with retrieved data
 
-    #         # #if we are here then we created a source.  Let's now delete it.
-    #         # #this will not delete the data tables yet
-    #         # sourceobj.delete()
-
-
-
-    #     print "\n\nHere are results:"
-    #     print results
+        #put in with transformed data
 
 
 
@@ -350,7 +384,7 @@ def add_import_commands(manager):
         #go through the dataconnections
         for dataconnection in modelobjs["dataconnection"]:
 
-            print "\n\n******************************************"
+            log("\n\n******************************************")
 
 
 
@@ -358,7 +392,7 @@ def add_import_commands(manager):
             datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
             if not datasetprovider:
                 results['skipped'] += 1
-                print "could not find the meta attached to this", dataconnection['fields']['indicator']
+                log("could not find the meta attached to this" +  str(dataconnection['fields']['indicator']))
                 continue
             if specificorg and datasetprovider['fields'].get("title", "nothinghere") != specificorg:
                 results['skipped'] += 1

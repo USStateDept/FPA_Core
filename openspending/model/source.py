@@ -106,6 +106,10 @@ class Source(db.Model):
         refineproj.refineproj.do_json("apply-operations", data=data)
         return True
 
+    def getORFile(self):
+        refineproj = self.get_or_create_ORProject()
+        return refineproj.get_file()
+
     def getORInstructions(self):
         #get the new ioperations from OR and save them int he database
         refineproj = RefineProj(source=self)

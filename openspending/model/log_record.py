@@ -38,6 +38,16 @@ class LogRecord(db.Model):
         self.level = level
         self.message = message
 
+    def as_json(self):
+        return {
+            "message": self.message,
+            "row": self.row,
+            "attribute": self.attribute,
+            "data_type": self.data_type,
+            "column": self.column,
+            "timestamp": self.timestamp
+        }
+
     @classmethod
     def by_id(cls, id):
         return db.session.query(cls).filter_by(id=id).first()
