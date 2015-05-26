@@ -34,5 +34,5 @@ def visualization(format='html'):
     # for tag in Tags.all_by_category().all():
     #     tags.append(tag.as_dict())
 
-    return render_template('visualization/visualization.html')
+    return render_template('visualization/visualization.jade')
 

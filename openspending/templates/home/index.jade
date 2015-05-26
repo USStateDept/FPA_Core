@@ -12,7 +12,6 @@
 
 {% block content %}
 .container-full
-find
   .row.jumbotron.bg-dark
     p &nbsp;
     h1.tlt() Explore Indicators, Effortlessly
@@ -24,20 +23,26 @@ find
         p.search-group
           #sticky-anchor
           #sticky.form-group.has-feedback
-            input.main-search(type='text' placeHolder='Find a country or indicator')
-            span.glyphicon.glyphicon-search.form-control-feedback
-              .main-search-results(data-bind="foreach:searchResults,visible:searchResults().length>0 && searchValue().length>=2")
-              span(data-bind="html:label,click:$root.selectIndicator")
-            .btn-group.btn-group-lg(data-toggle='buttons')
-              label.btn.btn-primary.active
-                input(type='radio' name='searchType') 
-                | All
-              label.btn.btn-primary
-                input(type='radio' name='searchType') 
-                | Countries
-              label.btn.btn-primary
-                input(type='radio' name='searchType')
-                | Indicators
+            .row
+              .col-md-8.nopadding
+                input.main-search(type='text',placeHolder='Search')
+                span.glyphicon.glyphicon-search.form-control-feedback
+              .col-md-4.nopadding
+                .btn-group.btn-group-lg(data-toggle='buttons')
+                  label.btn.btn-primary.active
+                    input(type='radio',name='searchGroup',value='search-all',data-bind='checked:searchType') 
+                    | All
+                  label.btn.btn-primary
+                    input(type='radio',name='searchGroup',value='search-countries',data-bind='checked:searchType') 
+                    | Countries
+                  label.btn.btn-primary
+                    input(type='radio',name='searchGroup',value='search-indicators',data-bind='checked:searchType')
+                    | Indicators
+            .row
+              .col-md-12
+
+                  .main-search-results(data-bind="foreach:searchResults,visible:searchResults().length>0 && searchValue().length>=2")
+                    span(data-bind="html:label,click:$root.selectIndicator")
     
       .col-md-2
 
@@ -171,7 +176,7 @@ find
             div.well
               .row
                 .col-md-3
-                  img(src="{{ static_path('dist/app/images/chart_scatter.png') }}")
+                  img(src="{{ static_path('find-ui/dist/app/images/chart_scatter.png') }}")
                 .col-md-9
                   p In 1970, 17.6 million children under the age of five died worldwide annually — about 143 infant and childhood deaths per 1000 children born.
           .col-md-6
@@ -179,7 +184,7 @@ find
             div.well                  
               .row
                 .col-md-3
-                  img(src="{{ static_path('dist/app/images/chart_pie.png' )}}")
+                  img(src="{{ static_path('find-ui/dist/app/images/chart_pie.png' )}}")
                 .col-md-9
                   p As one of the UN's Millennium Development Goals set in 2000, the organization sought the global under-five mortality rate by two-thirds by 2015, as compared to 1990 levels.
           .col-md-6
@@ -187,7 +192,7 @@ find
             div.well                  
               .row
                 .col-md-3
-                  img(src="{{ static_path('dist/app/images/chart_curved.png') }}")
+                  img(src="{{ static_path('find-ui/dist/app/images/chart_curved.png') }}")
                 .col-md-9
                   p The countries that are unlikely to hit the Millennium Development Goal — and still have high infant and childhood mortality rates — are mostly clustered in Sub-Saharan
           .col-md-6
@@ -209,12 +214,12 @@ find
 
 {% block footer_scripts %}
 
-script(src="{{ static_path('dist/bower_components/letteringjs/jquery.lettering.js') }}")
-script(src="{{ static_path('dist/bower_components/textillate/jquery.textillate.js') }}")
-script(src="{{ static_path('dist/bower_components/knockout/dist/knockout.js') }}")
-script(src="{{ static_path('dist/bower_components/lodash/lodash.min.js') }}")
-script(src="{{ static_path('dist/app/js/home/home.js') }}")
-script(src="{{ static_path('dist/app/js/common.js') }}")
+script(src="{{ static_path('find-ui/bower_components/letteringjs/jquery.lettering.js') }}")
+script(src="{{ static_path('find-ui/bower_components/textillate/jquery.textillate.js') }}")
+script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/home/home.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common.js') }}")
 
 
 {% endblock %}
