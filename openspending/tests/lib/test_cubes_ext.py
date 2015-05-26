@@ -30,10 +30,6 @@ class TestBrowser(TestCase):
         self.dataset.model = Mock()
         self.dataset.name = 'mock_dataset'
 
-        self.solr_patcher = patch('openspending.lib.browser.solr')
-        mock_solr = self.solr_patcher.start()
-        mock_solr.get_connection.return_value = self.conn
-
         self.conn.raw_query.return_value = make_response([])
 
         self.dataset_patcher = patch('openspending.lib.browser.Dataset')

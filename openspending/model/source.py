@@ -13,7 +13,8 @@ from openspending.model.common import MutableDict, JSONType
 #from openspending.model.account import Account
 from openspending.model.model import Model
 
-from settings import OPENREFINE_PUBLIC
+from flask import current_app
+#from settings import OPENREFINE_PUBLIC
 
 from openspending.preprocessors.ORhelper import RefineProj
 
@@ -279,6 +280,8 @@ class Source(db.Model):
         rawfile = None
         if self.rawfile:
             rawfile = self.rawfile.as_dict()
+
+        OPENREFINE_PUBLIC = current_app.config.get("OPENREFINE_PUBLIC")
 
         return {
             "id": self.id,

@@ -272,8 +272,10 @@ import zipfile
 import csv
 import io
 import requests
+from flask import current_app
 
-from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD, LOCKDOWN_FORCE
+
+#from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD, LOCKDOWN_FORCE
 
 
 def add_import_commands(manager):
@@ -326,6 +328,9 @@ def add_import_commands(manager):
 
 
             # Fill in your details here to be posted to the login form.
+            LOCKDOWN_FORCE = current_app.config.get("LOCKDOWNUSER", False)
+            LOCKDOWNUSER = current_app.config.get("LOCKDOWNUSER")
+            LOCKDOWNPASSWORD = current_app.config.get("LOCKDOWNUSER")
             if LOCKDOWN_FORCE:
                 payload = {
                     'username': LOCKDOWNUSER,
