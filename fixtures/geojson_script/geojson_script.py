@@ -3,7 +3,8 @@ import json
 
 engine = create_engine('POSTGRES URI')
 
-SIMPLIFY_VALUES = [None, .1, .01, .001, .0001]
+#SIMPLIFY_VALUES = [None, .1, .01, .001, .0001]
+SIMPLIFY_VALUES = [None]
 
 #from postgis columns
 REGIONS = ['sovereignt', 'continent', 'dos_region', 
@@ -47,7 +48,7 @@ for simplevalue in SIMPLIFY_VALUES:
 
     geojsonreturn = result_to_geojson(result)
 
-    with open("output/geounit_" + str(simplevalue) + ".geojson", 'wb') as f:
+    with open("../../openspending/static/json/geounit_" + str(simplevalue) + ".geojson", 'wb') as f:
         json.dump(geojsonreturn, f)
 
 
@@ -70,7 +71,7 @@ for simplevalue in SIMPLIFY_VALUES:
 
         geojsonreturn = result_to_geojson(result, properties = [region])
 
-        with open("output/" + region + "_" + str(simplevalue) + ".geojson", 'wb') as f:
+        with open("../../openspending/static/json/" + region + "_" + str(simplevalue) + ".geojson", 'wb') as f:
             json.dump(geojsonreturn, f)     
 
 print "Success"   
