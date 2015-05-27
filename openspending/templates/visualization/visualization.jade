@@ -22,21 +22,27 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row
     .col-md-12
-      div(role='tabpanel')
-        ul#vizTabs.nav.nav-tabs.nav-justified(role='tablist')                                 
+      div(role='tabpanel')  
+        ul#vizTabs.nav.nav-tabs.nav-justified(role='tablist')
           li.active(role='presentation')
+            a(href='#select-filter', aria-controls='select-vizualization', role='tab', data-toggle='tab')
+              h4
+                span(data-bind="visible:!selectionTracker().filter") Select Filters
+                span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
+                linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
+          li(role='presentation',data-bind="visible:selectionTracker().filter")
             a(href='#select-indicator', aria-controls='vizualize', role='tab', data-toggle='tab')
               h4
-                span(data-bind="visible:!selectionTracker().indicator") 1. Select Indicator
+                span(data-bind="visible:!selectionTracker().indicator") Select Indicator
                 span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
                 span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
-          li(role='presentation')
+          li(role='presentation',data-bind="visible:selectionTracker().filter && selectionTracker().indicator")
             a(href='#select-vizualization', aria-controls='select-vizualization', role='tab', data-toggle='tab')
               h4
-                span(data-bind="visible:!selectionTracker().vizualization") 2. Choose Vizualization
+                span(data-bind="visible:!selectionTracker().vizualization") Choose Vizualization
                 span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
                 span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
-          li.disabled(role='presentation')
+          li.disabled(role='presentation',data-bind="visible:selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization")
             a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab')
               h4 3.
                 span() &nbsp; Vizualize
@@ -45,6 +51,19 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             p
           .row
             p
+          #select-filter.tab-pane.active(role='tabpanel')
+            .row
+              .col-md-12
+                input.pull-left(data-bind="event:{keyup:filterCountries}" placeHolder="Filter")
+            .row
+              p
+            .row
+              div#filter-years
+            .row(data-bind="foreach:countriesModel")
+              .col-md-3.col-sm-4.col-xs-6
+                div.well.category-wrapper(data-bind='click:$root.selectCountry')
+                  div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
+                  h4(data-bind="html:label")
           //- BY TEST
           #select-indicator.tab-pane.active(role='tabpanel')                  
             .row
@@ -57,8 +76,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       a(href='#tab-source', data-toggle='tab') Sources        
                     li
                       a(href='#tab-alphabetic', data-toggle='tab') A - Z
-                    li
-                      a(href='#tab-countries', data-toggle='tab') Countries
+                    //- li
+                    //-   a(href='#tab-countries', data-toggle='tab') Countries
               .col-md-11
                 .tab-content
                   #tab-category.tab-pane
@@ -95,17 +114,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Filter")
                     div.list-group.row(data-bind="foreach:indicatorsModel")
                       a.list-group-item.col-md-4(data-bind='click:$root.selectIndicator,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
-                  #tab-countries.tab-pane
-                    .row
-                      .col-md-12
-                        input.pull-left(data-bind="event:{keyup:filterCountries}" placeHolder="Filter")
-                    .row
-                      p
-                    .row(data-bind="foreach:countriesModel")
-                      .col-md-3.col-sm-4.col-xs-6
-                        div.well.category-wrapper(data-bind='click:$root.selectCountry')
-                          div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
-                          h4(data-bind="html:label")
+                 
           //- TAB 2
           #select-vizualization.tab-pane(role='tabpanel')
             .row
@@ -121,6 +130,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;line&#34;)}')
                   div.well.category.noun-line-105490()
                   h4 Line
+              .col-sm-4.col-md-4
+                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;tree&#34;)}')
+                  div.well.category.noun-line-105490()
+                  h4 Tree
 
           //-TAB 3
           #vizualize.tab-pane(role='tabpanel')

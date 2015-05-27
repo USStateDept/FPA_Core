@@ -94,14 +94,29 @@
         },
 
         selectCountry: function() {
+            var countryLabel = arguments[0].label;
+            var countryId = arguments[0].id;
+            model.activeCountries.push(arguments[0]);
 
-            debugger;
+            var current = model.selectionTracker();
+            current.filter = true;
+            model.selectionTracker(current);
+
+            $('#vizTabs a[href="#select-indicator"]').tab('show');
         },
 
         expandCategory: function(model, evt) {
 
             expandedCategory = true;
 
+
+        },
+
+        clearFilter: function() {
+
+            var current = model.selectionTracker();
+            current.filter = false;
+            model.selectionTracker(current);
 
         },
 
@@ -153,6 +168,7 @@
 
         selectionTracker: ko.observable({
 
+            filter: false,
             indicator: false,
             vizualization: false
 
@@ -196,6 +212,8 @@
             return true;
 
         },
+
+        activeCountries: ko.observableArray([]),
 
         activeIndicator: ko.observable(""),
 
@@ -316,6 +334,16 @@
         model.sourcesModel(sourcesModel);
         model.indicatorsModel(indicatorsModel);
         model.indicatorsModelMaster(_.clone(indicatorsModel, true));
+
+        $("#filter-years").slider({
+            range: true,
+            min: 1990,
+            max: 2013,
+            values: [1994, 2015],
+            slide: function(event, ui) {
+                $("#years-label").val(ui.values[0] + " - " + ui.values[1]);
+            }
+        });
         //enable knockout
         ko.applyBindings(model);
 
