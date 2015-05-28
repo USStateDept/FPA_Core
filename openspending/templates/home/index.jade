@@ -58,13 +58,11 @@
             | Explore country-level indicators from a variety of sources and sectors. 
             | Visualize and compare the data to better understand the context.
   .row
-    .col-md-12#carousel-example-generic.carousel.slide(data-ride='carousel')
+    .col-md-12#carousel-updates.carousel.slide.carousel-fade(data-ride='carousel')
       ol.carousel-indicators
-        li.active(data-target='#carousel-example-generic', data-slide-to='0', title="Literacy Rates, and Under Five Mortality Rate")
-        |     
-        li(data-target='#carousel-example-generic', data-slide-to='1', title="GDP Growth, and Forest Area")
-        |     
-        li(data-target='#carousel-example-generic', data-slide-to='2', title="Foreign Direct Investment, and Population")
+        li.active(data-target='#carousel-updates', data-slide-to='0', title="Literacy Rates, and Under Five Mortality Rate")
+        li(data-target='#carousel-updates', data-slide-to='1', title="GDP Growth, and Forest Area") 
+        li(data-target='#carousel-updates', data-slide-to='2', title="Foreign Direct Investment, and Population")
       .carousel-inner(role='listbox')
         .item.active
           .row
@@ -121,12 +119,12 @@
                   .col-md-9
                     p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       // Controls
-      a.left.carousel-control(href='#carousel-example-generic', role='button', data-slide='prev')
+      a.left.carousel-control(href='#carousel-updates', role='button', data-slide='prev')
         span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
         |     
         span.sr-only Previous
       |   
-      a.right.carousel-control(href='#carousel-example-generic', role='button', data-slide='next')
+      a.right.carousel-control(href='#carousel-updates', role='button', data-slide='next')
         span.glyphicon.glyphicon-chevron-right(aria-hidden='true')
         |     
         span.sr-only Next

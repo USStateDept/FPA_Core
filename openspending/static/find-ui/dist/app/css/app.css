@@ -89,7 +89,7 @@ body {
   border-radius: 0px;
 }
 .app .jumbotron h1 {
-  font-size: 56px;
+  font-size: 48px;
   font-weight: 200;
   font-style: normal;
   color: #fff;
@@ -119,7 +119,7 @@ body {
   height: 68px;
   line-height: 60px;
   font-size: 34px;
-  left: 0;
+  left: 10px;
 }
 .app .jumbotron .main-search {
   width: 100%;
@@ -142,7 +142,7 @@ body {
   cursor: pointer;
 }
 .app .footer h1 {
-  font-size: 46px;
+  font-size: 36px;
   font-weight: 200;
   font-style: normal;
   color: #fff;
@@ -226,6 +226,24 @@ body {
 }
 #data-stories h1 {
   color: #fff;
+}
+.carousel-fade .carousel-inner .item {
+  opacity: 0;
+  -webkit-transition-property: opacity;
+  transition-property: opacity;
+}
+.carousel-fade .carousel-inner .item.active {
+  opacity: 1;
+}
+.carousel-fade .active.left,
+.carousel-fade .active.right {
+  left: 0;
+  opacity: 0;
+  index: 1;
+}
+.carousel-fade .next.left,
+.carousel-fade .prev.right {
+  opacity: 1;
 }
 /****** MEDIA QUERIES ************/
 @media (min-width: 768px) {

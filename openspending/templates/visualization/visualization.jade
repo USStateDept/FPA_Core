@@ -10,6 +10,7 @@
 
 {% block optional_head %}
 link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
 {% endblock %}
 
@@ -53,34 +54,78 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             p
           #select-filter.tab-pane.active(role='tabpanel')
             .row
-              .col-md-12
-                input.pull-left(data-bind="event:{keyup:filterCountries}" placeHolder="Filter")
+              p
+            .row
+              .col-md-12.title
+                .dropdown
+                  button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
+                      span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') Range
+                    |     
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') 2000
+                    |     
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') 2001
+                    |     
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') 2002
             .row
               p
             .row
-              div#filter-years
+              .col-md-12
+                div#filter-years
+            .row
+              p
+            .row
+              p
+            .row
+              .col-md-12.title
+                .dropdown
+                  button#dropdownMenu2.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Countries
+                      span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu2')
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') All
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') OECD
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') Department of Defense  
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') Department of State
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#') USAID
+            .row
+              p
+            .row
+              .col-md-12
+                input.pull-left(data-bind="event:{keyup:filterCountries}" placeHolder="Search Countries")
+            .row
+              p
             .row(data-bind="foreach:countriesModel")
               .col-md-3.col-sm-4.col-xs-6
                 div.well.category-wrapper(data-bind='click:$root.selectCountry')
                   div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
                   h4(data-bind="html:label")
           //- BY TEST
-          #select-indicator.tab-pane.active(role='tabpanel')                  
+          #select-indicator.tab-pane(role='tabpanel')                  
             .row
-              .col-md-1
+              .col-md-2
                 .tabbable.tabs-left
                   ul.nav.nav-tabs
-                    li
-                      a(href='#tab-category', data-toggle='tab') Category
                     li.active
-                      a(href='#tab-source', data-toggle='tab') Sources        
+                      a(href='#tab-category', data-toggle='tab') Sector
+                    li
+                      a(href='#tab-source', data-toggle='tab') Collections        
                     li
                       a(href='#tab-alphabetic', data-toggle='tab') A - Z
                     //- li
                     //-   a(href='#tab-countries', data-toggle='tab') Countries
-              .col-md-11
+              .col-md-10
                 .tab-content
-                  #tab-category.tab-pane
+                  #tab-category.tab-pane.active
                     .row(data-bind="foreach:categoriesModel")
                       .col-sm-4.col-md-4.col-sm-2.flip
                         .card
@@ -94,7 +139,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                               a.list-group-item.active(href="#" data-bind="html:label")
                               span(data-bind="foreach:indicators")
                                 a.list-group-item(data-bind='click:$root.selectIndicator,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
-                  #tab-source.tab-pane.active
+                  #tab-source.tab-pane
                     .row(data-bind="foreach:sourcesModel")
                       .col-sm-4.col-md-4.flip
                         .card
@@ -111,7 +156,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   #tab-alphabetic.tab-pane
                     .row
                       .col-md-12
-                        input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Filter")
+                        input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
                     div.list-group.row(data-bind="foreach:indicatorsModel")
                       a.list-group-item.col-md-4(data-bind='click:$root.selectIndicator,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
                  
@@ -168,6 +213,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
 script(src='//code.highcharts.com/highcharts.js')

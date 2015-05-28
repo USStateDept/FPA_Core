@@ -118,7 +118,7 @@ html, body
 	border-radius $radius0
 	
 	h1
-		font-size 56px
+		font-size 48px
 		font-weight $weightLight
 		font-style normal
 		color $colorLight
@@ -147,7 +147,7 @@ html, body
 		height 68px
 		line-height 60px
 		font-size 34px
-		left 0
+		left 10px
 		
 	.main-search
 		width 100%
@@ -174,7 +174,7 @@ html, body
 .app .footer
 	
 	h1
-		font-size 46px
+		font-size 36px
 		font-weight $weightLight
 		font-style normal
 		color $colorLight
@@ -268,6 +268,28 @@ html, body
 #data-stories
 	& h1
 		color #FFF
+		
+.carousel-fade
+	
+	.carousel-inner
+		
+		.item
+			opacity 0
+			transition-property opacity
+			
+		.item.active
+			opacity 1
+		
+	.active.left,
+	.active.right
+		left 0
+		opacity 0
+		index 1
+		
+	.next.left,
+	.prev.right
+		opacity 1
+
 		
 /****** MEDIA QUERIES ************/
 	

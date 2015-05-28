@@ -94,9 +94,9 @@
       cursor pointer
       
       &.well
-        background-color $bgContainer
+        background-color transparent
       .well
-        background-color $bgContainer
+        background-color transparent
   .flip
     .category-wrapper  
       transition 0.5s all
@@ -200,4 +200,18 @@
 .tabs-left > .nav-tabs .active > a:focus
   border-color #ddd transparent #ddd #ddd
   *border-right-color #ffffff
-
+    
+.title
+  background-color $bgLighter
+  padding 10px
+  color $colorDark
+    
+#select-indicator
+  
+  .nav.nav-tabs
+    
+    border-right none
+    
+    .active a
+        background-color $colorDark
+        color $colorLight

@@ -15,6 +15,8 @@
             trigger: "hover"
         });
 
+        // $('.dropdown-toggle').dropdown();
+
         $(".flip").click(function() {
 
             if (expandedCategory) {
@@ -31,6 +33,7 @@
             var isFlipped = $(this).find(".card").hasClass("flipped");
 
             $(".flip").find(".card").removeClass("flipped");
+            $(".flip").removeClass("flippedCol");
             //- $(".list-group").css("display": "none");
 
             if (isFlipped) {
@@ -39,6 +42,8 @@
 
             } else {
                 $(this).find(".card").addClass("flipped");
+                $(this).addClass("flippedCol");
+
                 //$(this).find(".list-group").addClass("show-me");
             }
             return true;
@@ -339,10 +344,14 @@
             range: true,
             min: 1990,
             max: 2013,
-            values: [1994, 2015],
+            values: [2000, 2013],
             slide: function(event, ui) {
                 $("#years-label").val(ui.values[0] + " - " + ui.values[1]);
             }
+        }).slider("pips", {
+            /* options go here as an object */
+        }).slider("float", {
+            /* options go here as an object */
         });
         //enable knockout
         ko.applyBindings(model);

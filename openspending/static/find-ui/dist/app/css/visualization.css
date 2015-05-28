@@ -85,10 +85,10 @@
   cursor: pointer;
 }
 .app .category-wrapper.well {
-  background-color: #eae6e6;
+  background-color: transparent;
 }
 .app .category-wrapper .well {
-  background-color: #eae6e6;
+  background-color: transparent;
 }
 .app .flip .category-wrapper {
   -webkit-transition: 0.5s all;
@@ -185,4 +185,16 @@
 .tabs-left > .nav-tabs .active > a:focus {
   border-color: #ddd transparent #ddd #ddd;
   *border-right-color: #fff;
+}
+.title {
+  background-color: #eae6e6;
+  padding: 10px;
+  color: #852224;
+}
+#select-indicator .nav.nav-tabs {
+  border-right: none;
+}
+#select-indicator .nav.nav-tabs .active a {
+  background-color: #852224;
+  color: #fff;
 }
