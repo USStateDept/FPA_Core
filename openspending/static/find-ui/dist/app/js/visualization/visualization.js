@@ -15,6 +15,9 @@
             trigger: "hover"
         });
 
+        //var val = $('#filter-years').slider("option", "value");
+
+
         // $('.dropdown-toggle').dropdown();
 
         $(".flip").click(function() {
@@ -56,6 +59,20 @@
 
     //KNOCKOUT MODEL
     var model = {
+
+        selectYear: function(years) {
+            var yearsArray = [];
+
+            if (!(years instanceof Array)) {
+                yearsArray = [years];
+            } else {
+                yearsArray = years;
+            }
+            model.activeYears.removeAll();
+
+            model.activeYears(yearsArray);
+
+        },
 
         selectIndicator: function() {
             if (expandedCategory) {
@@ -100,14 +117,26 @@
 
         selectCountry: function() {
             var countryLabel = arguments[0].label;
-            var countryId = arguments[0].id;
+            var countryId = arguments[0].code;
+
+            var countriesModel = _.clone(model.countriesModel(), true);
+            model.countriesModel.removeAll();
+            _.forEach(countriesModel, function(country) {
+                if (countryLabel == country.label) {
+                    country.selected = !country.selected;
+                }
+                model.countriesModel.push(country);
+            })
+            // model.countriesModel(response.data);
+            // model.countriesModelMaster(_.clone(response.data, true));
+
             model.activeCountries.push(arguments[0]);
 
             var current = model.selectionTracker();
             current.filter = true;
             model.selectionTracker(current);
 
-            $('#vizTabs a[href="#select-indicator"]').tab('show');
+            // $('#vizTabs a[href="#select-indicator"]').tab('show');
         },
 
         expandCategory: function(model, evt) {
@@ -218,6 +247,8 @@
 
         },
 
+        activeYears: ko.observableArray([2000, 2013]),
+
         activeCountries: ko.observableArray([]),
 
         activeIndicator: ko.observable(""),
@@ -247,7 +278,9 @@
 
 
     var countriesListLoadHandler = function(response) {
-
+        _.forEach(response.data, function(country) {
+            country.selected = true;
+        })
         model.countriesModel(response.data);
         model.countriesModelMaster(_.clone(response.data, true));
 
@@ -346,7 +379,18 @@
             max: 2013,
             values: [2000, 2013],
             slide: function(event, ui) {
-                $("#years-label").val(ui.values[0] + " - " + ui.values[1]);
+                var startYear = ui.values[0];
+                var endYear = ui.values[1];
+                var yearLabel = startYear;
+
+                if (startYear != endYear) {
+                    yearLabel = startYear + "-" + endYear;
+                    model.selectYear([startYear, endYear]);
+                } else {
+                    model.selectYear([startYear]);
+                }
+                // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
+
             }
         }).slider("pips", {
             /* options go here as an object */
@@ -430,9 +474,22 @@
             range: true,
             min: 1990,
             max: 2013,
-            values: [1994, 2015],
+            values: [1994, 2013],
             slide: function(event, ui) {
-                $("#years-label").val(ui.values[0] + " - " + ui.values[1]);
+
+                var startYear = ui.values[0];
+                var endYear = ui.values[1];
+                var yearLabel = startYear;
+
+                if (startYear != endYear) {
+                    yearLabel = startYear + "-" + endYear;
+                    model.selectYear([startYear, endYear]);
+                } else {
+                    model.selectYear([startYear]);
+                }
+
+                //$("#years-label").val(yearLabel);
+
             }
         });
 

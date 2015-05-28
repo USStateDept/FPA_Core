@@ -157,8 +157,12 @@
   
 
 //left tabs
-.nav-tabs>li>a
+.nav-tabs li a
   border 0px solid black
+  color $bgLighter
+  
+  &.selectable
+    color $colorDark !important
   
 .tabs-left
   & > .nav-tabs
@@ -215,3 +219,18 @@
     .active a
         background-color $colorDark
         color $colorLight
+        
+#filter-years-label
+  font-size 22px
+  font-weight bold
+
+
+.ui-slider-horizontal
+  height 1px
+  
+.countries-list .category-wrapper
+  opacity 0.6
+
+.countries-list .category-wrapper.selected
+  opacity 1.0
+  
