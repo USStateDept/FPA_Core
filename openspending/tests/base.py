@@ -6,13 +6,15 @@ from openspending.core import create_web_app
 from openspending.tests.helpers import clean_db, init_db
 
 
+
+
 class TestCase(FlaskTestCase):
 
     def create_app(self):
         app = create_web_app(**{
             'DEBUG': True,
             'TESTING': True,
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+            'SQLALCHEMY_DATABASE_URI': 'postgresql://postgres:1Password@localhost/openspending_testing',
             'CELERY_ALWAYS_EAGER': True,
             'UPLOADS_DEFAULT_DEST': tempfile.mkdtemp(),
             'LOCKDOWNUSER': 'test',

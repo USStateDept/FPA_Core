@@ -8,7 +8,7 @@ TESTING = True
 
 SITE_TITLE = 'FIND'
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1Password@localhost/openspending_test'
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1Password@localhost/openspending_testing'
 
 MAIL_SERVER = 'localhost'
 MAIL_PORT = 25
