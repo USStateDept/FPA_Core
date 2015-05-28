@@ -148,15 +148,17 @@ def verify():
     if request.method == 'GET':
         loginhash = request.args.get('login')
         if not loginhash:
-            message = "We cannot find your unique URL"
-            return render_template('account/email_message.jade', message=message)
+            message = "Invalid URL.  Please contact system administrator."
+            return render_template('account/message.jade', message=message)
 
 
         account = Account.by_login_hash(loginhash)
 
         if not account:
-            message = "We could not find your account"
-            return render_template('account/email_message.jade', message=message)
+            message = "This URL is no longer valid.  If you have an account, you can reset your password at the " + \
+                        " <a href='" + url_for('account.trigger_reset') + "'>password reset page</a>. Or you can register at \
+                        <a href='" + url_for('account.login') + "'>login page</a>"
+            return render_template('account/message.jade', message=message)
 
     
         #request.form.loginhash = {"data":loginhash}
@@ -168,13 +170,13 @@ def verify():
         loginhash = request.form.get('loginhash')
         if not loginhash:
             message = "We cannot find your unique URL"
-            return render_template('account/email_message.jade', message=message)
+            return render_template('account/message.jade', message=message)
 
         account = Account.by_login_hash(loginhash)
 
         if not account:
             message = "We could not find your account"
-            return render_template('account/email_message.jade', message=message)
+            return render_template('account/message.jade', message=message)
 
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
@@ -185,7 +187,8 @@ def verify():
             return render_template('account/verify.jade', loginhash=loginhash, account=account, error=error)
 
         account.password = generate_password_hash(password1)
-
+        #reset that hash but don't send it.
+        account.reset_loginhash()
         account.verified = True
         db.session.commit()
 
