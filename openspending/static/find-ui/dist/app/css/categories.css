@@ -4,20 +4,25 @@
 .app .icon-category-10:after {
   content: '\e60d';
 }
-.app .icon-category-20:after {
+.app .icon-category-20:after,
+.app .icon-category-cross-sectoral:after,
+.app .icon-category-democracy-human-rights-and-governance:after {
   content: '\e606';
 }
-.app .icon-category-50:after {
+.app .icon-category-50:after,
+.app .icon-category-economic-growth:after {
   content: '\e602';
 }
-.app .icon-category-40:after {
+.app .icon-category-40:after,
+.app .icon-category-education-and-social-services:after {
   content: '\e603';
 }
 .app .icon-category-30:after,
 .app .icon-category-health:after {
   content: '\e607';
 }
-.app .icon-category-90:after {
+.app .icon-category-90:after,
+.app .icon-category-cross-sectoral:after {
   content: '\e600';
 }
 .app .icon-category-60:after,

@@ -145,8 +145,12 @@
 .app .collapsed .glyphicon-circle-arrow-down {
   display: none;
 }
-.nav-tabs>li>a {
+.nav-tabs li a {
   border: 0px solid #000;
+  color: #eae6e6;
+}
+.nav-tabs li a.selectable {
+  color: #852224 !important;
 }
 .tabs-left > .nav-tabs {
   border-bottom: 0;
@@ -201,4 +205,13 @@
 #filter-years-label {
   font-size: 22px;
   font-weight: bold;
+}
+.ui-slider-horizontal {
+  height: 1px;
+}
+.countries-list .category-wrapper {
+  opacity: 0.6;
+}
+.countries-list .category-wrapper.selected {
+  opacity: 1;
 }

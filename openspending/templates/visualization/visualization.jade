@@ -28,23 +28,23 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
           li.active(role='presentation')
             a(href='#select-filter', aria-controls='select-vizualization', role='tab', data-toggle='tab')
               h4
-                span(data-bind="visible:!selectionTracker().filter") Select Filters
+                span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
                 span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
                 linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
-          li(role='presentation',data-bind="visible:selectionTracker().filter")
-            a(href='#select-indicator', aria-controls='vizualize', role='tab', data-toggle='tab')
+          li(role='presentation')
+            a(href='#select-indicator', aria-controls='vizualize', role='tab',data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}")
               h4
-                span(data-bind="visible:!selectionTracker().indicator") Select Indicator
+                span(data-bind="visible:!selectionTracker().indicator") 2. Select Indicator
                 span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
                 span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
-          li(role='presentation',data-bind="visible:selectionTracker().filter && selectionTracker().indicator")
-            a(href='#select-vizualization', aria-controls='select-vizualization', role='tab', data-toggle='tab')
+          li(role='presentation')
+            a(href='#select-vizualization', aria-controls='select-vizualization', role='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator?'tab':'none'}")
               h4
-                span(data-bind="visible:!selectionTracker().vizualization") Choose Vizualization
+                span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
                 span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
                 span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
-          li.disabled(role='presentation',data-bind="visible:selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization")
-            a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab')
+          li(role='presentation')
+            a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization?'tab':'none'}")
               h4 3.
                 span() &nbsp; Vizualize
         .tab-content
@@ -108,9 +108,9 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 
             .row
               p
-            .row(data-bind="foreach:countriesModel")
+            .row.countries-list(data-bind="foreach:countriesModel")
               .col-md-3.col-sm-4.col-xs-6
-                div.well.category-wrapper(data-bind='click:$root.selectCountry')
+                div.well.category-wrapper(data-bind='click:$root.selectCountry,css:{selected:selected}')
                   div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
                   h4(data-bind="html:label")
           //- BY TEST
@@ -136,7 +136,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                           .face.front
                             div.well.category-wrapper()
                               span.badge(data-bind="html:length")
-                              div(data-bind="attr:{class:'icon-category-' + label.replace(&#34; &#34;,&#34;-&#34;).toLowerCase() + ' well category'}")
+                              div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
                               h4(data-bind="html:label")
                           .face.back
                             div.list-group()

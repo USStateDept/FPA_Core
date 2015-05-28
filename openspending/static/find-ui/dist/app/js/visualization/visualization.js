@@ -117,14 +117,26 @@
 
         selectCountry: function() {
             var countryLabel = arguments[0].label;
-            var countryId = arguments[0].id;
+            var countryId = arguments[0].code;
+
+            var countriesModel = _.clone(model.countriesModel(), true);
+            model.countriesModel.removeAll();
+            _.forEach(countriesModel, function(country) {
+                if (countryLabel == country.label) {
+                    country.selected = !country.selected;
+                }
+                model.countriesModel.push(country);
+            })
+            // model.countriesModel(response.data);
+            // model.countriesModelMaster(_.clone(response.data, true));
+
             model.activeCountries.push(arguments[0]);
 
             var current = model.selectionTracker();
             current.filter = true;
             model.selectionTracker(current);
 
-            $('#vizTabs a[href="#select-indicator"]').tab('show');
+            // $('#vizTabs a[href="#select-indicator"]').tab('show');
         },
 
         expandCategory: function(model, evt) {
@@ -266,7 +278,9 @@
 
 
     var countriesListLoadHandler = function(response) {
-
+        _.forEach(response.data, function(country) {
+            country.selected = true;
+        })
         model.countriesModel(response.data);
         model.countriesModelMaster(_.clone(response.data, true));
 
