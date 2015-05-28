@@ -11,7 +11,7 @@ manager = create_submanager(description='Create model geometries to be used for 
 
 
 @manager.command
-def create():
+def create(silent = False):
     """ Create the geometry model from the geometry__country_level0 table """
     from openspending.core import db
     from openspending.model.country import Country
@@ -26,7 +26,8 @@ def create():
 
         #check if it already exists and don't overwrite
         if Country.by_gid(gid):
-            log.info("Found existing gid " + str(gid) + ".  Will not replace.")
+            if not silent:
+                log.info("Found existing gid " + str(gid) + ".  Will not replace.")
             continue
 
         tempcountry = Country(gid)

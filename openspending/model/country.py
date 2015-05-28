@@ -13,6 +13,8 @@ class Country(db.Model):
     """ A view stores a specific configuration of a visualisation widget. """
 
     __tablename__ = 'country'
+    __searchable__ = ['label']
+
 
     id = Column(Integer, primary_key=True)
     gid = Column(Integer, unique=True)
@@ -107,6 +109,11 @@ class Country(db.Model):
 
 
 
+    @classmethod
+    def all(cls):
+        """ Query available datasets based on dataset visibility. """
+        q = db.session.query(cls)
+        return q
 
 
 

@@ -34,7 +34,7 @@ blueprint = Blueprint('countries_api2', __name__)
 @blueprint.route('/countries_list')
 @api_json_errors
 @jsonp
-def dataorgs():
+def countries_list():
     output = Country.get_all_json()
 
     return json.dumps(output)

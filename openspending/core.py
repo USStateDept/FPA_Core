@@ -100,7 +100,9 @@ def create_web_app(**config):
         register_admin(flaskadmin, db)
 
         from openspending.model import Dataset
+        from openspending.model.country import Country
         whoosearch.whoosh_index(app,Dataset)
+        whoosearch.whoosh_index(app, Country)
 
     return app
 

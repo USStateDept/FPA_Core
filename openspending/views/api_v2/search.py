@@ -46,10 +46,13 @@ def partialsearch_api():
     return json.dumps(items)
 
 
-@blueprint.route('/search')
+
+
+#use /all, /countries, /indicators
+@blueprint.route('/search/<type>')
 @api_json_errors
 @jsonp
-def search_api():
+def search_api(type):
 
     q = request.args.get('q', None)
     if not q:
