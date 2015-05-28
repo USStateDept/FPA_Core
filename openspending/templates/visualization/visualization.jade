@@ -55,34 +55,30 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
           #select-filter.tab-pane.active(role='tabpanel')
             .row
               p
-            .row
-              .col-md-12.title
+            .row.title
+              .col-md-10
                 .dropdown
                   button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
                       span.caret
-                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1')
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
                     li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') Range
-                    |     
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') 2000
-                    |     
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') 2001
-                    |     
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') 2002
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
+                    
+                   
+              .col-md-2
+                .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
             .row
               p
             .row
               .col-md-12
                 div#filter-years
+                
             .row
               p
             .row
               p
-            .row
-              .col-md-12.title
+            .row.title
+              .col-md-12
                 .dropdown
                   button#dropdownMenu2.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Countries
                       span.caret
@@ -97,11 +93,19 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       a(role='menuitem', tabindex='-1', href='#') Department of State
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#') USAID
+                  
+                  button.btn.btn-default(type='button') Select All
+                  button.btn.btn-default(type='button') Deselect All
             .row
               p
             .row
               .col-md-12
-                input.pull-left(data-bind="event:{keyup:filterCountries}" placeHolder="Search Countries")
+                input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
+            .row
+              p
+            .row
+              .col-md-12
+                
             .row
               p
             .row(data-bind="foreach:countriesModel")

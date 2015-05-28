@@ -198,3 +198,7 @@
   background-color: #852224;
   color: #fff;
 }
+#filter-years-label {
+  font-size: 22px;
+  font-weight: bold;
+}

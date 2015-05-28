@@ -15,6 +15,9 @@
             trigger: "hover"
         });
 
+        //var val = $('#filter-years').slider("option", "value");
+
+
         // $('.dropdown-toggle').dropdown();
 
         $(".flip").click(function() {
@@ -56,6 +59,20 @@
 
     //KNOCKOUT MODEL
     var model = {
+
+        selectYear: function(years) {
+            var yearsArray = [];
+
+            if (!(years instanceof Array)) {
+                yearsArray = [years];
+            } else {
+                yearsArray = years;
+            }
+            model.activeYears.removeAll();
+
+            model.activeYears(yearsArray);
+
+        },
 
         selectIndicator: function() {
             if (expandedCategory) {
@@ -218,6 +235,8 @@
 
         },
 
+        activeYears: ko.observableArray([2000, 2013]),
+
         activeCountries: ko.observableArray([]),
 
         activeIndicator: ko.observable(""),
@@ -346,7 +365,18 @@
             max: 2013,
             values: [2000, 2013],
             slide: function(event, ui) {
-                $("#years-label").val(ui.values[0] + " - " + ui.values[1]);
+                var startYear = ui.values[0];
+                var endYear = ui.values[1];
+                var yearLabel = startYear;
+
+                if (startYear != endYear) {
+                    yearLabel = startYear + "-" + endYear;
+                    model.selectYear([startYear, endYear]);
+                } else {
+                    model.selectYear([startYear]);
+                }
+                // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
+
             }
         }).slider("pips", {
             /* options go here as an object */
@@ -430,9 +460,22 @@
             range: true,
             min: 1990,
             max: 2013,
-            values: [1994, 2015],
+            values: [1994, 2013],
             slide: function(event, ui) {
-                $("#years-label").val(ui.values[0] + " - " + ui.values[1]);
+
+                var startYear = ui.values[0];
+                var endYear = ui.values[1];
+                var yearLabel = startYear;
+
+                if (startYear != endYear) {
+                    yearLabel = startYear + "-" + endYear;
+                    model.selectYear([startYear, endYear]);
+                } else {
+                    model.selectYear([startYear]);
+                }
+
+                //$("#years-label").val(yearLabel);
+
             }
         });
 
