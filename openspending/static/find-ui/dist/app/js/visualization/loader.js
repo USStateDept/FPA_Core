@@ -24,10 +24,18 @@
         });
     }
 
-    window.loadIndicatorData = function(indicatorId, handlerFunc) {
+    window.loadIndicatorData = function(indicatorIds, groupId, region, handlerFunc) {
+        if (groupId != "all") {
+            var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}"
+        } else {
+            var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format=json"
+        }
+        var url = urlTemplate.replace(/{indicator_id}/g, indicatorIds.join("|"));
 
-        var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@name&format=json"
-        var url = urlTemplate.replace("{indicator_id}", indicatorId);
+        url = url.replace(/{groupId}/g, groupId);
+        url = url.replace(/{region}/g, region);
+
+
         //url = "data/gdp_per_capita.json";
         //gdp_per_capita
         //literacy_rate_adult_total

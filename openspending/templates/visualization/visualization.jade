@@ -26,23 +26,27 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       div(role='tabpanel')  
         ul#vizTabs.nav.nav-tabs.nav-justified(role='tablist')
           li.active(role='presentation')
-            a(href='#select-filter', aria-controls='select-vizualization', role='tab', data-toggle='tab')
+            a(href='#select-filter', aria-controls='select-vizualization', role='tab', data-toggle='tab',class='selectable')
               h4
-                span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
-                span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
-                linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
+                //-span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
+                span() 1. Select Filters
+                //-span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
+                //-linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
           li(role='presentation')
-            a(href='#select-indicator', aria-controls='vizualize', role='tab',data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}")
+            a(href='#select-indicator', aria-controls='vizualize', role='tab',class="selectable",data-toggle='tab')
+              //-data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}"
               h4
-                span(data-bind="visible:!selectionTracker().indicator") 2. Select Indicator
-                span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
-                span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
+                //-span(data-bind="visible:!selectionTracker().indicator") 2. Select Indicator
+                span() 2. Select Indicator
+                //-span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
+                //-span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
           li(role='presentation')
             a(href='#select-vizualization', aria-controls='select-vizualization', role='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator?'tab':'none'}")
               h4
-                span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
-                span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
-                span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
+                //-span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
+                span() 3. Choose Vizualization
+                //-span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
+                //-span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
           li(role='presentation')
             a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization?'tab':'none'}")
               h4 3.
@@ -78,24 +82,25 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             .row
               p
             .row.title
-              .col-md-12
+              .col-md-2
                 .dropdown
-                  button#dropdownMenu2.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Countries
+                  button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Country Groups
                       span.caret
-                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu2')
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroups', data-bind="foreach:countryGroupings")
                     li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') All
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
+              .col-md-2
+                .dropdown
+                  button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true', data-bind="visible:countryGroupRegions().length>0") Regions
+                      span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
                     li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') OECD
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') Department of Defense  
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') Department of State
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#') USAID
-                  
-                  button.btn.btn-default(type='button') Select All
-                  button.btn.btn-default(type='button') Deselect All
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="html:$data,click:$root.selectCountryGroupRegion")
+              .col-md-4
+                  //-button.btn.btn-default(type='button') Select All
+                  //-button.btn.btn-default(type='button') Deselect All
+              .col-md-4
+                .pull-right#filter-countries-label(data-bind="html:activeGroup().label + ' ' + activeRegion()")
             .row
               p
             .row
@@ -162,7 +167,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       .col-md-12
                         input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
                     div.list-group.row(data-bind="foreach:indicatorsModel")
-                      a.list-group-item.col-md-4(data-bind='click:$root.selectIndicator,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                      a.list-group-item.col-md-4(data-bind='css:{selected:(selected==true)},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
                  
           //- TAB 2
           #select-vizualization.tab-pane(role='tabpanel')
@@ -181,35 +186,35 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   h4 Line
               .col-sm-4.col-md-4
                 div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;tree&#34;)}')
-                  div.well.category.noun-line-105490()
-                  h4 Tree
+                  div.well.category.noun-scatter-105477()
+                  h4 Scatter Plot
 
           //-TAB 3
           #vizualize.tab-pane(role='tabpanel')
             .row
-              .col-md-2                      
-                div.ui-widget
-                  label(for="years-label") Years
-                  input#years-label(readonly)
-                div#slider-years
-                //- div.ui-widget
-                //-   label(for="regions") Regions
-                //-   input#regions
-                div.ui-widget(style="display:none")
-                  p#callback.message.success Callback target
-                  select(multiple='multiple', size='5')
-                      optgroup(label='Europe')
-                        option(value='Germany') Germany
-                        | &#x9;
-                        option(value='France') France
-                        | &#x9;
-                        option(value='France') Sweden
-                      optgroup(label='Asia')
-                        option(value='Pakistan') Pakistan
-                      optgroup(label='Australia')
-                        option(value='Australia') Australia
-                        option(value='Australia') New Zealand
-              .col-md-10
+              //- .col-md-2                      
+              //-   div.ui-widget
+              //-     label(for="years-label") Years
+              //-     input#years-label(readonly)
+              //-   div#slider-years
+              //-   //- div.ui-widget
+              //-   //-   label(for="regions") Regions
+              //-   //-   input#regions
+              //-   div.ui-widget(style="display:none")
+              //-     p#callback.message.success Callback target
+              //-     select(multiple='multiple', size='5')
+              //-         optgroup(label='Europe')
+              //-           option(value='Germany') Germany
+              //-           | &#x9;
+              //-           option(value='France') France
+              //-           | &#x9;
+              //-           option(value='France') Sweden
+              //-         optgroup(label='Asia')
+              //-           option(value='Pakistan') Pakistan
+              //-         optgroup(label='Australia')
+              //-           option(value='Australia') Australia
+              //-           option(value='Australia') New Zealand
+              .col-md-12
                 div#viz-container
 {% endblock %}
 

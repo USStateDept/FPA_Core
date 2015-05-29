@@ -270,7 +270,8 @@ body {
 .app .icon-category-70:after {
   content: '\e608';
 }
-.app .icon-category-10:after {
+.app .icon-category-10:after,
+.app .icon-category-peace-and-security:after {
   content: '\e60d';
 }
 .app .icon-category-20:after,
@@ -298,7 +299,8 @@ body {
 .app .icon-category-environment:after {
   content: '\e604';
 }
-.app .icon-category-80:after {
+.app .icon-category-80:after,
+.app .icon-category-humanitarian-assistance:after {
   content: '\e605';
 }
 .app [class^="icon-"],

@@ -58,6 +58,22 @@
       -webkit-transform rotatey(-180deg)
       -o-transform rotatey(-180deg)
 
+.flippedCol
+  position absolute
+  top 10px
+  left 10px
+  width 100%
+  
+  .list-group
+    max-height 300px
+    overflow hidden
+    
+    span
+      overflow-y scroll
+      overflow-x hidden
+      display block
+      max-height 260px
+  
 .app
   .face
     .list-group
@@ -115,6 +131,9 @@
     
   .list-group-item
     border none
+    
+    &.selected
+      background-color green
     
   .btn-group
     width 100%
@@ -220,7 +239,8 @@
         background-color $colorDark
         color $colorLight
         
-#filter-years-label
+#filter-years-label,
+#filter-countries-label
   font-size 22px
   font-weight bold
 

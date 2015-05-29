@@ -6,8 +6,16 @@
         var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
 
         var cells = data.cells;
-        var fromYear = data.cell[0].from[0];
-        var toYear = data.cell[0].to[0];
+
+        var timeCell = {};
+        _.forEach(data.cell, function(c) {
+            if (c.hierarchy == "time") {
+                timeCell = c;
+            }
+        });
+
+        var fromYear = timeCell.from[0];
+        var toYear = timeCell.to[0];
         var categories = [];
 
         for (var i = fromYear; i <= toYear; i++) {
@@ -19,11 +27,11 @@
 
         //TODO : do this in one loop
         _.forEach(cells, function(c) {
-            series[c["geometry__country_level0.name"]] = []
+            series[c["geometry__country_level0.name"] || c["geometry__country_level0.sovereignt"]] = []
         });
         //indicatorId = "gdp_per_capita";
         _.forEach(cells, function(c) {
-            series[c["geometry__country_level0.name"]].push(c[indicatorId + "__amount_sum"]);
+            series[c["geometry__country_level0.name"] || c["geometry__country_level0.sovereignt"]].push(c[indicatorId + "__amount_sum"]);
         });
 
         // var series = [{
@@ -44,18 +52,18 @@
 
         for (var countryName in series) {
             var visible = false;
-            if (defaultVisibleCountries.indexOf(countryName) > -1) {
-                visible = true;
-            }
+            // if (defaultVisibleCountries.indexOf(countryName) > -1) {
+            visible = true;
+            //  }
 
-            if (defaultCountries.indexOf(countryName) > -1) {
-                seriesArray.push({
-                    name: countryName,
-                    data: series[countryName],
-                    visible: visible
-                });
+            // if (defaultCountries.indexOf(countryName) > -1) {
+            seriesArray.push({
+                name: countryName,
+                data: series[countryName],
+                visible: visible
+            });
 
-            }
+            // }
 
         }
 

@@ -78,10 +78,11 @@
             if (expandedCategory) {
                 return;
             }
+            var indicatorIds = [];
             var indicatorLabel = arguments[0].label;
-            var indicatorId = arguments[0].id;
+            indicatorIds.push(arguments[0].id);
             model.activeIndicator(indicatorLabel);
-            model.activeIndicatorId(indicatorId);
+            model.activeIndicatorId(arguments[0].id);
             var current = model.selectionTracker();
             current.indicator = true;
             current.vizualization = false;
@@ -89,7 +90,46 @@
             //move to second
             $('#vizTabs a[href="#select-vizualization"]').tab('show')
 
-            window.loadIndicatorData(indicatorId, indicatorDataLoadHandler);
+            var activeGroup = model.activeGroup();
+            var activeRegion = model.activeRegion();
+
+            window.loadIndicatorData(indicatorIds, activeGroup.id, activeRegion, indicatorDataLoadHandler);
+
+        },
+
+        selectIndicatorMultiple: function() {
+            // if (expandedCategory) {
+            //     return;
+            // }
+            var selectedIndicator = arguments[0];
+
+            model.activeIndicators.removeAll();
+            model.indicatorsModel.removeAll();
+            _.forEach(model.indicatorsModelMaster(), function(indicator) {
+                if (selectedIndicator.id == indicator.id) {
+                    indicator.selected = !indicator.selected;
+                }
+                if (indicator.selected) {
+                    model.activeIndicators.push(indicator.id)
+                }
+                model.indicatorsModel.push(indicator);
+            });
+            // debugger;
+            // return;
+            // var indicatorId = arguments[0].id;
+            // //indicatorIds.push(arguments[0].id);
+            // model.activeIndicator(indicatorLabel);
+            // model.activeIndicatorId(arguments[0].id);
+            // var current = model.selectionTracker();
+            // current.indicator = true;
+            // current.vizualization = false;
+            // model.selectionTracker(current);
+            // //move to second
+            // $('#vizTabs a[href="#select-vizualization"]').tab('show')
+
+            // var activeGroup = model.activeGroup();
+            // var activeRegion = model.activeRegion();
+            //window.loadIndicatorData(indicatorIds, activeGroup.id, activeRegion, indicatorDataLoadHandler);
 
         },
 
@@ -141,11 +181,40 @@
 
         selectCountryGroup: function() {
 
+            var groupId = arguments[0].id;
+            model.activeGroup(arguments[0]);
+
+            if (groupId == "all") {
+                model.selectCountryGroupRegion("all"); //just select all countries
+            }
             //assign region to countryGroupRegion
+            model.countryGroupRegions.removeAll();
+            _.forEach(model.countryGroupings(), function(countryGroup) {
+                if (groupId == countryGroup.id) {
+                    model.countryGroupRegions(countryGroup.regions);
+                }
+            })
+
 
         },
 
         selectCountryGroupRegion: function() {
+            var selectedRegion = arguments[0];
+            var selectedGroup = model.activeGroup();
+
+            model.activeRegion(selectedRegion);
+            model.countriesModel.removeAll();
+
+            var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
+
+            _.forEach(countriesModelMaster, function(country) {
+                if (selectedRegion == "all") {
+                    model.countriesModel.push(country);
+                } else if (_.has(country.regions, selectedGroup.id) && country.regions[selectedGroup.id] == selectedRegion) {
+                    model.countriesModel.push(country);
+                }
+
+            })
 
             //filter country view by region
 
@@ -182,35 +251,6 @@
 
         },
 
-        // showView: function(code) {
-
-
-        //     $('#btn-primary').removeClass('active');
-        //     $('#by-category').removeClass('active');
-        //     $('#by-source').removeClass('active');
-        //     $('#all-indicators').removeClass('active');
-        //     switch (code) {
-
-        //         case "category":
-        //             $('#btn-category').addClass('active');
-        //             $('#by-category').addClass('active');
-        //             break;
-
-        //         case "sources":
-        //             $('#btn-source').addClass('active');
-        //             $('#by-source').addClass('active');
-        //             break;
-
-        //         case "alphabetic":
-        //             $('#btn-alphabetic').addClass('active');
-        //             $('#all-indicators').addClass('active');
-        //             break;
-
-        //     }
-
-
-
-        // },
 
         selectionTracker: ko.observable({
 
@@ -259,11 +299,21 @@
 
         },
 
+        activeGroup: ko.observable({
+            "id": "all",
+            "label": "All",
+            "regions": []
+        }),
+
+        activeRegion: ko.observable(""),
+
         activeYears: ko.observableArray([2000, 2013]),
 
         activeCountries: ko.observableArray([]),
 
         activeIndicator: ko.observable(""),
+
+        activeIndicators: ko.observableArray([]),
 
         activeIndicatorId: ko.observable(""),
 
@@ -309,7 +359,7 @@
             "regions": []
         }]),
 
-        countryGroupRegions: ko.observable([]),
+        countryGroupRegions: ko.observableArray([]),
 
         newSearch: ko.observable(true)
 
@@ -342,6 +392,11 @@
 
         });
 
+        model.countryGroupings.removeAll();
+
+        _.forEach(countryGroupings, function(countryGroup, i) {
+            model.countryGroupings.push(countryGroup);
+        })
 
 
 
@@ -432,6 +487,7 @@
             newIndicator.source = _.get(sourcesAll, 'data[sourceId].label');
             newIndicator.category = _.get(categoriesAll, 'data[categoryId].label');
             newIndicator.id = ind;
+            newIndicator.selected = false;
             //newIndicator.popup = newIndicator.source + "<br>" + newIndicator.category;
             indicatorsModel.push(newIndicator);
 
