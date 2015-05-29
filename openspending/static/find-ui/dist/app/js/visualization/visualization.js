@@ -139,6 +139,18 @@
             // $('#vizTabs a[href="#select-indicator"]').tab('show');
         },
 
+        selectCountryGroup: function() {
+
+            //assign region to countryGroupRegion
+
+        },
+
+        selectCountryGroupRegion: function() {
+
+            //filter country view by region
+
+        },
+
         expandCategory: function(model, evt) {
 
             expandedCategory = true;
@@ -271,6 +283,34 @@
 
         indicatorsModelMaster: ko.observableArray([]),
 
+        countryGroupings: ko.observableArray([{
+            "id": "all",
+            "label": "All",
+            "regions": []
+        }, {
+            "id": "continent",
+            "label": "Continent",
+            "regions": []
+        }, {
+            "id": "dod_cmd",
+            "label": "Department of Defense",
+            "regions": []
+        }, {
+            "id": "dos_region",
+            "label": "Department of State",
+            "regions": []
+        }, {
+            "id": "usaid_reg",
+            "label": "USAID",
+            "regions": []
+        }, {
+            "id": "wb_inc_lvl",
+            "label": "World Bank",
+            "regions": []
+        }]),
+
+        countryGroupRegions: ko.observable([]),
+
         newSearch: ko.observable(true)
 
 
@@ -278,9 +318,41 @@
 
 
     var countriesListLoadHandler = function(response) {
+
+        var countryGroupings = _.clone(model.countryGroupings(), true);
+
+
+        _.forEach(countryGroupings, function(countryGroup, i) {
+
+            var groupId = countryGroup.id;
+
+            if (countryGroup.id != "all") {
+
+                _.forEach(response.data, function(country) {
+
+                    //find level this country belongs to in this group
+                    var region = country.regions[groupId];
+                    if (_.indexOf(countryGroup.regions, region) < 0) {
+                        countryGroup.regions.push(region);
+                    }
+
+                });
+            }
+
+
+        });
+
+
+
+
+
+
+
         _.forEach(response.data, function(country) {
             country.selected = true;
-        })
+        });
+
+
         model.countriesModel(response.data);
         model.countriesModelMaster(_.clone(response.data, true));
 
