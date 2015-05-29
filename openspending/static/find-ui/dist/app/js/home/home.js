@@ -19,7 +19,7 @@
     $(".main-search").keyup(function() {
 
         var value = $(".main-search")[0].value;
-        var url = "/api/3/search";
+        var url = "/api/3/search/indicators";
         model.searchValue(value);
         if (value.length < 2) {
             model.searchResults.removeAll();

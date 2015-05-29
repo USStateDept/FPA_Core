@@ -1,12 +1,13 @@
 (function() {
 
-    window.prepareHighchartsJson = function(data, title, type, indicatorId) {
+    window.prepareHighchartsJson = function(data, type, indicators) {
 
-        var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
-        var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
+        //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
+        //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
 
         var cells = data.cells;
-
+        var indicatorId = indicators[0].id;
+        var title = indicators[0].label;
         var timeCell = {};
         _.forEach(data.cell, function(c) {
             if (c.hierarchy == "time") {
@@ -24,6 +25,8 @@
 
         var series = {};
         var seriesArray = [];
+
+        debugger;
 
         //TODO : do this in one loop
         _.forEach(cells, function(c) {

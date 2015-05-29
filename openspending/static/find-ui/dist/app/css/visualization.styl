@@ -68,11 +68,26 @@
     max-height 300px
     overflow hidden
     
-    span
+    span.list
       overflow-y scroll
       overflow-x hidden
       display block
       max-height 260px
+      background-color #FFF
+      
+
+    
+.list-group-item:hover + .downloadLinks
+  display block
+    
+.downloadLinks
+  margin-left 20px
+  color $bgLight
+  cursor pointer
+  display block
+
+.downloadLinks:hover
+  display block
   
 .app
   .face
@@ -133,7 +148,7 @@
     border none
     
     &.selected
-      background-color green
+      background-color rgba(0,100,0,0.5)
     
   .btn-group
     width 100%
@@ -245,12 +260,26 @@
   font-weight bold
 
 
-.ui-slider-horizontal
-  height 1px
+// .ui-slider-horizontal
+//   height 0px !important
+  
+.ui-slider-handle
+  border-radius 10px !important
+  //top -0.5em !important
   
 .countries-list .category-wrapper
   opacity 0.6
 
 .countries-list .category-wrapper.selected
   opacity 1.0
+  
+.app
+  
+  #loading
+    text-align center
+    line-height 300px
+    
+    
+    img
+      width auto
   

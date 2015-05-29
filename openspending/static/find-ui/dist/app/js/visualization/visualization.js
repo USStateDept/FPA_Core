@@ -9,6 +9,8 @@
     });
 
 
+
+
     var eventBind = function() {
 
         $(".list-group-item").popover({
@@ -16,10 +18,14 @@
         });
 
         //var val = $('#filter-years').slider("option", "value");
-
+        flipCardEvent();
 
         // $('.dropdown-toggle').dropdown();
 
+
+    }
+
+    var flipCardEvent = function() {
         $(".flip").click(function() {
 
             if (expandedCategory) {
@@ -60,6 +66,21 @@
     //KNOCKOUT MODEL
     var model = {
 
+        downloadData: function(format, indicator) {
+            var groupId = model.activeGroup().id;
+            if (groupId != "all") {
+                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}"
+            } else {
+                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}"
+            }
+            //var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}"
+            var url = urlTemplate.replace(/{indicator_id}/g, indicator.id);
+            url = url.replace(/{format}/g, format);
+            url = url.replace(/{groupId}/g, groupId);
+            url = url.replace(/{region}/g, model.activeRegion());
+            window.open(url, '_blank');
+        },
+
         selectYear: function(years) {
             var yearsArray = [];
 
@@ -74,34 +95,15 @@
 
         },
 
-        selectIndicator: function() {
-            if (expandedCategory) {
-                return;
-            }
-            var indicatorIds = [];
-            var indicatorLabel = arguments[0].label;
-            indicatorIds.push(arguments[0].id);
-            model.activeIndicator(indicatorLabel);
-            model.activeIndicatorId(arguments[0].id);
-            var current = model.selectionTracker();
-            current.indicator = true;
-            current.vizualization = false;
-            model.selectionTracker(current);
-            //move to second
-            $('#vizTabs a[href="#select-vizualization"]').tab('show')
 
-            var activeGroup = model.activeGroup();
-            var activeRegion = model.activeRegion();
-
-            window.loadIndicatorData(indicatorIds, activeGroup.id, activeRegion, indicatorDataLoadHandler);
-
-        },
 
         selectIndicatorMultiple: function() {
             // if (expandedCategory) {
             //     return;
             // }
             var selectedIndicator = arguments[0];
+            var categoriesModel = _.clone(model.categoriesModel(), true);
+            var sourcesModel = _.clone(model.sourcesModel(), true);
 
             model.activeIndicators.removeAll();
             model.indicatorsModel.removeAll();
@@ -110,10 +112,34 @@
                     indicator.selected = !indicator.selected;
                 }
                 if (indicator.selected) {
-                    model.activeIndicators.push(indicator.id)
+                    model.activeIndicators.push(indicator)
                 }
                 model.indicatorsModel.push(indicator);
             });
+
+            model.categoriesModel.removeAll();
+            _.forEach(categoriesModel, function(category) {
+                _.forEach(category.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                model.categoriesModel.push(category);
+            });
+
+
+            model.sourcesModel.removeAll();
+            _.forEach(sourcesModel, function(source) {
+                _.forEach(source.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                model.sourcesModel.push(source);
+            });
+
+            flipCardEvent();
             // debugger;
             // return;
             // var indicatorId = arguments[0].id;
@@ -135,22 +161,40 @@
 
         selectVizualization: function(type) {
 
+            $("#loading").show();
+
+            if ($('#viz-container').highcharts()) {
+                $('#viz-container').highcharts().destroy();
+            };
+
+            var indicators = model.activeIndicators();
+
+            // var current = model.selectionTracker();
+            // current.indicator = true;
+            // current.vizualization = false;
+            // model.selectionTracker(current);
+            // //move to second
+            // $('#vizTabs a[href="#select-vizualization"]').tab('show')
+
+            var activeGroup = model.activeGroup();
+            var activeRegion = model.activeRegion();
+
             var vizualizationType = type;
             model.activeChart(vizualizationType);
-            var current = model.selectionTracker();
-            current.indicator = true;
-            current.vizualization = true;
-            model.selectionTracker(current);
+
+            var deferred = window.loadIndicatorData(indicators, activeGroup.id, activeRegion);
+            deferred.done(indicatorDataLoadHandler);
+
+
+            // var current = model.selectionTracker();
+            // current.indicator = true;
+            // current.vizualization = true;
+            // model.selectionTracker(current);
             //move to third tab
 
             $('#vizTabs a[href="#vizualize"]').tab('show');
 
-            var highChartsJson = model.activeData();
-            highChartsJson.title.text = model.activeIndicator();
-            highChartsJson.chart.type = type;
-            highChartsJson.yAxis.title.text = "";
-            //highChartsJson.subtitle.text = type;
-            $('#viz-container').highcharts(model.activeData());
+
 
 
         },
@@ -367,6 +411,7 @@
     }
 
 
+
     var countriesListLoadHandler = function(response) {
 
         var countryGroupings = _.clone(model.countryGroupings(), true);
@@ -437,6 +482,7 @@
 
                 cloneIndicator.source = sourceLabel;
                 cloneIndicator.id = indicatorId;
+                cloneIndicator.selected = false;
                 return cloneIndicator;
             });
             //debugger;
@@ -462,6 +508,8 @@
                 var cloneIndicator = _.clone(indicatorsAll.data[indicatorId], true);
 
                 cloneIndicator.source = categoryLabel;
+                cloneIndicator.id = indicatorId;
+                cloneIndicator.selected = false;
                 return cloneIndicator;
 
             });
@@ -547,87 +595,20 @@
 
     var indicatorDataLoadHandler = function(response) {
 
-        //prepare region search 
-        // var availableRegions = [
-        //     "Algeria",
-        //     "Albania",
-        //     "Angola",
-        //     "China",
-        //     "Colombia",
-        //     "Croatia"
-        // ];
-
-        // $("#regions").autocomplete({
-        //     source: availableRegions
-        // });
 
 
-        //multiselect
-        var $callback = $("#callback");
-
-        $("select").multiselect({
-            click: function(event, ui) {
-                $callback.text(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked'));
-            },
-            beforeopen: function() {
-                $callback.text("Select about to be opened...");
-            },
-            open: function() {
-                $callback.text("Select opened!");
-            },
-            beforeclose: function() {
-                $callback.text("Select about to be closed...");
-            },
-            close: function() {
-                $callback.text("Select closed!");
-            },
-            checkAll: function() {
-                $callback.text("Check all clicked!");
-            },
-            uncheckAll: function() {
-                $callback.text("Uncheck all clicked!");
-            },
-            optgrouptoggle: function(event, ui) {
-                var values = $.map(ui.inputs, function(checkbox) {
-                    return checkbox.value;
-                }).join(", ");
-
-                $callback.html("<strong>Checkboxes " + (ui.checked ? "checked" : "unchecked") + ":</strong> " + values);
-            }
-        });
-
-        //prepare years
-
-        $("#slider-years").slider({
-            range: true,
-            min: 1990,
-            max: 2013,
-            values: [1994, 2013],
-            slide: function(event, ui) {
-
-                var startYear = ui.values[0];
-                var endYear = ui.values[1];
-                var yearLabel = startYear;
-
-                if (startYear != endYear) {
-                    yearLabel = startYear + "-" + endYear;
-                    model.selectYear([startYear, endYear]);
-                } else {
-                    model.selectYear([startYear]);
-                }
-
-                //$("#years-label").val(yearLabel);
-
-            }
-        });
-
-        $("#years-label").val($("#slider-years").slider("values", 0) +
-            " - " + $("#slider-years").slider("values", 1));
-
-
-        var highChartsJson = window.prepareHighchartsJson(response, model.activeIndicator(), model.activeChart(), model.activeIndicatorId());
+        var highChartsJson = window.prepareHighchartsJson(response, model.activeChart(), model.activeIndicators());
 
         model.activeData(highChartsJson);
+
+        var highChartsJson = model.activeData();
+        highChartsJson.title.text = model.activeIndicator();
+        highChartsJson.chart.type = model.activeChart();
+        highChartsJson.yAxis.title.text = "";
+        //highChartsJson.subtitle.text = type;
+        $('#viz-container').highcharts(model.activeData());
+        $("#loading").hide();
+
 
         // $('#viz-container').highcharts(highChartsJson, model.activeIndicator(), model.activeChart());
 

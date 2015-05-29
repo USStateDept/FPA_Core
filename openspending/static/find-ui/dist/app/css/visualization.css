@@ -65,11 +65,24 @@
   max-height: 300px;
   overflow: hidden;
 }
-.flippedCol .list-group span {
+.flippedCol .list-group span.list {
   overflow-y: scroll;
   overflow-x: hidden;
   display: block;
   max-height: 260px;
+  background-color: #fff;
+}
+.list-group-item:hover + .downloadLinks {
+  display: block;
+}
+.downloadLinks {
+  margin-left: 20px;
+  color: #5c74b4;
+  cursor: pointer;
+  display: block;
+}
+.downloadLinks:hover {
+  display: block;
 }
 .app .face .list-group.show-me {
   display: block;
@@ -128,7 +141,7 @@
   border: none;
 }
 .app .list-group-item.selected {
-  background-color: #008000;
+  background-color: rgba(0,100,0,0.5);
 }
 .app .btn-group {
   width: 100%;
@@ -226,12 +239,19 @@
   font-size: 22px;
   font-weight: bold;
 }
-.ui-slider-horizontal {
-  height: 1px;
+.ui-slider-handle {
+  border-radius: 10px !important;
 }
 .countries-list .category-wrapper {
   opacity: 0.6;
 }
 .countries-list .category-wrapper.selected {
   opacity: 1;
+}
+.app #loading {
+  text-align: center;
+  line-height: 300px;
+}
+.app #loading img {
+  width: auto;
 }

@@ -24,7 +24,13 @@
         });
     }
 
-    window.loadIndicatorData = function(indicatorIds, groupId, region, handlerFunc) {
+    window.loadIndicatorData = function(indicators, groupId, region) {
+        var indicatorIds = [];
+
+        _.forEach(indicators, function(indicator) {
+            indicatorIds.push(indicator.id);
+        });
+
         if (groupId != "all") {
             var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}"
         } else {
@@ -44,7 +50,7 @@
         //url = "http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__time|geometry__country_level0@name&format=json"
         // url = "http://api.worldbank.org/countries/all/indicators/NY.GDP.PCAP.KD?per_page=14200&format=jsonP";
         //debugger;
-        $.ajax({
+        return $.ajax({
             url: url,
             //jsonp: "prefix",
             //dataType: "jsonp",
@@ -55,8 +61,8 @@
 
             data: {
 
-            },
-            success: handlerFunc
+            }
+            //success: handlerFunc
         });
     }
 

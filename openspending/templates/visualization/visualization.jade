@@ -29,7 +29,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             a(href='#select-filter', aria-controls='select-vizualization', role='tab', data-toggle='tab',class='selectable')
               h4
                 //-span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
-                span() 1. Select Filters
+                span() 1. Set Filters
                 //-span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
                 //-linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
           li(role='presentation')
@@ -37,20 +37,20 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               //-data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}"
               h4
                 //-span(data-bind="visible:!selectionTracker().indicator") 2. Select Indicator
-                span() 2. Select Indicator
+                span() 2. Select Indicators
                 //-span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
           li(role='presentation')
-            a(href='#select-vizualization', aria-controls='select-vizualization', role='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator?'tab':'none'}")
+            a(href='#select-vizualization', aria-controls='select-vizualization', role='tab',data-bind="attr:{'data-toggle':activeIndicators().length > 0?'tab':'none'},css:{selectable:activeIndicators().length>0}")
               h4
                 //-span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
-                span() 3. Choose Vizualization
+                span() 3. Pick Visualization
                 //-span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
           li(role='presentation')
             a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization?'tab':'none'}")
-              h4 3.
-                span() &nbsp; Vizualize
+              h4
+                span() &nbsp; Visualize
         .tab-content
           .row
             p
@@ -146,8 +146,12 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                           .face.back
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
-                              span(data-bind="foreach:indicators")
-                                a.list-group-item(data-bind='click:$root.selectIndicator,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                              span.list(data-bind="foreach:indicators")
+                                a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                                span.downloadLinks()
+                                  span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                                  span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                                  span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
                   #tab-source.tab-pane
                     .row(data-bind="foreach:sourcesModel")
                       .col-sm-4.col-md-4.flip
@@ -160,14 +164,24 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                           .face.back
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
-                              span(data-bind="foreach:indicators")
-                                a.list-group-item(data-bind='click:$root.selectIndicator,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )       
+                              span.list(data-bind="foreach:indicators")
+                                a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
+                                span.downloadLinks()
+                                  span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                                  span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                                  span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
                   #tab-alphabetic.tab-pane
                     .row
                       .col-md-12
                         input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
-                    div.list-group.row(data-bind="foreach:indicatorsModel")
-                      a.list-group-item.col-md-4(data-bind='css:{selected:(selected==true)},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                    div.list-group.row()
+                      span(data-bind="foreach:indicatorsModel")
+                        .list-group-item.col-md-4
+                          a(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                          span.downloadLinks()
+                            span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                            span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                            span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
                  
           //- TAB 2
           #select-vizualization.tab-pane(role='tabpanel')
@@ -191,29 +205,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 
           //-TAB 3
           #vizualize.tab-pane(role='tabpanel')
+            .row#loading
+              .col-md-12
+                img(src='/static/find-ui/dist/app/images/loader.GIF')
             .row
-              //- .col-md-2                      
-              //-   div.ui-widget
-              //-     label(for="years-label") Years
-              //-     input#years-label(readonly)
-              //-   div#slider-years
-              //-   //- div.ui-widget
-              //-   //-   label(for="regions") Regions
-              //-   //-   input#regions
-              //-   div.ui-widget(style="display:none")
-              //-     p#callback.message.success Callback target
-              //-     select(multiple='multiple', size='5')
-              //-         optgroup(label='Europe')
-              //-           option(value='Germany') Germany
-              //-           | &#x9;
-              //-           option(value='France') France
-              //-           | &#x9;
-              //-           option(value='France') Sweden
-              //-         optgroup(label='Asia')
-              //-           option(value='Pakistan') Pakistan
-              //-         optgroup(label='Australia')
-              //-           option(value='Australia') Australia
-              //-           option(value='Australia') New Zealand
               .col-md-12
                 div#viz-container
 {% endblock %}
