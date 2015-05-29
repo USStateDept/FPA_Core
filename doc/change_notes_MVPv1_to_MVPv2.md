@@ -1,4 +1,4 @@
-Migrations notes from [MVP v.01](https://github.com/USStateDept/FPA_Core/releases/tag/v0.1) to MVP v.01
+Migrations notes from [MVP v.01](https://github.com/USStateDept/FPA_Core/releases/tag/v0.1) to MVP v.02
 ======================================
 
 Update Python Modules
