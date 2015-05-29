@@ -54,8 +54,8 @@
 
     window.loadCountries = function(url, handlerFunc) {
         // url = "data/access-to-improved.json";
-        url = "static/find-ui/dist/data/countries.json";
-
+        //url = "static/find-ui/dist/data/countries.json";
+        url = "/api/3/countries_list";
         $.ajax({
             url: url,
             // jsonp: "prefix",
