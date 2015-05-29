@@ -99,7 +99,8 @@ When starting the system fresh do this
 ===============================
 
 When reindexing search do this
-1. Run ostool search reindex
+1. ostool db migrate
+2. Run ostool search reindex
 
 ================
 to reinstall cube do this
