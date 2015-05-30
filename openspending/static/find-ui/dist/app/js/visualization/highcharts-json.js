@@ -26,7 +26,7 @@
         var series = {};
         var seriesArray = [];
 
-        debugger;
+        //debugger;
 
         //TODO : do this in one loop
         _.forEach(cells, function(c) {
@@ -34,22 +34,11 @@
         });
         //indicatorId = "gdp_per_capita";
         _.forEach(cells, function(c) {
-            series[c["geometry__country_level0.name"] || c["geometry__country_level0.sovereignt"]].push(c[indicatorId + "__amount_sum"]);
+            if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
+                series[c["geometry__country_level0.name"] || c["geometry__country_level0.sovereignt"]].push([c["geometry__time"], c[indicatorId + "__amount_sum"]]);
+            }
         });
 
-        // var series = [{
-        //     name: 'Angola',
-        //     data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-        // }, {
-        //     name: 'New York',
-        //     data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-        // }, {
-        //     name: 'Berlin',
-        //     data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-        // }, {
-        //     name: 'London',
-        //     data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-        // }];
 
 
 
@@ -71,6 +60,8 @@
         }
 
 
+
+
         var json = {
             chart: {
                 type: type
@@ -86,7 +77,14 @@
                 x: -20
             },
             xAxis: {
-                categories: categories
+                //categories: categories
+                title: {
+                    enabled: true,
+                    text: 'Years'
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
             },
             yAxis: {
                 title: {
@@ -94,8 +92,8 @@
                 },
                 plotLines: [{
                     value: 0,
-                    width: 1,
-                    color: '#808080'
+                    width: 0.25,
+                    color: '#FFFFCC'
                 }]
             },
             tooltip: {
@@ -108,6 +106,83 @@
                 borderWidth: 0
             },
             series: seriesArray
+        }
+
+        var jsonScatter = {
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Height Versus Weight of 507 Individuals by Gender'
+            },
+            subtitle: {
+                text: 'Source: Heinz  2003'
+            },
+            xAxis: {
+                title: {
+                    enabled: true,
+                    text: 'Height (cm)'
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: 'Weight (kg)'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 100,
+                y: 70,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                borderWidth: 1
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: '{point.x} cm, {point.y} kg'
+                    }
+                }
+            },
+            series: [{
+                name: 'Country A',
+                color: 'rgba(223, 83, 83, .5)',
+                data: [
+                    [2010, 51.6],
+                    [2011, 59.0]
+                ]
+
+            }, {
+                name: 'Country B',
+                color: 'rgba(119, 152, 191, .5)',
+                data: [
+                    [2010, 65.6],
+                    [2011, 71.8]
+                ]
+            }]
         }
 
 

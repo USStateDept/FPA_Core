@@ -74,20 +74,11 @@
       display block
       max-height 260px
       background-color #FFF
-      
-
-    
-.list-group-item:hover + .downloadLinks
-  display block
     
 .downloadLinks
   margin-left 20px
   color $bgLight
   cursor pointer
-  display block
-
-.downloadLinks:hover
-  display block
   
 .app
   .face
@@ -121,6 +112,14 @@
       background url(../images/noun_line_105490.png) center center no-repeat
       background-size contain
       
+    &.noun-radar-50835
+      background url(../images/noun_radar_50835.png) center center no-repeat
+      background-size contain
+      
+    &.noun-tree-35339
+      background url(../images/noun_tree_35339.png) center center no-repeat
+      background-size contain
+      
   .category-wrapper
       cursor pointer
       
@@ -143,11 +142,21 @@
       
     .panel
       border none
+      
+  .coming-soon
+      opacity 0.5
+      
+  .list-group a:hover
+    text-decoration none
     
   .list-group-item
     border none
+    cursor pointer
     
     &.selected
+      background-color rgba(0,100,0,0.5)
+      
+    .selected
       background-color rgba(0,100,0,0.5)
     
   .btn-group

@@ -83,15 +83,22 @@
 
         selectYear: function(years) {
             var yearsArray = [];
-
+            var pickedFromDropdown = false;
             if (!(years instanceof Array)) {
                 yearsArray = [years];
+                pickedFromDropdown = true;
             } else {
                 yearsArray = years;
             }
             model.activeYears.removeAll();
 
             model.activeYears(yearsArray);
+
+            if (pickedFromDropdown) {
+                $("#filter-years").slider('values', 0, years);
+                $("#filter-years").slider('values', 1, years);
+
+            }
 
         },
 

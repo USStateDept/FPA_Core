@@ -176,8 +176,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
                     div.list-group.row()
                       span(data-bind="foreach:indicatorsModel")
-                        .list-group-item.col-md-4
-                          a(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                        .list-group-item.col-md-4(data-bind="css:{selected:selected},click:$root.selectIndicatorMultiple")
+                          a(data-bind='html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
                           span.downloadLinks()
                             span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
                             span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
@@ -199,9 +199,17 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   div.well.category.noun-line-105490()
                   h4 Line
               .col-sm-4.col-md-4
-                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;tree&#34;)}')
+                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;scatter&#34;)}')
                   div.well.category.noun-scatter-105477()
                   h4 Scatter Plot
+              .col-sm-4.col-md-4
+                div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                  div.well.category.noun-radar-50835()
+                  h4 Radar
+              .col-sm-4.col-md-4
+                div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                  div.well.category.noun-tree-35339()
+                  h4 Tree
 
           //-TAB 3
           #vizualize.tab-pane(role='tabpanel')

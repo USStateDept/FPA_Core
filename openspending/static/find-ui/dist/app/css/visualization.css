@@ -72,17 +72,10 @@
   max-height: 260px;
   background-color: #fff;
 }
-.list-group-item:hover + .downloadLinks {
-  display: block;
-}
 .downloadLinks {
   margin-left: 20px;
   color: #5c74b4;
   cursor: pointer;
-  display: block;
-}
-.downloadLinks:hover {
-  display: block;
 }
 .app .face .list-group.show-me {
   display: block;
@@ -108,6 +101,14 @@
 }
 .app .category.noun-line-105490 {
   background: url("../images/noun_line_105490.png") center center no-repeat;
+  background-size: contain;
+}
+.app .category.noun-radar-50835 {
+  background: url("../images/noun_radar_50835.png") center center no-repeat;
+  background-size: contain;
+}
+.app .category.noun-tree-35339 {
+  background: url("../images/noun_tree_35339.png") center center no-repeat;
   background-size: contain;
 }
 .app .category-wrapper {
@@ -137,10 +138,20 @@
 .app .panel-group .panel {
   border: none;
 }
+.app .coming-soon {
+  opacity: 0.5;
+}
+.app .list-group a:hover {
+  text-decoration: none;
+}
 .app .list-group-item {
   border: none;
+  cursor: pointer;
 }
 .app .list-group-item.selected {
+  background-color: rgba(0,100,0,0.5);
+}
+.app .list-group-item .selected {
   background-color: rgba(0,100,0,0.5);
 }
 .app .btn-group {
