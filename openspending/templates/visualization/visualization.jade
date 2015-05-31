@@ -96,11 +96,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:$data,click:$root.selectCountryGroupRegion")
-              .col-md-4
+              //-.col-md-4
                   //-button.btn.btn-default(type='button') Select All
                   //-button.btn.btn-default(type='button') Deselect All
-              .col-md-4
-                .pull-right#filter-countries-label(data-bind="html:activeGroup().label + ' ' + activeRegion()")
+              .col-md-8
+                .pull-right#filter-countries-label(data-bind="html:activeGroup().label + ' - ' + activeRegion()")
             .row
               p
             .row

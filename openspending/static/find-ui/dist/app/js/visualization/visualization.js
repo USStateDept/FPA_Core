@@ -234,15 +234,18 @@
 
             var groupId = arguments[0].id;
             model.activeGroup(arguments[0]);
+            model.activeRegion(""); //set active region to undefined
 
             if (groupId == "all") {
                 model.selectCountryGroupRegion("all"); //just select all countries
             }
             //assign region to countryGroupRegion
             model.countryGroupRegions.removeAll();
+
             _.forEach(model.countryGroupings(), function(countryGroup) {
                 if (groupId == countryGroup.id) {
                     model.countryGroupRegions(countryGroup.regions);
+                    model.selectCountryGroupRegion(countryGroup.regions[0]);
                 }
             })
 
@@ -604,7 +607,7 @@
 
 
 
-        var highChartsJson = window.prepareHighchartsJson(response, model.activeChart(), model.activeIndicators());
+        var highChartsJson = window.prepareHighchartsJson(response, model.activeChart(), model.activeIndicators(), model.activeGroup(), model.activeRegion());
 
         model.activeData(highChartsJson);
 

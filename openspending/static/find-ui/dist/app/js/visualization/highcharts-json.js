@@ -1,6 +1,6 @@
 (function() {
 
-    window.prepareHighchartsJson = function(data, type, indicators) {
+    window.prepareHighchartsJson = function(data, type, indicators, group, region) {
 
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
@@ -8,6 +8,25 @@
         var cells = data.cells;
         var indicatorId = indicators[0].id;
         var title = indicators[0].label;
+        var groupId = group.id;
+        var cutBy = "name";
+        var multiVariate = indicators.length > 1; //eligible for scatter plot
+
+
+        switch (groupId) {
+            case "all":
+                cutBy = "sovereignt";
+                break;
+            default:
+                cutBy = groupId;
+                break;
+        }
+
+        if (!multiVariate) {
+            cutBy = "sovereignt"
+        }
+
+
         var timeCell = {};
         _.forEach(data.cell, function(c) {
             if (c.hierarchy == "time") {
@@ -27,17 +46,49 @@
         var seriesArray = [];
 
         //debugger;
+        //debugger;
 
-        //TODO : do this in one loop
-        _.forEach(cells, function(c) {
-            series[c["geometry__country_level0.name"] || c["geometry__country_level0.sovereignt"]] = []
-        });
-        //indicatorId = "gdp_per_capita";
-        _.forEach(cells, function(c) {
-            if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
-                series[c["geometry__country_level0.name"] || c["geometry__country_level0.sovereignt"]].push([c["geometry__time"], c[indicatorId + "__amount_sum"]]);
-            }
-        });
+        if (multiVariate && region.length > 0) {
+
+            _.forEach(indicators, function(indicator) {
+                series[indicator.id] = []
+            });
+            //indicatorId = "gdp_per_capita";
+            _.forEach(cells, function(c) {
+                if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
+                    //rada
+                    _.forEach(indicators, function(indicator) {
+                        //debugger;
+                        if (c["geometry__country_level0." + cutBy] == region) {
+
+                            series[indicator.id].push([c["geometry__time"], c[indicator.id + "__amount_sum"]])
+                        }
+                    });
+
+                    //series[c["geometry__country_level0." + cutBy]].push();
+                }
+            });
+
+        }
+
+        //debugger;
+        if (!multiVariate || region.length == 0) {
+
+            //TODO : do this in one loop
+            _.forEach(cells, function(c) {
+                series[c["geometry__country_level0." + cutBy]] = []
+            });
+            //indicatorId = "gdp_per_capita";
+            _.forEach(cells, function(c) {
+                if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
+                    //rada
+                    //debugger;
+                    series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicatorId + "__amount_sum"]]);
+                }
+            });
+
+        }
+
 
 
 

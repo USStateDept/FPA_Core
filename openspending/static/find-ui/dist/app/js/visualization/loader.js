@@ -27,14 +27,33 @@
     window.loadIndicatorData = function(indicators, groupId, region) {
         var indicatorIds = [];
 
+        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
+
         _.forEach(indicators, function(indicator) {
             indicatorIds.push(indicator.id);
         });
 
+        var multiVariate = indicators.length > 1; //eligible for scatter plot
+
         if (groupId != "all") {
-            var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}"
+
+            if (multiVariate) {
+
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time";
+
+            }
+
+            if (!multiVariate) {
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}";
+
+            }
+
+
+
+
+            // //to cut by country
         } else {
-            var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format=json"
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json"
         }
         var url = urlTemplate.replace(/{indicator_id}/g, indicatorIds.join("|"));
 

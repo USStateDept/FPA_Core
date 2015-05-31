@@ -210,7 +210,8 @@ body {
   min-width: 50%;
 }
 #sticky.stick input,
-#sticky.stick .main-search-results span {
+#sticky.stick .main-search-results span,
+#sticky.stick .btn-group {
   box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
 .carousel-indicators {
