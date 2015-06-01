@@ -33,11 +33,13 @@ def reindex():
                 attrs[primary_field] = unicode(getattr(dataset, primary_field))
                 writer.update_document(**attrs)
 
+    #make sure we ahve all of the geometry tables in there
+    createCountries(silent=True)
+
     index = whoo.whoosh_index(current_app, Country)
     with index.writer() as writer:
 
-        #make sure we ahve all of the geometry tables in there
-        createCountries(silent=True)
+
 
         for country in Country.all():
             primary_field = country.pure_whoosh.primary_key_name
