@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en" ng-app="openspending">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import a dataset - OpenSpending</title>
+
+    <meta name="description" content="We're enabling anyone to explore, visualize and track government spending." />
+    <meta name="author" content="Open Knowledge Foundation" />
+    <link rel="shortcut icon" href="http://localhost:5000/static/img/favicon.ico"
+      type="image/x-icon" />
+    <link rel="alternate" type="application/rss+xml"
+      title="Latest Datasets on OpenSpending"
+      href="http://localhost:5000/datasets.rss" />
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600'
+      rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+      rel="stylesheet">
+    
+      <link href="/static/prod/main.css?c087bc2b" rel="stylesheet" />
+    
+
+    <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
+    <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
+
+    <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
+    <script type="text/javascript" src="<%= file %>"></script><% }); %>
+    
+    
+    <!-- TODO: remove the need for this -->
+    
+  </head>
+
+  <h1>For simple example.  Needs to be moved into the flask templating</h1>
+
+  <!-- templates/layout.html body -->
+  <body ng-controller="AppCtrl"
+    class="bp-dataset view-new">
+    <div id="page">
+   
+
+      <div class="banner">
+        <div class="container">
+          
+            
+          
+          
+            <div ng-show="flash.getMessage()" class="alert alert-{{flash.getMessage()[1]}}">
+              <p>{{flash.getMessage()[0]}}</p>
+            </div>
+          
+          
+        </div>
+      </div>
+
+      <div class="container">
+        
+  <h2 class="page-header">
+    Import a dataset
+  </h2>
+
+  <div class="container" ui-view="main"></div>
+
+      </div>
+    </div>
+
+    <div id="catapult-cookie-bar" ng-show="showCookieWarning">
+      This site uses cookies
+      <button id="catapultCookie" ng-click="hideCookieWarning()">
+        Okay, thanks
+      </button>
+
+      <a href="http://okfn.org/cookie-policy">
+        Find out more
+      </a>
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <p>
+          This is an <a href="http://okfn.org">Open Knowledge Foundation</a>
+          project.
+        </p>
+      </div>
+    </div>
+    <div class="row">    
+      <div class="col-md-4">
+        <ul class="footer-links">
+          <li>
+            <a href="http://wheredoesmymoneygo.org">
+              Where Does My Money Go (UK)
+            </a>
+          </li>
+          <li>
+            <a href="http://offenerhaushalt.de">
+              OffenerHaushalt (DE)
+            </a>
+          </li>
+          <li>
+            <a href="http://opencorporates.com"
+              title="The Open Database Of The Corporate World">
+              OpenCorporates.com
+            </a>
+          </li>
+          <li>
+            <a href="http://okfnlabs.org">
+              OKFN Labs
+            </a>
+          </li>
+          <li>
+            <a href="http://spendingstories.org">
+              Spending Stories
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <ul class="footer-links">
+          <li>
+            <a href="http://twitter.com/openspending">
+              Twitter
+            </a>
+          </li>
+          <li>
+            <a href="http://community.openspending.org/help/">
+              Help
+            </a>
+          </li>
+          <li>
+            <a href="http://community.openspending.org/contact/">
+              Contact
+            </a>
+          </li>
+          <li>
+            <a href="http://community.openspending.org/help/api/">
+              API
+            </a>
+          </li>
+          <li>
+            <a href="http://okfn.org/privacy-policy/">
+              Privacy
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <p>
+          All <a href="http://www.gnu.org/licenses/agpl.html">code</a>,
+          <a href="http://creativecommons.org/licenses/by/3.0/">content</a>
+          and <a href="http://opendatacommons.org/licenses/odbl/">data</a> is
+          openly licensed.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <!-- script boot section -->
+    <script defer="defer">
+      var OpenSpending = OpenSpending || {};
+      OpenSpending.localeGroupSeparator = ",";
+      OpenSpending.localeDecimalSeparator = ".";
+    </script>
+    <!-- end script boot section -->
+
+    
+    
+  </body>
+</html>

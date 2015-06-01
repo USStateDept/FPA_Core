@@ -1,6 +1,4 @@
-link(href='{{ static_path("dist/app/css/feedback.css") }}' , rel='stylesheet')
-script(src="{{ static_path('dist/bower_components/jquery-cookie/jquery.cookie.js') }}")
-script(src="{{ static_path('dist/app/js/feedback.js') }}")
+
 span.expandbtn.expanded >>
 div.popupcontainer
 	div.warningmessage	
@@ -16,3 +14,7 @@ div.popupcontainer
 		textarea(name="message", type="textarea")
 
 		input(type="submit", id="feedbackbtn", value="Send Message")
+
+link(href='{{ static_path("find-ui/dist/app/css/feedback.css") }}' , rel='stylesheet')
+script(src="{{ static_path('find-ui/bower_components/jquery-cookie/jquery.cookie.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/feedback.js') }}")

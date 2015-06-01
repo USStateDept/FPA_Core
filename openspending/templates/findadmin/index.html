@@ -1,0 +1,61 @@
+{% extends "base.jade" %}
+
+{% block page_title %}US State Department FIND{% endblock %}
+
+{% block optional_head %}
+<link rel="stylesheet" type="text/css" href="/static/dataloader/build/vendor/angular-chosen-localytics/chosen-spinner.css" />
+<link rel="stylesheet" type="text/css" href="/static/dataloader/build/vendor/datatables/media/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/dataloader/build/assets/ngbp-0.3.2.css" />
+
+
+
+{% endblock %}
+
+{% block banner %}
+
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- templates/layout.html body -->
+  <div ng-app="openspending">
+    <div ng-controller="AppCtrl"
+      class="bp-dataset view-new">
+      <div id="page">
+     
+
+        <div class="container">
+          
+          <h2 class="page-header">
+            Import a dataset
+          </h2>
+
+          <div class="container" ui-view="main"></div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+
+
+{% block footer_scripts %}
+<!-- compiled JavaScript -->
+<script type="text/javascript" src="/static/dataloader/build/vendor/angular/angular.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/vendor/angular-ui-router/release/angular-ui-router.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/vendor/angular-cookies/angular-cookies.min.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/vendor/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/vendor/angular-chosen-localytics/chosen.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/vendor/underscore/underscore-min.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/src/app/app.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/src/app/modeler/modeler.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/templates-common.js"></script>
+<script type="text/javascript" src="/static/dataloader/build/templates-app.js"></script>
+
+{% endblock %}

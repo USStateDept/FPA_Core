@@ -2,7 +2,7 @@
 
 {% block page_title %}US State Department FIND{% endblock %}
 
-{% block scripts %}
+{% block optional_head %}
 
 {% endblock %}
 
@@ -12,7 +12,6 @@
 
 {% block content %}
 .container-full
-
   .row.jumbotron.bg-dark
     p &nbsp;
     h1.tlt() Explore Indicators, Effortlessly
@@ -22,12 +21,28 @@
       .col-md-8
 
         p.search-group
-          div#sticky-anchor
-          div#sticky.form-group.has-feedback
-            input.main-search(type='text' placeHolder='Find a country or indicator')
-            span.glyphicon.glyphicon-search.form-control-feedback
-            div.main-search-results(data-bind="foreach:searchResults,visible:searchResults().length>0 && searchValue().length>=2")
-              span(data-bind="html:label,click:$root.selectIndicator")
+          #sticky-anchor
+          #sticky.form-group.has-feedback
+            .row
+              .col-md-8.nopadding
+                input.main-search(type='text',placeHolder='Search')
+                span.glyphicon.glyphicon-search.form-control-feedback
+              .col-md-4.nopadding
+                .btn-group.btn-group-lg(data-toggle='buttons')
+                  label.btn.btn-primary.active
+                    input(type='radio',name='searchGroup',value='all',data-bind='checked:searchType') 
+                    | All
+                  label.btn.btn-primary
+                    input(type='radio',name='searchGroup',value='countries',data-bind='checked:searchType') 
+                    | Countries
+                  label.btn.btn-primary
+                    input(type='radio',name='searchGroup',value='indicators',data-bind='checked:searchType')
+                    | Indicators
+            .row
+              .col-md-12
+
+                  .main-search-results(data-bind="foreach:searchResults,visible:searchResults().length>0 && searchValue().length>=2")
+                    span(data-bind="html:label,click:$root.selectIndicator")
     
       .col-md-2
 
@@ -35,7 +50,7 @@
 .container
   .row
     .col-md-12
-      div.well.bg-none.font-large.font-dark
+      .well.bg-none.font-large.font-dark
         //-h3 Welcome to FIND
         .row
           .col-md-12
@@ -43,18 +58,16 @@
             | Explore country-level indicators from a variety of sources and sectors. 
             | Visualize and compare the data to better understand the context.
   .row
-    .col-md-12#carousel-example-generic.carousel.slide(data-ride='carousel')
+    .col-md-12#carousel-updates.carousel.slide.carousel-fade(data-ride='carousel')
       ol.carousel-indicators
-        li.active(data-target='#carousel-example-generic', data-slide-to='0', title="Literacy Rates, and Under Five Mortality Rate")
-        |     
-        li(data-target='#carousel-example-generic', data-slide-to='1', title="GDP Growth, and Forest Area")
-        |     
-        li(data-target='#carousel-example-generic', data-slide-to='2', title="Foreign Direct Investment, and Population")
+        li.active(data-target='#carousel-updates', data-slide-to='0', title="Literacy Rates, and Under Five Mortality Rate")
+        li(data-target='#carousel-updates', data-slide-to='1', title="GDP Growth, and Forest Area") 
+        li(data-target='#carousel-updates', data-slide-to='2', title="Foreign Direct Investment, and Population")
       .carousel-inner(role='listbox')
         .item.active
           .row
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Literacy rates
                 .row
                   .col-md-3
@@ -62,7 +75,7 @@
                   .col-md-9
                     p Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Under Five Mortality Rate
                 .row
                   .col-md-3
@@ -72,7 +85,7 @@
         .item
           .row
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 GDP Growth
                 .row
                   .col-md-3
@@ -80,7 +93,7 @@
                   .col-md-9
                     p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Forest Area
                 .row
                   .col-md-3
@@ -90,7 +103,7 @@
         .item
           .row
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Foreign Direct Investment
                 .row
                   .col-md-3
@@ -98,7 +111,7 @@
                   .col-md-9
                     p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             .col-md-6
-              div.well.bg-none
+              .well.bg-none
                 h3 Population Growth
                 .row
                   .col-md-3
@@ -106,12 +119,12 @@
                   .col-md-9
                     p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       // Controls
-      a.left.carousel-control(href='#carousel-example-generic', role='button', data-slide='prev')
+      a.left.carousel-control(href='#carousel-updates', role='button', data-slide='prev')
         span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
         |     
         span.sr-only Previous
       |   
-      a.right.carousel-control(href='#carousel-example-generic', role='button', data-slide='next')
+      a.right.carousel-control(href='#carousel-updates', role='button', data-slide='next')
         span.glyphicon.glyphicon-chevron-right(aria-hidden='true')
         |     
         span.sr-only Next
@@ -161,7 +174,7 @@
             div.well
               .row
                 .col-md-3
-                  img(src="{{ static_path('dist/app/images/chart_scatter.png') }}")
+                  img(src="{{ static_path('find-ui/dist/app/images/chart_scatter.png') }}")
                 .col-md-9
                   p In 1970, 17.6 million children under the age of five died worldwide annually — about 143 infant and childhood deaths per 1000 children born.
           .col-md-6
@@ -169,7 +182,7 @@
             div.well                  
               .row
                 .col-md-3
-                  img(src="{{ static_path('dist/app/images/chart_pie.png' )}}")
+                  img(src="{{ static_path('find-ui/dist/app/images/chart_pie.png' )}}")
                 .col-md-9
                   p As one of the UN's Millennium Development Goals set in 2000, the organization sought the global under-five mortality rate by two-thirds by 2015, as compared to 1990 levels.
           .col-md-6
@@ -177,7 +190,7 @@
             div.well                  
               .row
                 .col-md-3
-                  img(src="{{ static_path('dist/app/images/chart_curved.png') }}")
+                  img(src="{{ static_path('find-ui/dist/app/images/chart_curved.png') }}")
                 .col-md-9
                   p The countries that are unlikely to hit the Millennium Development Goal — and still have high infant and childhood mortality rates — are mostly clustered in Sub-Saharan
           .col-md-6
@@ -199,12 +212,12 @@
 
 {% block footer_scripts %}
 
-script(src="{{ static_path('dist/bower_components/letteringjs/jquery.lettering.js') }}")
-script(src="{{ static_path('dist/bower_components/textillate/jquery.textillate.js') }}")
-script(src="{{ static_path('dist/bower_components/knockout/dist/knockout.js') }}")
-script(src="{{ static_path('dist/bower_components/lodash/lodash.min.js') }}")
-script(src="{{ static_path('dist/app/js/home/home.js') }}")
-script(src="{{ static_path('dist/app/js/common.js') }}")
+script(src="{{ static_path('find-ui/bower_components/letteringjs/jquery.lettering.js') }}")
+script(src="{{ static_path('find-ui/bower_components/textillate/jquery.textillate.js') }}")
+script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/home/home.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common.js') }}")
 
 
 {% endblock %}

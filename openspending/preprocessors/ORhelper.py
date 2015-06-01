@@ -9,7 +9,8 @@ import time
 import csv
 import urllib
 from openspending.preprocessors import processing_funcs
-from settings import OPENREFINE_SERVER
+from flask import current_app
+#from settings import OPENREFINE_SERVER
 
 from os.path import splitext
 
@@ -91,6 +92,7 @@ class RefineProj:
 
 
     def __init__(self, source=None):
+        OPENREFINE_SERVER = current_app.config.get("OPENREFINE_SERVER")
         self.refine_server = refine.Refine(server=OPENREFINE_SERVER)
         #the source object will have the project_id of OR
         #if project_id does not exist then createOR
@@ -232,6 +234,7 @@ class RefineProj:
             return None
 
     def deleteOR(refineproj=None):
+        OPENREFINE_SERVER = current_app.config.get("OPENREFINE_SERVER")
         if not refineproj:
             refiner = refine.RefineProject(server=OPENREFINE_SERVER, project_id=int(self.openrefine_projectnumber))
         else:
@@ -286,6 +289,8 @@ def testORLoad(sourceurl=None, fileobj=None):
     
     with codecs.open(filepath, 'wb', 'utf-8') as f:
         f.write(datatext)
+
+    OPENREFINE_SERVER = current_app.config.get("OPENREFINE_SERVER")
 
     #store raw file here with barn
 

@@ -5,7 +5,7 @@ from flask.ext.assets import ManageAssets
 
 from openspending.core import create_web_app
 from openspending.assets import assets
-from openspending.command import user, db, importer, dbimport, search
+from openspending.command import user, db, importer, dbimport, search, geometry
 
 log = logging.getLogger(__name__.split('.')[0])
 
@@ -20,6 +20,7 @@ manager.add_option('-q', '--quiet',
 
 manager.add_command('user', user.manager)
 manager.add_command('search', search.manager)
+manager.add_command('geometry', geometry.manager)
 manager.add_command('db', db.manager)
 manager.add_command('assets', ManageAssets(assets))
 

@@ -1,0 +1,28 @@
+<div id="cubes_list" class="panel panel-default" >
+    <div class="panel-heading">
+        Indicator Options
+    </div>
+    <div class="loader">
+        <h3>{{ loading }}</h3>
+
+    </div>
+    <form class="form-horizontal" role="form">
+        <h2>{{model.label}}</h2>
+
+
+            <div><strong>Name:</strong> {{ model.cube_name }}</div>
+            <div><strong>Description:</strong> {{model.description}} </div>
+            <div>Link to detailed information <a href="/api/slicer/cube/geometry/cubes_model?cubes={{ model.name }}" target="_blank">Click here</a></div>
+
+            <div>Show all model data here in the ftuure</div>
+
+
+
+        <button ng-click="savedataset()">
+          Add Indicator
+        </button>
+
+
+    </form>
+
+</div>

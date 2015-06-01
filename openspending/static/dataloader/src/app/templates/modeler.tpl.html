@@ -1,0 +1,95 @@
+  <div ng-controller="ModelerCtrl">
+    <h1>Source Meta</h1>
+    <h2 style="color:green" ng-show="metavalid">All's good here</h2>
+    <form class="form-horizontal" name="form" method="post" enctype="multipart/form-data">
+      <div class="form-group" ng-class="{'has-error': form.label.$invalid}">
+        <label for="label" class="col-sm-2 control-label">
+          Source Name
+        </label>
+        <div class="col-sm-10">
+          <input name="label" ng-model="meta.name" class="form-control"
+            placeholder="My Dataset">
+          <p class="help-block" ng-show="form.label.$invalid"
+            ng-bind="form.label.$message"></p>
+        </div>
+      </div>
+      <div class="form-group" ng-class="{'has-error': form.label.$invalid}">
+        <label for="label" class="col-sm-2 control-label">
+          Target URL (changes reload stuff here)
+        </label>
+        <div class="col-sm-10">
+          <input name="label" ng-model="meta.url" class="form-control"
+            placeholder="My Dataset">
+          <p class="help-block" ng-show="form.label.$invalid"
+            ng-bind="form.label.$message"></p>
+        </div>
+        <h2>OR</h2>
+        <div class="col-sm-10">
+            <label for="sourcefile">Select a file</label>
+            <input name="sourcefile" type="file" id="sourcefile">
+          <p class="help-block" ng-show="form.sourcefile.$invalid"
+            ng-bind="form.sourcefile.$message"></p>
+          <p class="fileloaded-block" ng-show="meta.rawfile">
+            Current File Loaded: 
+            <a href="{{ meta.rawfile.url }}" target="_blank"> {{ meta.rawfile.url }}</a>
+          </p>
+        </div>
+      </div>
+
+      <h1>PreFunctions</h1>
+          <div class="form-group" ng-class="{'has-error': form.prefuncs.$invalid}">
+            <label for="prefuncs" class="col-sm-2 control-label">
+              Preprocessing Functions
+            </label>
+            <div class="col-sm-10">
+              <select name="prefuncs" class="form-control"
+                ng-model="meta.prefuncs" disable-search="true"
+                ng-options="c.value as c.label for c in reference.prefuncoptions" multiple>
+              </select>
+              <p class="help-block" ng-show="form.prefuncs.$invalid"
+                ng-bind="form.prefuncs.$message"></p>
+            </div>
+          </div>
+
+
+
+      <div class="save_buttons">
+        <button type="submit" ng-click="save_meta()" class="btn btn-success">
+          Save (will revert any work in OpenRefine)
+        </button>
+        <button type="submit" ng-click="apply_meta_default()" class="btn btn-success" ng-show="sourceexists">
+          Apply Default From Org
+        </button>
+      </div>
+      <div class="save_buttons_loader">
+        Saving.......
+      </div>
+      <div>
+        <h2>Things for the future</h2>
+        <ul>
+          <li>May put option to skip OpenRefine Processing?</li>
+        </ul>
+      </div>
+    </form>
+
+
+    <h1>ORstuff</h1>
+      <div ng-show="metavalid">
+        <div open-refine>OpenRefine</div>
+      </div>
+
+
+    <h1>Model stuff</h1>
+      <div class="model-columns" ng-show="dataloaded && metavalid">
+        
+      </div>
+
+    <br />
+    <br />
+    <div model-submit ng-show="dataloaded && metavalid && ! datarunning"></div>
+    <div model-submit ng-show="datarunning">Running the Data</div>
+
+    <div model-org-submit ng-show="loadsuccess"></div>
+
+
+  </div>

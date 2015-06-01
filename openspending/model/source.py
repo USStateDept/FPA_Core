@@ -13,7 +13,8 @@ from openspending.model.common import MutableDict, JSONType
 #from openspending.model.account import Account
 from openspending.model.model import Model
 
-from settings import OPENREFINE_PUBLIC
+from flask import current_app
+#from settings import OPENREFINE_PUBLIC
 
 from openspending.preprocessors.ORhelper import RefineProj
 
@@ -105,6 +106,10 @@ class Source(db.Model):
         #data = {'operations': json.dumps(ORoperations['data'])}
         refineproj.refineproj.do_json("apply-operations", data=data)
         return True
+
+    def getORFile(self):
+        refineproj = self.get_or_create_ORProject()
+        return refineproj.get_file()
 
     def getORInstructions(self):
         #get the new ioperations from OR and save them int he database
@@ -275,6 +280,8 @@ class Source(db.Model):
         rawfile = None
         if self.rawfile:
             rawfile = self.rawfile.as_dict()
+
+        OPENREFINE_PUBLIC = current_app.config.get("OPENREFINE_PUBLIC")
 
         return {
             "id": self.id,

@@ -1,0 +1,97 @@
+  <div ng-controller="DatasetNewCtrl">
+    <!-- templates/dataset/new_cta.html content -->
+    <div class="row" ng-hide="permissions.create">
+      <div class="col-md-6">
+        Let's do some nice ETL for this
+      </div>
+
+      <div class="col-md-12">
+        <a href="/login"
+          class="btn btn-lg btn-success">Sign in</a>
+      </div>
+    </div>
+      <div class="col-md-6 errors">
+        {{ errors }}
+      </div>
+
+    
+    <!-- templates/dataset/new.html content -->
+    <div class="row" ng-show="permissions.create">
+
+      <div class="col-md-8 dataset-info">
+        <form class="form-horizontal" name="form" ng-submit="save(form)">
+
+          <div class="form-group" ng-class="{'has-error': form.dataorg.$invalid}">
+            <label for="dataorg" class="col-sm-2 control-dataorg">
+              Data Source Metadata (Required)
+            </label>
+            <div class="col-sm-10">
+              <select name="dataorg" chosen class="form-control"
+                ng-model="dataset.dataorg" disable-search="true"
+                ng-options="c.value as c.label for c in reference.dataorgs">
+              </select>
+              <p class="help-block" ng-show="form.dataorg.$invalid"
+                ng-bind="form.dataorg.$message"></p>
+            </div>
+          </div>
+
+          <div class="form-group" ng-class="{'has-error': form.name.$invalid}">
+            <label for="name" class="col-sm-2 control-name">
+              Name
+            </label>
+            <div class="col-sm-10">
+              <input name="name" ng-model="dataset.name" class="form-control"
+                placeholder="Name_Of_Dataset">
+              <p class="help-block" ng-show="form.name.$invalid"
+                ng-bind="form.name.$message"></p>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error': form.label.$invalid}">
+            <label for="label" class="col-sm-2 control-label">
+              Label
+            </label>
+            <div class="col-sm-10">
+              <input name="label" ng-model="dataset.label" class="form-control"
+                placeholder="Name of Dataset">
+              <p class="help-block" ng-show="form.label.$invalid"
+                ng-bind="form.label.$message"></p>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error': form.description.$invalid}">
+            <label for="description" class="col-sm-2 control-description">
+              Description
+            </label>
+            <div class="col-sm-10">
+              <p class="help-block" ng-show="form.description.$invalid"
+                ng-bind="form.description.$message"></p>
+              <textarea ng-model="dataset.description" class="xxlarge form-control"
+                rows="4" name="description"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group" ng-class="{'has-error': form.dataType.$invalid}">
+            <label for="dataType" class="col-sm-2 control-dataType">
+              Data Type
+            </label>
+            <div class="col-sm-10">
+              <select name="dataType" class="form-control"
+                ng-model="dataset.dataType" disable-search="true"
+                ng-options="c.value as c.label for c in reference.dataTypes">
+              </select>
+              <p class="help-block" ng-show="form.dataType.$invalid"
+                ng-bind="form.dataType.$message"></p>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-success">
+                Save
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

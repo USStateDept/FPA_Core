@@ -2,52 +2,52 @@
 
 {% block page_title %}Login{% endblock %}
 
-{% block content %}
-h2.page-header Sign into Find
+{% block optional_head %}
 
-div.row
-  div.span6
-    h3 Login
-    form.basic.login.form-horizontal(id="login", action="{{ url_for('account.login') }}", method="POST")
-      fieldset
-        div.control-group
-          label(for="login") Email Login
-          input(name="login")
-        div.control-group
-          label(for="password") Password 
-          input(name="password", type="password")
-      div.form-actions
-        input.btn.bt-primary(value="Login", type="submit")
-    p.help-block Forgot your password?
-      a(href="{{ url_for('account.trigger_reset') }}") Request a password reset.
-  div.span6
-    h3 Create an Account
-    h3 Put more ifnormation about why this only USG
-      {% formfill form_fill with form_errors %}
-      form.basic.register.form-horiztonal(id="register", action="{{ url_for('account.register') }}", method="POST")
+
+{% endblock %} 
+
+{% block content %}
+h2.page-header Sign into Find.  This is under development, so it looks pretty ugly.  We are working hard to bring a polished style to you soon.
+
+div.container
+  div.row
+    div.span6
+      h3 Login
+      form.basic.login.form-horizontal(id="login", action="{{ url_for('account.login') }}", method="POST")
         fieldset
-          div.control-group.form-inline
-            label(for="email") Email USG Only
-          div.control-group.form-inline
-            label(for="fullname") First and Last Name
-            div.controls
-              input(name="fullname")
-          div.control-group.form-inline
-            label(for="password1") Password
-            div.controls
-              input(name="password1", type="password", autocomplete="off")
-          div.control-group.form-inline
-            label(for="password2") Password (repeated)
-            div.controls
-              input(name="password2", type="password", autocomplete="off")
           div.control-group
-            div.controls
-              label.checkbox(for="terms")
-                input(name="terms", type="checkbox") 
-                p I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
-          div.form-actions
-            input.btn.btn-primary(value="Create new account", type="submit")
-      {% endformfill %}
+            label(for="login") Email Login
+            input(name="login")
+          div.control-group
+            label(for="password") Password 
+            input(name="password", type="password")
+        div.form-actions
+          input.btn.bt-primary(value="Login", type="submit")
+      p.help-block Forgot your password?
+        a(href="{{ url_for('account.trigger_reset') }}") Request a password reset.
+    div.span6
+      h3 Create an Account
+      h3 Put more information about why this only USG
+        {% formfill form_fill with form_errors %}
+        form.basic.register.form-horiztonal(id="register", action="{{ url_for('account.register') }}", method="POST")
+          fieldset
+            div.control-group.form-inline
+              label(for="email") Email USG Only
+              div.controls
+                input(name="email")
+            div.control-group.form-inline
+              label(for="fullname") First and Last Name
+              div.controls
+                input(name="fullname")
+            div.control-group
+              div.controls
+                label.checkbox(for="terms")
+                  input(name="terms", type="checkbox") 
+                  p I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+            div.form-actions
+              input.btn.btn-primary(value="Create new account", type="submit")
+        {% endformfill %}
 
 
 {% endblock %}

@@ -52,6 +52,14 @@ class Run(db.Model):
         self.dataset = dataset
         self.source = source
 
+
+    def records_as_json(self):
+        returnset = []
+        for record in self.records:
+            returnset.append(record.as_json())
+        return returnset
+
+
     @property
     def successful_sample(self):
         """

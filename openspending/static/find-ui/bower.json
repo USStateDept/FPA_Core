@@ -1,0 +1,27 @@
+{
+  "name": "FIND-UI",
+  "version": "1.0.0",
+  "homepage": "https://github.com/USStateDept/FIND-UI",
+  "description": "FIND-UI bower",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "jquery": "~2.1.4",
+    "jquery-ui": "~1.11.4",
+    "knockout": "~3.3.0",
+    "lodash": "~3.8.0",
+    "requirejs": "~2.1.17",
+    "letteringjs": ">= 0.6.1",
+    "animate.css": ">= 3.0.0",
+    "textillate": "~0.4.0",
+    "jquery-cookie": "~1.4.1",
+    "jquery-ui-slider-pips": "~1.10.0"
+  }
+}

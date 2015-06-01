@@ -1,0 +1,11 @@
+<div id="cubes_list" class="panel panel-default" >
+    <button ng-click="newDatasource()">Create new datasource</button>
+    <div class="panel-heading">
+        <h2> Data Sources List </h2>
+    </div>
+    <h2>Click the "Create new datasource" or select an existing on to update or click the "+" beside the datasource to add a new indicator</h2>
+
+    <div>{{ table_loading }}</div>
+    <table class="datatable-preview" ng-hide="table_loading"></table>
+
+</div>

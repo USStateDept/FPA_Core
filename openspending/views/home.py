@@ -1,31 +1,40 @@
 from flask import Blueprint, render_template, request, redirect, flash
 from flask.ext.login import current_user, login_user, logout_user
 
+from openspending.core import login_manager
+
 from openspending.model.dataset import Dataset
 from openspending.views.cache import disable_cache
 from openspending.model import Account
+from openspending.model.account import LockdownUser,load_account
 
-from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD
+from flask import current_app
+
+#from settings import LOCKDOWNUSER, LOCKDOWNPASSWORD
 
 
 blueprint = Blueprint('home', __name__)
+
+
+
+
 
 @blueprint.route('/lockdown')
 def lockdown():
     return render_template('home/lockdown.html')
 
 
+
 @blueprint.route('/lockdown', methods=['POST', 'PUT'])
 def lockdown_perform():
     username = request.form.get('username', '')
     password = request.form.get('password', '')
-    print username
-    print password
-    print LOCKDOWNUSER
-    print LOCKDOWNPASSWORD
+    LOCKDOWNUSER = current_app.config.get('LOCKDOWNUSER', 'test')
+    LOCKDOWNPASSWORD = current_app.config.get('LOCKDOWNPASSWORD', 'test')
+
     if username.lower() == LOCKDOWNUSER and password == LOCKDOWNPASSWORD:
-        account = Account.all().first()
-        print account
+        account = load_account('all')
+        #account = Account.all().first()
         login_user(account, remember=True)
         return redirect("/", code=302)
     else:

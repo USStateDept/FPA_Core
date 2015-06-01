@@ -1,0 +1,24 @@
+<div id="cubes_list" class="panel panel-default" >
+    <div class="panel-heading">
+        Simple Filter
+    </div>
+
+    <ng-include src="'filter/_filters_nav.tpl.html'"></ng-include>
+
+    <div class="panel-body">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+            </span>
+            <input type="search" class="form-control search" placeholder="Search Available Fields" ng-model="query">
+        </div>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item"
+            ng-repeat="fieldop in fieldops | filter:query"
+            href="#/simplefilter/{{fieldop.value}}">
+            {{fieldop.label || "(no name)"}}
+            <small>({{fieldop.label || "no name"}})</small>
+        </a>
+    </div>
+</div>

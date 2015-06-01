@@ -16,8 +16,8 @@ from flask import request
 #from google.refine import refine
 
 from openspending import default_settings
-from settings import OPENREFINE_SERVER 
-from settings import LOCKDOWN_FORCE
+#from settings import OPENREFINE_SERVER 
+#from settings import LOCKDOWN_FORCE
 from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
 #from flask.ext.superadmin import Admin, model
@@ -69,43 +69,45 @@ def create_app(**config):
 
     @app.before_request
     def require_basic_auth(*args, **kwargs):
-        
+        LOCKDOWN_FORCE = app.config['LOCKDOWN_FORCE']
         if not current_user.is_authenticated() and request.path not in ["/lockdown", "/__ping__"] and LOCKDOWN_FORCE:
             return redirect("/lockdown", code=302)
         from openspending.model.search import SearchForm
         g.search_form = SearchForm()
 
-
-    app.cubes_workspace = Workspace()
-    
-    app.cubes_workspace.register_default_store('OpenSpendingStore')
+    with app.app_context():
+        app.cubes_workspace = Workspace()
+        
+        app.cubes_workspace.register_default_store('OpenSpendingStore')
 
 
     return app
 
 
 def create_web_app(**config):
-    print "RUNNING CREATE WEB APP"
     app = create_app(**config)
 
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
-    from openspending.views import register_views
-    register_views(app)
+    with app.app_context():
 
-    from openspending.admin.routes import register_admin
-    flaskadmin = admin.Admin(app, name='FIND Admin')
-    #flaskadmin = Admin(app, url='/admin', name='admin2')
-    register_admin(flaskadmin, db)
+        from openspending.views import register_views
+        register_views(app)
 
-    from openspending.model import Dataset
-    whoosearch.whoosh_index(app,Dataset)
+        from openspending.admin.routes import register_admin
+        flaskadmin = admin.Admin(app, name='FIND Admin')
+        #flaskadmin = Admin(app, url='/admin', name='admin2')
+        register_admin(flaskadmin, db)
+
+        from openspending.model import Dataset
+        from openspending.model.country import Country
+        whoosearch.whoosh_index(app,Dataset)
+        whoosearch.whoosh_index(app, Country)
 
     return app
 
 
 def create_celery(app):
-    print "RNNING CELERY NOW"
     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
     TaskBase = celery.Task

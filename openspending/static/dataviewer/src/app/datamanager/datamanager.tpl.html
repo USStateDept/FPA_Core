@@ -1,0 +1,50 @@
+<div class="jumbotron" >
+  <form>
+    <select data-placeholder="Choose a dataset..." class="chosen-select" ng-model="data_ids" > 
+      <option ng-repeat="dataset in datasets"  on-chosen-render="initChosen" value="{{dataset.name}}">
+        {{dataset.label}}
+      </option>
+    </select>
+    <div class="relationsection">
+      <select data-placeholder="Choose a dataset..." id="relation_dataset_1" class="chosen-relation" ng-model="data_ids" > 
+        <option ng-repeat="dataset in datasets"  on-chosen-render="initChosen" value="{{dataset.name}}">
+          {{dataset.label}}
+        </option>
+      </select>
+
+
+
+      <select data-placeholder="Choose a dataset..." id="relation_dataset_join_1" class="chosen-relation" ng-model="data_ids" > 
+        <option ng-repeat="dataset in datasets"  on-chosen-render="initChosen" value="{{dataset.name}}">
+          {{dataset.label}}
+        </option>
+      </select>
+
+
+
+    </div>
+    <button ng-click="renderRelation()">
+      Add Relation
+    </button>
+  </form>
+
+
+  <h3>Here is my table1</h3>
+  <table style="width:100%;">
+      <tr>
+        <th>ID</th>
+        <th ng-repeat="(columnname,datavalue) in data_preview[0]" >
+          {{columnname}}
+        </th>
+      </tr>
+      <tr ng-repeat="data_item_pre in data_preview" >
+          <td>{{$index}}</td>
+          <td ng-repeat="(columnname,datavalue) in data_preview[0]">
+            {{data_item_pre[columnname]}}
+          </td>
+      </tr>
+  </table>
+</div>
+
+
+

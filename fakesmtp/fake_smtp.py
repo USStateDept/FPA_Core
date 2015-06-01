@@ -13,6 +13,7 @@ class FakeSMTPServer(smtpd.SMTPServer):
 
     def __init__(*args, **kwargs):
         print "Running fake smtp server on port 25"
+        print "Check emaillog.log for email messages"
         smtpd.SMTPServer.__init__(*args, **kwargs)
 
     def process_message(*args, **kwargs):
@@ -20,9 +21,9 @@ class FakeSMTPServer(smtpd.SMTPServer):
         messagebody = args[4]
         
         try:
-            f = open('c:/inetpub/smtpmail/log/emaillog.log', 'a')
+            f = open('emaillog.log', 'a')
         except:
-            f = open('c:/inetpub/smtpmail/log/emaillog.log', 'a')
+            f = open('emaillog.log', 'w')
         f.write("/************************************/\n")
         f.write(fromaddress + "\n")
         f.write(messagebody + "\n")

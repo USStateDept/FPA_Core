@@ -11,6 +11,7 @@ from openspending.lib.findui import jsonp
 
 # from openspending.auth import require
 from openspending.model.dataset import Dataset
+from openspending.model.country import Country
 from openspending.views.error import api_json_errors
 # from openspending.lib import util
 # from openspending.lib.browser import Browser
@@ -46,26 +47,42 @@ def partialsearch_api():
     return json.dumps(items)
 
 
+
+
+#use /all, /countries, /indicators
 @blueprint.route('/search')
+@blueprint.route('/search/<searchtype>')
 @api_json_errors
 @jsonp
-def search_api():
+def search_api(searchtype= 'all'):
 
     q = request.args.get('q', None)
     if not q:
         return jsonify({})
 
-    results = Dataset.query.whoosh_search(q + "*", or_=True)
-    results_count = results.count()
-    results = results.limit(25).all()
-    returnobj = {
-                "totalresults":results_count,
-                "pages": int(float(results_count)/float(25))
-                }
-    items = collections.OrderedDict()
-    for result in results:
-        items[result.name] = result.label
-    returnobj['data'] = items
+    returnobj = {'data':{}}
+    if searchtype not in ['all', 'indicators', 'countries']:
+        searchtype = 'all'
+
+    if searchtype in ['all', 'indicators']:
+        results = Dataset.query.whoosh_search(q + "*", or_=True)
+        results_count = results.count()
+        results = results.limit(25).all()
+        returnobj['totaldatasets'] = results_count
+        items = collections.OrderedDict()
+        for result in results:
+            items[result.name] = result.label
+        returnobj['data']['indicators'] = items
+
+    if searchtype in ['all', 'countries']:
+        results = Country.query.whoosh_search(q + "*", or_=True)
+        results_count = results.count()
+        results = results.limit(25).all()
+        returnobj['totalcountries'] = results_count
+        items = collections.OrderedDict()
+        for result in results:
+            items[result.geounit] = result.label
+        returnobj['data']['countries'] = items
 
     return json.dumps(returnobj)
 

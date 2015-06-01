@@ -9,183 +9,238 @@
 
 
 {% block optional_head %}
-link(href='{{ static_path("dist/app/css/visualization.css") }}', rel='stylesheet')
-link(href='{{ static_path("dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
 {% endblock %}
 
 {% block content %}
 
-    <div class="container">
-      <div class="row">
-        <p></p>
-      </div>
-      <div class="row">
-        <p></p>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div role="tabpanel">
-            <ul id="vizTabs" role="tablist" class="nav nav-tabs nav-justified">                                
-              <li role="presentation" class="active"><a href="#select-indicator" aria-controls="vizualize" role="tab" data-toggle="tab">
-                  <h4><span data-bind="visible:!selectionTracker().indicator">1. Select Indicator</span><span data-bind="html:activeIndicator,visible:selectionTracker().indicator" class="selected-tab-value"></span><span data-bind="click:clearIndicator,visible:selectionTracker().indicator" class="glyphicon glyphicon-remove"></span></h4></a></li>
-              <li role="presentation"><a href="#select-vizualization" aria-controls="select-vizualization" role="tab" data-toggle="tab">
-                  <h4><span data-bind="visible:!selectionTracker().vizualization">2. Choose Vizualization</span><span data-bind="html:activeChart,visible:selectionTracker().vizualization" class="selected-tab-value"></span><span data-bind="click:clearChart,visible:selectionTracker().vizualization" class="glyphicon glyphicon-remove"></span></h4></a></li>
-              <li role="presentation" class="disabled"><a href="#vizualize" aria-controls="vizualize" role="tab" data-toggle="tab">
-                  <h4>3.<span>&nbsp; Vizualize</span></h4></a></li>
-            </ul>
-            <div class="tab-content">
-              <div class="row">
-                <p></p>
-              </div>
-              <div class="row">
-                <p></p>
-              </div>
-              <div id="select-indicator" role="tabpanel" class="tab-pane active">                 
-                <div class="row">
-                  <div class="col-md-1">
-                    <div class="tabbable tabs-left">
-                      <ul class="nav nav-tabs">
-                        <li><a href="#tab-category" data-toggle="tab">Category</a></li>
-                        <li class="active"><a href="#tab-source" data-toggle="tab">Sources        </a></li>
-                        <li><a href="#tab-alphabetic" data-toggle="tab">A - Z</a></li>
-                        <li><a href="#tab-countries" data-toggle="tab">Countries</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-md-11">
-                    <div class="tab-content">
-                      <div id="tab-category" class="tab-pane">
-                        <div data-bind="foreach:categoriesModel" class="row">
-                          <div class="col-sm-4 col-md-4 col-sm-2 flip">
-                            <div class="card">
-                              <div class="face front">
-                                <div class="well category-wrapper"><span data-bind="html:length" class="badge"></span>
-                                  <div data-bind="attr:{class:'icon-category-' + label.replace(&quot; &quot;,&quot;-&quot;).toLowerCase() + ' well category'}"></div>
-                                  <h4 data-bind="html:label"></h4>
-                                </div>
-                              </div>
-                              <div class="face back">
-                                <div class="list-group"><a href="#" data-bind="html:label" class="list-group-item active"></a><span data-bind="foreach:indicators"><a href="#" data-bind="click:$root.selectIndicator,html:label,attr:{&quot;data-content&quot;:&quot;&lt;strong&gt;Source : &lt;/strong&gt;&quot; + source}" data-html="true" class="list-group-item">                             </a></span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div id="tab-source" class="tab-pane active">
-                        <div data-bind="foreach:sourcesModel" class="row">
-                          <div class="col-sm-4 col-md-4 flip">
-                            <div class="card">
-                              <div class="face front">
-                                <div class="well category-wrapper"><span data-bind="html:length" class="badge"></span>
-                                  <div class="well category icon-category-70"></div>
-                                  <h4 data-bind="html:label"></h4>
-                                </div>
-                              </div>
-                              <div class="face back">
-                                <div class="list-group"><a href="#" data-bind="html:label" class="list-group-item active"></a><span data-bind="foreach:indicators"><a href="#" data-bind="click:$root.selectIndicator,html:label,attr:{&quot;data-content&quot;:&quot;&lt;strong&gt;Category : &lt;/strong&gt;&quot; + category}" data-html="true" class="list-group-item"></a></span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div id="tab-alphabetic" class="tab-pane">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <input data-bind="event:{keyup:filterIndicators}" placeHolder="Filter" class="pull-left">
-                          </div>
-                        </div>
-                        <div data-bind="foreach:indicatorsModel" class="list-group row"><a href="#" data-bind="click:$root.selectIndicator,html:label,attr:{&quot;data-content&quot;:&quot;&lt;strong&gt;Category : &lt;/strong&gt;&quot; + category + &quot;&lt;br&gt;&lt;strong&gt;Source : &lt;/strong&gt;&quot; + source,&quot;data-indicatorid&quot;:id}" data-html="true" class="list-group-item col-md-4"></a></div>
-                      </div>
-                      <div id="tab-countries" class="tab-pane">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <input data-bind="event:{keyup:filterCountries}" placeHolder="Filter" class="pull-left">
-                          </div>
-                        </div>
-                        <div class="row">
-                          <p></p>
-                        </div>
-                        <div data-bind="foreach:countriesModel" class="row">
-                          <div class="col-md-3 col-sm-4 col-xs-6">
-                            <div data-bind="click:$root.selectCountry" class="well category-wrapper">
-                              <div data-bind="style:{background:'url(app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}" class="well category"></div>
-                              <h4 data-bind="html:label"></h4>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id="select-vizualization" role="tabpanel" class="tab-pane">
-                <div class="row">
-                  <div class="col-sm-4 col-md-4">
-                    <div data-bind="click:function(){selectVizualization(&quot;bar&quot;)}" class="well category-wrapper">
-                      <div class="well category noun-bar-45998"></div>
-                      <h4>Bar</h4>
-                    </div>
-                  </div>
-                  <div class="col-sm-4 col-md-4">
-                    <div data-bind="click:function(){selectVizualization(&quot;line&quot;)}" class="well category-wrapper">
-                      <div class="well category noun-line-105490"></div>
-                      <h4>Line</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id="vizualize" role="tabpanel" class="tab-pane">
-                <div class="row">
-                  <div class="col-md-2">                     
-                    <div class="ui-widget">
-                      <label for="years-label">Years</label>
-                      <input id="years-label" readonly>
-                    </div>
-                    <div id="slider-years"></div>
-                    <div style="display:none" class="ui-widget">
-                      <p id="callback" class="message success">Callback target</p>
-                      <select multiple="multiple" size="5">
-                        <optgroup label="Europe">
-                          <option value="Germany">Germany</option>&#x9;
-                          <option value="France">France</option>&#x9;
-                          <option value="France">Sweden</option>
-                        </optgroup>
-                        <optgroup label="Asia">
-                          <option value="Pakistan">Pakistan</option>
-                        </optgroup>
-                        <optgroup label="Australia">
-                          <option value="Australia">Australia</option>
-                          <option value="Australia">New Zealand</option>
-                        </optgroup>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-10">
-                    <div id="viz-container"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
- 
+.container
+  .row
+    p
+  .row
+    p
+  .row
+    .col-md-12
+      div(role='tabpanel')  
+        ul#vizTabs.nav.nav-tabs.nav-justified(role='tablist')
+          li.active(role='presentation')
+            a(href='#select-filter', aria-controls='select-vizualization', role='tab', data-toggle='tab',class='selectable')
+              h4
+                //-span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
+                span() 1. Set Filters
+                //-span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
+                //-linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
+          li(role='presentation')
+            a(href='#select-indicator', aria-controls='vizualize', role='tab',class="selectable",data-toggle='tab')
+              //-data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}"
+              h4
+                //-span(data-bind="visible:!selectionTracker().indicator") 2. Select Indicator
+                span() 2. Select Indicators
+                //-span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
+                //-span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
+          li(role='presentation')
+            a(href='#select-vizualization', aria-controls='select-vizualization', role='tab',data-bind="attr:{'data-toggle':activeIndicators().length > 0?'tab':'none'},css:{selectable:activeIndicators().length>0}")
+              h4
+                //-span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
+                span() 3. Pick Visualization
+                //-span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
+                //-span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
+          li(role='presentation')
+            a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization?'tab':'none'}")
+              h4
+                span() &nbsp; Visualize
+        .tab-content
+          .row
+            p
+          .row
+            p
+          #select-filter.tab-pane.active(role='tabpanel')
+            .row
+              p
+            .row.title
+              .col-md-10
+                .dropdown
+                  button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
+                      span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
+                    
+                   
+              .col-md-2
+                .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
+            .row
+              p
+            .row
+              .col-md-12
+                div#filter-years
+                
+            .row
+              p
+            .row
+              p
+            .row.title
+              .col-md-2
+                .dropdown
+                  button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Country Groups
+                      span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroups', data-bind="foreach:countryGroupings")
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
+              .col-md-2
+                .dropdown
+                  button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true', data-bind="visible:countryGroupRegions().length>0") Regions
+                      span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="html:$data,click:$root.selectCountryGroupRegion")
+              //-.col-md-4
+                  //-button.btn.btn-default(type='button') Select All
+                  //-button.btn.btn-default(type='button') Deselect All
+              .col-md-8
+                .pull-right#filter-countries-label(data-bind="html:activeGroup().label + ' - ' + activeRegion()")
+            .row
+              p
+            .row
+              .col-md-12
+                input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
+            .row
+              p
+            .row
+              .col-md-12
+                
+            .row
+              p
+            .row.countries-list()
+              .col-md-6
+                .row(data-bind="foreach:countriesModel" )
+                  .col-md-4.col-sm-4.col-xs-4
+                    div.well.category-wrapper(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                      div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
+                      h4(data-bind="html:label")
+              .col-md-6
+                .row
+                  .col-md-12.map-view Placeholder for Map. Make map full width.
+              
+          //- BY TEST
+          #select-indicator.tab-pane(role='tabpanel')                  
+            .row
+              .col-md-2
+                .tabbable.tabs-left
+                  ul.nav.nav-tabs
+                    li.active
+                      a(href='#tab-category', data-toggle='tab') Sector
+                    li
+                      a(href='#tab-source', data-toggle='tab') Collections        
+                    li
+                      a(href='#tab-alphabetic', data-toggle='tab') A - Z
+                    //- li
+                    //-   a(href='#tab-countries', data-toggle='tab') Countries
+              .col-md-10
+                .tab-content
+                  #tab-category.tab-pane.active
+                    .row(data-bind="foreach:categoriesModel")
+                      .col-sm-4.col-md-4.col-sm-2.flip
+                        .card
+                          .face.front
+                            div.well.category-wrapper()
+                              span.badge(data-bind="html:length")
+                              div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
+                              h4(data-bind="html:label")
+                          .face.back
+                            div.list-group()
+                              a.list-group-item.active(href="#" data-bind="html:label")
+                              span.list(data-bind="foreach:indicators")
+                                a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                                span.downloadLinks()
+                                  span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                                  span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                                  span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                  #tab-source.tab-pane
+                    .row(data-bind="foreach:sourcesModel")
+                      .col-sm-4.col-md-4.flip
+                        .card
+                          .face.front
+                            div.well.category-wrapper()
+                              span.badge(data-bind="html:length")
+                              div.well.category.icon-category-70()
+                              h4(data-bind="html:label")
+                          .face.back
+                            div.list-group()
+                              a.list-group-item.active(href="#" data-bind="html:label")
+                              span.list(data-bind="foreach:indicators")
+                                a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
+                                span.downloadLinks()
+                                  span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                                  span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                                  span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                  #tab-alphabetic.tab-pane
+                    .row
+                      .col-md-12
+                        input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
+                    div.list-group.row()
+                      span(data-bind="foreach:indicatorsModel")
+                        .list-group-item.col-md-4(data-bind="css:{selected:selected},click:$root.selectIndicatorMultiple")
+                          a(data-bind='html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                          span.downloadLinks()
+                            span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                            span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                            span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                 
+          //- TAB 2
+          #select-vizualization.tab-pane(role='tabpanel')
+            .row
+              .col-sm-4.col-md-4
+                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;bar&#34;)}')
+                  div.well.category.noun-bar-45998()
+                  h4 Bar
+              //- .col-sm-4.col-md-4
+              //-   div.well.category-wrapper(data-bind='click:function(){selectVizualization("Scatter Plot")}' )
+              //-     div.well.category.noun-scatter-105477()
+              //-     h4 Scatter
+              .col-sm-4.col-md-4
+                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;line&#34;)}')
+                  div.well.category.noun-line-105490()
+                  h4 Line
+              .col-sm-4.col-md-4
+                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;scatter&#34;)}')
+                  div.well.category.noun-scatter-105477()
+                  h4 Scatter Plot
+              .col-sm-4.col-md-4
+                div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                  div.well.category.noun-radar-50835()
+                  h4 Radar
+              .col-sm-4.col-md-4
+                div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                  div.well.category.noun-tree-35339()
+                  h4 Tree
+
+          //-TAB 3
+          #vizualize.tab-pane(role='tabpanel')
+            .row#loading
+              .col-md-12
+                img(src='/static/find-ui/dist/app/images/loader.GIF')
+            .row
+              .col-md-12
+                div#viz-container
 {% endblock %}
 
 {% block footer_scripts %}
 link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 
-script(src="{{ static_path('dist/bower_components/jquery-ui/jquery-ui.js') }}")
-script(src="{{ static_path('dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
-script(src="{{ static_path('dist/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
 script(src='//code.highcharts.com/highcharts.js')
 script(src='//code.highcharts.com/modules/exporting.js')
-script(src="{{ static_path('dist/bower_components/knockout/dist/knockout.js')  }}") 
-script(src="{{ static_path('dist/app/js/visualization/config.js') }}")
-script(src="{{ static_path('dist/app/js/visualization/loader.js') }}")
-script(src="{{ static_path('dist/app/js/visualization/highcharts-json.js') }}")
-script(src="{{ static_path('dist/app/js/visualization/visualization.js') }}")
+script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/visualization/loader.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 
 {% endblock %}
 

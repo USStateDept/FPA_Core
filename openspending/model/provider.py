@@ -14,7 +14,10 @@ from openspending.lib.helpers import get_dataset
 
 from openspending.lib.cubes_util import getGeomCube
 
-from settings import SQLALCHEMY_DATABASE_URI
+from flask import current_app
+
+
+#from settings import SQLALCHEMY_DATABASE_URI
 
 
 
@@ -140,6 +143,7 @@ class OpenSpendingStore(SQLStore):
 
 
     def __init__(self, **options):
+        SQLALCHEMY_DATABASE_URI = current_app.config.get('SQLALCHEMY_DATABASE_URI')
         super(OpenSpendingStore, self).__init__(url=SQLALCHEMY_DATABASE_URI, **options)
         options = dict(options)
         self.options = options

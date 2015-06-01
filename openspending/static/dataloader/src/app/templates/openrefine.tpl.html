@@ -1,0 +1,21 @@
+<div class="control-group">
+  <label class="control-label" for="preprocessors">Preprocessing Functions (Need to multiselect and sort here)</label>
+  <div class="controls">
+
+    <div>Need something like this for preprocessors <a href="http://codepen.io/thgreasi/pen/olDJi" target="_blank"> this</a>
+  </div>
+</div>
+
+<div>Going to assume we have a valid url and it loaded above into the OR project</div>
+<ul>
+  <li>1.Go to OpenRefine URL: <a href="{{ meta.ORURL }}" target=="_blank"> {{ meta.ORURL }}</a></li>
+  <li>2. Make edits</li>
+  <li>3. <button open-refine-fetch>Update Columns from OpenRefine</button> to load your operations in the text field</li>
+  <li>This will reload the data and update everything</li> 
+</ul>
+<div class="control-group">
+  <label class="control-label" for="description">Open Refine Instructions</label>
+  <div class="controls">
+    <textarea class="xxlarge span4" rows="4" name="description" ng-model="meta.ORoperations"></textarea>
+  </div>
+</div>

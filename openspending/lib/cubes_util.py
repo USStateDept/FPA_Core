@@ -375,128 +375,9 @@ def getGeomCube(provider, metaonly):
                           ]
                         },
                         {
-                          "name": "dos_level1",
-                          "info": {},
-                          "label": "Department of State Country Groupings",
-                          "key": "dos_level1",
-                          "label_attribute": "dos_level1",
-                          "order_attribute": "dos_level1",
-                          "attributes": [
-                            {
-                              "name": "dos_level1",
-                              "info": {},
-                              "label": "Department of State Country Groupings",
-                              "ref": "geometry__country_level0.dos_level1",
-                              "locales": []
-                            }
-                          ]
-                        },
-                        {
-                          "name": "dod_level1",
-                          "info": {},
-                          "label": "Department of Defense Country Groupings",
-                          "key": "dod_level1",
-                          "label_attribute": "dod_level1",
-                          "order_attribute": "dod_level1",
-                          "attributes": [
-                            {
-                              "name": "dod_level1",
-                              "info": {},
-                              "label": "Department of Defense Country Groupings",
-                              "ref": "geometry__country_level0.dod_level1",
-                              "locales": []
-                            }
-                          ]
-                        },
-                        {
-                          "name": "usaid_level1",
-                          "info": {},
-                          "label": "USAID Country Groupings",
-                          "key": "usaid_level1",
-                          "label_attribute": "usaid_level1",
-                          "order_attribute": "usaid_level1",
-                          "attributes": [
-                            {
-                              "name": "usaid_level1",
-                              "info": {},
-                              "label": "USAID Country Groupings",
-                              "ref": "geometry__country_level0.usaid_level1",
-                              "locales": []
-                            }
-                          ]
-                        },
-                        {
-                          "name": "bureau",
-                          "info": {},
-                          "label": "Bureau Country Groupings",
-                          "key": "bureau",
-                          "label_attribute": "bureau",
-                          "order_attribute": "bureau",
-                          "attributes": [
-                            {
-                              "name": "bureau",
-                              "info": {},
-                              "label": "Bureau Country Groupings",
-                              "ref": "geometry__country_level0.bureau",
-                              "locales": []
-                            }
-                          ]
-                        },
-                        {
-                          "name": "region_wb",
-                          "info": {},
-                          "label": "World Bank Regions",
-                          "key": "region_wb",
-                          "label_attribute": "region_wb",
-                          "order_attribute": "region_wb",
-                          "attributes": [
-                            {
-                              "name": "region_wb",
-                              "info": {},
-                              "label": "World Bank Regions",
-                              "ref": "geometry__country_level0.region_wb",
-                              "locales": []
-                            }
-                          ]
-                        },
-                        {
-                          "name": "subregion",
-                          "info": {},
-                          "label": "Subregion",
-                          "key": "subregion",
-                          "label_attribute": "subregion",
-                          "order_attribute": "subregion",
-                          "attributes": [
-                            {
-                              "name": "subregion",
-                              "info": {},
-                              "label": "Subregion",
-                              "ref": "geometry__country_level0.subregion",
-                              "locales": []
-                            }
-                          ]
-                        },
-                        {
-                          "name": "region_un",
-                          "info": {},
-                          "label": "UN Regions",
-                          "key": "region_un",
-                          "label_attribute": "region_un",
-                          "order_attribute": "region_un",
-                          "attributes": [
-                            {
-                              "name": "region_un",
-                              "info": {},
-                              "label": "UN Regions",
-                              "ref": "geometry__country_level0.region_un",
-                              "locales": []
-                            }
-                          ]
-                        },
-                        {
                           "name": "continent",
                           "info": {},
-                          "label": "Continent",
+                          "label": "Continents Countries",
                           "key": "continent",
                           "label_attribute": "continent",
                           "order_attribute": "continent",
@@ -504,25 +385,195 @@ def getGeomCube(provider, metaonly):
                             {
                               "name": "continent",
                               "info": {},
-                              "label": "Continent",
+                              "label": "Continents Country",
                               "ref": "geometry__country_level0.continent",
                               "locales": []
                             }
                           ]
                         },
                         {
-                          "name": "incomegroup_level1",
+                          "name": "dos_region",
                           "info": {},
-                          "label": "Income Groups",
-                          "key": "incomegroup_level1",
-                          "label_attribute": "incomegroup_level1",
-                          "order_attribute": "incomegroup_level1",
+                          "label": "Department of State Countries",
+                          "key": "dos_region",
+                          "label_attribute": "dos_region",
+                          "order_attribute": "dos_region",
                           "attributes": [
                             {
-                              "name": "incomegroup_level1",
+                              "name": "dos_region",
                               "info": {},
-                              "label": "Income Groups",
-                              "ref": "geometry__country_level0.incomegroup_level1",
+                              "label": "Department of State Country",
+                              "ref": "geometry__country_level0.dos_region",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "dod_cmd",
+                          "info": {},
+                          "label": "Department of Defense Country",
+                          "key": "dod_cmd",
+                          "label_attribute": "dod_cmd",
+                          "order_attribute": "dod_cmd",
+                          "attributes": [
+                            {
+                              "name": "dod_cmd",
+                              "info": {},
+                              "label": "Department of Defense Country",
+                              "ref": "geometry__country_level0.dod_cmd",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "usaid_reg",
+                          "info": {},
+                          "label": "USAID Countries",
+                          "key": "usaid_reg",
+                          "label_attribute": "usaid_reg",
+                          "order_attribute": "usaid_reg",
+                          "attributes": [
+                            {
+                              "name": "usaid_reg",
+                              "info": {},
+                              "label": "USAID Countries",
+                              "ref": "geometry__country_level0.usaid_reg",
+                              "locales": []
+                            }
+                          ]
+                        },  
+                        {
+                          "name": "feed_the_f",
+                          "info": {},
+                          "label": "Feed the Future Countries",
+                          "key": "feed_the_f",
+                          "label_attribute": "feed_the_f",
+                          "order_attribute": "feed_the_f",
+                          "attributes": [
+                            {
+                              "name": "feed_the_f",
+                              "info": {},
+                              "label": "Feed the Future Countries",
+                              "ref": "geometry__country_level0.feed_the_f",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "pepfar",
+                          "info": {},
+                          "label": "PEPFAR Countries",
+                          "key": "pepfar",
+                          "label_attribute": "pepfar",
+                          "order_attribute": "pepfar",
+                          "attributes": [
+                            {
+                              "name": "pepfar",
+                              "info": {},
+                              "label": "PEPFAR Countries",
+                              "ref": "geometry__country_level0.pepfar",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "paf",
+                          "info": {},
+                          "label": "PAF Countries",
+                          "key": "paf",
+                          "label_attribute": "paf",
+                          "order_attribute": "paf",
+                          "attributes": [
+                            {
+                              "name": "paf",
+                              "info": {},
+                              "label": "PAF Countries",
+                              "ref": "geometry__country_level0.paf",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "oecd",
+                          "info": {},
+                          "label": "OECD Countries",
+                          "key": "oecd",
+                          "label_attribute": "oecd",
+                          "order_attribute": "oecd",
+                          "attributes": [
+                            {
+                              "name": "oecd",
+                              "info": {},
+                              "label": "OECD Countries",
+                              "ref": "geometry__country_level0.oecd",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "region_un",
+                          "info": {},
+                          "label": "UN Region Countries",
+                          "key": "region_un",
+                          "label_attribute": "region_un",
+                          "order_attribute": "region_un",
+                          "attributes": [
+                            {
+                              "name": "region_un",
+                              "info": {},
+                              "label": "UN Region Countries",
+                              "ref": "geometry__country_level0.region_un",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "subregion",
+                          "info": {},
+                          "label": "Subregion Countries",
+                          "key": "subregion",
+                          "label_attribute": "subregion",
+                          "order_attribute": "subregion",
+                          "attributes": [
+                            {
+                              "name": "subregion",
+                              "info": {},
+                              "label": "Subregion Countries",
+                              "ref": "geometry__country_level0.subregion",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "region_wb",
+                          "info": {},
+                          "label": "World Bank Region Countries",
+                          "key": "region_wb",
+                          "label_attribute": "region_wb",
+                          "order_attribute": "region_wb",
+                          "attributes": [
+                            {
+                              "name": "region_wb",
+                              "info": {},
+                              "label": "World Bank Region Countries",
+                              "ref": "geometry__country_level0.region_wb",
+                              "locales": []
+                            }
+                          ]
+                        },
+                        {
+                          "name": "wb_inc_lvl",
+                          "info": {},
+                          "label": "World Bank Income Level Countries",
+                          "key": "wb_inc_lvl",
+                          "label_attribute": "wb_inc_lvl",
+                          "order_attribute": "wb_inc_lvl",
+                          "attributes": [
+                            {
+                              "name": "wb_inc_lvl",
+                              "info": {},
+                              "label": "World Bank Income Level Countries",
+                              "ref": "geometry__country_level0.wb_inc_lvl",
                               "locales": []
                             }
                           ]
@@ -564,41 +615,91 @@ def getGeomCube(provider, metaonly):
                           ]
                         },
                         {
-                          "name": "dos_level1",
+                          "name": "dos_region",
                           "info": {},
                           "label": "Department of State Regions",
                           "levels": [
-                            "dos_level1",
+                            "dos_region",
                             "sovereignt",
                             "name"
                           ]
                         },
                         {
-                          "name": "dod_level1",
-                          "info": {},
-                          "label": "Department of Defense Regions",
-                          "levels": [
-                            "dod_level1",
-                            "sovereignt",
-                            "name"
-                          ]
-                        },
-                        {
-                          "name": "usaid_level1",
+                          "name": "usaid_reg",
                           "info": {},
                           "label": "USAID Regions",
                           "levels": [
-                            "usaid_level1",
+                            "usaid_reg",
                             "sovereignt",
                             "name"
                           ]
                         },
                         {
-                          "name": "bureau",
+                          "name": "dod_cmd",
                           "info": {},
-                          "label": "Bureau Regions",
+                          "label": "Department of Defense Regions",
                           "levels": [
-                            "bureau",
+                            "dod_cmd",
+                            "sovereignt",
+                            "name"
+                          ]
+                        },
+                        {
+                          "name": "feed_the_f",
+                          "info": {},
+                          "label": "Feed the Future Regions",
+                          "levels": [
+                            "feed_the_f",
+                            "sovereignt",
+                            "name"
+                          ]
+                        },
+                        {
+                          "name": "pepfar",
+                          "info": {},
+                          "label": "PEPFAR Regions",
+                          "levels": [
+                            "pepfar",
+                            "sovereignt",
+                            "name"
+                          ]
+                        },
+                        {
+                          "name": "paf",
+                          "info": {},
+                          "label": "PAF Regions",
+                          "levels": [
+                            "paf",
+                            "sovereignt",
+                            "name"
+                          ]
+                        },
+                        {
+                          "name": "oecd",
+                          "info": {},
+                          "label": "OECD Regions",
+                          "levels": [
+                            "oecd",
+                            "sovereignt",
+                            "name"
+                          ]
+                        },
+                        {
+                          "name": "region_un",
+                          "info": {},
+                          "label": "United Nation Regions",
+                          "levels": [
+                            "region_un",
+                            "sovereignt",
+                            "name"
+                          ]
+                        },
+                        {
+                          "name": "subregion",
+                          "info": {},
+                          "label": "Subregions",
+                          "levels": [
+                            "subregion",
                             "sovereignt",
                             "name"
                           ]
@@ -614,41 +715,21 @@ def getGeomCube(provider, metaonly):
                           ]
                         },
                         {
-                          "name": "subregion",
+                          "name": "wb_inc_lvl",
                           "info": {},
-                          "label": "Subregion",
+                          "label": "World Bank Income Level Regions",
                           "levels": [
-                            "subregion",
+                            "wb_inc_lvl",
                             "sovereignt",
                             "name"
                           ]
-                        },
-                        {
-                          "name": "region_un",
-                          "info": {},
-                          "label": "UN Regions",
-                          "levels": [
-                            "region_un",
-                            "sovereignt",
-                            "name"
-                          ]
-                        },
+                        },                        
                         {
                           "name": "continent",
                           "info": {},
                           "label": "Continents",
                           "levels": [
                             "continent",
-                            "sovereignt",
-                            "name"
-                          ]
-                        },
-                        {
-                          "name": "incomegroup_level1",
-                          "info": {},
-                          "label": "Income Grouping",
-                          "levels": [
-                            "incomegroup_level1",
                             "sovereignt",
                             "name"
                           ]
@@ -668,16 +749,18 @@ def getGeomCube(provider, metaonly):
                 u'geometry__year' : u"geometry__time.year",
                 u"time.id" : u"geometry__time.id",
                 u"time.gid" : u"geometry__time.gid",
-                u"country_level0.dos_level1": u"geometry__country_level0.dos_level1", 
-                u"country_level0.dod_level1": u"geometry__country_level0.dod_level1",
-                u"country_level0.incomegroup_level1": u"geometry__country_level0.incomegroup_level1", 
-                u"country_level0.usaid_level1": u"geometry__country_level0.usaid_level1",
-                u"country_level0.bureau": u"geometry__country_level0.bureau", 
-                u"country_level0.region_wb": u"geometry__country_level0.region_wb", 
-                u"country_level0.subregion": u"geometry__country_level0.subregion", 
-                u"country_level0.region_un": u"geometry__country_level0.region_un", 
-                u"country_level0.continent": u"geometry__country_level0.continent", 
-                u"country_level0.sovereignt": u"geometry__country_level0.sovereignt", 
+                u"country_level0.continent": u"geometry__country_level0.continent",
+                u"country_level0.dos_region": u"geometry__country_level0.dos_region",
+                u"country_level0.usaid_reg": u"geometry__country_level0.usaid_reg", 
+                u"country_level0.dod_cmd": u"geometry__country_level0.dod_cmd", 
+                u"country_level0.feed_the_f": u"geometry__country_level0.feed_the_f",
+                u"country_level0.pepfar": u"geometry__country_level0.pepfar",
+                u"country_level0.paf": u"geometry__country_level0.paf",
+                u"country_level0.oecd": u"geometry__country_level0.oecd",
+                u"country_level0.region_un": u"geometry__country_level0.region_un",
+                u"country_level0.subregion": u"geometry__country_level0.subregion",
+                u"country_level0.region_wb": u"geometry__country_level0.region_wb",
+                u"country_level0.wb_inc_lvl": u"geometry__country_level0.wb_inc_lvl",
                 u"country_level0.id": u"geometry__country_level0.id",
                 u"country_level0.name": u"geometry__country_level0.name",
                 u"country_level0.label": u"geometry__country_level0.label"

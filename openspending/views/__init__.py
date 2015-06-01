@@ -12,6 +12,7 @@ from openspending.views.indicators import blueprint as indicators
 from openspending.views.feedback import blueprint as feedback
 from openspending.views.search import blueprint as search
 from openspending.views.viz import blueprint as viz
+from openspending.views.admin import blueprint as findadmin
 # from openspending.views.badge import blueprint as badge
 # from openspending.views.view import blueprint as view
 # from openspending.views.editor import blueprint as editor
@@ -25,6 +26,7 @@ from openspending.views.api_v2.references import blueprint as references_v3
 from openspending.views.api_v2.dataview import blueprint as dataview_v3
 from openspending.views.api_v2.categories import blueprint as categories_v3
 from openspending.views.api_v2.search import blueprint as search_v3
+from openspending.views.api_v2.countries import blueprint as countries_v3
 
 
 def register_views(app):
@@ -37,13 +39,14 @@ def register_views(app):
     app.register_blueprint(feedback)
     app.register_blueprint(search)
     app.register_blueprint(viz)
-
+    app.register_blueprint(findadmin)
     # app.register_blueprint(badge)
     # app.register_blueprint(view)
     # app.register_blueprint(editor)
     # app.register_blueprint(source)
     # app.register_blueprint(run)
     app.register_blueprint(api_v2.blueprint)
+    app.register_blueprint(countries_v3, url_prefix='/api/3')
     app.register_blueprint(categories_v3, url_prefix='/api/3')
     #app.register_blueprint(dimension)
 

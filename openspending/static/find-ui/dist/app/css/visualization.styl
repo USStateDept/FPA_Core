@@ -1,0 +1,299 @@
+/*Variables Stylus*/  
+@import "variables.styl"
+
+.flip
+  -webkit-perspective 800
+  -ms-perspective 800
+  -moz-perspective 800
+  -o-perspective 800
+  min-height 225px
+  position relative
+  
+    
+  .card
+    width 100%
+    height 100%
+    -webkit-transform-style preserve-3d
+    -webkit-transition 0.5s
+    -moz-transform-style preserve-3d
+    -moz-transition 0.5s
+    -ms-transform-style preserve-3d
+    -ms-transition 0.5s
+    -o-transform-style preserve-3d
+    -o-transition 0.5s
+    -webkit-transform-style preserve-3d
+    transform-style preserve-3d
+    -webkit-transition 0.5s
+    transition 0.5s
+    
+    &.flipped
+      transform rotatey(-180deg)
+      -ms-transform rotatey(-180deg)
+      -moz-transform rotatey(-180deg)
+      -webkit-transform rotatey(-180deg)
+      -o-transform rotatey(-180deg)
+      
+    .face
+      width 100%
+      height 100%
+      position absolute
+      z-index 2
+      backface-visibility hidden
+      -webkit-backface-visibility hidden
+      -moz-backface-visibility hidden
+      -ms-backface-visibility hidden
+      -o-backface-visibility hidden
+      
+    .front
+      position absolute
+      z-index 1
+      cursor pointer
+      
+    .back
+      color black
+      cursor pointer
+      transform rotatey(-180deg)
+      -ms-transform rotatey(-180deg)
+      -moz-transform rotatey(-180deg)
+      -webkit-transform rotatey(-180deg)
+      -o-transform rotatey(-180deg)
+
+.flippedCol
+  position absolute
+  top 10px
+  left 10px
+  width 100%
+  
+  .list-group
+    max-height 300px
+    overflow hidden
+    
+    span.list
+      overflow-y scroll
+      overflow-x hidden
+      display block
+      max-height 260px
+      background-color #FFF
+    
+.downloadLinks
+  margin-left 20px
+  color $bgLight
+  cursor pointer
+  
+.app
+  .face
+    .list-group
+      &.show-me
+        display block
+        
+.app
+  
+  #viz-container
+    min-width 50%
+    height 400px
+  
+  .selected-tab-value
+    color $colorDark
+  
+  .category
+    &.noun-pie-15345
+      background url(../images/noun_pie_15345.png) center center no-repeat
+      background-size contain
+      
+    &.noun-bar-45998
+      background url(../images/noun_bar_45998.png) center center no-repeat
+      background-size contain
+      
+    &.noun-scatter-105477
+      background url(../images/noun_scatter_105477.png) center center no-repeat
+      background-size contain
+      
+    &.noun-line-105490
+      background url(../images/noun_line_105490.png) center center no-repeat
+      background-size contain
+      
+    &.noun-radar-50835
+      background url(../images/noun_radar_50835.png) center center no-repeat
+      background-size contain
+      
+    &.noun-tree-35339
+      background url(../images/noun_tree_35339.png) center center no-repeat
+      background-size contain
+      
+  .category-wrapper
+      cursor pointer
+      
+      &.well
+        background-color transparent
+      .well
+        background-color transparent
+  .flip
+    .category-wrapper  
+      transition 0.5s all
+      &:hover
+        box-shadow 0 5px 10px rgba(0,0,0,.2)
+        transform scale(1.01)
+        
+  .panel-group
+    margin-bottom 0
+    
+    .list-group-item
+      padding-left 30px
+      
+    .panel
+      border none
+      
+  .coming-soon
+      opacity 0.5
+      
+  .list-group a:hover
+    text-decoration none
+    
+  .list-group-item
+    border none
+    cursor pointer
+    
+    &.selected
+      background-color rgba(0,100,0,0.5)
+      
+    .selected
+      background-color rgba(0,100,0,0.5)
+    
+  .btn-group
+    width 100%
+    display none
+    
+    label
+      width 33.33%
+      
+  .active
+    .btn-group
+      display block
+      
+    .btn-primary
+      background none
+      color $colorDark
+      border none
+      
+      &.active
+        border-top 1px solid $bgMedium
+      
+      
+  
+
+        
+.app .shadow
+  box-shadow 0 5px 10px rgba(0,0,0,.2)
+  border-radius $radius5
+  
+.app .glyphicon-circle-arrow-right
+  display none
+  
+.app .glyphicon-circle-arrow-down
+  display block
+
+.app .collapsed .glyphicon-circle-arrow-right
+  display block
+  
+.app .collapsed .glyphicon-circle-arrow-down
+  display none
+  
+
+//left tabs
+.nav-tabs li a
+  border 0px solid black
+  color $bgLighter
+  
+  &.selectable
+    color $colorDark !important
+  
+.tabs-left
+  & > .nav-tabs
+    border-bottom 0
+    float left
+    margin-right 19px
+    border-right 1px solid #ddd
+    & > li
+      & > a
+        margin-right -1px
+        -webkit-border-radius 4px 0 0 4px
+        -moz-border-radius 4px 0 0 4px
+        border-radius 4px 0 0 4px
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane
+  display none
+
+.tab-content > .active,
+.pill-content > .active
+  display block
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li
+  float none
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a
+  min-width 74px
+  margin-right 0
+  margin-bottom 3px
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus
+  border-color #eeeeee #dddddd #eeeeee #eeeeee
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus
+  border-color #ddd transparent #ddd #ddd
+  *border-right-color #ffffff
+    
+.title
+  background-color $bgLighter
+  padding 10px
+  color $colorDark
+    
+#select-indicator
+  
+  .nav.nav-tabs
+    
+    border-right none
+    
+    .active a
+        background-color $colorDark
+        color $colorLight
+        
+#filter-years-label,
+#filter-countries-label
+  font-size 22px
+  font-weight bold
+
+
+// .ui-slider-horizontal
+//   height 0px !important
+  
+.ui-slider-handle
+  border-radius 10px !important
+  //top -0.5em !important
+  
+.countries-list .category-wrapper
+  opacity 0.6
+
+.countries-list .category-wrapper.selected
+  opacity 1.0
+  
+.app
+  
+  #loading
+    text-align center
+    line-height 300px
+    
+    
+    img
+      width auto
+  
+
+  .map-view
+    height 400px
+    background-color $bgLighter
+    padding 20px
