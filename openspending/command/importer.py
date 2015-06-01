@@ -379,6 +379,15 @@ def add_import_commands(manager):
     @manager.command
     def loadmetaonlyjson(**args):
         """ Load a JSON dump from  """
+
+
+        log.warn("This command should only be run for bulk exports from the django admin site.  It may overwrite data already loaded into the system.  Test before using.")
+        tocontinue  = raw_input("If you're sure, enter 'y': ")
+
+        if tocontinue != 'y':
+            sys.exit()
+
+
         specificorg = args.get("specificorg", None)
         file_dir = args.get('file_dir', None)
         modelobjs = parseDBJSON(args)

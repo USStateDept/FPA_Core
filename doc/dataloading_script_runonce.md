@@ -1,6 +1,10 @@
 Data Loading Process
 ======================
 
+Note
+---------------
+
+This is only to be run one time to maintain the integrity of the loaded data.  Check to see how data is overwritten in the command code loadmetajsononly and test on the current database before proceeding.
 
 Requirements
 ------------
