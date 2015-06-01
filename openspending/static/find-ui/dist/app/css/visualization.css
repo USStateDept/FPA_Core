@@ -266,3 +266,8 @@
 .app #loading img {
   width: auto;
 }
+.app .map-view {
+  height: 400px;
+  background-color: #eae6e6;
+  padding: 20px;
+}

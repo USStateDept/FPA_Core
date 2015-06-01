@@ -113,11 +113,17 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 
             .row
               p
-            .row.countries-list(data-bind="foreach:countriesModel")
-              .col-md-3.col-sm-4.col-xs-6
-                div.well.category-wrapper(data-bind='click:$root.selectCountry,css:{selected:selected}')
-                  div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
-                  h4(data-bind="html:label")
+            .row.countries-list()
+              .col-md-6
+                .row(data-bind="foreach:countriesModel" )
+                  .col-md-4.col-sm-4.col-xs-4
+                    div.well.category-wrapper(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                      div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
+                      h4(data-bind="html:label")
+              .col-md-6
+                .row
+                  .col-md-12.map-view Placeholder for Map. Make map full width.
+              
           //- BY TEST
           #select-indicator.tab-pane(role='tabpanel')                  
             .row

@@ -24,7 +24,7 @@
         });
     }
 
-    window.loadIndicatorData = function(indicators, groupId, region) {
+    window.loadIndicatorData = function(indicators, groupId, region, yearRange) {
         var indicatorIds = [];
 
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
@@ -39,12 +39,12 @@
 
             if (multiVariate) {
 
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time";
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}";
 
             }
 
             if (!multiVariate) {
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}";
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&cut=geometry__time:{yearFrom}-{yearTo}";
 
             }
 
@@ -53,12 +53,18 @@
 
             // //to cut by country
         } else {
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json"
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}"
         }
         var url = urlTemplate.replace(/{indicator_id}/g, indicatorIds.join("|"));
 
+        if (!yearRange[1]) {
+            yearRange[1] = yearRange[0];
+        }
+
         url = url.replace(/{groupId}/g, groupId);
         url = url.replace(/{region}/g, region);
+        url = url.replace(/{yearFrom}/g, yearRange[0]);
+        url = url.replace(/{yearTo}/g, yearRange[1]);
 
 
         //url = "data/gdp_per_capita.json";
