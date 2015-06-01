@@ -6,8 +6,6 @@ def logged_in():
 
 
 def is_admin():
-    print "ogged in", logged_in()
-    print current_user.get_id()
     return logged_in() and current_user.admin
 
 

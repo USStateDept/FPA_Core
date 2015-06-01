@@ -49,5 +49,6 @@ def createuser():
         account.admin = False
     else:
         account.admin = True
+    account.verified = True
     db.session.add(account)
     db.session.commit()
