@@ -69,15 +69,17 @@
         downloadData: function(format, indicator) {
             var groupId = model.activeGroup().id;
             if (groupId != "all") {
-                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}"
+                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&cut=geometry__time:{yearFrom}-{yearTo}"
             } else {
-                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}"
+                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}&cut=geometry__time:{yearFrom}-{yearTo}"
             }
             //var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}"
             var url = urlTemplate.replace(/{indicator_id}/g, indicator.id);
             url = url.replace(/{format}/g, format);
             url = url.replace(/{groupId}/g, groupId);
             url = url.replace(/{region}/g, model.activeRegion());
+            url = url.replace(/{yearFrom}/g, model.activeYears()[0]);
+            url = url.replace(/{yearTo}/g, model.activeYears()[1] || model.activeYears()[0]);
             window.open(url, '_blank');
         },
 
@@ -185,11 +187,12 @@
 
             var activeGroup = model.activeGroup();
             var activeRegion = model.activeRegion();
+            var activeYears = model.activeYears();
 
             var vizualizationType = type;
             model.activeChart(vizualizationType);
 
-            var deferred = window.loadIndicatorData(indicators, activeGroup.id, activeRegion);
+            var deferred = window.loadIndicatorData(indicators, activeGroup.id, activeRegion, activeYears);
             deferred.done(indicatorDataLoadHandler);
 
 

@@ -36,6 +36,10 @@
 
         var fromYear = timeCell.from[0];
         var toYear = timeCell.to[0];
+
+        if (type == "bar") {
+            fromYear = toYear;
+        }
         var categories = [];
 
         for (var i = fromYear; i <= toYear; i++) {

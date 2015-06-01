@@ -6,7 +6,7 @@
 
         searchValue: ko.observable(""),
 
-        searchType: ko.observable("search-all"), //search-indicators, search-countries
+        searchType: ko.observable("all"), //indicators, countries
 
         selectIndicator: function(obj) {
             window.location.href = "visualization#ind=" + obj.id
@@ -55,27 +55,41 @@
 
         model.searchResults.removeAll();
 
+        var searchLevel = ["countries", "indicators"];
+
+        if (searchType != "all") {
+            searchLevel = [searchType];
+        }
+
         var valuesArr = value.split(" ");
 
-        for (id in response.data) {
-            var resultItem = {
-                id: id,
-                label: ""
+        _.forEach(searchLevel, function(responseType) {
+
+            for (id in response.data[responseType]) {
+
+                var resultItem = {
+                    id: id,
+                    label: ""
+                }
+
+                var originalLabel = response.data[responseType][id];
+                var label = originalLabel;
+
+                _.forEach(valuesArr, function(v) {
+                    var regex = new RegExp('(' + v + ')', 'gi');
+
+                    label = label.replace(regex, "<strong style='color:red'>$1</strong>")
+                })
+
+                resultItem.label = label;
+
+
+                model.searchResults.push(resultItem);
             }
-            var originalLabel = response.data[id];
-            var label = originalLabel;
 
-            _.forEach(valuesArr, function(v) {
-                var regex = new RegExp('(' + v + ')', 'gi');
-
-                label = label.replace(regex, "<strong style='color:red'>$1</strong>")
-            })
-
-            resultItem.label = label;
+        })
 
 
-            model.searchResults.push(resultItem);
-        }
 
     }
 
