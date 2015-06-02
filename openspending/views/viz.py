@@ -67,3 +67,13 @@ def sectors(format='html'):
     #     tags.append(tag.as_dict())
 
     return render_template('sectors/sectors.jade')
+
+@blueprint.route('/data')
+#@blueprint.route('/datasets.<fmt:format>')
+def data(format='html'):
+    """ Get the datasets indicators list by category"""
+    # tags = []
+    # for tag in Tags.all_by_category().all():
+    #     tags.append(tag.as_dict())
+
+    return render_template('data/data.jade')
