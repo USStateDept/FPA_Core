@@ -8,7 +8,16 @@
         // $('#vizTabs a:first').tab('show')
     });
 
+    var startUI = function() {
 
+        var map = L.map('map').setView([51.505, -33.9], 6);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18,
+            id: 'examples.map-i875mjb7',
+            accessToken: 'pk.eyJ1Ijoid2lzZWd1eSIsImEiOiI5N2IxYWYxMzU2YmZhOTU3ZjM4ZDRjZDBlMzNkYzU0NSJ9._T6Dz2ZFA4p9VZMdT2SmjA'
+        }).addTo(map);
+    }
 
 
     var eventBind = function() {
@@ -193,7 +202,33 @@
             model.activeChart(vizualizationType);
 
             var deferred = window.loadIndicatorData(indicators, activeGroup.id, activeRegion, activeYears);
+
             deferred.done(indicatorDataLoadHandler);
+
+            $("#filter-years").slider({
+                range: true,
+                min: 1990,
+                max: 2015,
+                values: [1990, 2015],
+                slide: function(event, ui) {
+                    var startYear = ui.values[0];
+                    var endYear = ui.values[1];
+                    var yearLabel = startYear;
+
+                    if (startYear != endYear) {
+                        yearLabel = startYear + "-" + endYear;
+                        model.selectYear([startYear, endYear]);
+                    } else {
+                        model.selectYear([startYear]);
+                    }
+                    // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
+
+                }
+            }).slider("pips", {
+                /* options go here as an object */
+            }).slider("float", {
+                /* options go here as an object */
+            });
 
 
             // var current = model.selectionTracker();
@@ -364,7 +399,7 @@
 
         activeRegion: ko.observable(""),
 
-        activeYears: ko.observableArray([2000, 2013]),
+        activeYears: ko.observableArray([1990, 2015]),
 
         activeCountries: ko.observableArray([]),
 
@@ -562,30 +597,7 @@
         model.indicatorsModel(indicatorsModel);
         model.indicatorsModelMaster(_.clone(indicatorsModel, true));
 
-        $("#filter-years").slider({
-            range: true,
-            min: 1990,
-            max: 2013,
-            values: [2000, 2013],
-            slide: function(event, ui) {
-                var startYear = ui.values[0];
-                var endYear = ui.values[1];
-                var yearLabel = startYear;
 
-                if (startYear != endYear) {
-                    yearLabel = startYear + "-" + endYear;
-                    model.selectYear([startYear, endYear]);
-                } else {
-                    model.selectYear([startYear]);
-                }
-                // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
-
-            }
-        }).slider("pips", {
-            /* options go here as an object */
-        }).slider("float", {
-            /* options go here as an object */
-        });
         //enable knockout
         ko.applyBindings(model);
 
@@ -626,6 +638,10 @@
         // $('#viz-container').highcharts(highChartsJson, model.activeIndicator(), model.activeChart());
 
     }
+
+
+
+    startUI(); //this should be the last function in this function
 
 
 }())
