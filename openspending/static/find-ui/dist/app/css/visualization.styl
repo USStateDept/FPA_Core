@@ -65,14 +65,14 @@
   width 100%
   
   .list-group
-    max-height 300px
+    max-height 450px
     overflow hidden
     
     span.list
       overflow-y scroll
       overflow-x hidden
       display block
-      max-height 260px
+      max-height 410px
       background-color #FFF
     
 .downloadLinks
@@ -293,7 +293,24 @@
       width auto
   
 
-  .map-view
+  #map
     height 400px
+    //width 100%
     background-color $bgLighter
     padding 20px
+    
+.flags-countries
+  width 60px
+  height 29px
+  display inline-block
+  
+.flags-labels
+  font-size 18px
+  padding-left 10px
+  line-height 15px
+  
+.flag-item
+  cursor pointer
+  
+.flag-item:hover
+  text-decoration underline

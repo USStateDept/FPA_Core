@@ -62,14 +62,14 @@
   width: 100%;
 }
 .flippedCol .list-group {
-  max-height: 300px;
+  max-height: 450px;
   overflow: hidden;
 }
 .flippedCol .list-group span.list {
   overflow-y: scroll;
   overflow-x: hidden;
   display: block;
-  max-height: 260px;
+  max-height: 410px;
   background-color: #fff;
 }
 .downloadLinks {
@@ -266,8 +266,24 @@
 .app #loading img {
   width: auto;
 }
-.app .map-view {
+.app #map {
   height: 400px;
   background-color: #eae6e6;
   padding: 20px;
+}
+.flags-countries {
+  width: 60px;
+  height: 29px;
+  display: inline-block;
+}
+.flags-labels {
+  font-size: 18px;
+  padding-left: 10px;
+  line-height: 15px;
+}
+.flag-item {
+  cursor: pointer;
+}
+.flag-item:hover {
+  text-decoration: underline;
 }

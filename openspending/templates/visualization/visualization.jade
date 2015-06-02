@@ -10,6 +10,7 @@
 
 {% block optional_head %}
 link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
 {% endblock %}
@@ -26,25 +27,25 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       div(role='tabpanel')  
         ul#vizTabs.nav.nav-tabs.nav-justified(role='tablist')
           li.active(role='presentation')
-            a(href='#select-filter', aria-controls='select-vizualization', role='tab', data-toggle='tab',class='selectable')
+            a(href='#select-indicator', aria-controls='vizualize', role='tab', data-toggle='tab',class='selectable')
               h4
                 //-span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
-                span() 1. Set Filters
+                span() 1. Indicators
                 //-span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
                 //-linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
           li(role='presentation')
-            a(href='#select-indicator', aria-controls='vizualize', role='tab',class="selectable",data-toggle='tab')
+            a(href='#select-filter', aria-controls='vizualize', role='tab',class="selectable",data-toggle='tab')
               //-data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}"
               h4
                 //-span(data-bind="visible:!selectionTracker().indicator") 2. Select Indicator
-                span() 2. Select Indicators
+                span() 2. Countries
                 //-span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
           li(role='presentation')
-            a(href='#select-vizualization', aria-controls='select-vizualization', role='tab',data-bind="attr:{'data-toggle':activeIndicators().length > 0?'tab':'none'},css:{selectable:activeIndicators().length>0}")
+            a(href='#select-vizualization', aria-controls='vizualize', role='tab',data-bind="attr:{'data-toggle':activeIndicators().length > 0?'tab':'none'},css:{selectable:activeIndicators().length>0}")
               h4
                 //-span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
-                span() 3. Pick Visualization
+                span() 3. Chart Type
                 //-span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
           li(role='presentation')
@@ -56,26 +57,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             p
           .row
             p
-          #select-filter.tab-pane.active(role='tabpanel')
-            .row
-              p
-            .row.title
-              .col-md-10
-                .dropdown
-                  button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
-                      span.caret
-                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
-                    
-                   
-              .col-md-2
-                .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
-            .row
-              p
-            .row
-              .col-md-12
-                div#filter-years
+          #select-filter.tab-pane(role='tabpanel')
+            
                 
             .row
               p
@@ -114,18 +97,18 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             .row
               p
             .row.countries-list()
-              .col-md-6
+              .col-md-8
                 .row(data-bind="foreach:countriesModel" )
-                  .col-md-4.col-sm-4.col-xs-4
-                    div.well.category-wrapper(data-bind='click:$root.selectCountry,css:{selected:selected}')
-                      div.well.category(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_medium/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
-                      h4(data-bind="html:label")
-              .col-md-6
+                  .col-md-6.col-sm-12.col-xs-12
+                    div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                      div.flags-countries(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_small/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
+                      span.flags-labels(data-bind="html:label")
+              .col-md-4
                 .row
-                  .col-md-12.map-view Placeholder for Map. Make map full width.
+                  .col-md-12#map
               
           //- BY TEST
-          #select-indicator.tab-pane(role='tabpanel')                  
+          #select-indicator.tab-pane.active(role='tabpanel')                  
             .row
               .col-md-2
                 .tabbable.tabs-left
@@ -223,6 +206,25 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .col-md-12
                 img(src='/static/find-ui/dist/app/images/loader.GIF')
             .row
+              p
+            .row.title
+              .col-md-10
+                .dropdown
+                  button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
+                      span.caret
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
+                    
+                   
+              .col-md-2
+                .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
+            .row
+              p
+            .row
+              .col-md-12
+                div#filter-years
+            .row
               .col-md-12
                 div#viz-container
 {% endblock %}
@@ -234,6 +236,7 @@ script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}
 script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
 script(src='//code.highcharts.com/highcharts.js')
 script(src='//code.highcharts.com/modules/exporting.js')
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
