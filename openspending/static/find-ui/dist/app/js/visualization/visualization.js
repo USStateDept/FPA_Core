@@ -3,6 +3,7 @@
     /**
      * Start the Wiard mode
      **/
+    var clickedIndicator = false;
 
     $(function() {
         // $('#vizTabs a:first').tab('show')
@@ -35,10 +36,18 @@
     }
 
     var flipCardEvent = function() {
+
         $(".flip").click(function() {
+
+
 
             if (expandedCategory) {
                 expandedCategory = false;
+                return;
+            }
+
+            if (clickedIndicator) {
+                clickedIndicator = false;
                 return;
             }
 
@@ -76,6 +85,9 @@
     var model = {
 
         downloadData: function(format, indicator) {
+
+            clickedIndicator = true;
+
             var groupId = model.activeGroup().id;
             if (groupId != "all") {
                 var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&cut=geometry__time:{yearFrom}-{yearTo}"
@@ -115,11 +127,13 @@
 
 
 
-        selectIndicatorMultiple: function() {
+        selectIndicatorMultiple: function(selectedIndicator, evt) {
             // if (expandedCategory) {
             //     return;
             // }
-            var selectedIndicator = arguments[0];
+
+            clickedIndicator = true;
+
             var categoriesModel = _.clone(model.categoriesModel(), true);
             var sourcesModel = _.clone(model.sourcesModel(), true);
 
@@ -179,6 +193,18 @@
 
         selectVizualization: function(type) {
 
+            var indicators = _.map(model.activeIndicators(), function(indicator) {
+                return indicator.id;
+            });
+
+
+
+            var hashString = "y=" + model.activeYears().join("|") + "&i=" + indicators.join("|") +
+                "&c=" + model.activeChart() + "&g=" + model.activeGroup().id +
+                "&r=" + model.activeRegion();
+            window.location.href = "/data-visualization#" + hashString;
+
+            return;
             $("#loading").show();
 
             if ($('#viz-container').highcharts()) {
@@ -205,30 +231,7 @@
 
             deferred.done(indicatorDataLoadHandler);
 
-            $("#filter-years").slider({
-                range: true,
-                min: 1990,
-                max: 2015,
-                values: [1990, 2015],
-                slide: function(event, ui) {
-                    var startYear = ui.values[0];
-                    var endYear = ui.values[1];
-                    var yearLabel = startYear;
 
-                    if (startYear != endYear) {
-                        yearLabel = startYear + "-" + endYear;
-                        model.selectYear([startYear, endYear]);
-                    } else {
-                        model.selectYear([startYear]);
-                    }
-                    // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
-
-                }
-            }).slider("pips", {
-                /* options go here as an object */
-            }).slider("float", {
-                /* options go here as an object */
-            });
 
 
             // var current = model.selectionTracker();
@@ -237,7 +240,8 @@
             // model.selectionTracker(current);
             //move to third tab
 
-            $('#vizTabs a[href="#vizualize"]').tab('show');
+
+            // $('#vizTabs a[href="#vizualize"]').tab('show');
 
 
 
@@ -396,6 +400,8 @@
             "label": "All",
             "regions": []
         }),
+
+        activeCard: ko.observable(""),
 
         activeRegion: ko.observable(""),
 

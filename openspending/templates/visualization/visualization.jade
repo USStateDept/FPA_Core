@@ -10,6 +10,7 @@
 
 {% block optional_head %}
 link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/dist/app/css/flags32.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
@@ -48,10 +49,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 span() 3. Chart Type
                 //-span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
-          li(role='presentation')
-            a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization?'tab':'none'}")
-              h4
-                span() &nbsp; Visualize
+          //- li(role='presentation')
+          //-   a(href='#vizualize', aria-controls='vizualize', role='tab', data-toggle='tab',data-bind="attr:{'data-toggle':selectionTracker().filter && selectionTracker().indicator && selectionTracker().vizualization?'tab':'none'}")
+          //-     h4
+          //-       span() &nbsp; Visualize
         .tab-content
           .row
             p
@@ -98,10 +99,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               p
             .row.countries-list()
               .col-md-8
-                .row(data-bind="foreach:countriesModel" )
+                .row.f32(data-bind="foreach:countriesModel" )
                   .col-md-6.col-sm-12.col-xs-12
                     div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
-                      div.flags-countries(data-bind="style:{background:'url(/static/find-ui/dist/app/images/flags_style1_small/' + label.replace(/ /g,'_') + '.png) center center no-repeat'}")
+                      div.flag(data-bind="css:iso_a2.toLowerCase()")
                       span.flags-labels(data-bind="html:label")
               .col-md-4
                 .row
@@ -201,48 +202,48 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   h4 Tree
 
           //-TAB 3
-          #vizualize.tab-pane(role='tabpanel')
-            .row#loading
-              .col-md-12
-                img(src='/static/find-ui/dist/app/images/loader.GIF')
-            .row
-              p
-            .row.title
-              .col-md-10
-                .dropdown
-                  button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
-                      span.caret
-                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
-                    li(role='presentation')
-                      a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
+          //- #vizualize.tab-pane(role='tabpanel')
+          //-   .row#loading
+          //-     .col-md-12
+          //-       img(src='/static/find-ui/dist/app/images/loader.GIF')
+          //-   .row
+          //-     p
+          //-   .row.title
+          //-     .col-md-10
+          //-       .dropdown
+          //-         button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
+          //-             span.caret
+          //-         ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
+          //-           li(role='presentation')
+          //-             a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
                     
                    
-              .col-md-2
-                .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
-            .row
-              p
-            .row
-              .col-md-12
-                div#filter-years
-            .row
-              .col-md-12
-                div#viz-container
+          //-     .col-md-2
+          //-       .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
+          //-   .row
+          //-     p
+          //-   .row
+          //-     .col-md-12
+          //-       div#filter-years
+          //-   .row
+          //-     .col-md-12
+          //-       div#viz-container
 {% endblock %}
 
 {% block footer_scripts %}
 link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
+//-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
-script(src='//code.highcharts.com/highcharts.js')
-script(src='//code.highcharts.com/modules/exporting.js')
+//-script(src='//code.highcharts.com/highcharts.js')
+//-script(src='//code.highcharts.com/modules/exporting.js')
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
 script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/loader.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
+//-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 
 {% endblock %}
