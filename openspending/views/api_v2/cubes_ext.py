@@ -1,5 +1,5 @@
 import logging
-
+from datetime import datetime
 import os
 
 from flask import request, g
@@ -168,12 +168,19 @@ def aggregate_cubes(star_name):
 
     fields = result.labels
 
+    
+    try:
+        filename_output = cubes[0] + "_" + datetime.now().strftime("%Y-%m-%d")
+    except:
+        filename_output = "aggregate_" + datetime
+
+
     if output_format == "excel":
         output_string = xls_generator(result,
                                  fields,
                                  include_header=bool(header),
                                  header=header)
-        headers = {"Content-Disposition": 'attachment; filename="aggregate.xlsx"'}
+        headers = {"Content-Disposition": 'attachment; filename="' + filename_output + '.xlsx"'}
         return Response(output_string,
                         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                         headers=headers)
@@ -184,7 +191,7 @@ def aggregate_cubes(star_name):
                                  include_header=bool(header),
                                  header=header)
         
-        headers = {"Content-Disposition": 'attachment; filename="aggregate.csv"'}
+        headers = {"Content-Disposition": 'attachment; filename="' + filename_output + '.csv"'}
         return Response(generator,
                         mimetype='text/csv',
                         headers=headers)
