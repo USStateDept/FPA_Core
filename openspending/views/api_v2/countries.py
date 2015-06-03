@@ -15,6 +15,7 @@ from openspending.lib.findui import jsonp
 # from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
 import json
+from openspending.core import cache
 # from openspending.lib.indices import clear_index_cache
 # from openspending.views.cache import etag_cache_keygen
 # from openspending.views.context import api_form_data
@@ -34,6 +35,7 @@ blueprint = Blueprint('countries_api2', __name__)
 @blueprint.route('/countries_list')
 @api_json_errors
 @jsonp
+@cache.cached(timeout=60)
 def countries_list():
     output = Country.get_all_json()
 

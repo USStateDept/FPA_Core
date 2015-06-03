@@ -2,26 +2,17 @@ import colander
 from flask import Blueprint, render_template, request, redirect
 from flask.ext.login import current_user, login_user, logout_user
 from flask import current_app
-from sqlalchemy.sql.expression import desc, func, or_
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from openspending.core import db, login_manager
 from openspending.auth import require
-from openspending.model.dataset import Dataset
+#from openspending.model.dataset import Dataset
 from openspending.model.account import (Account, AccountRegister,
                                         AccountSettings)
-from openspending.lib.paramparser import DistinctParamParser
-from openspending.lib.mailman import subscribe_lists
-from openspending.lib.jsonexport import jsonify
-from openspending.lib.mailer import send_reset_link
 from openspending.lib.helpers import url_for, obj_or_404
 from openspending.lib.helpers import flash_error
 from openspending.lib.helpers import flash_notice, flash_success
-from openspending.lib.pagination import Page
 from openspending.lib.reghelper import sendhash
-from openspending.views.cache import disable_cache
-
-
 
 
 from wtforms import Form, TextField, PasswordField, validators
@@ -52,7 +43,6 @@ def load_user_from_request(request):
 @blueprint.route('/login', methods=['GET'])
 def login():
     """ Render the login/registration page. """
-    disable_cache()
     return render_template('account/login.jade')
 
 
@@ -73,7 +63,6 @@ def login_perform():
 @blueprint.route('/register', methods=['POST', 'PUT'])
 def register():
     """ Perform registration of a new user """
-    disable_cache()
     errors, values = {}, dict(request.form.items())
 
     try:
@@ -143,7 +132,6 @@ def register():
 @blueprint.route('/account/verify', methods=['POST', 'GET'])
 def verify():
 
-    disable_cache()
 
     if request.method == 'GET':
         loginhash = request.args.get('login')
@@ -206,7 +194,6 @@ def verify():
 #Developemnt and beta only
 @blueprint.route('/accounts/email_message', methods=['GET'])
 def email_message():
-    disable_cache()
 
     user_id = request.args.get('id')
 
@@ -231,7 +218,6 @@ def email_message():
 
 @blueprint.route('/logout')
 def logout():
-    disable_cache()
     logout_user()
     flash_success("You have been logged out.")
     return redirect(url_for('home.index'))
@@ -245,7 +231,6 @@ def trigger_reset():
     """
     Allow user to trigger a reset of the password in case they forget it
     """
-    disable_cache()
     # If it's a simple GET method we return the form
     if request.method == 'GET':
         return render_template('account/trigger_reset.html')

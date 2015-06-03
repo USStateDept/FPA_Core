@@ -2,28 +2,21 @@ from flask import current_app, request
 from flask.ext.login import current_user
 
 from openspending import auth, _version
-from openspending.views.cache import setup_caching, cache_response
 from openspending.views.home import blueprint as home
 from openspending.lib.helpers import static_path
 from openspending.lib.helpers import url_for
 
 
-@home.before_app_request
-def before_request():
-    request._ds_available_views = []
-    request._ds_view = None
-    setup_caching()
-
 
 @home.after_app_request
 def after_request(resp):
-    resp.headers['Server'] = 'OpenSpending/%s' % _version.__version__
+    resp.headers['Server'] = 'FIND/Beta'
     
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
     
-    return cache_response(resp)
+    return resp
 
 
 
