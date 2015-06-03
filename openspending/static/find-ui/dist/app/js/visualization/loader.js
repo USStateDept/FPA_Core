@@ -30,7 +30,7 @@
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
 
         _.forEach(indicators, function(indicator) {
-            indicatorIds.push(indicator.id);
+            indicatorIds.push(indicator);
         });
 
         var multiVariate = indicators.length > 1; //eligible for scatter plot

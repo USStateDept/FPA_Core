@@ -84,6 +84,7 @@ class Country(db.Model):
                             country_level0.name as geounit, \
                             country_level0.sovereignt as sovereignty, \
                             country_level0.label as label, \
+                            country_level0.iso_a2 as iso_a2, \
                             country_level0.continent as continent, \
                             country_level0.georegion as georegion, \
                             country_level0.dos_region as dos_region, \
@@ -103,6 +104,7 @@ class Country(db.Model):
             output['data'].append({
                     'geounit': country["geounit"],
                     'label': country['label'],
+                    'iso_a2': country['iso_a2'],
                     'regions': tempreg
                 })
         return output

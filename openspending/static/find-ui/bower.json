@@ -22,6 +22,7 @@
     "animate.css": ">= 3.0.0",
     "textillate": "~0.4.0",
     "jquery-cookie": "~1.4.1",
-    "jquery-ui-slider-pips": "~1.10.0"
+    "jquery-ui-slider-pips": "~1.10.0",
+    "leaflet": "~0.7.3"
   }
 }

@@ -1,0 +1,75 @@
+{% extends "base.jade" %}
+
+{% block page_title %}Indicators{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+
+{% block optional_head %}
+link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
+{% endblock %}
+
+{% block content %}
+
+.container
+  .row#loading
+    .col-md-12
+      img(src='/static/find-ui/dist/app/images/loader.GIF')
+  .row
+    p
+  .row.title
+    .col-md-10
+      .dropdown
+        button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
+            span.caret
+        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
+          li(role='presentation')
+            a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
+      button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Change Indicator
+      button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Change Countries
+      button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Show Regional Average
+          
+         
+    .col-md-2
+      .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
+  .row
+    p
+  .row
+    .col-md-12
+      div#filter-years
+  .row
+    .col-md-12
+      div#viz-container
+{% endblock %}
+
+{% block footer_scripts %}
+link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
+
+script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
+script(src='//code.highcharts.com/highcharts.js')
+script(src='//code.highcharts.com/modules/exporting.js')
+script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/visualization/loader.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}")
+//- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
+
+{% endblock %}
+
+
+
+
+
+

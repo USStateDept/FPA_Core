@@ -1,0 +1,64 @@
+{% extends "base.jade" %}
+
+{% block page_title %}Indicators{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+
+{% block optional_head %}
+link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/dist/app/css/flags32.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
+{% endblock %}
+
+{% block content %}
+
+.container
+  .row
+    p
+  .row
+    .col-md-12
+      input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
+  .row
+    p
+  .row.countries-list()
+    .col-md-8
+      .row.f32(data-bind="foreach:countriesModel" )
+        .col-md-6.col-sm-12.col-xs-12
+          div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
+            div.flag(data-bind="css:iso_a2.toLowerCase()")
+            span.flags-labels(data-bind="html:label")
+    .col-md-4
+      .row
+        .col-md-12#map
+
+{% endblock %}
+
+{% block footer_scripts %}
+link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
+
+script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+//-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
+//-script(src='//code.highcharts.com/highcharts.js')
+//-script(src='//code.highcharts.com/modules/exporting.js')
+script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/visualization/loader.js') }}")
+//-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
+
+{% endblock %}
+
+
+
+
+
+
