@@ -17,6 +17,7 @@ from cubes.server.utils import *
 from cubes.formatters import JSONLinesGenerator, csv_generator, xls_generator
 from cubes.browser import SPLIT_DIMENSION_NAME
 from cubes.server.decorators import prepare_cell
+from openspending.core import cache
 
 
 
@@ -66,6 +67,7 @@ def cubes_model(star_name):
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_aggregate", methods=["JSON", "GET"])
 @requires_complex_browser
 @api_json_errors
+@cache.cached(timeout=360)
 #@log_request("aggregate", "aggregates")
 def aggregate_cubes(star_name):
 
