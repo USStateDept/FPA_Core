@@ -32,3 +32,4 @@ tmp/*
 datauploads
 openspending/whoosh_index
 whoosh_index
+filecache

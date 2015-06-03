@@ -4,7 +4,6 @@ from flask.ext.login import current_user, login_user, logout_user
 from openspending.core import login_manager
 
 from openspending.model.dataset import Dataset
-from openspending.views.cache import disable_cache
 from openspending.model import Account
 from openspending.model.account import LockdownUser,load_account
 

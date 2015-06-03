@@ -4,25 +4,80 @@ import json
 import datetime
 from StringIO import StringIO
 
-from flask import url_for
-from flask.ext.babel import format_date
+from flask import url_for, current_app
 
 from openspending.core import db
 from openspending.model.dataset import Dataset
 from openspending.tests.base import ControllerTestCase
-from openspending.tests.helpers import (make_account, load_fixture,
-                                        clean_and_reindex_solr)
+from openspending.tests.helpers import (make_account, load_fixture)
 from openspending.tests.importer.test_OR import csvimport_fixture
 from openspending.lib.helpers import get_source
+from openspending.command.search import reindex as reindex_search
 
 
 class TestDatasetController(ControllerTestCase):
 
     def setUp(self):
         super(TestDatasetController, self).setUp()
+        current_app.config['LOCKDOWN_FORCE'] = False
         #self.source = csvimport_fixture("sci_study")
 
         self.user = make_account('test')
+
+    def test_account_login(self):
+        response = self.client.get(url_for('account.login'))
+        assert '200' in response.status
+
+    def test_account_emailmessage(self):
+        response = self.client.get(url_for('account.email_message'))
+        assert '200' in response.status
+
+    def test_home_index(self):
+        response = self.client.get(url_for('home.index'))
+        assert '200' in response.status 
+
+    def test_home_heartbeat(self):
+        response = self.client.get(url_for('home.ping'))
+        assert '200' in response.status
+
+    def test_categories_dataorgs(self):
+        response = self.client.get(url_for('categories_api2.dataorgs'))
+        assert '200' in response.status 
+
+    def test_countries_countrieslist(self):
+        reindex_search()
+        response = self.client.get(url_for('countries_api2.countries_list'))
+        assert '200' in response.status 
+
+    def test_dataset_dataorgs(self):
+        response = self.client.get(url_for('datasets_api2.dataorgs'))
+        assert '200' in response.status
+
+    def test_dataset_datasets(self):
+        response = self.client.get(url_for('datasets_api2.index'))
+        assert '200' in response.status
+
+    #### Other dataset functions need a dataset
+
+    def test_dataview_dataviews(self):
+        response = self.client.get(url_for('dataview_api2.dataviews'))
+        assert '200' in response.status
+
+    def test_references_referencedata(self):
+        reindex_search()
+        response = self.client.get(url_for('meta_api2.reference_data'))
+        assert '200' in response.status
+
+    def test_references_preprocessors(self):
+        response = self.client.get(url_for('meta_api2.reference_preprocessors'))
+        assert '200' in response.status
+
+
+    def test_search_full(self):
+        reindex_search()
+        response = self.client.get(url_for('search_api2.search_api', q='afghan'))
+        assert '200' in response.status
+        assert 'afghanistan' in response.data
 
     # def test_index(self):
     #     response = self.client.get(url_for('dataset.index'))

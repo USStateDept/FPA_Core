@@ -6,7 +6,6 @@ DEBUG = True
 SITE_TITLE = 'FIND'
 
 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:!!!insert password!!!!@localhost/find_march24'
-SOLR_URL = 'http://localhost:8983/solr/openspending'
 
 MAIL_SERVER = 'localhost'
 MAIL_PORT = 25
@@ -14,10 +13,10 @@ MAIL_PORT = 25
 # MAIL_USE_SSL = False
 # MAIL_USERNAME = None
 # MAIL_PASSWORD = None
-MAIL_DEFAULT_SENDER = 'noreply@openspending.org'
+MAIL_DEFAULT_SENDER = 'noreply@find.state.gov'
 
-CACHE = True
-CACHE_TYPE = 'simple'
+#CACHE = True
+#CACHE_TYPE = 'simple'
 
 
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
@@ -25,6 +24,14 @@ CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_ALWAYS_EAGER = False
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+#filesystem caching
+CACHE = True
+CACHE_TYPE = 'filesystem'
+CACHE_DEFAULT_TIMEOUT = 3600
+CACHE_DIR = os.path.realpath('.') + '/filecache/'
+CACHE_THRESHOLD = 100
+
 
 
 #update this if you have a proxy on apache

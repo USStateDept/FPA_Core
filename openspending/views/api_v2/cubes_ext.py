@@ -7,7 +7,6 @@ from flask import request, g
 #from openspending.core import cache
 from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
-#from openspending.views.cache import etag_cache_keygen
 from openspending.views.api_v2.common import blueprint
 from openspending.views.error import api_json_errors
 
@@ -66,7 +65,6 @@ def cubes_model(star_name):
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_aggregate", methods=["JSON", "GET"])
 @requires_complex_browser
 @api_json_errors
-#@log_request("aggregate", "aggregates")
 def aggregate_cubes(star_name):
 
     cubes_arg = request.args.get("cubes", None)

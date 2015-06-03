@@ -4,8 +4,7 @@ import io
 from openspending.core import create_app, create_celery
 from openspending.core import db
 from openspending.model.source import Source
-from openspending.importer.analysis import analyze_csv
-from openspending.importer import CSVImporter,  ORImporter
+from openspending.importer import ORImporter
 
 import csv
 from sqlalchemy import text
@@ -17,12 +16,6 @@ log = get_task_logger(__name__)
 flask_app = create_app()
 celery = create_celery(flask_app)
 
-
-@celery.task(ignore_result=True)
-def analyze_all_sources():
-    with flask_app.app_context():
-        for source in db.session.query(Source):
-            analyze_source.delay(source.id)
 
 
 #we are using this in-sync becuase it takes less than 1 second
@@ -100,19 +93,6 @@ def check_column(source_id, columnkey, columnvalue):
 
 
 
-@celery.task(ignore_result=True)
-def analyze_source(source_id):
-    with flask_app.app_context():
-        source = Source.by_id(source_id)
-        if not source:
-            return log.error("No such source: %s", source_id)
-        log.info("Analyzing: %s", source.url)
-        source.analysis = analyze_csv(source.url)
-        if 'error' in source.analysis:
-            log.error(source.analysis.get('error'))
-        else:
-            log.info("Columns: %r", source.analysis.get('columns'))
-        db.session.commit()
 
 
 

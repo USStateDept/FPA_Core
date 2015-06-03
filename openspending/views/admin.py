@@ -4,7 +4,6 @@ from flask.ext.login import current_user
 from flask import current_app
 
 from openspending.auth import require
-from openspending.views.cache import disable_cache
 
 
 from wtforms import Form, TextField, PasswordField, validators
@@ -20,6 +19,5 @@ def dataloader():
     """ Render the login/registration page. """
     if not require.account.is_admin():
     	return redirect("/login", code=302)
-    disable_cache()
     return render_template('findadmin/index.html')
 

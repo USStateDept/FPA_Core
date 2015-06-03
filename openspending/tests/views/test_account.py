@@ -38,7 +38,6 @@ class TestLockDownController(ControllerTestCase):
     def test_login_success(self):
         response = self.client.post(url_for('home.lockdown'),
                                     data={'username': "test",'password':'test'}, follow_redirects=True)
-        print response.data
         assert 'Explore country-level indicators from a variety of sources and sectors' in response.data
 
 

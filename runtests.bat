@@ -11,6 +11,7 @@ REM call "pyenv/Scripts/activate.bat"
 
 nosetests openspending.tests.views.test_account
 nosetests openspending.tests.model.test_country
+nosetests openspending.tests.views.test_all_views
 
 "C:\Program Files\PostgreSQL\9.3\bin\dropdb.exe" -U postgres -W openspending_testing
 
