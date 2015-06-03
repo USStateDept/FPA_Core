@@ -39,7 +39,5 @@ $ ostool search reindex
 Front-end
 ----------------------
 
-1. Build all necessary files in the static folder using gulp or grunt.
-
-2. Copy all built files to the AWS bucket findstatic.  CloudFront will cache these files, so it takes an hour or two before it delivers the updated files.
+1. Copy all built files to the AWS bucket findstatic.  CloudFront will cache these files, so it takes an hour or two before it delivers the updated files.
 
