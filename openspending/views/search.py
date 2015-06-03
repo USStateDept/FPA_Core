@@ -5,7 +5,7 @@ from werkzeug.exceptions import BadRequest
 
 from openspending.lib.helpers import url_for, obj_or_404
 
-from openspending.views.cache import disable_cache
+from openspending.core import cache
 
 from openspending.model import Dataset
 

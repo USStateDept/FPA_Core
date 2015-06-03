@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Unicode, Boolean, DateTime
 
-from openspending.core import db
+from openspending.core import db,cache
 from openspending.model.common import MutableDict, JSONType
 
 
@@ -77,6 +77,7 @@ class Country(db.Model):
         return tempobj
 
     @classmethod
+    @cache.memoize(timeout=360)
     def get_all_json(cls):
         regions = ['continent', 'georegion', 'dos_region', 'usaid_reg', 'dod_cmd',\
                     'feed_the_f', 'region_un', 'wb_inc_lvl']
