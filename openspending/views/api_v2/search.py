@@ -36,7 +36,7 @@ def partialsearch_api():
 
     q = request.args.get('q', None)
     if not q:
-        return jsonify({})
+        return json.dumps({})
 
     results = Dataset.query.whoosh_search(q + "*").limit(10).all()
     items = collections.OrderedDict()
@@ -57,7 +57,7 @@ def search_api(searchtype= 'all'):
 
     q = request.args.get('q', None)
     if not q:
-        return jsonify({})
+        return json.dumps({})
 
     returnobj = {'data':{}}
     if searchtype not in ['all', 'indicators', 'countries']:
