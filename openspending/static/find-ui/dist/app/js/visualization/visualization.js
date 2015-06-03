@@ -90,9 +90,9 @@
 
             var groupId = model.activeGroup().id;
             if (groupId != "all") {
-                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&cut=geometry__time:{yearFrom}-{yearTo}"
+                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
             } else {
-                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}&cut=geometry__time:{yearFrom}-{yearTo}"
+                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
             }
             //var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}"
             var url = urlTemplate.replace(/{indicator_id}/g, indicator.id);

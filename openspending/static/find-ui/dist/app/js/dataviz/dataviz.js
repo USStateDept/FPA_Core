@@ -9,20 +9,21 @@
     var region = hashParams.r;
     var chart = hashParams.c;
     var activeData;
-    var chart;
+    var regionalAverageData;
+
 
     var model = {
         showRegionalAverage: function() {
-            chart = $('#viz-container').highcharts();
+            var activeChart = $('#viz-container').highcharts();
 
-            chart.addSeries({
+            activeChart.addSeries({
                 name: "REGIONAL AVERAGE",
-                data: window.lastSeries,
+                data: regionalAverageData,
                 visible: true,
                 zIndex: 1
             })
 
-            chart.redraw();
+            activeChart.redraw();
         },
 
         selectYear: function() {
@@ -72,7 +73,9 @@
             /* options go here as an object */
         });
 
-        var highChartsJson = window.prepareHighchartsJson(response, chart, indicators, group, region);
+        var sortedData = window.prepareHighchartsJson(response, chart, indicators, group, region);
+        var highChartsJson = sortedData.highcharts;
+        regionalAverageData = sortedData.average;
 
         highChartsJson.title.text = indicators[0];
         highChartsJson.chart.type = chart;

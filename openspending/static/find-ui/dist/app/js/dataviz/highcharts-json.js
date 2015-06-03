@@ -11,7 +11,8 @@
         var groupId = group;
         var cutBy = "name";
         var multiVariate = indicators.length > 1; //eligible for scatter plot
-
+        var seriesAverage = [];
+        var dataByYear = [];
 
         switch (groupId) {
             case "all":
@@ -80,6 +81,7 @@
 
             //TODO : do this in one loop
             _.forEach(cells, function(c) {
+                dataByYear[c["geometry__time"].toString()] = [];
                 series[c["geometry__country_level0." + cutBy]] = []
             });
             //indicatorId = "gdp_per_capita";
@@ -88,8 +90,17 @@
                     //rada
                     //debugger;
                     series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicatorId + "__amount_sum"]]);
+                    dataByYear[c["geometry__time"]].push(c[indicatorId + "__amount_sum"]);
                 }
             });
+
+            for (var year in dataByYear) {
+                var total = _.reduce(dataByYear[year], function(total, n) {
+                    return total + n;
+                });
+                var average = total / dataByYear[year].length;
+                seriesAverage.push([parseInt(year), average]);
+            }
 
         }
 
@@ -102,7 +113,7 @@
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
             visible = true;
             //  }
-            window.lastSeries = series[countryName];
+            window.averageSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
             seriesArray.push({
                 name: countryName,
@@ -240,8 +251,11 @@
             }]
         }
 
-
-        return json;
+        //debugger;
+        return {
+            highcharts: json,
+            average: seriesAverage
+        };
     }
 
 }())

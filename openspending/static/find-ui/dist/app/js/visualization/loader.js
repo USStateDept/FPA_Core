@@ -39,12 +39,13 @@
 
             if (multiVariate) {
 
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}";
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
             }
 
             if (!multiVariate) {
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&cut=geometry__time:{yearFrom}-{yearTo}";
+
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
             }
 
@@ -53,7 +54,7 @@
 
             // //to cut by country
         } else {
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}"
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
         }
         var url = urlTemplate.replace(/{indicator_id}/g, indicatorIds.join("|"));
 
