@@ -53,3 +53,5 @@ before_script:
   - nosetests --version
 script:
   - nosetests openspending.tests.views.test_account
+  - nosetests openspending.tests.model.test_country
+  - nosetests openspending.tests.views.test_all_views
