@@ -41,4 +41,4 @@ Front-end
 
 1. Copy all built files to the AWS bucket findstatic.  CloudFront will cache these files, so it takes an hour or two before it delivers the updated files.
 
-2. Go to cloudfront and invalidate all files that were overwritten in order to update the cache.   For example, invalidate path /static/*
+2. Go to cloudfront and invalidate all files that were overwritten in order to update the cache.   For example, invalidate path /static/* (instructions for how to invalidate files http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html)
