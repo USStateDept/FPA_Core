@@ -102,7 +102,7 @@
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
             visible = true;
             //  }
-
+            window.lastSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
             seriesArray.push({
                 name: countryName,

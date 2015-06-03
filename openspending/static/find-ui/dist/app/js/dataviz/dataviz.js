@@ -9,6 +9,30 @@
     var region = hashParams.r;
     var chart = hashParams.c;
     var activeData;
+    var chart;
+
+    var model = {
+        showRegionalAverage: function() {
+            chart = $('#viz-container').highcharts();
+
+            chart.addSeries({
+                name: "REGIONAL AVERAGE",
+                data: window.lastSeries,
+                visible: true,
+                zIndex: 1
+            })
+
+            chart.redraw();
+        },
+
+        selectYear: function() {
+
+        },
+
+        activeYears: ko.observableArray([1990, 2015])
+    }
+
+    ko.applyBindings(model);
 
 
 
@@ -55,6 +79,7 @@
         highChartsJson.yAxis.title.text = "";
         //highChartsJson.subtitle.text = type;
         $('#viz-container').highcharts(highChartsJson);
+
         $("#loading").hide();
     }
 
@@ -64,7 +89,7 @@
         if ($('#viz-container').highcharts()) {
             $('#viz-container').highcharts().destroy();
         };
-        debugger;
+
         window.loadIndicatorData(indicators, group, region, [startYear, endYear]);
     }
 
