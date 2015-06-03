@@ -6,8 +6,7 @@ from openspending.references.enumerations import DATATYPES
 from openspending.preprocessors.processing_funcs import AVAILABLE_FUNCTIONS
 from openspending.model import DataOrg
 from openspending.lib.jsonexport import jsonify
-from openspending.views.cache import etag_cache_keygen
-
+from openspending.core import cache
 log = logging.getLogger(__name__)
 blueprint = Blueprint('meta_api2', __name__)
 
@@ -26,7 +25,6 @@ def fromModel(d):
 
 @blueprint.route('/reference')
 def reference_data():
-    etag_cache_keygen('england prevails')
     dataorgs = fromModel(DataOrg.get_all().all())
     return jsonify({
         'dataTypes': sorted(DATATYPES, key=lambda d: d['label']),
@@ -35,6 +33,6 @@ def reference_data():
 
 
 @blueprint.route('/preprocessors')
+@cache.cached(timeout=3600)
 def reference_preprocessors():
-    etag_cache_keygen('preprocessors_api_3')
     return jsonify(sorted(AVAILABLE_FUNCTIONS, key=lambda d: d['label']))

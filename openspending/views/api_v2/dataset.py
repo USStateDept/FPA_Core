@@ -14,8 +14,6 @@ from openspending.model import Dataset, Source, Run, DataOrg, SourceFile
 from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
 from openspending.lib.helpers import get_dataset, get_source
-from openspending.lib.indices import clear_index_cache
-from openspending.views.cache import etag_cache_keygen
 from openspending.views.context import api_form_data
 from openspending.views.error import api_json_errors
 from openspending.validation.model.dataset import dataset_schema, source_schema
@@ -83,7 +81,6 @@ def view(name):
     """
 
     dataset = get_dataset(name)
-    etag_cache_keygen(dataset)
     return jsonify(dataset, headers= {'Cache-Control' : 'no-cache'})
 
 
@@ -301,7 +298,6 @@ def model(datasetname):
     #if not sourcename then we are saving the defaults for dataset
     
     dataset = get_dataset(datasetname)
-    etag_cache_keygen(dataset)
     if not dataset.source:
         return jsonify(False)
     else:

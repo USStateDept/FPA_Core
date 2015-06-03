@@ -22,7 +22,6 @@ from openspending.views.error import api_json_errors
 # from openspending.lib.paramparser import SearchParamParser
 # from openspending.lib.hypermedia import entry_apply_links
 # from openspending.lib.hypermedia import dataset_apply_links
-# from openspending.views.cache import etag_cache_keygen
 #rom openspending.views.api_v2.common import blueprint
 
 

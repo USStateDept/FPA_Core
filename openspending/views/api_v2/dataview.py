@@ -11,8 +11,6 @@ from openspending.core import db
 from openspending.model import Dataview
 from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
-from openspending.lib.indices import clear_index_cache
-from openspending.views.cache import etag_cache_keygen
 from openspending.views.context import api_form_data
 from openspending.views.error import api_json_errors
 
@@ -41,7 +39,6 @@ def view(urlhash):
     """
 
     dataview = Dataview.by_urlhash(urlhash)
-    etag_cache_keygen(dataview)
     return jsonify(dataview, headers= {'Cache-Control' : 'no-cache'})
 
 

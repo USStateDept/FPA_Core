@@ -9,13 +9,9 @@ from flask import Blueprint, render_template, request, redirect
 from flask import Response
 from flask.ext.login import current_user
 
-from openspending.core import db
+from openspending.core import db, cache
 from openspending.model import Tags
-from openspending.lib.csvexport import write_csv
 from openspending.lib.jsonexport import jsonify
-from openspending.lib.indices import cached_index
-from openspending.reference.country import COUNTRIES
-from openspending.views.cache import etag_cache_keygen, disable_cache
 
 log = logging.getLogger(__name__)
 
@@ -38,6 +34,7 @@ def categories(format='html'):
 
 
 @blueprint.route('/indicators/categories/datasets')
+@cache.cached(timeout=360)
 #@blueprint.route('/datasets.<fmt:format>')
 def datasets_by_tag():
     """ Get the datasets indicators list by category"""

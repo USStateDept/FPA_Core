@@ -16,8 +16,6 @@ from openspending.lib.findui import jsonp
 from openspending.lib.jsonexport import jsonify
 import json
 from openspending.core import cache
-# from openspending.lib.indices import clear_index_cache
-# from openspending.views.cache import etag_cache_keygen
 # from openspending.views.context import api_form_data
 from openspending.views.error import api_json_errors
 # from openspending.validation.model.dataset import dataset_schema, source_schema
