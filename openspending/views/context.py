@@ -36,8 +36,6 @@ def csrf_protect():
         resquesttoken = request.form.get('csrf_token', None)
         if request.json and not resquesttoken:
             resquesttoken = request.json.get('csrf_token')
-        print "request token", resquesttoken
-        print "token", token
         if not token or resquesttoken != token:
             abort(403)
 
@@ -50,8 +48,6 @@ def generate_csrf_token():
         return
     if 'csrf_token' not in session:
         session['csrf_token'] = make_uuid()
-    print session['csrf_token']
-    return session['csrf_token']
 
 current_app.jinja_env.globals['csrf_token'] = generate_csrf_token   
 
