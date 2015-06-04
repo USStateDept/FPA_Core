@@ -12,6 +12,7 @@ from restpager import Pager
 from openspending.core import db, sourcefiles
 from openspending.model import Dataset, Source, Run, DataOrg, SourceFile
 from openspending.auth import require
+from openspending import auth as can
 from openspending.lib.jsonexport import jsonify
 from openspending.lib.helpers import get_dataset, get_source
 from openspending.views.context import api_form_data
@@ -489,6 +490,30 @@ def ORoperations(datasetname):
         return jsonify(ORinstructions, headers= {'Cache-Control' : 'no-cache'})
     except Exception, e:
         return jsonify({"error":"Could not fetch the ORinstructions" + str(e)})
+
+
+
+@blueprint.route('/permissions')
+def permissions():
+    """
+    Check a user's permissions for a given dataset. This could also be
+    done via request to the user, but since we're not really doing a
+    RESTful service we do this via the api instead.
+    """
+    if 'dataset' not in request.args:
+        return jsonify({'error': 'Parameter dataset missing'}, status=400)
+
+    # Get the dataset we want to check permissions for
+    dataset = Dataset.by_name(request.args['dataset'])
+
+    # Return permissions
+    return jsonify({
+        'create': can.dataset.create() and dataset is None,
+        'read': False if dataset is None else can.dataset.read(dataset),
+        'update': False if dataset is None else can.dataset.update(dataset),
+        'delete': False if dataset is None else can.dataset.delete(dataset)
+    },
+    headers= {'Cache-Control' : 'no-cache'})
 
 
 

@@ -160,10 +160,6 @@ class AccountRegister(colander.MappingSchema):
     fullname = colander.SchemaNode(colander.String())
     email = colander.SchemaNode(colander.String(),
                                 validator=colander.Email())
-    password1 = colander.SchemaNode(colander.String(),
-                                    validator=colander.Length(min=4))
-    password2 = colander.SchemaNode(colander.String(),
-                                    validator=colander.Length(min=4))
     terms = colander.SchemaNode(colander.Bool())
 
 
