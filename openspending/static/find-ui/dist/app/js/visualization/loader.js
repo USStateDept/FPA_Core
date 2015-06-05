@@ -24,7 +24,7 @@
         });
     }
 
-    window.loadIndicatorData = function(indicators, groupId, region, yearRange) {
+    window.loadIndicatorData = function(indicators, groupId, region, yearRange, groupBy) {
         var indicatorIds = [];
 
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
@@ -38,6 +38,10 @@
         if (groupId != "all") {
 
             if (multiVariate) {
+
+                if (groupBy && (groupBy == "countries")) {
+                    groupId += ":name";
+                }
 
                 var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 

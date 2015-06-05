@@ -1,6 +1,6 @@
 (function() {
 
-    window.prepareHighchartsJson = function(data, type, indicators, group, region) {
+    window.prepareHighchartsJson = function(data, type, indicators, group, region, groupBy) {
 
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
@@ -14,8 +14,8 @@
         var seriesAverage = [];
         var dataByYear = [];
 
-        switch (groupId) {
-            case "all":
+        switch (true) {
+            case (groupId == "all" || groupBy == "countries"):
                 cutBy = "sovereignt";
                 break;
             default:
@@ -53,7 +53,7 @@
         //debugger;
         //debugger;
 
-        if (multiVariate && region.length > 0) {
+        if (multiVariate && region.length > 0 && (groupBy == "indicators")) {
 
             _.forEach(indicators, function(indicator) {
                 series[indicator] = []
@@ -77,7 +77,7 @@
         }
 
         //debugger;
-        if (!multiVariate || region.length == 0) {
+        if (!multiVariate || region.length == 0 || groupBy == "countries") {
 
             //TODO : do this in one loop
             _.forEach(cells, function(c) {
@@ -169,7 +169,9 @@
                 layout: 'vertical',
                 align: 'right',
                 verticalAlign: 'middle',
-                borderWidth: 0
+                borderWidth: 0,
+                width: 200,
+                itemWidth: 100
             },
             series: seriesArray
         }

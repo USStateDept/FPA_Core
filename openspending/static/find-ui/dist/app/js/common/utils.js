@@ -16,4 +16,10 @@
         return hashParams;
     }
 
+    window.updateHash = function(hashObj) {
+
+        var result = decodeURIComponent($.param(hashObj));
+        window.location.hash = result; //console.log("fdfsd");
+    }
+
 }())

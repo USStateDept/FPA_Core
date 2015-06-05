@@ -199,37 +199,42 @@
 
 
 
-            var hashString = "y=" + model.activeYears().join("|") + "&i=" + indicators.join("|") +
-                "&c=" + model.activeChart() + "&g=" + model.activeGroup().id +
+            var hashString = "y=" + model.activeYears().join("|") +
+                "&f=" + model.activeYears().join("|") +
+                "&i=" + indicators.join("|") +
+                "&c=" + type + "&g=" + model.activeGroup().id +
                 "&r=" + model.activeRegion();
+
             window.location.href = "/data-visualization#" + hashString;
 
-            return;
-            $("#loading").show();
 
-            if ($('#viz-container').highcharts()) {
-                $('#viz-container').highcharts().destroy();
-            };
 
-            var indicators = model.activeIndicators();
 
-            // var current = model.selectionTracker();
-            // current.indicator = true;
-            // current.vizualization = false;
-            // model.selectionTracker(current);
-            // //move to second
-            // $('#vizTabs a[href="#select-vizualization"]').tab('show')
+            // $("#loading").show();
 
-            var activeGroup = model.activeGroup();
-            var activeRegion = model.activeRegion();
-            var activeYears = model.activeYears();
+            // if ($('#viz-container').highcharts()) {
+            //     $('#viz-container').highcharts().destroy();
+            // };
 
-            var vizualizationType = type;
-            model.activeChart(vizualizationType);
+            // var indicators = model.activeIndicators();
 
-            var deferred = window.loadIndicatorData(indicators, activeGroup.id, activeRegion, activeYears);
+            // // var current = model.selectionTracker();
+            // // current.indicator = true;
+            // // current.vizualization = false;
+            // // model.selectionTracker(current);
+            // // //move to second
+            // // $('#vizTabs a[href="#select-vizualization"]').tab('show')
 
-            deferred.done(indicatorDataLoadHandler);
+            // var activeGroup = model.activeGroup();
+            // var activeRegion = model.activeRegion();
+            // var activeYears = model.activeYears();
+
+            // var vizualizationType = type;
+            // model.activeChart(vizualizationType);
+
+            // var deferred = window.loadIndicatorData(indicators, activeGroup.id, activeRegion, activeYears);
+
+            // deferred.done(indicatorDataLoadHandler);
 
 
 

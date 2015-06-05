@@ -25,15 +25,25 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row.title
     .col-md-10
-      .dropdown
+      .dropdown.pull-left
         button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
             span.caret
-        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2013)")
+        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2015)")
           li(role='presentation')
             a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
-      button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Change Indicator
-      button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Change Countries
-      button#dropdownMenu1.btn.btn-default.dropdown-toggle(data-bind="click:showRegionalAverage",type='button', data-toggle='dropdown', aria-expanded='true') Show Regional Average
+      .dropdown.pull-left
+        button#dropdownMenu2.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Group By
+            span.caret
+        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu2')
+          li(role='presentation')
+            a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('indicators')}") Indicators
+            a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('countries')}") Countries
+      button.btn.btn-default.dropdown-toggle(data-bind="click:showStats",type='button', data-toggle='dropdown', aria-expanded='true') Show Stats
+      button.btn.btn-default.dropdown-toggle(data-bind="click:showRegionalAverage",type='button', data-toggle='dropdown', aria-expanded='true') Show Regional Average
+      button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+      button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
+      
+      
           
          
     .col-md-2
@@ -46,6 +56,33 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row
     .col-md-12
       div#viz-container
+  .row
+    .col-md-10
+      //- button.btn.btn-default.dropdown-toggle(data-bind="click:showTable",type='button', data-toggle='dropdown', aria-expanded='true') Data Table
+      //- button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Indicator
+      //- button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Countries
+      ul.nav.nav-tabs
+        li
+          a(href='#tab_a', data-toggle='tab') Data Table
+        li
+          a(href='#tab_b', data-toggle='tab') Indicators
+        li
+          a(href='#tab_c', data-toggle='tab') Countries
+      .tab-content
+        #tab_a.tab-pane
+          h4 Data Table          
+          p
+            | See Data in a table    
+        #tab_b.tab-pane
+          h4 Indicators         
+          p
+            | Select from Indicators       
+        #tab_c.tab-pane
+          h4 Countries 
+          p
+            | Select from List of Countries
+    // tab content
+
 {% endblock %}
 
 {% block footer_scripts %}
