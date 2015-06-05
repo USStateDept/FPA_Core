@@ -25,21 +25,22 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row.title
     .col-md-10
-      .dropdown.pull-left
-        button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
-            span.caret
-        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2015)")
-          li(role='presentation')
-            a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
-      .dropdown.pull-left
-        button#dropdownMenu2.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Group By
-            span.caret
-        ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu2')
-          li(role='presentation')
-            a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('indicators')}") Indicators
-            a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('countries')}") Countries
-      button.btn.btn-default.dropdown-toggle(data-bind="click:showStats",type='button', data-toggle='dropdown', aria-expanded='true') Show Stats
-      button.btn.btn-default.dropdown-toggle(data-bind="click:showRegionalAverage",type='button', data-toggle='dropdown', aria-expanded='true') Show Regional Average
+      //- .dropdown.pull-left
+      //-   button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
+      //-       span.caret
+      //-   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2015)")
+      //-     li(role='presentation')
+      //-       a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
+      //- .dropdown.pull-left
+      //-   button#dropdownMenu2.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Group By
+      //-       span.caret
+      //-   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu2')
+      //-     li(role='presentation')
+      //-       a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('indicators')}") Indicators
+      //-       a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('countries')}") Countries
+      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('min')}",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
+      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('max')}",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
+      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('avg')}",type='button', data-toggle='dropdown', aria-expanded='true') Average
       button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
       button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
       

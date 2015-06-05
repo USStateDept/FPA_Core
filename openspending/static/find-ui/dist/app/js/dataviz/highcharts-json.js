@@ -1,17 +1,18 @@
 (function() {
 
-    window.prepareHighchartsJson = function(data, type, indicators, group, region, groupBy) {
+    window.prepareHighchartsJson = function(data, statsData, type, indicators, group, region, groupBy) {
 
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
 
         var cells = data.cells;
+        var statsCells = statsData.cells;
         var indicatorId = indicators[0];
         var title = indicators[0];
         var groupId = group;
         var cutBy = "name";
         var multiVariate = indicators.length > 1; //eligible for scatter plot
-        var seriesAverage = [];
+        // var seriesAverage = [];
         var dataByYear = [];
 
         switch (true) {
@@ -47,7 +48,24 @@
             categories.push(parseInt(i));
         }
 
-        var series = {};
+        var series = {
+            "Minimum": [],
+            "Maximum": [],
+            "Average": [],
+        };
+
+
+        //Add stats to series
+
+        _.forEach(statsCells, function(c) {
+            if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) && (groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
+                series["Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
+                series["Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
+                series["Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
+            }
+        });
+
+        //debugger;
         var seriesArray = [];
 
         //debugger;
@@ -94,38 +112,41 @@
                 }
             });
 
-            for (var year in dataByYear) {
-                var total = _.reduce(dataByYear[year], function(total, n) {
-                    return total + n;
-                });
-                var average = total / dataByYear[year].length;
-                seriesAverage.push([parseInt(year), average]);
-            }
+            // for (var year in dataByYear) {
+            //     var total = _.reduce(dataByYear[year], function(total, n) {
+            //         return total + n;
+            //     });
+            //     var average = total / dataByYear[year].length;
+            //     seriesAverage.push([parseInt(year), average]);
+            // }
 
         }
 
 
 
 
-
+        var counter = 1;
         for (var countryName in series) {
             var visible = false;
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
             visible = true;
             //  }
-            window.averageSeries = series[countryName];
+            //window.averageSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
             seriesArray.push({
                 name: countryName,
                 data: series[countryName],
-                visible: visible
+                visible: counter > 3 ? true : false,
+                zIndex: counter++
             });
 
             // }
 
         }
 
-
+        seriesArray[0].zIndex = seriesArray.length + 1;
+        seriesArray[1].zIndex = seriesArray.length + 2;
+        seriesArray[2].zIndex = seriesArray.length + 3;
 
 
         var json = {
@@ -255,8 +276,8 @@
 
         //debugger;
         return {
-            highcharts: json,
-            average: seriesAverage
+            highcharts: json
+            //average: seriesAverage
         };
     }
 

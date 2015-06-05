@@ -11,30 +11,52 @@
     var chart = hashParams.c;
 
     var activeData;
-    var regionalAverageData;
+    var regionalAverageData, regionalAverageSeries;
+    var regionalAverageIndex;
     var groupBy = "countries";
+
+    var statsData, statsDataSeries;
 
     var model = {
         showRegionalAverage: function() {
-            var activeChart = $('#viz-container').highcharts();
 
-            activeChart.addSeries({
-                name: "REGIONAL AVERAGE",
-                data: regionalAverageData,
-                visible: true,
-                zIndex: 1
-            })
 
-            activeChart.redraw();
+
+
         },
 
         showTable: function() {
 
         },
 
-        showStats: function() {
+        showStats: function(type) {
 
+            var index = 0;
 
+            switch (type) {
+                case "min":
+                    index = 0;
+                    break;
+
+                case "max":
+                    index = 1;
+                    break;
+
+                case "avg":
+                    index = 2;
+                    break;
+            }
+
+            var activeChart = $('#viz-container').highcharts();
+            var series = activeChart.series[index];
+
+            if (series.visible) {
+                series.hide();
+                //$button.html('Show series');
+            } else {
+                series.show();
+                // $button.html('Hide series');
+            }
         },
 
         showAll: function() {
@@ -151,13 +173,13 @@
     }
 
 
-    var indicatorDataLoadHandler = function(response) {
+    var indicatorDataLoadHandler = function(responseData, responseStats) {
 
+        statsData = responseStats[0];
 
-
-        var sortedData = window.prepareHighchartsJson(response, chart, indicators, group, region, groupBy);
+        var sortedData = window.prepareHighchartsJson(responseData[0], responseStats[0], chart, indicators, group, region, groupBy);
         var highChartsJson = sortedData.highcharts;
-        regionalAverageData = sortedData.average;
+        //regionalAverageData = sortedData.average;
 
         highChartsJson.title.text = indicators[0];
         highChartsJson.chart.type = chart;
@@ -175,18 +197,18 @@
             $('#viz-container').highcharts().destroy();
         };
 
-        var _deferred = window.loadIndicatorData(indicators, group, region, [startYear, endYear], groupBy);
-
-        _deferred.done(indicatorDataLoadHandler);
+        var _deferredList = window.loadIndicatorData(indicators, group, region, [startYear, endYear], groupBy);
+        $.when(_deferredList).done(indicatorDataLoadHandler)
+        //_deferred.done(indicatorDataLoadHandler);
     }
 
     if (indicators.length > 1) {
         //switch to group by indicators
         groupBy = "indicators";
     }
-    var deferred = window.loadIndicatorData(indicators, group, region, yearsFilter, groupBy);
-
-    deferred.done(indicatorDataLoadHandler);
+    var deferredList = window.loadIndicatorData(indicators, group, region, yearsFilter, groupBy);
+    $.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler)
+    //deferred.done(indicatorDataLoadHandler);
 
     initialize();
 

@@ -33,6 +33,8 @@
             indicatorIds.push(indicator);
         });
 
+        urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
+
         var multiVariate = indicators.length > 1; //eligible for scatter plot
 
         if (groupId != "all") {
@@ -54,13 +56,19 @@
             }
 
 
-
+            var statsUrl = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
             // //to cut by country
         } else {
             var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
+            var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         }
+
+
         var url = urlTemplate.replace(/{indicator_id}/g, indicatorIds.join("|"));
+        //debugger;
+
+
 
         if (!yearRange[1]) {
             yearRange[1] = yearRange[0];
@@ -72,6 +80,11 @@
         url = url.replace(/{yearTo}/g, yearRange[1]);
 
 
+        statsUrl = statsUrl.replace(/{groupId}/g, groupId);
+        statsUrl = statsUrl.replace(/{yearFrom}/g, yearRange[0]);
+        statsUrl = statsUrl.replace(/{yearTo}/g, yearRange[1]);
+        //debugger;
+
         //url = "data/gdp_per_capita.json";
         //gdp_per_capita
         //literacy_rate_adult_total
@@ -80,7 +93,26 @@
         //url = "http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__time|geometry__country_level0@name&format=json"
         // url = "http://api.worldbank.org/countries/all/indicators/NY.GDP.PCAP.KD?per_page=14200&format=jsonP";
         //debugger;
-        return $.ajax({
+
+        //stats
+
+
+        var statsDeferred = $.ajax({
+            url: statsUrl,
+            //jsonp: "prefix",
+            //dataType: "jsonp",
+            dataType: "json",
+            // xhrFields: {
+            //     "withCredentials": true
+            // },
+
+            data: {
+
+            }
+            //success: handlerFunc
+        });
+
+        var dataDeferred = $.ajax({
             url: url,
             //jsonp: "prefix",
             //dataType: "jsonp",
@@ -94,6 +126,8 @@
             }
             //success: handlerFunc
         });
+
+        return [dataDeferred, statsDeferred];
     }
 
     window.loadCountries = function(url, handlerFunc) {
