@@ -51,7 +51,7 @@ def index():
 
 @blueprint.route('/favicon.ico')
 def favicon():
-    return redirect('/static/img/favicon.ico', code=301)
+    return redirect('/static/favicon.ico', code=301)
 
 
 ######################OPENSPENDING STUFF#########################
