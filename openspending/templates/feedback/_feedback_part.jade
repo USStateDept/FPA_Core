@@ -1,19 +1,21 @@
 
 span.expandbtn.expanded >>
 div.popupcontainer
-	div.warningmessage	
-		p Welcome to FIND! Our site is still under construction, as we are still continuing to add components throughout. If you have any suggestions, please fill out the form below. To minimize to the sidebar, press the arrow above.
-	form(id="feedbackform")
-		label(for="email") Email (Optional)
-		input(name="email")
+    div.warningmessage  
+        p Welcome to FIND! Our site is still under construction, as we are still continuing to add components throughout. If you have any suggestions, please fill out the form below. To minimize to the sidebar, press the arrow above.
+    form(id="feedbackform")
+        input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
 
-		label(for="name") Name (Optional)
-		input(name="name")
+        label(for="email") Email (Optional)
+        input(name="email")
 
-		label(for="message") Suggestion/Comment
-		textarea(name="message", type="textarea")
+        label(for="name") Name (Optional)
+        input(name="name")
 
-		input(type="submit", id="feedbackbtn", value="Send Message")
+        label(for="message") Suggestion/Comment
+        textarea(name="message", type="textarea")
+
+        input(type="submit", id="feedbackbtn", value="Send Message")
 
 link(href='{{ static_path("find-ui/dist/app/css/feedback.css") }}' , rel='stylesheet')
 script(src="{{ static_path('find-ui/bower_components/jquery-cookie/jquery.cookie.js') }}")

@@ -59,3 +59,5 @@ LOCKDOWN_FORCE = False
 
 #UploadSet Flask-uploads management of files
 WHOOSH_BASE = tempfile.mkdtemp()
+
+PRESERVE_CONTEXT_ON_EXCEPTION = False

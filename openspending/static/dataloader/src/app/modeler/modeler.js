@@ -106,6 +106,7 @@ modeler.controller( 'ModelerCtrl', function ModelerCtrl( $scope, $stateParams, $
        form_data.append("sourcefile", $('#sourcefile')[0].files[0]);
        form_data.append("name", $scope.meta.name);
        form_data.append("prefuncs", JSON.stringify($scope.meta.prefuncs));
+       form_data.append("csrf_token", csrf_token);
 
 
         $.ajax({
@@ -123,7 +124,11 @@ modeler.controller( 'ModelerCtrl', function ModelerCtrl( $scope, $stateParams, $
         $.ajax({
             type: 'POST',
             url: '/api/3/datasets/' + $stateParams.datasetname + '/model',
-            data: {'name': $scope.meta.name, 'url': $scope.meta.url, 'prefuncs': JSON.stringify($scope.meta.prefuncs)},
+            data: {'name': $scope.meta.name, 
+                    'url': $scope.meta.url, 
+                    'prefuncs': JSON.stringify($scope.meta.prefuncs),
+                    'csrf_token': csrf_token
+                  },
             cache: false,
             success: handleresponse
         });
@@ -135,7 +140,8 @@ modeler.controller( 'ModelerCtrl', function ModelerCtrl( $scope, $stateParams, $
         $.ajax({
             type: 'POST',
             url: '/api/3/datasets/' + $stateParams.datasetname + '/model',
-            data: {'name': $scope.meta.name, 'prefuncs':JSON.stringify($scope.meta.prefuncs)},
+            data: {'name': $scope.meta.name, 'prefuncs':JSON.stringify($scope.meta.prefuncs),
+                    'csrf_token': csrf_token},
             cache: false,
             success: handleresponse
         });
@@ -297,7 +303,7 @@ modeler.directive('modelFieldChecker', function($http){
                 //   });      
                 // };
                 $http.post('/api/3/datasets/' + scope.$parent.meta.dataset + '/model/fieldcheck/' + scope.columnkey, 
-                      {"columnval": scope.columnvalue.column})
+                      {"columnval": scope.columnvalue.column, 'csrf_token': csrf_token})
                       .then(function(res) {
                         if (res.data.success){
                           scope.loadsuccess = true;
@@ -363,7 +369,7 @@ modeler.directive('modelSubmit', function ($http) {
 
                 //validate that everything is there any ready to go with the column names
                 $http.post('/api/3/datasets/' + scope.meta.dataset + '/runmodel', 
-                      {"meta": scope.meta, "modeler": scope.modeler})
+                      {"meta": scope.meta, "modeler": scope.modeler, "csrf_token": csrf_token})
                       .then(function(res) {
                         if (res.data.success){
                           scope.submitmessage = "RUN Success";
@@ -397,7 +403,7 @@ modeler.directive('modelOrgSubmit', function ($http) {
             element.on("click", function () {
               //validate that everything is there any ready to go with the column names
                 $http.post('/api/3/datasets/' + scope.meta.dataset + '/applymodel', 
-                      {"meta": scope.meta, "modeler": scope.modeler})
+                      {"meta": scope.meta, "modeler": scope.modeler, "csrf_token": csrf_token})
                       .then(function(res) {
                         if (res.data.success){
                           scope.orgmessage = "everything is ok";

@@ -44,13 +44,14 @@ def lockdown_perform():
 
 @blueprint.route('/')
 def index():
-    datasets = Dataset.all_by_account(current_user)
-    return render_template('home/index.jade', datasets=datasets)
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('home/index.jade')
 
 
 @blueprint.route('/favicon.ico')
 def favicon():
-    return redirect('/static/img/favicon.ico', code=301)
+    return redirect('/static/favicon.ico', code=301)
 
 
 ######################OPENSPENDING STUFF#########################

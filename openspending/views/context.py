@@ -1,5 +1,7 @@
-from flask import current_app, request
+from flask import current_app, request, session, abort
 from flask.ext.login import current_user
+import uuid
+
 
 from openspending import auth, _version
 from openspending.views.home import blueprint as home
@@ -26,6 +28,29 @@ def get_active_section():
     return {'dataset': True}
 
 
+
+@current_app.before_request
+def csrf_protect():
+    if request.method == "POST" and request.path not in ["/lockdown"]:
+        token = session.get('csrf_token', None)
+        resquesttoken = request.form.get('csrf_token', None)
+        if request.json and not resquesttoken:
+            resquesttoken = request.json.get('csrf_token')
+        if not token or resquesttoken != token:
+            abort(403)
+
+def make_uuid():
+    return unicode(uuid.uuid4())
+
+
+def generate_csrf_token():
+    if request.method == 'POST':
+        return
+    if 'csrf_token' not in session:
+        session['csrf_token'] = make_uuid()
+    return session['csrf_token']
+
+
 @home.app_context_processor
 def template_context_processor():
     data = {
@@ -35,7 +60,7 @@ def template_context_processor():
         'section_active': get_active_section(),
         'logged_in': auth.account.logged_in(),
         'current_user': current_user
-    }
+        }
     return data
 
 

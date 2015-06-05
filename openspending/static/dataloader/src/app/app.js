@@ -7,21 +7,6 @@ openspending.controller('AppCtrl', ['$scope', '$location', '$http', '$cookies', 
   
   $scope.flash = flash;
 
-  // EU cookie warning
-  $scope.showCookieWarning = !$cookies.neelieCookie;
-
-  $scope.hideCookieWarning = function() {
-    $cookies.neelieCookie = true;
-    $scope.showCookieWarning = !$cookies.neelieCookie;
-  };
-
-  // Language selector
-  $scope.setLocale = function(locale) {
-    $http.post('/set-locale', {'locale': locale}).then(function(res) {
-      $window.location.reload();
-    });
-    return false;
-  };
 
   // Allow SCE escaping in the app
   $scope.trustAsHtml = function(text) {
@@ -130,8 +115,9 @@ openspending.controller('DatasetNewCtrl', ['$scope', '$http', '$window', '$locat
 
   var saveExistingDataSet = function(form) {
                           //validate this for the dataorg can be set later anyway?
-
-                          var dfd = $http.post('/api/3/datasets/' + $stateParams.datasetname, $scope.dataset);
+                          postdata = {};
+                          $.extend(postdata, $scope.dataset, {'csrf_token': csrf_token});
+                          var dfd = $http.post('/api/3/datasets/' + $stateParams.datasetname, postdata);
                           dfd.then(function(res) {
                             //$location.path('/' + res.data.name + '/manage/meta');
                             if (res.data.success === true){
@@ -147,7 +133,9 @@ openspending.controller('DatasetNewCtrl', ['$scope', '$http', '$window', '$locat
                         };
 
   var saveNewDataSet = function(form) {
-                        var dfd = $http.post('/api/3/datasets', $scope.dataset);
+                        postdata = {};
+                        $.extend(postdata, $scope.dataset, {'csrf_token': csrf_token});
+                        var dfd = $http.post('/api/3/datasets', postdata);
                         dfd.then(function(res) {
                             if (res.data.success === true){
                               //flash message
@@ -185,7 +173,7 @@ openspending.controller('DatasetNewCtrl', ['$scope', '$http', '$window', '$locat
 
   }
   else{
-    $http.get('/api/2/permissions?dataset=new').then(function(res) {
+    $http.get('/api/3/permissions?dataset=new').then(function(res) {
       $scope.permissions = res.data;
     });
     $scope.save = saveNewDataSet;
@@ -222,7 +210,9 @@ openspending.controller('SourceFormCtrl', ['$scope', '$http', '$window', '$locat
 
 
   $scope.save = function(form) {
-    var dfd = $http.post('/api/3/datasets', $scope.dataset);
+    postdata = {};
+    $.extend(postdata, $scope.dataset, {'csrf_token': csrf_token});
+    var dfd = $http.post('/api/3/datasets', postdata);
     dfd.then(function(res) {
       $location.path('/' + res.data.name + '/manage/meta');
     }, validation.handle(form));
@@ -247,7 +237,7 @@ var getDataTableOptions = function(resobj){
 
 
   _.each(resobj, function(val, key){
-    val['loaddata'] = '<a class="list-group-item" href="#/' + val['name'] + '/source"> **Edit Data***</a>';
+    val['loaddata'] = '<a class="list-group-item" href="#/' + val['name'] + '/source" target="_blank"> **Edit Data***</a>';
 
   });
 

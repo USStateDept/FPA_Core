@@ -57,5 +57,8 @@
 <script type="text/javascript" src="/static/dataloader/build/src/app/modeler/modeler.js"></script>
 <script type="text/javascript" src="/static/dataloader/build/templates-common.js"></script>
 <script type="text/javascript" src="/static/dataloader/build/templates-app.js"></script>
+<script type="text/javascript">
+  var csrf_token = "{{ csrf_token() }}";
+</script>
 
 {% endblock %}
