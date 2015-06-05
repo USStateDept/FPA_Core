@@ -28,4 +28,6 @@ html(lang='en')
     
     {% block footer_scripts %}{% endblock %}
 
-    include feedback/_feedback_part.jade
+    {% include "feedback/_feedback_part.jade" with context%}
+
+

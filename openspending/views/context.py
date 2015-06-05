@@ -48,8 +48,7 @@ def generate_csrf_token():
         return
     if 'csrf_token' not in session:
         session['csrf_token'] = make_uuid()
-
-current_app.jinja_env.globals['csrf_token'] = generate_csrf_token   
+    return session['csrf_token']
 
 
 @home.app_context_processor

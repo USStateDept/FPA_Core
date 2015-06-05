@@ -20,6 +20,7 @@ class TestDatasetController(ControllerTestCase):
     def setUp(self):
         super(TestDatasetController, self).setUp()
         current_app.config['LOCKDOWN_FORCE'] = False
+        current_app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
         #self.source = csvimport_fixture("sci_study")
 
         self.user = make_account('test')
