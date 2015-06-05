@@ -237,7 +237,7 @@ var getDataTableOptions = function(resobj){
 
 
   _.each(resobj, function(val, key){
-    val['loaddata'] = '<a class="list-group-item" href="#/' + val['name'] + '/source"> **Edit Data***</a>';
+    val['loaddata'] = '<a class="list-group-item" href="#/' + val['name'] + '/source" target="_blank"> **Edit Data***</a>';
 
   });
 
