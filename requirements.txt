@@ -31,7 +31,7 @@ sqlalchemy-migrate==0.9.2
 python-slugify==0.1.0
 Flask-Assets==0.10
 cssmin==0.2.0
-git+https://github.com/USStateDept/cubes.git@DOSv.14
+git+https://github.com/USStateDept/cubes.git@DOSv.15
 expressions==0.2.2
 grako==3.5.1
 restpager==0.1
