@@ -4,18 +4,17 @@ from account import logged_in
 
 
 def create():
-    return logged_in()
+    return logged_in() and (current_user.admin or current_user in dataset.managers)
 
 
 def read(dataset):
-	#use this to control everything
-	return True
+    #use this to control everything
+    return True
     #return update(dataset)
 
 
 def update(dataset):
-    return logged_in() and (current_user.admin or
-                            current_user in dataset.managers)
+    return logged_in() and (current_user.admin or current_user in dataset.managers)
 
 
 def delete(dataset):

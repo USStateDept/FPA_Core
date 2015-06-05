@@ -15,6 +15,7 @@ div.container
     div.span6
       h3 Login
       form.basic.login.form-horizontal(id="login", action="{{ url_for('account.login') }}", method="POST")
+        input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
         fieldset
           div.control-group
             label(for="login") Email Login
@@ -31,6 +32,7 @@ div.container
       h3 Put more information about why this only USG
         {% formfill form_fill with form_errors %}
         form.basic.register.form-horiztonal(id="register", action="{{ url_for('account.register') }}", method="POST")
+          input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
           fieldset
             div.control-group.form-inline
               label(for="email") Email USG Only

@@ -18,6 +18,7 @@
       </p>
       {% formfill form_fill with form_errors %}
       <form action="{{ url_for('account.trigger_reset') }}" method="POST" class="form-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <input type="text" class="input-large span5" name="email" placeholder="Email" />
         <button type="submit" class="btn">Request a reset</button>
       </form>

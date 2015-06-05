@@ -13,6 +13,7 @@ from openspending.lib.helpers import url_for, obj_or_404
 from openspending.lib.helpers import flash_error
 from openspending.lib.helpers import flash_notice, flash_success
 from openspending.lib.reghelper import sendhash
+from openspending.views.context import generate_csrf_token
 
 
 from wtforms import Form, TextField, PasswordField, validators
@@ -43,7 +44,8 @@ def load_user_from_request(request):
 @blueprint.route('/login', methods=['GET'])
 def login():
     """ Render the login/registration page. """
-    return render_template('account/login.jade')
+    values = {"csrf_token": generate_csrf_token()}
+    return render_template('account/login.jade', form_fill=values)
 
 
 @blueprint.route('/login', methods=['POST', 'PUT'])
@@ -56,7 +58,7 @@ def login_perform():
             login_user(account, remember=True)
             flash_success("Welcome back, " + account.fullname + "!")
             return redirect(url_for('home.index'))
-    flash_error(_("Incorrect user name or password!"))
+    flash_error("Incorrect user name or password!")
     return login()
 
 
@@ -125,6 +127,7 @@ def register():
         return redirect(url_for('account.email_message', id=account.id))
     except colander.Invalid as i:
         errors = i.asdict()
+    values["csrf_token"] = generate_csrf_token()
     return render_template('account/login.jade', form_fill=values,
                            form_errors=errors)
 
@@ -150,7 +153,7 @@ def verify():
 
     
         #request.form.loginhash = {"data":loginhash}
-        values = {'loginhash': loginhash}
+        values = {'loginhash': loginhash, "csrf_token": generate_csrf_token()}
         return render_template('account/verify.jade', account=account, form_fill=values)
 
     else:
@@ -231,25 +234,28 @@ def trigger_reset():
     """
     Allow user to trigger a reset of the password in case they forget it
     """
+
+    values = {"csrf_token": generate_csrf_token()}
+
     # If it's a simple GET method we return the form
     if request.method == 'GET':
-        return render_template('account/trigger_reset.html')
+        return render_template('account/trigger_reset.html', form_fill=values)
 
     # Get the email
     email = request.form.get('email')
 
     # Simple check to see if the email was provided. Flash error if not
     if email is None or not len(email):
-        flash_error(_("Please enter an email address!"))
-        return render_template('account/trigger_reset.html')
+        flash_error("Please enter an email address!")
+        return render_template('account/trigger_reset.html',  form_fill=values)
 
     # Get the account for this email
     account = Account.by_email(email)
 
     # If no account is found we let the user know that it's not registered
     if account is None:
-        flash_error(_("No user is registered under this address!"))
-        return render_template('account/trigger_reset.html')
+        flash_error("No user is registered under this address!")
+        return render_template('account/trigger_reset.html',  form_fill=values)
 
     account.reset_loginhash()
     db.session.commit()

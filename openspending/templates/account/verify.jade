@@ -16,6 +16,7 @@ div.container
       h3 Choose Password
         {% formfill form_fill with form_errors %}
         form.basic.register.form-horiztonal(id="register", action="{{ url_for('account.verify') }}", method="POST")
+          input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
           fieldset
             h3 Welcome Back, {{ account.fullname }}
             h4 {{ error }}
