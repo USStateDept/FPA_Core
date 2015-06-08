@@ -18,6 +18,15 @@
     var statsData, statsDataSeries;
 
     var model = {
+
+        shortenUrl: function() {
+            //513b798e10d6c101ac6ac7fdd405d0e7
+
+
+            //https://go.usa.gov/api
+
+        },
+
         showRegionalAverage: function() {
 
 
