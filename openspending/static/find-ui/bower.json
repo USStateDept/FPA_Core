@@ -23,6 +23,7 @@
     "textillate": "~0.4.0",
     "jquery-cookie": "~1.4.1",
     "jquery-ui-slider-pips": "~1.10.0",
-    "leaflet": "~0.7.3"
+    "leaflet": "~0.7.3",
+    "highcharts": "~4.1.5"
   }
 }

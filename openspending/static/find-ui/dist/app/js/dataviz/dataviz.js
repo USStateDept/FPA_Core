@@ -9,6 +9,7 @@
     var group = hashParams.g;
     var region = hashParams.r;
     var chart = hashParams.c;
+    var countries = hashParams.cn.split("|");
 
     var activeData;
     var regionalAverageData, regionalAverageSeries;
@@ -206,7 +207,7 @@
             $('#viz-container').highcharts().destroy();
         };
 
-        var _deferredList = window.loadIndicatorData(indicators, group, region, [startYear, endYear], groupBy);
+        var _deferredList = window.loadIndicatorData(indicators, group, region, [startYear, endYear], countries, groupBy);
         $.when(_deferredList).done(indicatorDataLoadHandler)
         //_deferred.done(indicatorDataLoadHandler);
     }
@@ -215,7 +216,7 @@
         //switch to group by indicators
         groupBy = "indicators";
     }
-    var deferredList = window.loadIndicatorData(indicators, group, region, yearsFilter, groupBy);
+    var deferredList = window.loadIndicatorData(indicators, group, region, yearsFilter, countries, groupBy);
     $.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler)
     //deferred.done(indicatorDataLoadHandler);
 

@@ -24,7 +24,7 @@
         });
     }
 
-    window.loadIndicatorData = function(indicators, groupId, region, yearRange, groupBy) {
+    window.loadIndicatorData = function(indicators, groupId, region, yearRange, countries, groupBy) {
         var indicatorIds = [];
 
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
@@ -63,6 +63,12 @@
             var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
             var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         }
+
+        if (countries.length > 0 && countries[0].length > 0) {
+            //debugger;
+            urlTemplate += "&cut=geometry__country_level0@name:" + countries.join(";")
+        }
+
 
 
         var url = urlTemplate.replace(/{indicator_id}/g, indicatorIds.join("|"));

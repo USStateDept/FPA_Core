@@ -27,14 +27,14 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     .col-md-12
       div(role='tabpanel')  
         ul#vizTabs.nav.nav-tabs.nav-justified(role='tablist')
-          li.active(role='presentation')
+          li.active(role='presentation',data-bind="click:function(){selectView('indicators')}")
             a(href='#select-indicator', aria-controls='vizualize', role='tab', data-toggle='tab',class='selectable')
               h4
                 //-span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
                 span() 1. Indicators
                 //-span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
                 //-linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
-          li(role='presentation')
+          li(role='presentation',data-bind="click:function(){selectView('countries')}")
             a(href='#select-filter', aria-controls='vizualize', role='tab',class="selectable",data-toggle='tab')
               //-data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}"
               h4
@@ -42,7 +42,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 span() 2. Countries
                 //-span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
-          li(role='presentation')
+          li(role='presentation',data-bind="click:function(){selectView('chart')}")
             a(href='#select-vizualization', aria-controls='vizualize', role='tab',data-bind="attr:{'data-toggle':activeIndicators().length > 0?'tab':'none'},css:{selectable:activeIndicators().length>0}")
               h4
                 //-span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
@@ -65,6 +65,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               p
             .row
               p
+            
             .row.title
               .col-md-2
                 .dropdown
@@ -84,7 +85,16 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   //-button.btn.btn-default(type='button') Select All
                   //-button.btn.btn-default(type='button') Deselect All
               .col-md-8
-                .pull-right#filter-countries-label(data-bind="html:activeGroup().label + ' - ' + activeRegion()")
+                .pull-right#filter-countries-label(data-bind="visible:activeCountries().length==0,html:activeGroup().label + ' - ' + activeRegion()")
+
+            .row.title.f32(data-bind="visible:activeCountries().length>0")
+              .col-md-10(data-bind="foreach:activeCountries")
+                .pull-right.flag-item(data-bind='click:$root.removeCountry,css:{selected:selected}')
+                  div.flag(data-bind="css:iso_a2.toLowerCase()")
+                  span.flags-labels(data-bind="html:label")
+              .col-md-2
+                a(data-bind="click:clearActiveCountries") Clear
+
             .row
               p
             .row
@@ -193,7 +203,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   div.well.category.noun-scatter-105477()
                   h4 Scatter Plot
               .col-sm-4.col-md-4
-                div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;radar&#34;)}')
                   div.well.category.noun-radar-50835()
                   h4 Radar
               .col-sm-4.col-md-4
@@ -231,9 +241,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 {% endblock %}
 
 {% block footer_scripts %}
-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
-
+//-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
+link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+//-script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
 //-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")

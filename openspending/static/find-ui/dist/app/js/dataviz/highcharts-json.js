@@ -148,6 +148,20 @@
         seriesArray[1].zIndex = seriesArray.length + 2;
         seriesArray[2].zIndex = seriesArray.length + 3;
 
+        // debugger;
+
+
+        //debugger;
+
+        var chartObj = {
+
+            type: type
+        };
+
+        //if (type == "radar") {
+        //chartObj.polar = true;
+        //chartObj["type"] = "line";
+        // }
 
         var json = {
             chart: {

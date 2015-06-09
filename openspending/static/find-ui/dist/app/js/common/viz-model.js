@@ -2,6 +2,18 @@
 
     window.vizModel = {
 
+        selectView: function(type) {
+
+            switch (type) {
+                case "countries":
+                    setTimeout(function() {
+                        window.createMap();
+                    }, 10);
+
+                    break;
+            }
+        },
+
         downloadData: function(format, indicator) {
 
             clickedIndicator = true;
@@ -115,13 +127,18 @@
                 return indicator.id;
             });
 
+            var countries = _.map(vizModel.activeCountries(), function(country) {
+                return country.geounit;
+            });
+
 
 
             var hashString = "y=" + vizModel.activeYears().join("|") +
                 "&f=" + vizModel.activeYears().join("|") +
                 "&i=" + indicators.join("|") +
                 "&c=" + type + "&g=" + vizModel.activeGroup().id +
-                "&r=" + vizModel.activeRegion();
+                "&r=" + vizModel.activeRegion() +
+                "&cn=" + countries.join("|");
 
             window.location.href = "/data-visualization#" + hashString;
 
@@ -130,8 +147,13 @@
         },
 
         selectCountry: function() {
-            var countryLabel = arguments[0].label;
-            var countryId = arguments[0].code;
+
+
+            var selectedCountry = arguments[0];
+            var countryLabel = selectedCountry.label;
+            var countryId = selectedCountry.code;
+
+            vizModel.activeCountries.push(selectedCountry);
 
             var countriesModel = _.clone(vizModel.countriesModel(), true);
             vizModel.countriesModel.removeAll();
@@ -144,13 +166,35 @@
             //vizModel.countriesModel(response.data);
             //vizModel.countriesModelMaster(_.clone(response.data, true));
 
-            vizModel.activeCountries.push(arguments[0]);
+            // vizModel.activeCountries.push(arguments[0]);
 
             var current = vizModel.selectionTracker();
             current.filter = true;
             vizModel.selectionTracker(current);
 
             // $('#vizTabs a[href="#select-indicator"]').tab('show');
+        },
+
+        removeCountry: function() {
+
+            var selectedCountry = arguments[0];
+            var activeCountries = vizModel.activeCountries();
+            var selectedIndex = _.indexOf(activeCountries, selectedCountry);
+
+            vizModel.activeCountries.splice(selectedIndex, 1);
+
+            // _.each(activeCountries, function(country){
+            // 	if (geounit)
+            // });
+            // vizModel.activeCountries.push(selectedCountry);
+
+        },
+
+
+        clearActiveCountries: function() {
+
+            vizModel.activeCountries.removeAll();
+
         },
 
         selectCountryGroup: function() {
@@ -161,16 +205,19 @@
 
             if (groupId == "all") {
                 vizModel.selectCountryGroupRegion("all"); //just select all countries
-            }
-            //assign region to countryGroupRegion
-            vizModel.countryGroupRegions.removeAll();
+            } else {
+                //assign region to countryGroupRegion
+                vizModel.countryGroupRegions.removeAll();
 
-            _.forEach(vizModel.countryGroupings(), function(countryGroup) {
-                if (groupId == countryGroup.id) {
-                    vizModel.countryGroupRegions(countryGroup.regions);
-                    vizModel.selectCountryGroupRegion(countryGroup.regions[0]);
-                }
-            })
+                _.forEach(vizModel.countryGroupings(), function(countryGroup) {
+                    if (groupId == countryGroup.id) {
+                        vizModel.countryGroupRegions(_.clone(countryGroup.regions, true));
+                        vizModel.selectCountryGroupRegion(countryGroup.regions[0]);
+                    }
+                })
+
+            }
+
 
 
         },
@@ -283,6 +330,8 @@
         }),
 
         activeCard: ko.observable(""),
+
+        activeRegion: ko.observable(""),
 
         activeRegion: ko.observable(""),
 

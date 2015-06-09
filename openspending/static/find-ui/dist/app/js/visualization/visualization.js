@@ -4,20 +4,24 @@
      * Start the Wiard mode
      **/
     var clickedIndicator = false;
-
+    var mapCreated = false;
     $(function() {
         // $('#vizTabs a:first').tab('show')
     });
 
-    var startUI = function() {
+    window.createMap = function() {
 
-        var map = L.map('map').setView([51.505, -33.9], 6);
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            maxZoom: 18,
-            id: 'examples.map-i875mjb7',
-            accessToken: 'pk.eyJ1Ijoid2lzZWd1eSIsImEiOiI5N2IxYWYxMzU2YmZhOTU3ZjM4ZDRjZDBlMzNkYzU0NSJ9._T6Dz2ZFA4p9VZMdT2SmjA'
-        }).addTo(map);
+        if (!mapCreated) {
+            mapCreated = true;
+            var map = L.map('map').setView([38, -77], 3);
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 18,
+                id: 'examples.map-i875mjb7',
+                accessToken: 'pk.eyJ1Ijoid2lzZWd1eSIsImEiOiI5N2IxYWYxMzU2YmZhOTU3ZjM4ZDRjZDBlMzNkYzU0NSJ9._T6Dz2ZFA4p9VZMdT2SmjA'
+            }).addTo(map);
+        }
+
     }
 
 
@@ -268,7 +272,7 @@
 
 
 
-    startUI(); //this should be the last function in this function
+    //startUI(); //this should be the last function in this function
 
 
 }())

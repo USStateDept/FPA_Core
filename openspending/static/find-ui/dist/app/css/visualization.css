@@ -82,7 +82,7 @@
 }
 .app #viz-container {
   min-width: 50%;
-  height: 400px;
+  height: 550px;
 }
 .app .selected-tab-value {
   color: #852224;
@@ -286,4 +286,7 @@
 }
 .flag-item:hover {
   text-decoration: underline;
+}
+.custom-country {
+  padding: 10px;
 }
