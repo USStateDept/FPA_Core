@@ -15,36 +15,59 @@
     }
 
     ko.applyBindings(model);
-    //search event
-    $(".main-search").keyup(function() {
 
-        var value = $(".main-search")[0].value;
-        var url = "/api/3/search/indicators";
-        model.searchValue(value);
-        if (value.length < 2) {
-            model.searchResults.removeAll();
-            return;
-        }
+    var searchKeyUpHandler = function() {
 
-        $.ajax({
-            url: url,
-            jsonp: "callback",
-            dataType: "jsonp",
-            //dataType: "json",
-            data: {
-                q: value
-            },
-            success: function(response) {
-                searchHandler(response, value)
+            var value = $(".main-search")[0].value;
+
+            var url = "/api/3/search/countries";
+
+            switch (model.searchType()) {
+
+                case "countries":
+                    url = "/api/3/search/countries";
+                    break;
+
+                case "indicators":
+                    url = "/api/3/search/indicators";
+                    break;
+
+                default:
+                    url = "/api/3/search";
+                    break;
             }
-        });
 
-    });
+            model.searchValue(value);
+            if (value.length < 2) {
+                model.searchResults.removeAll();
+                return;
+            }
+
+            $.ajax({
+                url: url,
+                jsonp: "callback",
+                dataType: "jsonp",
+                //dataType: "json",
+                data: {
+                    q: value
+                },
+                success: function(response) {
+                    searchHandler(response, value)
+                }
+            });
+
+        }
+        //search event
+    $(".main-search").keyup(searchKeyUpHandler);
 
     $("input:radio[name=searchGroup]").change(function() {
 
         var value = $(this)[0].value;
+
+        model.searchResults.removeAll();
         model.searchType(value);
+        searchKeyUpHandler();
+
     });
 
 
