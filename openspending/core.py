@@ -74,6 +74,13 @@ def create_app(**config):
             return redirect("/lockdown", code=302)
         from openspending.model.search import SearchForm
         g.search_form = SearchForm()
+        if request.method == "POST" and request.path not in ["/lockdown"]:
+            token = session.get('csrf_token', None)
+            resquesttoken = request.form.get('csrf_token', None)
+            if request.json and not resquesttoken:
+                resquesttoken = request.json.get('csrf_token')
+            if not token or resquesttoken != token:
+                abort(403)
 
     with app.app_context():
         app.cubes_workspace = Workspace()

@@ -8,7 +8,6 @@ from sqlalchemy.ext.associationproxy import association_proxy
 
 from openspending.core import db
 
-from openspending.model.metadataorg import MetadataOrg
 from openspending.model.common import (MutableDict, JSONType,
                                        DatasetFacetMixin)
 
@@ -56,7 +55,6 @@ class DataOrg(db.Model):
         self.mappingTemplate = dataorg.get('mappingTemplate', {})
         self.prefuncs = dataorg.get('prefuncs', {})
         self.lastUpdated = datetime.utcnow()
-        self.metadataorg = dataorg.get('metadataorg')
 
 
 
@@ -75,7 +73,7 @@ class DataOrg(db.Model):
         json['pk'] = getattr(self, 'id')
         json['model'] = "DataOrg"
 
-        fields = ['label','description','ORTemplate','mappingTemplate','prefuncs','metadataorg_id']
+        fields = ['label','description','ORTemplate','mappingTemplate','prefuncs']
 
         for field in fields:
             json['fields'][field] = getattr(self, field)
@@ -86,7 +84,7 @@ class DataOrg(db.Model):
     @classmethod
     def import_json_dump(cls, theobj):
         
-        fields = ['label','description','ORTemplate','mappingTemplate','prefuncs','metadataorg_id']
+        fields = ['label','description','ORTemplate','mappingTemplate','prefuncs']
         classobj = cls()
         for field in fields:
             setattr(classobj, field, theobj['fields'][field])
@@ -109,15 +107,13 @@ class DataOrg(db.Model):
         self.mappingTemplate = dataset.get('mappingTemplate', {})
         self.prefuncs = dataset.get('prefuncs', {})
         self.lastUpdated = datetime.utcnow()
-        self.metadataorg = dataset.get('metadataorg')
 
     def as_dict(self):
         return {
             'id' : self.id,
             'label': self.label,
             'description': self.description,
-            'lastUpdated': self.lastUpdated,
-            'metadataorg': self.metadataorg
+            'lastUpdated': self.lastUpdated
         }
 
 
