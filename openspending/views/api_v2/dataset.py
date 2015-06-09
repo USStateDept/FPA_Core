@@ -117,6 +117,14 @@ def create():
         dataset = Dataset(data=data)
         dataset.managers.append(current_user)
         db.session.add(dataset)
+        
+        dataset_source = Source.by_source_name(dataset.name)
+        if not dataset_source:
+            dataset_source = Source(dataset=dataset, name=dataset.name)
+            db.session.add(dataset_source)
+        else:
+            dataset_source.dataset = dataset
+        #creating a new dataset so we have to create a source as well
         db.session.commit()
         return jsonify({"success":True, "dataset":dataset.name})
     except Exception, e:
@@ -291,7 +299,6 @@ def save_default_model(datasetname):
 
 
 
-
 @blueprint.route('/datasets/<datasetname>/model', methods=['GET'])
 #@blueprint.route('/datasets/<datasetname>/model/<sourcename>')
 @api_json_errors
@@ -300,10 +307,17 @@ def model(datasetname):
     
     dataset = get_dataset(datasetname)
     if not dataset.source:
-        return jsonify(False)
-    else:
+        #then create one
+        dataset_source = Source.by_source_name(dataset.name)
+        if not dataset_source:
+            dataset_source = Source(name=dataset.name, dataset=dataset)
+            db.session.add(dataset_source)
+        else:
+            dataset_source.dataset = dataset
+        db.session.commit()
+
         #figure out what they need over there?
-        return jsonify(dataset.source)
+    return jsonify(dataset.source)
 
 
 

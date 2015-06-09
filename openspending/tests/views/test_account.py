@@ -38,7 +38,7 @@ class TestLockDownController(ControllerTestCase):
     def test_login_success(self):
         response = self.client.post(url_for('home.lockdown'),
                                     data={'username': "test",'password':'test'}, follow_redirects=True)
-        assert 'Explore country-level indicators from a variety of sources and sectors' in response.data
+        assert '<div class="container">' in response.data
 
 
 
@@ -77,7 +77,8 @@ class TestAccountController(ControllerTestCase):
         response = self.client.get(url_for('home.index'), follow_redirects = True)
         assert '200' in response.status, \
             'home not successly shown for new user'
-        assert 'Explore country-level indicators from a variety of sources and sectors' \
+        print response.data
+        assert '<div class="container">' \
             in response.data
 
         # Get the user profile for an anonymous user
