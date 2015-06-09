@@ -192,8 +192,9 @@
         //regionalAverageData = sortedData.average;
 
         highChartsJson.title.text = indicators[0];
-        highChartsJson.chart.type = chart;
+        //highChartsJson.chart.type = chart;
         highChartsJson.yAxis.title.text = "";
+        //debugger;
         //highChartsJson.subtitle.text = type;
         $('#viz-container').highcharts(highChartsJson);
 

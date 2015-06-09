@@ -158,15 +158,13 @@
             type: type
         };
 
-        //if (type == "radar") {
-        //chartObj.polar = true;
-        //chartObj["type"] = "line";
-        // }
+        if (type == "radar") {
+            chartObj.polar = true;
+            chartObj["type"] = "line";
+        }
 
         var json = {
-            chart: {
-                type: type
-            },
+            chart: chartObj,
             title: {
 
                 text: "GDP per capita",
