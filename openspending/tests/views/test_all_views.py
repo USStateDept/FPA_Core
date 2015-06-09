@@ -10,7 +10,6 @@ from openspending.core import db
 from openspending.model.dataset import Dataset
 from openspending.tests.base import ControllerTestCase
 from openspending.tests.helpers import (make_account, load_fixture)
-from openspending.tests.importer.test_OR import csvimport_fixture
 from openspending.lib.helpers import get_source
 from openspending.command.search import reindex as reindex_search
 

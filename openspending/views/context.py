@@ -29,16 +29,6 @@ def get_active_section():
 
 
 
-@current_app.before_request
-def csrf_protect():
-    if request.method == "POST" and request.path not in ["/lockdown"]:
-        token = session.get('csrf_token', None)
-        resquesttoken = request.form.get('csrf_token', None)
-        if request.json and not resquesttoken:
-            resquesttoken = request.json.get('csrf_token')
-        if not token or resquesttoken != token:
-            abort(403)
-
 def make_uuid():
     return unicode(uuid.uuid4())
 
