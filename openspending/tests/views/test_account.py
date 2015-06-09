@@ -77,7 +77,6 @@ class TestAccountController(ControllerTestCase):
         response = self.client.get(url_for('home.index'), follow_redirects = True)
         assert '200' in response.status, \
             'home not successly shown for new user'
-        print response.data
         assert '<div class="container">' \
             in response.data
 

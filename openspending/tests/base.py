@@ -26,8 +26,8 @@ class TestCase(FlaskTestCase):
     def setUp(self):
         init_db(self.app)
 
-    def tearDown(self):
-        clean_db(self.app)
+ #   def tearDown(self):
+#        clean_db(self.app)
 
 
 class DatabaseTestCase(TestCase):

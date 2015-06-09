@@ -49,9 +49,7 @@ install:
 before_script:
   - psql -c 'create database openspending_testing;' -U postgres
   - psql -d openspending_testing -U postgres -c "create extension postgis"
-  - pg_restore -d openspending_testing -U postgres < ./fixtures/geometry_final.backup
+  - pg_restore -d openspending_testing -U postgres < ./openspending/tests/fixtures/testing_database.backup
   - nosetests --version
 script:
-  - nosetests openspending.tests.views.test_account
-  - nosetests openspending.tests.model.test_country
-  - nosetests openspending.tests.views.test_all_views
+  - nosetests
