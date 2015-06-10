@@ -151,6 +151,23 @@
         });
     }
 
+    window.loadGeoJSON = function(type, handlerFunc) {
+
+        url = "/static/json/" + type + "_None.geojson";
+        $.ajax({
+            url: url,
+            // jsonp: "prefix",
+            dataType: "json",
+            data: {
+
+            },
+            success: function(response) {
+                handlerFunc(response, type)
+            }
+        });
+
+    }
+
 
 
 }())
