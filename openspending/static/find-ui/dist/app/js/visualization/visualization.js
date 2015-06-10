@@ -5,21 +5,60 @@
      **/
     var clickedIndicator = false;
     var mapCreated = false;
+    var map;
+    var geoJsonLayers = [];
+
     $(function() {
         // $('#vizTabs a:first').tab('show')
     });
 
+    var geoJSONHandler = function(response, type) {
+
+        if (!geoJsonLayers[type]) {
+            geoJsonLayers[type] = L.geoJson(response);
+        }
+
+        for (var _type in geoJsonLayers) {
+            if (type == _type) {
+                map.addLayer(geoJsonLayers[_type]);
+            } else {
+
+                map.removeLayer(geoJsonLayers[_type]);
+            }
+        }
+
+
+        //geoJsonLayers[type].addTo(map);
+        //debugger;
+        // geoJsonLayer = L.geoJson(this.collection.toJSON(), {
+        //     onEachFeature: _self.onEachFeature
+        // });
+
+    }
+
+    window.changeGroup = function(groupId) {
+        if (groupId == "all") {
+            groupId = "sovereignt";
+        }
+        window.loadGeoJSON(groupId, geoJSONHandler);
+    }
+
     window.createMap = function() {
+
+        var defaultType = "sovereignt";
 
         if (!mapCreated) {
             mapCreated = true;
-            var map = L.map('map').setView([38, -77], 3);
+            map = L.map('map').setView([0, 0], 1);
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 18,
                 id: 'examples.map-i875mjb7',
                 accessToken: 'pk.eyJ1Ijoid2lzZWd1eSIsImEiOiI5N2IxYWYxMzU2YmZhOTU3ZjM4ZDRjZDBlMzNkYzU0NSJ9._T6Dz2ZFA4p9VZMdT2SmjA'
             }).addTo(map);
+
+            //load geojson
+            window.loadGeoJSON(defaultType, geoJSONHandler);
         }
 
     }

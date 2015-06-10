@@ -9,7 +9,19 @@
         searchType: ko.observable("all"), //indicators, countries
 
         selectIndicator: function(obj) {
-            window.location.href = "visualization#ind=" + obj.id
+
+            if (obj.type == "countries") {
+
+                window.location.href = "data-visualization#y=1990|2015&f=1990|2015&i=gdp_per_capita&c=line&g=all&r=&cn=" + obj.id
+
+            }
+
+
+            if (obj.type == "indicators") {
+
+                window.location.href = "data-visualization#y=1990|2015&f=1990|2015&i=" + obj.id + "&c=line&g=all&r=&cn=";
+
+            }
             // alert("selected indicator")
         }
     }
@@ -92,7 +104,8 @@
 
                 var resultItem = {
                     id: id,
-                    label: ""
+                    label: "",
+                    type: responseType
                 }
 
                 var originalLabel = response.data[responseType][id];

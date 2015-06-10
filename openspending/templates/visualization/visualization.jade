@@ -75,8 +75,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
               .col-md-2
-                .dropdown
-                  button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true', data-bind="visible:countryGroupRegions().length>0") Regions
+                .dropdown(data-bind="visible:countryGroupRegions().length>0")
+                  button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Regions
                       span.caret
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
                     li(role='presentation')

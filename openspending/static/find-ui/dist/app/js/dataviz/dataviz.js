@@ -15,16 +15,44 @@
     var regionalAverageData, regionalAverageSeries;
     var regionalAverageIndex;
     var groupBy = "countries";
+    var modalTitle = "";
+    var modalMessage = "";
 
     var statsData, statsDataSeries;
 
+    $('#modal').modal({
+        show: false,
+        keyboard: false
+    }); // initialized with defaults
+
+
+    $('#modal').on('show.bs.modal', function(event) {
+        var modal = $(this)
+        modal.find('.modal-title').text(modalTitle);
+        modal.find('.modal-body').text(modalMessage);
+    });
+
     var model = {
 
-        shortenUrl: function() {
-            //513b798e10d6c101ac6ac7fdd405d0e7
+        shareUrl: function() {
+
+            modalTitle = "Share";
+            modalMessage = "http://shareme.gov/Uns87nG";
+
+            $('#modal').modal('show');
 
 
-            //https://go.usa.gov/api
+        },
+
+        shareFacebook: function() {
+
+            debugger;
+
+        },
+
+        shareTwitter: function() {
+
+            debugger;
 
         },
 
@@ -185,6 +213,7 @@
 
     var indicatorDataLoadHandler = function(responseData, responseStats) {
 
+
         statsData = responseStats[0];
 
         var sortedData = window.prepareHighchartsJson(responseData[0], responseStats[0], chart, indicators, group, region, groupBy);
@@ -209,7 +238,7 @@
         };
 
         var _deferredList = window.loadIndicatorData(indicators, group, region, [startYear, endYear], countries, groupBy);
-        $.when(_deferredList).done(indicatorDataLoadHandler)
+        $.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
         //_deferred.done(indicatorDataLoadHandler);
     }
 

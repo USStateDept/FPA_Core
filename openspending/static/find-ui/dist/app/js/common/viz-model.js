@@ -2,6 +2,7 @@
 
     window.vizModel = {
 
+
         selectView: function(type) {
 
             switch (type) {
@@ -199,15 +200,24 @@
 
         selectCountryGroup: function() {
 
+
+
             var groupId = arguments[0].id;
+
+            window.changeGroup(groupId);
+
             vizModel.activeGroup(arguments[0]);
             vizModel.activeRegion(""); //set active region to undefined
+
+
+            vizModel.countryGroupRegions.removeAll();
+
 
             if (groupId == "all") {
                 vizModel.selectCountryGroupRegion("all"); //just select all countries
             } else {
                 //assign region to countryGroupRegion
-                vizModel.countryGroupRegions.removeAll();
+
 
                 _.forEach(vizModel.countryGroupings(), function(countryGroup) {
                     if (groupId == countryGroup.id) {

@@ -24,6 +24,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row
     p
   .row.title
+    .col-md-12
+      button.btn.btn-default.facebook(data-bind="click:shareFacebook")
+      button.btn.btn-default.twitter(data-bind="click:shareTwitter")
+      button.btn.btn-default.share(data-bind="click:shareUrl")
+  .row.title
     .col-md-10
       //- .dropdown.pull-left
       //-   button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
