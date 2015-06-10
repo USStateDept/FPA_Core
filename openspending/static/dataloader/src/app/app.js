@@ -232,13 +232,16 @@ var getDataTableOptions = function(resobj){
   var headers = [{data:"loaddata", title:"load link"}];
   _.each(basekeys, function(val, key){
     //backslash per https://datatables.net/reference/option/columns.render
+	if(val!='description'&&val!='name'&&val!='source'){
     headers.push({data:val.replace('.', '\\.'), title:val.replace('.', '\\.')});
+	}
   });
 
 
   _.each(resobj, function(val, key){
     val['loaddata'] = '<a class="list-group-item" href="#/' + val['name'] + '/source" target="_blank"> **Edit Data***</a>';
-
+	val['has_data'] = '<a href="/api/slicer/cube/geometry/cubes_aggregate?cubes=' + val['name'] + '&drilldown=geometry__country_level0@name" target="_blank">'+val['has_data']+'</a>';
+	
   });
 
   return {data: resobj,
