@@ -40,7 +40,9 @@
         var toYear = timeCell.to[0];
 
         if (type == "bar") {
-            fromYear = toYear;
+
+            // fromYear = parseInt(toYear);
+            toYear = parseInt(fromYear);
         }
         var categories = [];
 
@@ -72,7 +74,7 @@
         //debugger;
 
         if (multiVariate && region.length > 0 && (groupBy == "indicators")) {
-
+            //debugger;
             _.forEach(indicators, function(indicator) {
                 series[indicator] = []
             });
@@ -96,7 +98,7 @@
 
         //debugger;
         if (!multiVariate || region.length == 0 || groupBy == "countries") {
-
+            //debugger;
             //TODO : do this in one loop
             _.forEach(cells, function(c) {
                 dataByYear[c["geometry__time"].toString()] = [];
@@ -123,9 +125,8 @@
         }
 
 
-
-
         var counter = 1;
+
         for (var countryName in series) {
             var visible = false;
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
@@ -148,7 +149,7 @@
         seriesArray[1].zIndex = seriesArray.length + 2;
         seriesArray[2].zIndex = seriesArray.length + 3;
 
-        // debugger;
+        //debugger;
 
 
         //debugger;

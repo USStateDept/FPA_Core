@@ -1,5 +1,6 @@
 (function() {
 
+
     window.vizModel = {
 
 
@@ -58,10 +59,15 @@
 
 
 
-        selectIndicatorMultiple: function(selectedIndicator, evt) {
+        selectIndicatorMultiple: function(selectedIndicator, evt, direct) {
             // if (expandedCategory) {
             //     return;
             // }
+
+
+            if (direct) {
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=all&r=&cn=";
+            }
 
             clickedIndicator = true;
 
@@ -147,8 +153,11 @@
 
         },
 
-        selectCountry: function() {
+        selectCountry: function(selectedCountry, evt, direct) {
 
+            if (direct) {
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
+            }
 
             var selectedCountry = arguments[0];
             var countryLabel = selectedCountry.label;
@@ -345,7 +354,7 @@
 
         activeRegion: ko.observable(""),
 
-        activeYears: ko.observableArray([1990, 2015]),
+        activeYears: ko.observableArray([1990, 2014]),
 
         activeCountries: ko.observableArray([]),
 

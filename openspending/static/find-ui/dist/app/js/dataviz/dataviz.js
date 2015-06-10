@@ -147,7 +147,7 @@
 
         },
 
-        activeYears: ko.observableArray([1990, 2015])
+        activeYears: ko.observableArray([1990, 2014])
     }
 
     ko.applyBindings(model);
