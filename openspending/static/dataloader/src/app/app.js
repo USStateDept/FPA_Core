@@ -240,7 +240,8 @@ var getDataTableOptions = function(resobj){
 
   _.each(resobj, function(val, key){
     val['loaddata'] = '<a class="list-group-item" href="#/' + val['name'] + '/source" target="_blank"> **Edit Data***</a>';
-    //delete val['name'];
+	val['has_data'] = '<a href="/api/slicer/cube/geometry/cubes_aggregate?cubes=' + val['name'] + '&drilldown=geometry__country_level0@name" target="_blank">'+val['has_data']+'</a>';
+	
   });
 
   return {data: resobj,
