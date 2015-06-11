@@ -1,0 +1,30 @@
+{
+  "name": "tidy-table",
+  "version": "2.1.0",
+  "homepage": "https://github.com/nuxy/Tidy-Table",
+  "description": "Generate a sortable HTML table from JSON",
+  "main": "tidy-table.js",
+  "keywords": [
+    "javascript",
+    "jquery",
+    "library"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "*.md",
+    "Rakefile",
+    "test",
+    "test.html"
+  ],
+  "_release": "2.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.1.0",
+    "commit": "4c68d4b8f0ab4b9764214169e975860ac325e70d"
+  },
+  "_source": "git://github.com/nuxy/tidy-table.git",
+  "_target": "~2.1.0",
+  "_originalSource": "tidy-table",
+  "_direct": true
+}

@@ -63,9 +63,7 @@
 
         },
 
-        showTable: function() {
 
-        },
 
         showStats: function(type) {
 
@@ -147,7 +145,102 @@
 
         },
 
-        activeYears: ko.observableArray([1990, 2014])
+        activeYears: ko.observableArray([1990, 2014]),
+
+        categoriesModel: ko.observableArray([]),
+
+        sourcesModel: ko.observableArray([]),
+
+        indicatorsModel: ko.observableArray([]),
+
+        indicatorsModelMaster: ko.observableArray([]),
+
+        filterIndicators: function(m, evt) {
+            var charCode = evt.charCode;
+            var value = evt.currentTarget.value;
+
+            var indicators = model.indicatorsModelMaster();
+            model.indicatorsModel.removeAll();
+            //model.newSearch(false);
+
+            for (var x in indicators) {
+
+                if (indicators[x].label.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                    model.indicatorsModel.push(indicators[x]);
+                }
+            }
+
+            return true;
+
+        },
+
+        countriesModel: ko.observableArray([]),
+
+        countriesModelMaster: ko.observableArray([]),
+
+        countryGroupings: ko.observableArray([{
+            "id": "all",
+            "label": "All",
+            "regions": []
+        }, {
+            "id": "continent",
+            "label": "Continent",
+            "regions": []
+        }, {
+            "id": "dod_cmd",
+            "label": "Department of Defense",
+            "regions": []
+        }, {
+            "id": "dos_region",
+            "label": "Department of State",
+            "regions": []
+        }, {
+            "id": "usaid_reg",
+            "label": "USAID",
+            "regions": []
+        }, {
+            "id": "wb_inc_lvl",
+            "label": "World Bank",
+            "regions": []
+        }]),
+
+        countryGroupRegions: ko.observableArray([]),
+
+        activeCountries: ko.observableArray([]),
+
+        activeGroup: ko.observable({
+            "id": "all",
+            "label": "All",
+            "regions": []
+        }),
+
+        activeRegion: ko.observable(""),
+
+        clearActiveCountries: function() {
+
+            model.activeCountries.removeAll();
+
+        },
+
+        filterCountries: function(m, evt) {
+
+            var charCode = evt.charCode;
+            var value = evt.currentTarget.value;
+
+            var countries = vizModel.countriesModelMaster();
+            vizModel.countriesModel.removeAll();
+            //model.newSearch(false);
+
+            for (var x in countries) {
+
+                if (countries[x].label.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                    vizModel.countriesModel.push(countries[x]);
+                }
+            }
+
+            return true;
+
+        }
     }
 
     ko.applyBindings(model);
@@ -210,6 +303,70 @@
         });
     }
 
+    var showTable = function(data) {
+        debugger;
+        //get colum names from cells
+        var columnTitles = [];
+        var columnValues = [];
+        var cells = data.cells;
+
+        for (var colName in cells[0]) {
+            columnTitles.push(colName)
+        }
+
+        _.each(cells, function(cell) {
+            var row = [];
+            for (var colName in cell) {
+                row.push(cell[colName]);
+            }
+            columnValues.push(row);
+        });
+
+
+        var block = $('#data-table')
+            .TidyTable({
+                enableCheckbox: false,
+                enableMenu: false
+            }, {
+                columnTitles: columnTitles,
+                columnValues: columnValues,
+
+                // do something with selected results
+                // menuOptions: [
+                //     // ['Option 1', {
+                //     //     callback: doSomething1
+                //     // }],
+                //     // ['Option 2', {
+                //     //     callback: doSomething2
+                //     // }]
+                // ],
+
+                // post-process DOM elements
+                postProcess: {
+                    // table: doSomething3,
+                    // column: doSomething4,
+                    // menu: doSomething5
+                },
+
+                // pre-process column values before sort (optional)
+                sortByPattern: function(col_num, val) {
+                    if (col_num != 1) return val;
+
+                    return String(val).replace(/$|%|#/g, '');
+                }
+            });
+
+        // copy the table options menu
+        var menu = $('select.tidy_table', block).clone(true);
+        block.append(menu);
+
+        // optional animation
+        block.slideDown('fast');
+
+        // remove stored data
+        block.TidyTable('destroy');
+    }
+
 
     var indicatorDataLoadHandler = function(responseData, responseStats) {
 
@@ -228,6 +385,8 @@
         $('#viz-container').highcharts(highChartsJson);
 
         $("#loading").hide();
+
+        showTable(responseData[0]);
     }
 
     var redrawChart = function(startYear, endYear) {
@@ -249,6 +408,24 @@
     var deferredList = window.loadIndicatorData(indicators, group, region, yearsFilter, countries, groupBy);
     $.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler)
     //deferred.done(indicatorDataLoadHandler);
+
+
+    var indicatorListLoadHandler = function(response) {
+
+        window.bindIndicators(response, model);
+
+    }
+
+    window.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
+
+
+    var countriesListLoadHandler = function(response) {
+
+        window.bindCountries(response, model);
+
+    }
+
+    window.loadCountries("", countriesListLoadHandler);
 
     initialize();
 
