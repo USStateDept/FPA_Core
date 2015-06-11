@@ -10,6 +10,7 @@
 
 {% block optional_head %}
 link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/tidy-table/tidy-table.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
@@ -69,24 +70,129 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       //- button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Countries
       ul.nav.nav-tabs
         li
-          a(href='#tab_a', data-toggle='tab') Data Table
+          a(href='#data-table', data-toggle='tab') Data Table
         li
           a(href='#tab_b', data-toggle='tab') Indicators
         li
           a(href='#tab_c', data-toggle='tab') Countries
       .tab-content
-        #tab_a.tab-pane
-          h4 Data Table          
-          p
-            | See Data in a table    
+        #data-table.tab-pane
+              
         #tab_b.tab-pane
-          h4 Indicators         
-          p
-            | Select from Indicators       
+          .row
+            .col-md-2
+              .tabbable.tabs-left
+                ul.nav.nav-tabs
+                  li.active
+                    a(href='#tab-category', data-toggle='tab') Sector
+                  li
+                    a(href='#tab-source', data-toggle='tab') Collections        
+                  li
+                    a(href='#tab-alphabetic', data-toggle='tab') A - Z
+                  //- li
+                  //-   a(href='#tab-countries', data-toggle='tab') Countries
+            .col-md-10
+              .tab-content
+                #tab-category.tab-pane.active
+                  .row(data-bind="foreach:categoriesModel")
+                    .col-sm-4.col-md-4.col-sm-2.flip
+                      .card
+                        .face.front
+                          div.well.category-wrapper()
+                            span.badge(data-bind="html:length")
+                            div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
+                            h4(data-bind="html:label")
+                        .face.back
+                          div.list-group()
+                            a.list-group-item.active(href="#" data-bind="html:label")
+                            span.list(data-bind="foreach:indicators")
+                              a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                              span.downloadLinks()
+                                span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                                span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                                span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                #tab-source.tab-pane
+                  .row(data-bind="foreach:sourcesModel")
+                    .col-sm-4.col-md-4.flip
+                      .card
+                        .face.front
+                          div.well.category-wrapper()
+                            span.badge(data-bind="html:length")
+                            div.well.category.icon-category-70()
+                            h4(data-bind="html:label")
+                        .face.back
+                          div.list-group()
+                            a.list-group-item.active(href="#" data-bind="html:label")
+                            span.list(data-bind="foreach:indicators")
+                              a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
+                              span.downloadLinks()
+                                span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                                span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                                span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                #tab-alphabetic.tab-pane
+                  .row
+                    .col-md-12
+                      input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
+                  div.list-group.row()
+                    span(data-bind="foreach:indicatorsModel")
+                      .list-group-item.col-md-4(data-bind="css:{selected:selected},click:$root.selectIndicatorMultiple")
+                        a(data-bind='html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                        span.downloadLinks()
+                          span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+                          span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+                          span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON      
         #tab_c.tab-pane
-          h4 Countries 
-          p
-            | Select from List of Countries
+          .row.title
+            .col-md-2
+              .dropdown
+                button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Country Groups
+                    span.caret
+                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroups', data-bind="foreach:countryGroupings")
+                  li(role='presentation')
+                    a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
+            .col-md-2
+              .dropdown(data-bind="visible:countryGroupRegions().length>0")
+                button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Regions
+                    span.caret
+                ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
+                  li(role='presentation')
+                    a(role='menuitem', tabindex='-1', href='#',data-bind="html:$data,click:$root.selectCountryGroupRegion")
+            //-.col-md-4
+                //-button.btn.btn-default(type='button') Select All
+                //-button.btn.btn-default(type='button') Deselect All
+            .col-md-8
+              .pull-right#filter-countries-label(data-bind="visible:activeCountries().length==0,html:activeGroup().label + ' - ' + activeRegion()")
+
+          .row.title.f32(data-bind="visible:activeCountries().length>0")
+            .col-md-10(data-bind="foreach:activeCountries")
+              .pull-right.flag-item(data-bind='click:$root.removeCountry,css:{selected:selected}')
+                div.flag(data-bind="css:iso_a2.toLowerCase()")
+                span.flags-labels(data-bind="html:label")
+            .col-md-2
+              a(data-bind="click:clearActiveCountries") Clear
+
+          .row
+            p
+          .row
+            .col-md-12
+              input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
+          .row
+            p
+          .row
+            .col-md-12
+              
+          .row
+            p
+          .row.countries-list()
+            .col-md-8
+              .row.f32(data-bind="foreach:countriesModel" )
+                .col-md-6.col-sm-12.col-xs-12
+                  div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                    div.flag(data-bind="css:iso_a2.toLowerCase()")
+                    span.flags-labels(data-bind="html:label")
+            .col-md-4
+              .row
+                .col-md-12#map
     // tab content
 
 {% endblock %}
@@ -102,6 +208,7 @@ script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")
+script(src="{{ static_path('find-ui/bower_components/tidy-table/tidy-table.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
 script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")

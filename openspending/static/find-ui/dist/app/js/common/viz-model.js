@@ -342,21 +342,14 @@
 
         },
 
-        activeGroup: ko.observable({
-            "id": "all",
-            "label": "All",
-            "regions": []
-        }),
 
         activeCard: ko.observable(""),
 
-        activeRegion: ko.observable(""),
 
-        activeRegion: ko.observable(""),
 
         activeYears: ko.observableArray([1990, 2014]),
 
-        activeCountries: ko.observableArray([]),
+
 
         activeIndicator: ko.observable(""),
 
@@ -368,10 +361,6 @@
 
         activeData: ko.observable({}), //data itself
 
-        countriesModel: ko.observableArray([]),
-
-        countriesModelMaster: ko.observableArray([]),
-
         categoriesModel: ko.observableArray([]),
 
         sourcesModel: ko.observableArray([]),
@@ -379,6 +368,21 @@
         indicatorsModel: ko.observableArray([]),
 
         indicatorsModelMaster: ko.observableArray([]),
+
+        activeCountries: ko.observableArray([]),
+
+        activeGroup: ko.observable({
+            "id": "all",
+            "label": "All",
+            "regions": []
+        }),
+
+        activeRegion: ko.observable(""),
+
+
+        countriesModel: ko.observableArray([]),
+
+        countriesModelMaster: ko.observableArray([]),
 
         countryGroupings: ko.observableArray([{
             "id": "all",
