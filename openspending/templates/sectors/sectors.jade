@@ -36,7 +36,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               div.list-group()
                 a.list-group-item.active(href="#" data-bind="html:label")
                 span.list(data-bind="foreach:indicators")
-                  a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                  a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
                   span.downloadLinks()
                     span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
                     span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    

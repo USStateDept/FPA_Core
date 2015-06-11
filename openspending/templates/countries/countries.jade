@@ -30,7 +30,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     .col-md-8
       .row.f32(data-bind="foreach:countriesModel" )
         .col-md-6.col-sm-12.col-xs-12
-          div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
+          div.flag-item(data-bind='click:function(){$root.selectCountry(arguments[0],arguments[1],true)},css:{selected:selected}')
             div.flag(data-bind="css:iso_a2.toLowerCase()")
             span.flags-labels(data-bind="html:label")
     .col-md-4
@@ -53,7 +53,9 @@ script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')
 script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/loader.js') }}")
 //-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/countries/countries.js') }}")
 
 {% endblock %}
 
