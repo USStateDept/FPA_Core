@@ -311,3 +311,7 @@
   background: url("../images/noun_share_33345.png") center center no-repeat;
   background-size: contain;
 }
+.btn #data-table {
+  max-height: 300px;
+  overflow: auto;
+}

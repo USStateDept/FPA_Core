@@ -65,8 +65,9 @@
             // }
 
 
+
             if (direct) {
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=all&r=&cn=";
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&l=" + selectedIndicator.label + "&c=line&g=all&r=&cn=";
             }
 
             clickedIndicator = true;
@@ -134,6 +135,10 @@
                 return indicator.id;
             });
 
+            var indicatorLabels = _.map(vizModel.activeIndicators(), function(indicator) {
+                return indicator.label;
+            });
+
             var countries = _.map(vizModel.activeCountries(), function(country) {
                 return country.geounit;
             });
@@ -143,6 +148,8 @@
             var hashString = "y=" + vizModel.activeYears().join("|") +
                 "&f=" + vizModel.activeYears().join("|") +
                 "&i=" + indicators.join("|") +
+                "&i=" + indicators.join("|") +
+                "&l=" + indicatorLabels.join("|") +
                 "&c=" + type + "&g=" + vizModel.activeGroup().id +
                 "&r=" + vizModel.activeRegion() +
                 "&cn=" + countries.join("|");
@@ -156,7 +163,7 @@
         selectCountry: function(selectedCountry, evt, direct) {
 
             if (direct) {
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&l=GDP+Per+Capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
             }
 
             var selectedCountry = arguments[0];
