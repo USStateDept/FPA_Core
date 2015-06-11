@@ -95,6 +95,7 @@ class Country(db.Model):
                             country_level0.region_un as region_un, \
                             country_level0.wb_inc_lvl as wb_inc_lvl \
                             FROM public.geometry__country_level0 as country_level0 \
+                            WHERE country_level0.label = country_level0.sovereignt \
                             ORDER BY country_level0.name;")
         output = {"data":[]}
         for country in result:
