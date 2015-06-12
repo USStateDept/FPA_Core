@@ -32,6 +32,9 @@ CACHE_DEFAULT_TIMEOUT = 3600
 CACHE_DIR = os.path.realpath('.') + '/filecache/'
 CACHE_THRESHOLD = 100
 
+#uncomment this line to use compiled javascript
+#ASSETS_DEBUG = False
+
 
 
 #update this if you have a proxy on apache

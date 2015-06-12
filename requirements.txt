@@ -41,3 +41,4 @@ git+https://github.com/syrusakbary/pyjade.git@4dbd2ffd7ccdf20c7de6ad7dd8e6b0942b
 https://github.com/USStateDept/Flask-WhooshAlchemy/archive/v.60.zip
 xlrd==0.9.3
 openpyxl==2.2.2
+jsmin==2.1.1

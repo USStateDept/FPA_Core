@@ -3,6 +3,10 @@ from kombu import Exchange, Queue
 SECRET_KEY = 'foo'
 DEBUG = True
 
+
+ASSETS_DEBUG = True
+
+
 SITE_TITLE = 'OpenSpending'
 
 SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/openspending'

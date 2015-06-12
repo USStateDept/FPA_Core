@@ -82,7 +82,8 @@ def view(name):
     """
 
     dataset = get_dataset(name)
-    return jsonify(dataset, headers= {'Cache-Control' : 'no-cache'})
+    outputdict = dataset.detailed_dict()
+    return jsonify(outputdict, headers= {'Cache-Control' : 'no-cache'})
 
 
 @blueprint.route('/datasets', methods=['POST', 'PUT'])
