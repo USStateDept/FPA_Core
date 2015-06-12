@@ -6,6 +6,7 @@
     var yearsRange = hashParams.y.split("|");
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
+    var indicatorsLabel = hashParams.l.split("|");
     var group = hashParams.g;
     var region = hashParams.r;
     var chart = hashParams.c;
@@ -254,7 +255,7 @@
             var _hashParams = window.getHashParams();
             yearsFilter = _hashParams.f.split("|");
 
-            redrawChart(yearsFilter[0], yearsFilter[1]);
+            setExtremes(yearsFilter[0], yearsFilter[1]);
         }
         var minYear = parseInt(yearsRange[0]);
         var maxYear = parseInt(yearsRange[1]);
@@ -304,7 +305,7 @@
     }
 
     var showTable = function(data) {
-        debugger;
+        //debugger;
         //get colum names from cells
         var columnTitles = [];
         var columnValues = [];
@@ -377,27 +378,66 @@
         var highChartsJson = sortedData.highcharts;
         //regionalAverageData = sortedData.average;
 
-        highChartsJson.title.text = indicators[0];
+        highChartsJson.title.text = indicatorsLabel.join(" & ");
         //highChartsJson.chart.type = chart;
         highChartsJson.yAxis.title.text = "";
+        highChartsJson.chart.events = {
+            load: function() {
+                //debugger;
+                var xAxis = this.series[0].xAxis;
+
+                xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
+
+                $("#loading").hide();
+            }
+        }
         //debugger;
         //highChartsJson.subtitle.text = type;
-        $('#viz-container').highcharts(highChartsJson);
+        var chart = $('#viz-container').highcharts(highChartsJson);
 
-        $("#loading").hide();
+
+
+
 
         showTable(responseData[0]);
     }
+    var useNarrowExtremes = true;
 
-    var redrawChart = function(startYear, endYear) {
-        $("#loading").show();
-        // debugger;
-        if ($('#viz-container').highcharts()) {
-            $('#viz-container').highcharts().destroy();
-        };
+    var setExtremes = function(startYear, endYear) {
+        //$("#loading").show();
 
-        var _deferredList = window.loadIndicatorData(indicators, group, region, [startYear, endYear], countries, groupBy);
-        $.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
+        var chart = $('#viz-container').highcharts();
+        var xAxis = chart.series[0].xAxis;
+
+        xAxis.setExtremes(startYear, endYear);
+
+        // return;
+
+        // var xAxis = chart.series[0].xAxis,
+        //     extremes = xAxis.getExtremes(),
+        //     span = extremes.max - extremes.min,
+        //     center = (extremes.min + extremes.max) / 2,
+        //     newMin = center - span / 4,
+        //     newMax = center + span / 4;
+
+        // if (useNarrowExtremes) {
+        //     xAxis.setExtremes(newMin, newMax);
+        // } else {
+        //     xAxis.setExtremes();
+        // }
+
+        // useNarrowExtremes = !useNarrowExtremes;
+
+
+
+        // return;
+        // // debugger;
+        // if ($('#viz-container').highcharts()) {
+        //     $('#viz-container').highcharts().destroy();
+        // };
+
+        // var _deferredList = window.loadIndicatorData(indicators, group, region, [startYear, endYear], countries, groupBy);
+        // $.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
         //_deferred.done(indicatorDataLoadHandler);
     }
 
