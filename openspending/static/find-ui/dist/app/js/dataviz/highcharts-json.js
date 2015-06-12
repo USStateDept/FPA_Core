@@ -60,7 +60,8 @@
         //Add stats to series
 
         _.forEach(statsCells, function(c) {
-            if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) && (groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
+            //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
+            if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
                 series["Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
                 series["Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
                 series["Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
@@ -80,18 +81,18 @@
             });
             //indicatorId = "gdp_per_capita";
             _.forEach(cells, function(c) {
-                if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
-                    //rada
-                    _.forEach(indicators, function(indicator) {
-                        //debugger;
-                        if (c["geometry__country_level0." + cutBy] == region) {
+                // if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
+                //rada
+                _.forEach(indicators, function(indicator) {
+                    //debugger;
+                    if (c["geometry__country_level0." + cutBy] == region) {
 
-                            series[indicator].push([c["geometry__time"], c[indicator + "__amount_sum"]])
-                        }
-                    });
+                        series[indicator].push([c["geometry__time"], c[indicator + "__amount_sum"]])
+                    }
+                });
 
-                    //series[c["geometry__country_level0." + cutBy]].push();
-                }
+                //series[c["geometry__country_level0." + cutBy]].push();
+                // }
             });
 
         }
@@ -106,12 +107,12 @@
             });
             //indicatorId = "gdp_per_capita";
             _.forEach(cells, function(c) {
-                if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
-                    //rada
-                    //debugger;
-                    series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicatorId + "__amount_sum"]]);
-                    dataByYear[c["geometry__time"]].push(c[indicatorId + "__amount_sum"]);
-                }
+                //if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
+                //rada
+                //debugger;
+                series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicatorId + "__amount_sum"]]);
+                dataByYear[c["geometry__time"]].push(c[indicatorId + "__amount_sum"]);
+                // }
             });
 
             // for (var year in dataByYear) {

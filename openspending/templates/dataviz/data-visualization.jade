@@ -10,6 +10,7 @@
 
 {% block optional_head %}
 link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/dist/app/css/flags32.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/tidy-table/tidy-table.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
@@ -74,7 +75,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
         li
           a(href='#tab_b', data-toggle='tab') Indicators
         li
-          a(href='#tab_c', data-toggle='tab') Countries
+          a(href='#tab_c', data-toggle='tab') Comparator
       .tab-content
         #data-table.tab-pane
               
@@ -135,7 +136,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
                   div.list-group.row()
                     span(data-bind="foreach:indicatorsModel")
-                      .list-group-item.col-md-4(data-bind="css:{selected:selected},click:$root.selectIndicatorMultiple")
+                      .list-group-item.col-md-4(data-bind="css:{selected:selected},click:$root.redrawChart")
                         a(data-bind='html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
                         span.downloadLinks()
                           span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
@@ -162,6 +163,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 //-button.btn.btn-default(type='button') Deselect All
             .col-md-8
               .pull-right#filter-countries-label(data-bind="visible:activeCountries().length==0,html:activeGroup().label + ' - ' + activeRegion()")
+              .pull-right
+                button.btn.btn-default(data-bind='visible:countryGroupRegions().length>0,click:addComparator', type='button', data-toggle='dropdown', aria-expanded='true') Show Mean of Individual Countries In the Region
+              .pull-right
+                button.btn.btn-default(data-bind='visible:countryGroupRegions().length>0,click:addRegionComparator', type='button', data-toggle='dropdown', aria-expanded='true') Show Region Mean
 
           .row.title.f32(data-bind="visible:activeCountries().length>0")
             .col-md-10(data-bind="foreach:activeCountries")
@@ -184,15 +189,15 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
           .row
             p
           .row.countries-list()
-            .col-md-8
+            .col-md-12
               .row.f32(data-bind="foreach:countriesModel" )
-                .col-md-6.col-sm-12.col-xs-12
-                  div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                .col-md-4.col-sm-6.col-xs-12
+                  div.flag-item(data-bind='click:$root.addComparator,css:{selected:selected}')
                     div.flag(data-bind="css:iso_a2.toLowerCase()")
                     span.flags-labels(data-bind="html:label")
-            .col-md-4
-              .row
-                .col-md-12#map
+            //- .col-md-4
+            //-   .row
+            //-     .col-md-12#map
     // tab content
 
 {% endblock %}

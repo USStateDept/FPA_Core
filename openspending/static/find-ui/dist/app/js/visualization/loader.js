@@ -132,7 +132,7 @@
             }
             //success: handlerFunc
         });
-
+        //debugger;
         return [dataDeferred, statsDeferred];
     }
 
