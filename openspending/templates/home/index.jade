@@ -212,12 +212,11 @@
 
 {% block footer_scripts %}
 
-script(src="{{ static_path('find-ui/bower_components/letteringjs/jquery.lettering.js') }}")
-script(src="{{ static_path('find-ui/bower_components/textillate/jquery.textillate.js') }}")
-script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js') }}")
-script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+{% assets "common" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 script(src="{{ static_path('find-ui/dist/app/js/home/home.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/common.js') }}")
 
 
 {% endblock %}
