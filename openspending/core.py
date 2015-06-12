@@ -112,7 +112,10 @@ def create_web_app(**config):
         whoosearch.whoosh_index(app, Country)
 
         from openspending.views.context import generate_csrf_token
-        app.jinja_env.globals['csrf_token'] = generate_csrf_token   
+        app.jinja_env.globals['csrf_token'] = generate_csrf_token 
+
+        from openspending.assets.assets import register_assets
+        register_assets(assets)  
 
 
     return app

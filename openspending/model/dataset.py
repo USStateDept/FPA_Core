@@ -187,7 +187,6 @@ class Dataset(db.Model):
         load_status = "Need Source"
         if self.source:
             load_status = self.source.load_status
-        print self.dataorg
         dataset_dict=None
         if self.dataorg:
             dataset_dict=self.dataorg.label
@@ -200,6 +199,20 @@ class Dataset(db.Model):
             'has_data': self.has_data,
             'source': self.source_id,
             'status': load_status
+        }
+
+
+    def detailed_dict(self):
+        dataorg_dict=None
+        if self.dataorg:
+            dataset_dict=self.dataorg.label
+        return {
+            'label': self.label,
+            'name': self.name,
+            'description': self.description,
+            'dataType': self.dataType,
+            'dataorg': dataorg_dict,
+            'created_at': self.created_at
         }
 
 
