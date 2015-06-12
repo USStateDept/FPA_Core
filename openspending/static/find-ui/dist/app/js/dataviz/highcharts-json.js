@@ -168,19 +168,19 @@
             chart: chartObj,
             title: {
 
-                text: "GDP per capita",
+                text: "",
                 x: -20
             },
             subtitle: {
 
-                text: "World Bank",
+                text: "",
                 x: -20
             },
             xAxis: {
                 //categories: categories
                 title: {
                     enabled: true,
-                    text: 'Years'
+                    text: ''
                 },
                 startOnTick: true,
                 endOnTick: true,
@@ -188,7 +188,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'GDP per capita'
+                    text: ''
                 },
                 plotLines: [{
                     value: 0,

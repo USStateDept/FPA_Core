@@ -145,9 +145,8 @@
 
 
 
-            var hashString = "y=" + vizModel.activeYears().join("|") +
+            var hashString = "y=1990|2014" + // + vizModel.activeYears().join("|")
                 "&f=" + vizModel.activeYears().join("|") +
-                "&i=" + indicators.join("|") +
                 "&i=" + indicators.join("|") +
                 "&l=" + indicatorLabels.join("|") +
                 "&c=" + type + "&g=" + vizModel.activeGroup().id +
