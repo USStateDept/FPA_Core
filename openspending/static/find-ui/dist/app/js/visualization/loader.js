@@ -37,7 +37,7 @@
 
         var multiVariate = indicators.length > 1; //eligible for scatter plot
 
-        if (groupId != "all") {
+        if (groupId != "all" && countries.length == 0) {
 
             if (multiVariate) {
 
