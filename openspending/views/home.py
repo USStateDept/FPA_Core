@@ -40,7 +40,23 @@ def lockdown_perform():
         return render_template('home/lockdown.html')
 
 
+@blueprint.route('/about')
+def about():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('about/about.jade')
 
+@blueprint.route('/contact')
+def contact():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('contact/contact.jade')
+
+@blueprint.route('/privacy')
+def privacy():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('privacy/privacy.jade')
 
 @blueprint.route('/')
 def index():
