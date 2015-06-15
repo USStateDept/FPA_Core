@@ -168,6 +168,18 @@
 
     }
 
+    /*window.getIndicatorsMeta = function(indicators) {
+
+        var defferreds = [];
+
+        _.forEach(indicators, function(indicator) {
+            var url = "/api/3/datasets/" + indicator.id;
+
+        })
+
+        //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
+    }*/
+
 
 
 }())

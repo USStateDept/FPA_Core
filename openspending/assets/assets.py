@@ -26,6 +26,7 @@ def register_assets(assets_class):
 
     if "home" not in assets_class:
         tempjs = Bundle('find-ui/bower_components/letteringjs/jquery.lettering.js',
+                        'find-ui/bower_components/textillate/jquery.textillate.js',
                         'find-ui/dist/app/js/common.js',
                         filters='jsmin',
                         output='home.js')
