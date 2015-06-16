@@ -58,6 +58,48 @@ def privacy():
     #return render_template('home/index.jade', datasets=datasets)
     return render_template('privacy/privacy.jade')
 
+@blueprint.route('/terms')
+def terms():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('terms/terms.jade')
+
+@blueprint.route('/help')
+def help():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('help/help.jade')
+
+@blueprint.route('/accessibility')
+def accessibility():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('accessibility/accessibility.jade')
+
+@blueprint.route('/api')
+def api():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('api/api.jade')
+
+@blueprint.route('/pii')
+def pii():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('pii/pii.jade')
+
+@blueprint.route('/copyright')
+def copyright():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('copyright/copyright.jade')
+
+@blueprint.route('/glossary')
+def glossary():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('glossary/glossary.jade')
+
 @blueprint.route('/')
 def index():
     #datasets = Dataset.all_by_account(current_user)
