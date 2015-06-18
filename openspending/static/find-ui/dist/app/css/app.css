@@ -8,8 +8,21 @@
 }
 html,
 body {
+  height: 100%;
+  margin: 0;
   padding-top: 30px;
   font-family: 'Roboto', sans-serif;
+}
+.wrapper {
+  min-height: 100%;
+  position: relative;
+}
+.content-body {
+  padding-bottom: 60px;
+}
+.app .content-text {
+  font-size: 16px;
+  color: #3a0000;
 }
 .app a {
   color: #852224;
@@ -160,6 +173,11 @@ body {
   font-weight: 200;
   font-size: 14px;
   font-style: normal;
+  width: 100%;
+  height: 60px;
+  position: absolute;
+  bottom: 0;
+  left: 15px;
 }
 .app .footer-links .nav > li > a {
   padding: 0px;

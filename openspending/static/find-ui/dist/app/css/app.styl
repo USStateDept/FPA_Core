@@ -31,10 +31,23 @@
 	font-style normal
 
 html, body
-	//min-height 2000px
+	height 100%
+	margin 0
 	padding-top 30px
 	font-family $family
 	
+.wrapper
+	min-height 100%
+	position relative
+	
+.content-body
+	padding-bottom 60px
+
+.app
+	.content-text
+		font-size 16px
+		color $colorDeep
+
 .app a
 	color $links
 
@@ -173,6 +186,7 @@ html, body
 
 .app .footer
 	
+	
 	h1
 		font-size 36px
 		font-weight $weightLight
@@ -197,6 +211,11 @@ html, body
 	font-weight $weightLight
 	font-size $sizeFooter
 	font-style normal
+	width 100%
+	height 60px
+	position absolute
+	bottom 0
+	left 15px
 	
 		
 	.nav > li > a
