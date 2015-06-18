@@ -65,6 +65,8 @@ class Dataset(db.Model):
     metadataorg_id = Column(Integer, ForeignKey('metadataorg.id'))
     metadataorg = relationship(MetadataOrg,
                            backref=backref('datasets', lazy='dynamic'))
+                           
+    years = Column(Unicode(1000))
 
     #TODO
     #tag stuff
@@ -198,7 +200,8 @@ class Dataset(db.Model):
             'dataorg': dataset_dict,
             'has_data': self.has_data,
             'source': self.source_id,
-            'status': load_status
+            'status': load_status,
+            'years':self.years
         }
 
 
