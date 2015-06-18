@@ -67,7 +67,7 @@
 
 
             if (direct) {
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&l=" + selectedIndicator.label + "&c=line&g=all&r=&cn=";
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=all&r=&cn=";
             }
 
             clickedIndicator = true;
@@ -162,7 +162,7 @@
         selectCountry: function(selectedCountry, evt, direct) {
 
             if (direct) {
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&l=GDP+Per+Capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
             }
 
             var selectedCountry = arguments[0];

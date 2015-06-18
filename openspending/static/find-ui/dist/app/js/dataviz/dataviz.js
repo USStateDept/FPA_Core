@@ -6,7 +6,6 @@
     var yearsRange = hashParams.y.split("|");
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
-    var indicatorsLabel = hashParams.l.split("|");
     var group = hashParams.g;
     var region = hashParams.r;
     var chart = hashParams.c;
@@ -311,8 +310,18 @@
                 $('#viz-container').highcharts().destroy();
             };
             indicators = [indicator.id];
+
+            var _deferredMetaList = window.loadIndicatorsMeta(indicators);
             var _deferredList = window.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
-            $.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
+            _deferredList = _deferredList.concat(_deferredMetaList);
+
+            //var _deferredList = window.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+
+            $.when.apply($, _deferredList).done(function(response) {
+                indicatorDataLoadHandler(arguments);
+            });
+
+            //$.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
             //_deferred.done(indicatorDataLoadHandler);
         },
 
@@ -529,16 +538,21 @@
     }
 
 
-    var indicatorDataLoadHandler = function(responseData, responseStats) {
+    var indicatorDataLoadHandler = function(args) {
+
+        var responseData = args[0];
+        var responseStats = args[1];
+
+        var indicatorsMeta = [].splice.call(args, 0);
+        indicatorsMeta.shift(); //remove first two
+        indicatorsMeta.shift();
 
 
-        statsData = responseStats[0];
-
-        var sortedData = window.prepareHighchartsJson(responseData[0], responseStats[0], chart, indicators, group, region, groupBy);
+        var sortedData = window.prepareHighchartsJson(responseData[0], responseStats[0], indicatorsMeta, chart, indicators, group, region, groupBy);
         var highChartsJson = sortedData.highcharts;
         //regionalAverageData = sortedData.average;
 
-        highChartsJson.title.text = indicatorsLabel.join(" & ");
+        highChartsJson.title.text = "";
         //highChartsJson.chart.type = chart;
         highChartsJson.yAxis.title.text = "";
         highChartsJson.chart.events = {
@@ -573,42 +587,22 @@
 
         xAxis.setExtremes(startYear, endYear);
 
-        // return;
 
-        // var xAxis = chart.series[0].xAxis,
-        //     extremes = xAxis.getExtremes(),
-        //     span = extremes.max - extremes.min,
-        //     center = (extremes.min + extremes.max) / 2,
-        //     newMin = center - span / 4,
-        //     newMax = center + span / 4;
-
-        // if (useNarrowExtremes) {
-        //     xAxis.setExtremes(newMin, newMax);
-        // } else {
-        //     xAxis.setExtremes();
-        // }
-
-        // useNarrowExtremes = !useNarrowExtremes;
-
-
-
-        // return;
-        // // debugger;
-        // if ($('#viz-container').highcharts()) {
-        //     $('#viz-container').highcharts().destroy();
-        // };
-
-        // var _deferredList = window.loadIndicatorData(indicators, group, region, [startYear, endYear], countries, groupBy);
-        // $.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
-        //_deferred.done(indicatorDataLoadHandler);
     }
 
     if (indicators.length > 1) {
         //switch to group by indicators
         groupBy = "indicators";
     }
+    var deferredMetaList = window.loadIndicatorsMeta(indicators);
     var deferredList = window.loadIndicatorData(indicators, group, region, yearsFilter, countries, groupBy);
-    $.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler)
+    deferredList = deferredList.concat(deferredMetaList);
+
+    //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
+
+    $.when.apply($, deferredList).done(function(response) {
+        indicatorDataLoadHandler(arguments);
+    });
     //deferred.done(indicatorDataLoadHandler);
 
 

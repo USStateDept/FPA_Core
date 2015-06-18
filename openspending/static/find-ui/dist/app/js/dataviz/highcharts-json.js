@@ -1,6 +1,6 @@
 (function() {
 
-    window.prepareHighchartsJson = function(data, statsData, type, indicators, group, region, groupBy) {
+    window.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, group, region, groupBy) {
 
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
@@ -14,6 +14,10 @@
         var multiVariate = indicators.length > 1; //eligible for scatter plot
         // var seriesAverage = [];
         var dataByYear = [];
+
+        var titleArray = _.map(indicatorsMeta, function(meta) {
+            return meta[0].label;
+        });
 
         switch (true) {
             case (groupId == "all" || groupBy == "countries"):
@@ -169,12 +173,12 @@
             chart: chartObj,
             title: {
 
-                text: "",
+                text: titleArray.join(" & "),
                 x: -20
             },
             subtitle: {
 
-                text: "",
+                text: titleArray.join(" & "),
                 x: -20
             },
             xAxis: {

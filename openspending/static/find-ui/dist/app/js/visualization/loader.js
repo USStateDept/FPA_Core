@@ -168,17 +168,33 @@
 
     }
 
-    /*window.getIndicatorsMeta = function(indicators) {
+    window.loadIndicatorsMeta = function(indicators) {
 
         var defferreds = [];
 
         _.forEach(indicators, function(indicator) {
-            var url = "/api/3/datasets/" + indicator.id;
+
+            var url = "/api/3/datasets/" + indicator;
+
+            var deferred = $.ajax({
+
+                url: url,
+
+                dataType: "json",
+
+                data: {
+
+                }
+
+            });
+
+            defferreds.push(deferred);
 
         })
 
+        return defferreds;
         //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
-    }*/
+    }
 
 
 

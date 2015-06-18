@@ -47,6 +47,7 @@
   cursor: pointer;
 }
 .flip .card .back {
+  display: none;
   color: #000;
   cursor: pointer;
   transform: rotatey(-180deg);
@@ -60,6 +61,9 @@
   top: 10px;
   left: 10px;
   width: 100%;
+}
+.flippedCol .back {
+  display: block !important;
 }
 .flippedCol .list-group {
   max-height: 450px;
