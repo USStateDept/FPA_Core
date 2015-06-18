@@ -65,6 +65,8 @@ class Dataset(db.Model):
     metadataorg_id = Column(Integer, ForeignKey('metadataorg.id'))
     metadataorg = relationship(MetadataOrg,
                            backref=backref('datasets', lazy='dynamic'))
+                           
+    years = Column(Unicode(1000))
 
     #TODO
     #tag stuff
@@ -184,12 +186,16 @@ class Dataset(db.Model):
 
 
     def as_dict(self):
+        the_years=[]
         load_status = "Need Source"
         if self.source:
             load_status = self.source.load_status
         dataset_dict=None
         if self.dataorg:
             dataset_dict=self.dataorg.label
+        if self.years:
+            the_years=self.years.split(",")
+            the_years=map(int,the_years)
         return {
             'label': self.label,
             'name': self.name,
@@ -198,7 +204,8 @@ class Dataset(db.Model):
             'dataorg': dataset_dict,
             'has_data': self.has_data,
             'source': self.source_id,
-            'status': load_status
+            'status': load_status,
+            'years':the_years
         }
 
 
