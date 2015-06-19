@@ -196,6 +196,7 @@ class Dataset(db.Model):
         if self.years:
             the_years=self.years.split(",")
             the_years=map(int,the_years)
+            the_years.sort()
         return {
             'label': self.label,
             'name': self.name,
