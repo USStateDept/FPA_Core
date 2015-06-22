@@ -19,67 +19,43 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 
 {% block content %}
 
-.container
+.container-full
   .row#loading
     .col-md-12
       img(src='/static/find-ui/dist/app/images/loader.GIF')
   .row
     p
-  .row.title
-    .col-md-12
+  .row
+    .col-md-10
       button.btn.btn-default.facebook(data-bind="click:shareFacebook")
       button.btn.btn-default.twitter(data-bind="click:shareTwitter")
-      button.btn.btn-default.share(data-bind="click:shareUrl")
-  .row.title
-    .col-md-10
-      //- .dropdown.pull-left
-      //-   button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Years
-      //-       span.caret
-      //-   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu1',data-bind="foreach:ko.utils.range(1990, 2015)")
-      //-     li(role='presentation')
-      //-       a(role='menuitem', tabindex='-1', href='#',data-bind="text:$data,click:$root.selectYear")
-      //- .dropdown.pull-left
-      //-   button#dropdownMenu2.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Group By
-      //-       span.caret
-      //-   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu2')
-      //-     li(role='presentation')
-      //-       a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('indicators')}") Indicators
-      //-       a(role='menuitem', tabindex='-1', href='#',data-bind="click:function(){groupBy('countries')}") Countries
-      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('min')}",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
-      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('max')}",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
-      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('avg')}",type='button', data-toggle='dropdown', aria-expanded='true') Average
-      button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
-      button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
-      
-      
-          
-         
+      button.btn.btn-default.share(data-bind="click:shareUrl")        
     .col-md-2
       .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
   .row
     p
   .row
-    .col-md-12
+    .col-md-4
+      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('min')}",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
+      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('max')}",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
+      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('avg')}",type='button', data-toggle='dropdown', aria-expanded='true') Average
+      button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+      button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
+    .col-md-8
       div#filter-years
   .row
-    .col-md-12
-      div#viz-container
-  .row
-    .col-md-12
-      //- button.btn.btn-default.dropdown-toggle(data-bind="click:showTable",type='button', data-toggle='dropdown', aria-expanded='true') Data Table
-      //- button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Indicator
-      //- button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Countries
+    .col-md-4
       ul.nav.nav-tabs
-        li
+        li.active
           a(href='#data-table', data-toggle='tab') Data Table
         li
-          a(href='#tab_b', data-toggle='tab') Indicators
+          a(href='#indicators', data-toggle='tab') Indicators
         li
-          a(href='#tab_c', data-toggle='tab') Comparator
+          a(href='#comparator', data-toggle='tab') Comparator
       .tab-content
-        #data-table.tab-pane
+        #data-table.tab-pane.active
               
-        #tab_b.tab-pane
+        #indicators.tab-pane
           .row
             .col-md-2
               .tabbable.tabs-left
@@ -142,7 +118,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                           span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
                           span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
                           span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON      
-        #tab_c.tab-pane
+        #comparator.tab-pane
           .row.title
             .col-md-2
               .dropdown
@@ -195,6 +171,14 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   div.flag-item(data-bind='click:$root.addComparator,css:{selected:selected}')
                     div.flag(data-bind="css:iso_a2.toLowerCase()")
                     span.flags-labels(data-bind="html:label")
+    .col-md-8
+      div#viz-container
+  .row
+    .col-md-12
+      //- button.btn.btn-default.dropdown-toggle(data-bind="click:showTable",type='button', data-toggle='dropdown', aria-expanded='true') Data Table
+      //- button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Indicator
+      //- button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Countries
+      
             //- .col-md-4
             //-   .row
             //-     .col-md-12#map

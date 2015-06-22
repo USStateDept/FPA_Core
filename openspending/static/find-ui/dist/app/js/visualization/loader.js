@@ -197,5 +197,24 @@
     }
 
 
+    window.loadUrlShorten = function(url) {
+        var deferred = $.ajax({
+
+            url: url,
+
+            dataType: "jsonp",
+
+            jsonp: "callback",
+
+            data: {
+
+            }
+
+        });
+
+        return deferred;
+    }
+
+
 
 }())

@@ -119,7 +119,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   .col-md-12#map
               
           //- BY TEST
-          #select-indicator.tab-pane.active(role='tabpanel')                  
+          #select-indicator.tab-pane.active(role='tabpanel') 
+            .row
+              .col-md-2
+              .col-md-10
+                div(data-bind="foreach:activeIndicators")
+                  .glyphicon.glyphicon-remove(data-bind="") 
+                  span(data-bind="html:label")                 
             .row
               .col-md-2
                 .tabbable.tabs-left

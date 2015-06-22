@@ -37,9 +37,26 @@
         shareUrl: function() {
 
             modalTitle = "Share";
-            modalMessage = "http://shareme.gov/Uns87nG";
+            modalMessage = "";
+            //go.usa.gov 
+            // 
+            var encodeUrl = "http://find.state.gov";
 
-            $('#modal').modal('show');
+
+            if (window.location.hostname === "find.state.gov") {
+                encodeUrl = window.location.href;
+            }
+
+            encodeUrl = encodeURIComponent(encodeUrl);
+
+            var url = "https://go.usa.gov/api/shorten.jsonp?login=find&apiKey=513b798e10d6c101ac6ac7fdd405d0e7&longUrl={encodeUrl}";
+            url = url.replace("{encodeUrl}", encodeUrl);
+
+            window.loadUrlShorten(url).then(function(response) {
+                modalMessage = response.response.data.entry[0].short_url;
+                $('#modal').modal('show');
+            })
+
 
 
         },
