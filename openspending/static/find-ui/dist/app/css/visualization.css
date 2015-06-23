@@ -77,9 +77,28 @@
   background-color: #fff;
 }
 .downloadLinks {
-  margin-left: 20px;
+  margin: 5px 0px 0px 20px;
   color: #5c74b4;
   cursor: pointer;
+}
+.downloadLinks span {
+  display: none;
+  font-size: 12px;
+  color: #fff;
+  background-color: #eae6e6;
+  border-radius: 5px;
+  padding: 3px;
+  margin: 2px;
+}
+.indicator-item:hover .downloadLinks span {
+  background-color: #5c74b4;
+  display: inline;
+}
+.indicator-item .glyphicon {
+  display: none;
+}
+.indicator-item:hover .glyphicon {
+  display: inline;
 }
 .app .face .list-group.show-me {
   display: block;
@@ -147,6 +166,9 @@
 }
 .app .list-group a:hover {
   text-decoration: none;
+}
+.app a.list-group-item:hover {
+  background: none;
 }
 .app .list-group-item {
   border: none;
@@ -258,8 +280,18 @@
   width: 90%;
   margin: auto;
 }
+.ui-slider-horizontal {
+  height: 3px !important;
+}
+.ui-widget-header,
+.ui-state-default,
+.ui-state-hover {
+  background: none !important;
+}
 .ui-slider-handle {
   border-radius: 10px !important;
+  top: -0.5em !important;
+  background-color: #852224;
 }
 .countries-list .category-wrapper {
   opacity: 0.6;
@@ -320,6 +352,7 @@
   background-size: contain;
 }
 #data-table {
-  max-height: 470px;
+  height: 470px;
+  width: 100%;
   overflow: auto;
 }

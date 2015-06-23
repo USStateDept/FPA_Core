@@ -16,7 +16,10 @@
             }
         },
 
-        downloadData: function(format, indicator) {
+        downloadData: function(format, indicator, evt) {
+
+
+            evt.stopPropagation();
 
             clickedIndicator = true;
 
@@ -34,6 +37,8 @@
             url = url.replace(/{yearFrom}/g, vizModel.activeYears()[0]);
             url = url.replace(/{yearTo}/g, vizModel.activeYears()[1] || vizModel.activeYears()[0]);
             window.open(url, '_blank');
+
+
         },
 
         selectYear: function(years) {
@@ -57,6 +62,45 @@
 
         },
 
+
+        removeIndicator: function(selectedIndicator) {
+
+            var indicatorIndex = _.indexOf(vizModel.activeIndicators(), selectedIndicator);
+
+            vizModel.activeIndicators.splice(indicatorIndex, 1);
+            vizModel.indicatorsModel.removeAll();
+            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
+                if (selectedIndicator.id == indicator.id) {
+                    indicator.selected = !indicator.selected;
+                }
+                vizModel.indicatorsModel.push(indicator);
+            });
+
+
+            vizModel.categoriesModel.removeAll();
+            _.forEach(categoriesModel, function(category) {
+                _.forEach(category.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                vizModel.categoriesModel.push(category);
+            });
+
+
+            vizModel.sourcesModel.removeAll();
+            _.forEach(sourcesModel, function(source) {
+                _.forEach(source.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                vizModel.sourcesModel.push(source);
+            });
+
+
+        },
 
 
         selectIndicatorMultiple: function(selectedIndicator, evt, direct) {

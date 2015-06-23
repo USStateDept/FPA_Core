@@ -120,12 +120,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               
           //- BY TEST
           #select-indicator.tab-pane.active(role='tabpanel') 
-            .row
+            .row(style="padding:10px")
               .col-md-2
               .col-md-10
                 div(data-bind="foreach:activeIndicators")
-                  .glyphicon.glyphicon-remove(data-bind="") 
-                  span(data-bind="html:label")                 
+                  div
+                    .glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
+                    span(data-bind="html:label")                 
             .row
               .col-md-2
                 .tabbable.tabs-left
@@ -153,11 +154,15 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
                               span.list(data-bind="foreach:indicators")
-                                a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
-                                span.downloadLinks()
-                                  span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
-                                  span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
-                                  span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                                span.indicator-item
+
+                                  a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                                    .glyphicon.glyphicon-plus(data-bind="click:$root.selectIndicatorMultiple") 
+                                    span(data-bind="html:label")
+                                  div.downloadLinks()
+                                    span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                                    span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                                    span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
                   #tab-source.tab-pane
                     .row(data-bind="foreach:sourcesModel")
                       .col-sm-4.col-md-4.flip
@@ -171,23 +176,28 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
                               span.list(data-bind="foreach:indicators")
-                                a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
-                                span.downloadLinks()
-                                  span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
-                                  span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
-                                  span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                                span.indicator-item
+                                  a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
+                                    .glyphicon.glyphicon-plus(data-bind="click:$root.selectIndicatorMultiple") 
+                                    span(data-bind="html:label")
+                                  div.downloadLinks()
+                                    span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                                    span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                                    span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
                   #tab-alphabetic.tab-pane
                     .row
                       .col-md-12
                         input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
                     div.list-group.row()
                       span(data-bind="foreach:indicatorsModel")
-                        .list-group-item.col-md-4(data-bind="css:{selected:selected},click:$root.selectIndicatorMultiple")
-                          a(data-bind='html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
-                          span.downloadLinks()
-                            span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
-                            span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
-                            span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                        .list-group-item.col-md-4.indicator-item(data-bind="css:{selected:selected},click:$root.selectIndicatorMultiple")
+                          a(data-bind='attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                            .glyphicon.glyphicon-plus(data-bind="click:$root.selectIndicatorMultiple") 
+                            span(data-bind="html:label")
+                          div.downloadLinks()
+                            span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                            span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                            span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
                  
           //- TAB 2
           #select-vizualization.tab-pane(role='tabpanel')

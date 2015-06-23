@@ -11,7 +11,8 @@
 {% block optional_head %}
 link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/flags32.css") }}', rel='stylesheet')
-link(href='{{ static_path("find-ui/bower_components/tidy-table/tidy-table.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/slickgrid/slick.grid.css") }}', rel='stylesheet')
+//-link(href='{{ static_path("find-ui/bower_components/tidy-table/tidy-table.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
@@ -34,7 +35,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
   .row
     p
-  .row
+  .row(style="padding:10px")
     .col-md-4
       button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('min')}",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
       button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('max')}",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
@@ -46,12 +47,12 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row
     .col-md-4
       ul.nav.nav-tabs
-        li.active
-          a(href='#data-table', data-toggle='tab') Data Table
-        li
-          a(href='#indicators', data-toggle='tab') Indicators
         li
           a(href='#comparator', data-toggle='tab') Comparator
+        li
+          a(href='#indicators', data-toggle='tab') Indicators        
+        li.active
+          a(href='#data-table', data-toggle='tab') Data Table
       .tab-content
         #data-table.tab-pane.active
               
@@ -140,7 +141,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             .col-md-8
               .pull-right#filter-countries-label(data-bind="visible:activeCountries().length==0,html:activeGroup().label + ' - ' + activeRegion()")
               .pull-right
-                button.btn.btn-default(data-bind='visible:countryGroupRegions().length>0,click:addComparator', type='button', data-toggle='dropdown', aria-expanded='true') Show Mean of Individual Countries In the Region
+                button.btn.btn-default(data-bind='visible:countryGroupRegions().length>0,click:addComparator', type='button', data-toggle='dropdown', aria-expanded='true') Show All Countries In this Region
               .pull-right
                 button.btn.btn-default(data-bind='visible:countryGroupRegions().length>0,click:addRegionComparator', type='button', data-toggle='dropdown', aria-expanded='true') Show Region Mean
 
@@ -197,7 +198,7 @@ script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")
-script(src="{{ static_path('find-ui/bower_components/tidy-table/tidy-table.min.js') }}")
+//-script(src="{{ static_path('find-ui/bower_components/tidy-table/tidy-table.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
 script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
@@ -206,6 +207,15 @@ script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}"
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
+
+//-slickgrid
+script(src="{{ static_path('find-ui/bower_components/slickgrid/lib/jquery.event.drag-2.2.js') }}")
+script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.core.js') }}")
+script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.grid.js') }}")
+script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.dataview.js') }}")
+script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.checkboxselectcolumn.js') }}")
+script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.rowselectionmodel.js') }}")
+script(src="{{ static_path('find-ui/bower_components/slickgrid-bootstrap/bootstrap/bootstrap-slickgrid.js') }}")
 
 {% endblock %}
 

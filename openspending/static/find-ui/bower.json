@@ -25,6 +25,7 @@
     "jquery-ui-slider-pips": "~1.10.0",
     "leaflet": "~0.7.3",
     "highcharts": "~4.1.5",
-    "tidy-table": "~2.1.0"
+    "tidy-table": "~2.1.0",
+    "slickgrid-bootstrap": "*"
   }
 }

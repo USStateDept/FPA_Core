@@ -1,0 +1,20 @@
+{
+  "name": "slickgrid-bootstrap",
+  "dependencies": {
+    "jquery": ">=1.7 <2",
+    "jquery-ui": ">=1.8 <2",
+    "bootstrap": ">=2.2.2 <3",
+    "slickgrid": ">=2.0 <3"
+  },
+  "homepage": "https://github.com/reebalazs/SlickGrid-bootstrap",
+  "_release": "42ef3f93a2",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "42ef3f93a2e214b1734835a37f3a9ffcf448d6e9"
+  },
+  "_source": "git://github.com/reebalazs/SlickGrid-bootstrap.git",
+  "_target": "*",
+  "_originalSource": "slickgrid-bootstrap",
+  "_direct": true
+}
