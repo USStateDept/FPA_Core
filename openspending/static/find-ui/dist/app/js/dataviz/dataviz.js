@@ -583,7 +583,7 @@
             sortable: true
         }];
         var dataFull = [];
-        for (var i = 0; i < 2000; i++) {
+        for (var i = 0; i < 200000; i++) {
             dataFull[i] = {
                 id: 'id_' + i, // needed for DataView
                 title: "Task " + i,
