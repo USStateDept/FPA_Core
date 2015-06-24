@@ -266,6 +266,13 @@ body {
 .carousel-fade .prev.right {
   opacity: 1;
 }
+.slick-header {
+  height: 30px !important;
+}
+.slick-header-columns,
+.slick-header-column {
+  height: 100% !important;
+}
 /****** MEDIA QUERIES ************/
 @media (min-width: 768px) {
   .app .jumbotron {

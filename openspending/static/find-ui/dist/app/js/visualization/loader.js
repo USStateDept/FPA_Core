@@ -37,8 +37,8 @@
 
         var multiVariate = indicators.length > 1; //eligible for scatter plot
 
-        if (groupId != "all" && countries.length == 0) {
-
+        if (groupId != "all" && (countries.length == 0 || countries[0] == "")) {
+            //debugger;
             if (multiVariate) {
 
                 if (groupBy && (groupBy == "countries")) {
@@ -51,8 +51,15 @@
 
             if (!multiVariate) {
 
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+                // debugger;
+                if (region.length > 0) {
+                    urlTemplate += "&cut=geometry__country_level0@{groupId}:{region}"
+                }
+                //cut down to countries in this region
+                //&cut=geometry__country_level0@{groupId}:{region}
 
+                //"drilldown=geometry__country_level0@dos_region|geometry__time@time&cut=geometry__time:1990-2014&order=time
             }
 
 
@@ -60,6 +67,7 @@
 
             // //to cut by country
         } else {
+            //debugger;
             var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
             var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         }

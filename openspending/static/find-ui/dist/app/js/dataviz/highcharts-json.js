@@ -20,7 +20,8 @@
         });
 
         switch (true) {
-            case (groupId == "all" || groupBy == "countries"):
+            case ((groupId == "all" || groupBy == "countries") && region.length > 0):
+                debugger;
                 cutBy = "sovereignt";
                 break;
             default:
@@ -28,10 +29,10 @@
                 break;
         }
 
-        if (!multiVariate) {
+        if (!multiVariate && region.length > 0) {
             cutBy = "sovereignt"
         }
-
+        //debugger;
 
         var timeCell = {};
         _.forEach(data.cell, function(c) {

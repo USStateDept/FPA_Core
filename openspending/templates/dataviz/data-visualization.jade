@@ -47,14 +47,14 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row
     .col-md-4
       ul.nav.nav-tabs
-        li
+        li.active
           a(href='#comparator', data-toggle='tab') Comparator
         li
           a(href='#indicators', data-toggle='tab') Indicators        
-        li.active
+        li
           a(href='#data-table', data-toggle='tab') Data Table
       .tab-content
-        #data-table.tab-pane.active
+        #data-table.tab-pane
               
         #indicators.tab-pane
           .row
@@ -119,7 +119,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                           span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
                           span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
                           span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON      
-        #comparator.tab-pane
+        #comparator.tab-pane.active
           .row.title
             .col-md-2
               .dropdown

@@ -12,14 +12,14 @@
 
             if (obj.type == "countries") {
 
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + obj.id
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&c=line&g=all&r=SCA&cn=" + obj.id
 
             }
 
 
             if (obj.type == "indicators") {
 
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + obj.id + "&c=line&g=all&r=&cn=";
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + obj.id + "&c=line&g=dos_region&r=&cn=";
 
             }
             // alert("selected indicator")

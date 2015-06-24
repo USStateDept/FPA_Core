@@ -55,7 +55,7 @@
             window.loadUrlShorten(url).then(function(response) {
                 modalMessage = response.response.data.entry[0].short_url;
                 $('#modal').modal('show');
-            })
+            });
 
 
 
@@ -320,12 +320,13 @@
         },
 
         redrawChart: function(indicator) {
-            $("#loading").show();
 
+            $("#loading").show();
 
             if ($('#viz-container').highcharts()) {
                 $('#viz-container').highcharts().destroy();
             };
+
             indicators = [indicator.id];
 
             var _deferredMetaList = window.loadIndicatorsMeta(indicators);
@@ -493,26 +494,38 @@
     var showTable = function(data) {
         //debugger;
         //get colum names from cells
-        var columnTitles = [];
-        var columnValues = [];
+
+        var columnsSortable = [];
         var cells = data.cells;
 
+        _.forEach(cells, function(cell, i) {
+            cell.id = 'id_' + i
+        });
+
         for (var colName in cells[0]) {
-            columnTitles.push(colName)
+            // columnTitles.push(colName);
+            columnsSortable.push({
+                id: colName,
+                name: colName,
+                field: colName,
+                width: 200,
+                sortable: true
+            });
         }
 
-        _.each(cells, function(cell) {
+        /*_.each(cells, function(cell) {
             var row = [];
             for (var colName in cell) {
                 row.push(cell[colName]);
             }
             columnValues.push(row);
-        });
+        });*/
+        debugger;
 
         function DummyLinkFormatter(row, cell, value, columnDef, dataContext) {
             return '<a href="#">' + value + '</a>';
         }
-        var columnsBasic = [{
+        /*var columnsBasic = [{
             id: "title",
             name: "Title",
             field: "title",
@@ -543,8 +556,8 @@
             name: "Effort Driven",
             field: "effortDriven",
             width: 100
-        }];
-        var columnsSortable = [{
+        }];*/
+        /*var columnsSortable = [{
             id: "title",
             name: "Title",
             field: "title",
@@ -581,7 +594,7 @@
             field: "effortDriven",
             width: 100,
             sortable: true
-        }];
+        }];*/
         var dataFull = [];
         for (var i = 0; i < 200000; i++) {
             dataFull[i] = {
@@ -599,7 +612,7 @@
 
         // Example 3: sortable, reorderable columns
         columns = columnsSortable.slice();
-        data = dataFull.slice();
+        data = cells.slice();
 
         $("#data-table").slickgrid({
             columns: columns,
