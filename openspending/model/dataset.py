@@ -211,16 +211,22 @@ class Dataset(db.Model):
 
 
     def detailed_dict(self):
+        the_years=[]
         dataorg_dict=None
         if self.dataorg:
             dataset_dict=self.dataorg.label
+        if self.years:
+            the_years=self.years.split(",")
+            the_years=map(int,the_years)
+            the_years.sort()
         return {
             'label': self.label,
             'name': self.name,
             'description': self.description,
             'dataType': self.dataType,
             'dataorg': dataorg_dict,
-            'created_at': self.created_at
+            'created_at': self.created_at,
+            'years':the_years
         }
 
 
