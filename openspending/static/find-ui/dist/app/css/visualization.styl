@@ -174,18 +174,38 @@
     text-decoration none
    
      
-  a.list-group-item:hover
-    background none
+  // a.list-group-item:hover
+  //   background none
     
   .list-group-item
     border none
     cursor pointer
     
     &.selected
-      background-color rgba(0,100,0,0.5)
+      background-color $bgMedium
+      color #FFF
+      
+      a
+        color #FFF
       
     .selected
-      background-color rgba(0,100,0,0.5)
+      background-color $bgMedium
+      color #FFF
+      
+.subcategories
+  
+  .list-group-item.active
+    background-color $bgLighter
+    font-size 16px
+    color $colorDark
+    font-weight bold
+    padding-left 20px
+    
+      
+    
+  a, .downloadLinks
+    padding-left 45px
+
     
   .btn-group
     width 100%
@@ -351,7 +371,9 @@
 .flag-item:hover
   text-decoration underline
   
-
+.f32 .flag
+  vertical-align text-bottom
+  
 .custom-country
   padding 10px
   
@@ -377,7 +399,7 @@
     background url(../images/noun_share_33345.png) center center no-repeat
     background-size contain
     
-#data-table
+#data-table, #indicators, #comparator
   height 470px
   width 100%
   overflow auto

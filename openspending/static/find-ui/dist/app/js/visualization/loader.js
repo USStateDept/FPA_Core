@@ -52,9 +52,10 @@
             if (!multiVariate) {
 
                 var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+
                 // debugger;
                 if (region.length > 0) {
-                    urlTemplate += "&cut=geometry__country_level0@{groupId}:{region}"
+                    urlTemplate += "&cut=geometry__country_level0@{groupId}:{region}";
                 }
                 //cut down to countries in this region
                 //&cut=geometry__country_level0@{groupId}:{region}
@@ -63,14 +64,20 @@
             }
 
 
-            var statsUrl = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+            // var statsUrl = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
             // //to cut by country
         } else {
             //debugger;
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
-            var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+
+            // "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+
         }
+
+
+        var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+
 
         if (countries.length > 0 && countries[0].length > 0) {
             //debugger;

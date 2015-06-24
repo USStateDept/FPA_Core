@@ -66,6 +66,8 @@
         removeIndicator: function(selectedIndicator) {
 
             var indicatorIndex = _.indexOf(vizModel.activeIndicators(), selectedIndicator);
+            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
+            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
 
             vizModel.activeIndicators.splice(indicatorIndex, 1);
             vizModel.indicatorsModel.removeAll();
@@ -86,7 +88,7 @@
                 });
                 vizModel.categoriesModel.push(category);
             });
-
+            //debugger;
 
             vizModel.sourcesModel.removeAll();
             _.forEach(sourcesModel, function(source) {
@@ -99,19 +101,28 @@
                 vizModel.sourcesModel.push(source);
             });
 
+            window.flipCardEvent();
 
         },
 
+        selectSubcategory: function(selectedSubcategory, evt) {
+            evt.stopPropagation();
+            var currentTarget = evt.currentTarget;
+            var displayValue = $(currentTarget).next().css("display");
+            if (displayValue == "none") {
+                $(currentTarget).next().css("display", "block");
+            } else {
+                $(currentTarget).next().css("display", "none");
+            }
+
+        },
 
         selectIndicatorMultiple: function(selectedIndicator, evt, direct) {
-            // if (expandedCategory) {
-            //     return;
-            // }
-
 
 
             if (direct) {
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=all&r=&cn=";
+                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=dos_region&r=&cn=";
+                return;
             }
 
             clickedIndicator = true;
@@ -154,22 +165,6 @@
             });
 
             window.flipCardEvent();
-            // debugger;
-            // return;
-            // var indicatorId = arguments[0].id;
-            // //indicatorIds.push(arguments[0].id);
-            //vizModel.activeIndicator(indicatorLabel);
-            //vizModel.activeIndicatorId(arguments[0].id);
-            // var current =vizModel.selectionTracker();
-            // current.indicator = true;
-            // current.vizualization = false;
-            //vizModel.selectionTracker(current);
-            // //move to second
-            // $('#vizTabs a[href="#select-vizualization"]').tab('show')
-
-            // var activeGroup =vizModel.activeGroup();
-            // var activeRegion =vizModel.activeRegion();
-            //window.loadIndicatorData(indicatorIds, activeGroup.id, activeRegion, indicatorDataLoadHandler);
 
         },
 
@@ -207,6 +202,7 @@
 
             if (direct) {
                 window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
+                return;
             }
 
             var selectedCountry = arguments[0];
@@ -232,8 +228,13 @@
             current.filter = true;
             vizModel.selectionTracker(current);
 
+            window.highlightOnMap(selectedCountry, "country");
+            //highlight country on map
+
             // $('#vizTabs a[href="#select-indicator"]').tab('show');
         },
+
+
 
         removeCountry: function() {
 

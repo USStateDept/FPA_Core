@@ -5,8 +5,8 @@
      **/
     var clickedIndicator = false;
     var mapCreated = false;
-    var map;
-    var geoJsonLayers = [];
+    window.map;
+    window.geoJsonLayers = {};
 
     $(function() {
         // $('#vizTabs a:first').tab('show')
@@ -15,14 +15,26 @@
     var geoJSONHandler = function(response, type) {
 
         if (!geoJsonLayers[type]) {
-            geoJsonLayers[type] = L.geoJson(response);
+            //debugger;
+            geoJsonLayers[type] = L.geoJson(response, {
+                style: {
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.3,
+                    fillColor: '#666666'
+                }
+            });
+
         }
+
+
 
         for (var _type in geoJsonLayers) {
             if (type == _type) {
                 map.addLayer(geoJsonLayers[_type]);
             } else {
-
                 map.removeLayer(geoJsonLayers[_type]);
             }
         }
@@ -182,6 +194,8 @@
         // $('#viz-container').highcharts(highChartsJson, model.activeIndicator(), model.activeChart());
 
     }
+
+
 
 
 

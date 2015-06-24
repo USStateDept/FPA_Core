@@ -28,7 +28,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row
     .col-md-10
-      button.btn.btn-default.facebook(data-bind="click:shareFacebook")
+      //-button.btn.btn-default.facebook(data-bind="click:shareFacebook")
       button.btn.btn-default.twitter(data-bind="click:shareTwitter")
       button.btn.btn-default.share(data-bind="click:shareUrl")        
     .col-md-2
@@ -37,9 +37,9 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row(style="padding:10px")
     .col-md-4
-      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('min')}",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
-      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('max')}",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
-      button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('avg')}",type='button', data-toggle='dropdown', aria-expanded='true') Average
+      //-button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('min')}",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
+      //-button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('max')}",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
+      //-button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('avg')}",type='button', data-toggle='dropdown', aria-expanded='true') Average
       button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
       button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
     .col-md-8

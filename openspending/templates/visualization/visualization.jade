@@ -85,18 +85,19 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   //-button.btn.btn-default(type='button') Select All
                   //-button.btn.btn-default(type='button') Deselect All
               .col-md-8
-                .pull-right#filter-countries-label(data-bind="visible:activeCountries().length==0,html:activeGroup().label + ' - ' + activeRegion()")
+                .pull-right#filter-countries-label(data-bind="visible:activeCountries().length==0,html:activeGroup().label + ' ' + activeRegion()")
 
-            .row.title.f32(data-bind="visible:activeCountries().length>0")
-              .col-md-10(data-bind="foreach:activeCountries")
-                .pull-right.flag-item(data-bind='click:$root.removeCountry,css:{selected:selected}')
-                  div.flag(data-bind="css:iso_a2.toLowerCase()")
-                  span.flags-labels(data-bind="html:label")
-              .col-md-2
-                a(data-bind="click:clearActiveCountries") Clear
+            
 
             .row
               p
+            .row(data-bind="visible:activeCountries().length>0")
+              .col-md-10(data-bind="foreach:activeCountries")
+                div
+                  .glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
+                  span.flags-labels(data-bind="html:label")
+              .col-md-2
+                a(data-bind="click:clearActiveCountries") Clear All
             .row
               .col-md-12
                 input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
@@ -109,11 +110,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               p
             .row.countries-list()
               .col-md-8
-                .row.f32(data-bind="foreach:countriesModel" )
-                  .col-md-6.col-sm-12.col-xs-12
-                    div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                .row.f32(data-bind="foreach:countriesModel")
+                  .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
+                    div.flag-item( data-bind='click:$root.selectCountry,css:{selected:selected}')
                       div.flag(data-bind="css:iso_a2.toLowerCase()")
-                      span.flags-labels(data-bind="html:label")
+                      span.flags-labels(style="vertical-align:middle" data-bind="html:label")
               .col-md-4
                 .row
                   .col-md-12#map
@@ -153,16 +154,29 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                           .face.back
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
-                              span.list(data-bind="foreach:indicators")
-                                span.indicator-item
+                              span.list
+                                span.subcategories(data-bind="foreach:subcategories")
+                                  a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")
+                                    span( data-bind="html:label")
+                                  span(data-bind="foreach:indicators" style="display:none")
+                                    span.indicator-item
+                                      a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                                        .glyphicon.glyphicon-plus(data-bind="click:$root.selectIndicatorMultiple") 
+                                        span(data-bind="html:label")
+                                      div.downloadLinks()
+                                        span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                                        span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                                        span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
+                                span.categories(data-bind="foreach:indicators,visible:subcategories.length==0")
+                                  span.indicator-item
+                                    a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                                      .glyphicon.glyphicon-plus(data-bind="click:$root.selectIndicatorMultiple") 
+                                      span(data-bind="html:label")
+                                    div.downloadLinks()
+                                      span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                                      span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                                      span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
 
-                                  a.list-group-item(data-bind='css:{selected:selected},click:$root.selectIndicatorMultiple,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
-                                    .glyphicon.glyphicon-plus(data-bind="click:$root.selectIndicatorMultiple") 
-                                    span(data-bind="html:label")
-                                  div.downloadLinks()
-                                    span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
-                                    span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
-                                    span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
                   #tab-source.tab-pane
                     .row(data-bind="foreach:sourcesModel")
                       .col-sm-4.col-md-4.flip

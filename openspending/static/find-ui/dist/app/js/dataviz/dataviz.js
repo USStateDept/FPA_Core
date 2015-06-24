@@ -501,6 +501,17 @@
         _.forEach(cells, function(cell, i) {
             cell.id = 'id_' + i
         });
+        //debugger;
+        //population_growth__amount_min
+        //population_growth__amount_max
+        //population_growth__amount_sum
+        //population_growth__amount_avg
+        //geometry_time
+
+        function DummyLinkFormatter(row, cell, value, columnDef, dataContext) {
+            //return '<a href="#">' + value + '</a>';
+            return value
+        }
 
         for (var colName in cells[0]) {
             // columnTitles.push(colName);
@@ -509,104 +520,12 @@
                 name: colName,
                 field: colName,
                 width: 200,
-                sortable: true
+                sortable: true,
+                formatter: DummyLinkFormatter
             });
         }
 
-        /*_.each(cells, function(cell) {
-            var row = [];
-            for (var colName in cell) {
-                row.push(cell[colName]);
-            }
-            columnValues.push(row);
-        });*/
-        debugger;
 
-        function DummyLinkFormatter(row, cell, value, columnDef, dataContext) {
-            return '<a href="#">' + value + '</a>';
-        }
-        /*var columnsBasic = [{
-            id: "title",
-            name: "Title",
-            field: "title",
-            width: 200,
-            formatter: DummyLinkFormatter
-        }, {
-            id: "duration",
-            name: "Duration",
-            field: "duration",
-            width: 100
-        }, {
-            id: "%",
-            name: "% Complete",
-            field: "percentComplete",
-            width: 100
-        }, {
-            id: "start",
-            name: "Start",
-            field: "start",
-            width: 150
-        }, {
-            id: "finish",
-            name: "Finish",
-            field: "finish",
-            width: 150
-        }, {
-            id: "effort-driven",
-            name: "Effort Driven",
-            field: "effortDriven",
-            width: 100
-        }];*/
-        /*var columnsSortable = [{
-            id: "title",
-            name: "Title",
-            field: "title",
-            width: 200,
-            sortable: true,
-            formatter: DummyLinkFormatter
-        }, {
-            id: "duration",
-            name: "Duration",
-            field: "duration",
-            width: 100,
-            sortable: true
-        }, {
-            id: "%",
-            name: "% Complete",
-            field: "percentComplete",
-            width: 100,
-            sortable: true
-        }, {
-            id: "start",
-            name: "Start",
-            field: "start",
-            width: 100,
-            sortable: true
-        }, {
-            id: "finish",
-            name: "Finish",
-            field: "finish",
-            width: 100,
-            sortable: true
-        }, {
-            id: "effort-driven",
-            name: "Effort Driven",
-            field: "effortDriven",
-            width: 100,
-            sortable: true
-        }];*/
-        var dataFull = [];
-        for (var i = 0; i < 200000; i++) {
-            dataFull[i] = {
-                id: 'id_' + i, // needed for DataView
-                title: "Task " + i,
-                duration: "5 days",
-                percentComplete: Math.round(Math.random() * 100),
-                start: "01/01/2009",
-                finish: "01/05/2009",
-                effortDriven: (i % 5 == 0)
-            };
-        }
         var columns;
         var data;
 
@@ -666,49 +585,6 @@
             }
         });
 
-        return;
-        var block = $('#data-table')
-            .TidyTable({
-                enableCheckbox: false,
-                enableMenu: false
-            }, {
-                columnTitles: columnTitles,
-                columnValues: columnValues,
-
-                // do something with selected results
-                // menuOptions: [
-                //     // ['Option 1', {
-                //     //     callback: doSomething1
-                //     // }],
-                //     // ['Option 2', {
-                //     //     callback: doSomething2
-                //     // }]
-                // ],
-
-                // post-process DOM elements
-                postProcess: {
-                    // table: doSomething3,
-                    // column: doSomething4,
-                    // menu: doSomething5
-                },
-
-                // pre-process column values before sort (optional)
-                sortByPattern: function(col_num, val) {
-                    if (col_num != 1) return val;
-
-                    return String(val).replace(/$|%|#/g, '');
-                }
-            });
-
-        // copy the table options menu
-        var menu = $('select.tidy_table', block).clone(true);
-        block.append(menu);
-
-        // optional animation
-        block.slideDown('fast');
-
-        // remove stored data
-        block.TidyTable('destroy');
     }
 
 

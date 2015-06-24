@@ -26,6 +26,7 @@
     window.bindIndicators = function(response, model) {
         //debugger;
         var categoriesAll = response.data.categories;
+        var subcategoriesAll = response.data.subcategories;
         var sourcesAll = response.data.sources;
         var indicatorsAll = response.data.indicators;
 
@@ -36,8 +37,15 @@
         //Sort out Categories
         for (var cat in categoriesAll.data) {
 
-            var indicatorsInCategory = _.map(categoriesAll.data[cat].indicators, function(indicatorId) {
+            var isOnlyCategory = function(indicatorId) {
+                return indicatorsAll.data[indicatorId].subcategory === "None";
+            }
 
+            var isSubCategory = function(indicatorId) {
+                return indicatorsAll.data[indicatorId].subcategory != "None";
+            }
+
+            var makeIndicator = function(indicatorId) {
                 var sourceId = _.get(indicatorsAll, 'data[indicatorId].source');
                 var sourceLabel = _.get(sourcesAll, 'data[sourceId].label');
 
@@ -46,15 +54,61 @@
                 cloneIndicator.source = sourceLabel;
                 cloneIndicator.id = indicatorId;
                 cloneIndicator.selected = false;
+
                 return cloneIndicator;
+            }
+
+            var indicatorsIdsInCategory = _.filter(categoriesAll.data[cat].indicators, _.negate(isSubCategory));
+
+            var indicatorsIdsInSubCategory = _.filter(categoriesAll.data[cat].indicators, _.negate(isOnlyCategory));
+
+            var indicatorsInCategory = _.map(indicatorsIdsInCategory, makeIndicator);
+            var indicatorsInSubCategory = _.map(indicatorsIdsInSubCategory, makeIndicator);
+
+            //arrange subcategories in order
+            var subcategories = [];
+
+            var subcategoriesTracker = [];
+
+            _.forEach(indicatorsInSubCategory, function(indicator) {
+
+                var subCatIndex = _.indexOf(subcategoriesTracker, indicator.subcategory);
+
+                if (subCatIndex < 0) {
+                    //debugger;
+                    var newSubCategory = {
+                        "id": indicator.subcategory,
+                        "label": subcategoriesAll.data[indicator.subcategory].label,
+                        "indicators": [indicator],
+                        "selected": false
+                    }
+                    subcategoriesTracker.push(indicator.subcategory);
+                    subcategories.push(newSubCategory);
+                } else {
+                    subcategories[subCatIndex].indicators.push(indicator);
+                }
+
             });
+
+            if (subcategories.length > 0 && indicatorsInCategory.length > 0) {
+                var generalSubCategory = {
+                    "label": "General",
+                    "indicators": indicatorsInCategory,
+                    "selected": false
+                }
+                subcategories.unshift(generalSubCategory);
+            }
+
+
             //debugger;
             var newCategory = {
                 "label": categoriesAll.data[cat].label,
                 "length": categoriesAll.data[cat].indicators.length,
                 "indicators": indicatorsInCategory,
-                "subcategories": []
+                "subcategories": subcategories
             }
+
+
 
             categoriesModel.push(newCategory);
 
@@ -158,6 +212,39 @@
 
         model.countriesModel(response.data);
         model.countriesModelMaster(_.clone(response.data, true));
+    }
+
+    window.highlightOnMap = function(region, type) {
+
+        var label = region.label;
+        var style = function(feature) {
+
+            if (label == feature.properties.sovereignt) {
+                return {
+                    weight: 2,
+                    opacity: 1,
+                    color: 'red',
+                    dashArray: '3',
+                    fillOpacity: 0.3,
+                    fillColor: '#ff0000'
+                };
+            } else {
+                return {
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.3,
+                    fillColor: '#666666'
+                };
+            }
+        }
+
+        window.map.removeLayer(geoJsonLayers["sovereignt"]);
+
+        L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
+            style: style
+        }).addTo(window.map);
     }
 
 }())

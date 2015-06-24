@@ -167,35 +167,48 @@
 .app .list-group a:hover {
   text-decoration: none;
 }
-.app a.list-group-item:hover {
-  background: none;
-}
 .app .list-group-item {
   border: none;
   cursor: pointer;
 }
 .app .list-group-item.selected {
-  background-color: rgba(0,100,0,0.5);
+  background-color: #336b99;
+  color: #fff;
+}
+.app .list-group-item.selected a {
+  color: #fff;
 }
 .app .list-group-item .selected {
-  background-color: rgba(0,100,0,0.5);
+  background-color: #336b99;
+  color: #fff;
 }
-.app .btn-group {
+.subcategories .list-group-item.active {
+  background-color: #eae6e6;
+  font-size: 16px;
+  color: #852224;
+  font-weight: bold;
+  padding-left: 20px;
+}
+.subcategories a,
+.subcategories .downloadLinks {
+  padding-left: 45px;
+}
+.subcategories .btn-group {
   width: 100%;
   display: none;
 }
-.app .btn-group label {
+.subcategories .btn-group label {
   width: 33.33%;
 }
-.app .active .btn-group {
+.subcategories .active .btn-group {
   display: block;
 }
-.app .active .btn-primary {
+.subcategories .active .btn-primary {
   background: none;
   color: #852224;
   border: none;
 }
-.app .active .btn-primary.active {
+.subcategories .active .btn-primary.active {
   border-top: 1px solid #336b99;
 }
 .app .shadow {
@@ -327,6 +340,9 @@
 .flag-item:hover {
   text-decoration: underline;
 }
+.f32 .flag {
+  vertical-align: text-bottom;
+}
 .custom-country {
   padding: 10px;
 }
@@ -351,7 +367,9 @@
   background: url("../images/noun_share_33345.png") center center no-repeat;
   background-size: contain;
 }
-#data-table {
+#data-table,
+#indicators,
+#comparator {
   height: 470px;
   width: 100%;
   overflow: auto;

@@ -37,7 +37,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
           //-   a(href='#tab-countries', data-toggle='tab') Countries
     .col-md-10
       .tab-content
-        #tab-category.tab-pane
+        #tab-category.tab-pane.active
           .row(data-bind="foreach:categoriesModel")
             .col-sm-4.col-md-4.col-sm-2.flip
               .card
@@ -49,12 +49,29 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 .face.back
                   div.list-group()
                     a.list-group-item.active(href="#" data-bind="html:label")
-                    span.list(data-bind="foreach:indicators")
-                      a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
-                      span.downloadLinks()
-                        span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
-                        span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
-                        span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+                    span.list
+                      span.subcategories(data-bind="foreach:subcategories")
+                        a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")
+                          span( data-bind="html:label")
+                        span(data-bind="foreach:indicators" style="display:none")
+                          span.indicator-item
+                            a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                              .glyphicon.glyphicon-plus() 
+                              span(data-bind="html:label")
+                            div.downloadLinks()
+                              span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                              span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                              span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
+                      span.categories(data-bind="foreach:indicators,visible:subcategories.length==0")
+                        span.indicator-item
+                          a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+                            .glyphicon.glyphicon-plus() 
+                            span(data-bind="html:label")
+                          div.downloadLinks()
+                            span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                            span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                            span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
+
         #tab-source.tab-pane
           .row(data-bind="foreach:sourcesModel")
             .col-sm-4.col-md-4.flip
@@ -68,23 +85,76 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   div.list-group()
                     a.list-group-item.active(href="#" data-bind="html:label")
                     span.list(data-bind="foreach:indicators")
-                      a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
-                      span.downloadLinks()
-                        span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
-                        span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
-                        span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
-        #tab-alphabetic.tab-pane.active
+                      span.indicator-item
+                        a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
+                          .glyphicon.glyphicon-plus() 
+                          span(data-bind="html:label")
+                        div.downloadLinks()
+                          span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                          span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                          span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
+        #tab-alphabetic.tab-pane
           .row
             .col-md-12
               input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
           div.list-group.row()
             span(data-bind="foreach:indicatorsModel")
-              .list-group-item.col-md-4(data-bind="css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)}")
-                a(data-bind='html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
-                span.downloadLinks()
-                  span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
-                  span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
-                  span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+              .list-group-item.col-md-4.indicator-item(data-bind="css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)}")
+                a(data-bind='attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+                  .glyphicon.glyphicon-plus() 
+                  span(data-bind="html:label")
+                div.downloadLinks()
+                  span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
+                  span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
+                  span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
+        //- #tab-category.tab-pane
+        //-   .row(data-bind="foreach:categoriesModel")
+        //-     .col-sm-4.col-md-4.col-sm-2.flip
+        //-       .card
+        //-         .face.front
+        //-           div.well.category-wrapper()
+        //-             span.badge(data-bind="html:length")
+        //-             div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
+        //-             h4(data-bind="html:label")
+        //-         .face.back
+        //-           div.list-group()
+        //-             a.list-group-item.active(href="#" data-bind="html:label")
+        //-             span.list(data-bind="foreach:indicators")
+        //-               a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},html:label,attr:{&#34;data-content&#34;:&#34;<strong>Source : </strong>&#34; + source}' data-html="true")
+        //-               span.downloadLinks()
+        //-                 span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+        //-                 span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+        //-                 span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+        //- #tab-source.tab-pane
+        //-   .row(data-bind="foreach:sourcesModel")
+        //-     .col-sm-4.col-md-4.flip
+        //-       .card
+        //-         .face.front
+        //-           div.well.category-wrapper()
+        //-             span.badge(data-bind="html:length")
+        //-             div.well.category.icon-category-70()
+        //-             h4(data-bind="html:label")
+        //-         .face.back
+        //-           div.list-group()
+        //-             a.list-group-item.active(href="#" data-bind="html:label")
+        //-             span.list(data-bind="foreach:indicators")
+        //-               a.list-group-item(data-bind='css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)},html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; +category}'  data-html="true" )
+        //-               span.downloadLinks()
+        //-                 span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+        //-                 span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+        //-                 span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
+        //- #tab-alphabetic.tab-pane.active
+        //-   .row
+        //-     .col-md-12
+        //-       input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
+        //-   div.list-group.row()
+        //-     span(data-bind="foreach:indicatorsModel")
+        //-       .list-group-item.col-md-4(data-bind="css:{selected:selected},click:function(){$root.selectIndicatorMultiple(arguments[0],arguments[1],true)}")
+        //-         a(data-bind='html:label,attr:{&#34;data-content&#34;:&#34;<strong>Category : </strong>&#34; + category + &#34;<br><strong>Source : </strong>&#34; + source,&#34;data-indicatorid&#34;:id}' data-html="true")
+        //-         span.downloadLinks()
+        //-           span(data-bind="click:function(){$root.downloadData('excel',$data)}") Excel    
+        //-           span(data-bind="click:function(){$root.downloadData('csv',$data)}") CSV    
+        //-           span(data-bind="click:function(){$root.downloadData('json',$data)}") JSON
 
 {% endblock %}
 

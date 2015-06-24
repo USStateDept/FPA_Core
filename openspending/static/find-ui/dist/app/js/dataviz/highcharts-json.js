@@ -11,6 +11,7 @@
         var title = indicators[0];
         var groupId = group;
         var cutBy = "name";
+        var dataType = "avg"; //sum,avg
         var multiVariate = indicators.length > 1; //eligible for scatter plot
         // var seriesAverage = [];
         var dataByYear = [];
@@ -32,7 +33,7 @@
         if (!multiVariate && region.length > 0) {
             cutBy = "sovereignt"
         }
-        //debugger;
+
 
         var timeCell = {};
         _.forEach(data.cell, function(c) {
@@ -56,9 +57,9 @@
         }
 
         var series = {
-            "Minimum": [],
-            "Maximum": [],
-            "Average": [],
+            "Global Minimum": [],
+            "Global Maximum": [],
+            "Global Average": [],
         };
 
 
@@ -66,11 +67,11 @@
 
         _.forEach(statsCells, function(c) {
             //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
-            if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
-                series["Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
-                series["Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
-                series["Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
-            }
+            //if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
+            series["Global Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
+            series["Global Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
+            series["Global Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
+            // }
         });
 
         //debugger;
@@ -92,7 +93,7 @@
                     //debugger;
                     if (c["geometry__country_level0." + cutBy] == region) {
 
-                        series[indicator].push([c["geometry__time"], c[indicator + "__amount_sum"]])
+                        series[indicator].push([c["geometry__time"], c[indicator + "__amount_" + dataType]])
                     }
                 });
 
@@ -115,8 +116,8 @@
                 //if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
                 //rada
                 //debugger;
-                series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicatorId + "__amount_sum"]]);
-                dataByYear[c["geometry__time"]].push(c[indicatorId + "__amount_sum"]);
+                series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicatorId + "__amount_" + dataType]]);
+                dataByYear[c["geometry__time"]].push(c[indicatorId + "__amount" + dataType]);
                 // }
             });
 
