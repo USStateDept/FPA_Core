@@ -65,6 +65,10 @@ def dataorgs():
                                     "total":0,
                                     "data":collections.OrderedDict({})
                                 },
+                                "subcategories":{
+                                    #"total":0,
+                                    "data":collections.OrderedDict({})
+                                },
                                 "sources":{
                                     "total":0,
                                     "data":collections.OrderedDict({})
@@ -107,12 +111,14 @@ def dataorgs():
                 else:
                     outputschema['data']['categories']['data'][tag.slug_label] = {
                                                                         'label': tag.label,
-                                                                        'indicators': [indicator.name],
-                                                                        "subcategories": {}
+                                                                        'indicators': [indicator.name]
+                                                                        #"subcategories": {}
                                                                     }
                     outputschema['data']['categories']['total'] += 1
                 category = tag.slug_label
             elif tag.category == "subspsd":
+                #if outputschema['data']['categories']['data'].get(tag.slug_label, None):
+                outputschema['data']['subcategories']['data'][tag.slug_label]= {'label':tag.label}
             #     if outputschema['data']['categories']['data'].get(tag.slug_label, None):
             #         if outputschema['data']['categories']['data'][tag.slug_label]['subcategories'].get(tag.slug_label, None):
             #             outputschema['data']['categories']['data'][tag.slug_label]['subcategories'][tag.slug_label]['indicators'].append(indicator.name)
