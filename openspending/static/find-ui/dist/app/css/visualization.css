@@ -277,12 +277,18 @@
   padding: 10px;
   color: #852224;
 }
-#select-indicator .nav.nav-tabs {
+.tabs-app .nav.nav-tabs {
   border-right: none;
 }
-#select-indicator .nav.nav-tabs .active a {
+.tabs-app .nav.nav-tabs .active a {
   background-color: #852224;
   color: #fff;
+}
+.tabs-app .nav > li > a:hover {
+  color: #852224;
+}
+.tabs-app .nav > li > a {
+  color: #852224;
 }
 #filter-years-label,
 #filter-countries-label {

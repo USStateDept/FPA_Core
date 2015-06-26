@@ -47,6 +47,10 @@ body {
 .app .navbar-default .navbar-nav > li:nth-child(2) > a {
   font-weight: 200;
 }
+.nav > li > a:hover {
+  background: none;
+  color: #852224;
+}
 .app .navbar-brand {
   color: #fff;
   font-weight: 400;
