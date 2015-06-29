@@ -367,6 +367,24 @@
 
         },
 
+        expandMap: function() {
+            var expanded = $(".countries-list .countries-col").css("display") == "none";
+
+            if (expanded) {
+
+                $(".countries-list .countries-col").css("display", "block");
+                $(".countries-list .map-col").css("width", "");
+            } else {
+
+                $(".countries-list .countries-col").css("display", "none");
+                $(".countries-list .map-col").css("width", "100%");
+            }
+
+            map.invalidateSize();
+
+
+        },
+
         expandCategory: function(model, evt) {
 
             expandedCategory = true;

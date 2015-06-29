@@ -70,19 +70,31 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .col-md-12
                 .dropdown.pull-left
                   button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
-                      span(data-bind="html:activeGroup().label")
                       .glyphicon.glyphicon-menu-down
+                      span(data-bind="html:activeGroup().label")
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroups', data-bind="foreach:countryGroupings")
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
 
                 .dropdown.pull-left(data-bind="visible:countryGroupRegions().length>0",style="margin-left:10px")
                   button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
-                      span(data-bind="html:activeRegion()")
                       .glyphicon.glyphicon-menu-down
+                      span(data-bind="html:activeRegion()")
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:$data,click:$root.selectCountryGroupRegion")
+
+                .dropdown.pull-left(data-bind="visible:activeCountries().length>0",style="margin-left:10px")
+
+                  button#dropdownMenuSelectedCountries.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
+                      .glyphicon.glyphicon-menu-down
+                      span() Selected Countries
+                      span.badge(data-bind="html:activeCountries().length")
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="foreach:activeCountries")
+
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
+                a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0") Clear All
               //-.col-md-4
                   //-button.btn.btn-default(type='button') Select All
                   //-button.btn.btn-default(type='button') Deselect All
@@ -93,13 +105,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 
             .row
               p
-            .row(data-bind="visible:activeCountries().length>0")
-              .col-md-10(data-bind="foreach:activeCountries")
-                div
-                  .glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
-                  span.flags-labels(data-bind="html:label")
-              .col-md-2
-                a(data-bind="click:clearActiveCountries") Clear All
+            //- .row(data-bind="visible:activeCountries().length>0")
+            //-   .col-md-10(data-bind="foreach:activeCountries")
+            //-     div
+            //-       .glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
+            //-       span.flags-labels(data-bind="html:label")
+            //-   .col-md-2
+            //-     a(data-bind="click:clearActiveCountries") Clear All
             .row
               .col-md-12
                 input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
@@ -111,15 +123,16 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             .row
               p
             .row.countries-list()
-              .col-md-8
+              .col-md-8.countries-col(style="height:400px;overflow-y:auto")
                 .row.f32(data-bind="foreach:countriesModel")
                   .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
                     div.flag-item( data-bind='click:$root.selectCountry,css:{selected:selected}')
                       div.flag(data-bind="css:iso_a2.toLowerCase()")
                       span.flags-labels(style="vertical-align:middle" data-bind="html:label")
-              .col-md-4
+              .col-md-4.map-col
                 .row
                   .col-md-12#map
+                span.badge(style="z-index:1000",data-bind="click:expandMap") Expand Map
               
           //- BY TEST
           #select-indicator.tabs-app.tab-pane.active(role='tabpanel') 
