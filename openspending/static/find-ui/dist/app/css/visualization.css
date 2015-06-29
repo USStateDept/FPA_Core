@@ -94,11 +94,26 @@
   background-color: #5c74b4;
   display: inline;
 }
-.indicator-item .glyphicon {
+.indicator-item .glyphicon.glyphicon-plus,
+.indicator-item .glyphicon.glyphicon-minus {
   display: none;
 }
-.indicator-item:hover .glyphicon {
+.indicator-item:hover .glyphicon.glyphicon-plus {
   display: inline;
+}
+.indicator-item .glyphicon.glyphicon-menu-right {
+  display: inline;
+}
+.indicator-item:hover .glyphicon.glyphicon-menu-right {
+  display: none;
+}
+.indicator-item.selected:hover .glyphicon.glyphicon-minus,
+.indicator-item .selected:hover .glyphicon.glyphicon-minus {
+  display: inline;
+}
+.indicator-item.selected:hover .glyphicon.glyphicon-plus,
+.indicator-item .selected:hover .glyphicon.glyphicon-plus {
+  display: none;
 }
 .app .face .list-group.show-me {
   display: block;
@@ -345,6 +360,9 @@
 }
 .flag-item:hover {
   text-decoration: underline;
+}
+.flag-item.selected {
+  opacity: 0.5;
 }
 .f32 .flag {
   vertical-align: text-bottom;

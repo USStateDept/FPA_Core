@@ -73,9 +73,7 @@ html, body
 	.navbar-nav > li:nth-child(2) > a
 		font-weight $weightLight
 		
-.nav > li > a:hover
-	background none
-	color $colorDark
+
 
 .app .navbar-brand
 	color $colorLight
@@ -239,12 +237,16 @@ html, body
 		margin-right 20px
 		padding-right 20px
 		
-.app .btn-default
+.app .btn-default,
+.open>.dropdown-toggle.btn-default
 	border-top none
 	border-left none
 	border-right none
 	border-radius $radius0
 	color $bgMedium
+	background-color transparent
+	border-color transparent
+	font-weight bold
 	//font-size 28px
 	font-weight $weightMedium
 	

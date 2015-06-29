@@ -121,7 +121,8 @@
 
 
             if (direct) {
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=dos_region&r=&cn=";
+                //TODO: Calculate Year Extremes
+                window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=dos_region&r=&cn=";
                 return;
             }
 
@@ -183,9 +184,9 @@
             });
 
 
-
-            var hashString = "y=1990|2014" + // + vizModel.activeYears().join("|")
-                "&f=" + vizModel.activeYears().join("|") +
+            //TODO: Calculate Year Extremes, change activeYears to extremes
+            var hashString = //"y=1990|2014" + // + vizModel.activeYears().join("|")
+                "f=" + vizModel.activeYears().join("|") +
                 "&i=" + indicators.join("|") +
                 //"&l=" + indicatorLabels.join("|") +
                 "&c=" + type + "&g=" + vizModel.activeGroup().id +
@@ -201,24 +202,39 @@
         selectCountry: function(selectedCountry, evt, direct) {
 
             if (direct) {
-                window.location.href = "data-visualization#y=1990|2014&f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
+                //TODO: Calculate Year Extremes
+                window.location.href = "data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
                 return;
             }
 
             var selectedCountry = arguments[0];
+            if (selectedCountry.selected) {
+                return false;
+            }
             var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.code;
+            var countryId = selectedCountry.iso_a2;
 
             vizModel.activeCountries.push(selectedCountry);
+
+            var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
+            vizModel.countriesModelMaster.removeAll();
 
             var countriesModel = _.clone(vizModel.countriesModel(), true);
             vizModel.countriesModel.removeAll();
             _.forEach(countriesModel, function(country) {
-                if (countryLabel == country.label) {
+                if (countryId == country.iso_a2) {
                     country.selected = !country.selected;
                 }
                 vizModel.countriesModel.push(country);
-            })
+            });
+
+            _.forEach(countriesModelMaster, function(country) {
+                if (countryId == country.iso_a2) {
+                    country.selected = !country.selected;
+                }
+                vizModel.countriesModelMaster.push(country);
+            });
+
             //vizModel.countriesModel(response.data);
             //vizModel.countriesModelMaster(_.clone(response.data, true));
 
@@ -244,6 +260,28 @@
 
             vizModel.activeCountries.splice(selectedIndex, 1);
 
+            var countryLabel = selectedCountry.label;
+            var countryId = selectedCountry.iso_a2;
+
+            var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
+            vizModel.countriesModelMaster.removeAll();
+
+            var countriesModel = _.clone(vizModel.countriesModel(), true);
+            vizModel.countriesModel.removeAll();
+            _.forEach(countriesModel, function(country) {
+                if (countryId == country.iso_a2) {
+                    country.selected = !country.selected;
+                }
+                vizModel.countriesModel.push(country);
+            });
+
+            _.forEach(countriesModelMaster, function(country) {
+                if (countryId == country.iso_a2) {
+                    country.selected = !country.selected;
+                }
+                vizModel.countriesModelMaster.push(country);
+            });
+
             // _.each(activeCountries, function(country){
             // 	if (geounit)
             // });
@@ -255,6 +293,21 @@
         clearActiveCountries: function() {
 
             vizModel.activeCountries.removeAll();
+
+            var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
+            vizModel.countriesModelMaster.removeAll();
+
+            var countriesModel = _.clone(vizModel.countriesModel(), true);
+            vizModel.countriesModel.removeAll();
+            _.forEach(countriesModel, function(country) {
+                country.selected = false;
+                vizModel.countriesModel.push(country);
+            });
+
+            _.forEach(countriesModelMaster, function(country) {
+                country.selected = false;
+                vizModel.countriesModelMaster.push(country);
+            });
 
         },
 

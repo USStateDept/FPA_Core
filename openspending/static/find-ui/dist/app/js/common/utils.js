@@ -206,7 +206,7 @@
 
 
         _.forEach(response.data, function(country) {
-            country.selected = true;
+            country.selected = false;
         });
 
 

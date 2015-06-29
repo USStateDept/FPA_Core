@@ -2,8 +2,8 @@
 
 
     var hashParams = window.getHashParams();
+    var yearsExtremes = []; //default, will be calculated
 
-    var yearsRange = hashParams.y.split("|");
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
     var group = hashParams.g;
@@ -330,7 +330,7 @@
             indicators = [indicator.id];
 
             var _deferredMetaList = window.loadIndicatorsMeta(indicators);
-            var _deferredList = window.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+            var _deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupBy);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
             //var _deferredList = window.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
@@ -375,7 +375,7 @@
             }
 
             //debugger;
-            var deff = window.loadIndicatorData(indicators, _groupId, _region, [1990, 2014], _countries, groupBy);
+            var deff = window.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupBy);
 
 
 
@@ -444,10 +444,19 @@
 
             setExtremes(yearsFilter[0], yearsFilter[1]);
         }
-        var minYear = parseInt(yearsRange[0]);
-        var maxYear = parseInt(yearsRange[1]);
+
+
+    }
+
+    var createYearSlider = function(minYear, maxYear) {
+
+        //var minYear = parseInt(yearsRange[0]);
+        //var maxYear = parseInt(yearsRange[1]);
+
         var minYearFilter = parseInt(yearsFilter[0]);
         var maxYearFilter = parseInt(yearsFilter[1]);
+
+
         $("#filter-years").slider({
             range: true,
             min: minYear,
@@ -612,7 +621,11 @@
 
                 xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
 
+
                 $("#loading").hide();
+
+
+
             }
         }
         //debugger;
@@ -640,25 +653,57 @@
 
     }
 
-    if (indicators.length > 1) {
-        //switch to group by indicators
-        groupBy = "indicators";
-    }
-    var deferredMetaList = window.loadIndicatorsMeta(indicators);
-    var deferredList = window.loadIndicatorData(indicators, group, region, yearsFilter, countries, groupBy);
-    deferredList = deferredList.concat(deferredMetaList);
 
-    //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
-
-    $.when.apply($, deferredList).done(function(response) {
-        indicatorDataLoadHandler(arguments);
-    });
     //deferred.done(indicatorDataLoadHandler);
 
 
     var indicatorListLoadHandler = function(response) {
 
+        //calculate the year extremes
+        var years = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
+
+        //TODO: remove this once the years are present
+        for (var indicatorId in response.data.indicators.data) {
+            response.data.indicators.data[indicatorId].years = years;
+        }
+
+        for (var indicatorId in response.data.indicators.data) {
+            var yearStart = years[0];
+            var yearEnd = years[years.length - 1];
+            var years = response.data.indicators.data[indicatorId].years;
+
+            if (yearsExtremes.length == 0) {
+                yearsExtremes.push(yearStart);
+                yearsExtremes.push(yearEnd);
+            } else {
+                if (yearStart < yearsExtremes[0]) {
+                    yearsExtremes[0] = yearStart;
+                }
+                if (yearEnd < yearsExtremes[1]) {
+                    yearsExtremes[1] = yearEnd;
+                }
+            }
+        }
+
+        //create slider first
+        createYearSlider(yearsExtremes[0], yearsExtremes[1]);
+
         window.bindIndicators(response, model);
+
+        //now get the data
+        if (indicators.length > 1) {
+            //switch to group by indicators
+            groupBy = "indicators";
+        }
+        var deferredMetaList = window.loadIndicatorsMeta(indicators);
+        var deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupBy);
+        deferredList = deferredList.concat(deferredMetaList);
+
+        //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
+
+        $.when.apply($, deferredList).done(function(response) {
+            indicatorDataLoadHandler(arguments);
+        });
 
     }
 

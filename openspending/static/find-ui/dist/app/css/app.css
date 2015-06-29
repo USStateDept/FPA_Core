@@ -47,10 +47,6 @@ body {
 .app .navbar-default .navbar-nav > li:nth-child(2) > a {
   font-weight: 200;
 }
-.nav > li > a:hover {
-  background: none;
-  color: #852224;
-}
 .app .navbar-brand {
   color: #fff;
   font-weight: 400;
@@ -198,12 +194,16 @@ body {
   margin-right: 20px;
   padding-right: 20px;
 }
-.app .btn-default {
+.app .btn-default,
+.open>.dropdown-toggle.btn-default {
   border-top: none;
   border-left: none;
   border-right: none;
   border-radius: 0px;
   color: #336b99;
+  background-color: transparent;
+  border-color: transparent;
+  font-weight: bold;
   font-weight: 400;
 }
 .app .btn-group:nth-child(2) {

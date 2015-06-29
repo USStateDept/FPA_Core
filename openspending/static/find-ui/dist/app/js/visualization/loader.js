@@ -24,7 +24,7 @@
         });
     }
 
-    window.loadIndicatorData = function(indicators, groupId, region, yearRange, countries, groupBy) {
+    window.loadIndicatorData = function(indicators, groupId, region, yearsExtremes, countries, groupBy) {
         var indicatorIds = [];
 
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
@@ -91,19 +91,19 @@
 
 
 
-        if (!yearRange[1]) {
-            yearRange[1] = yearRange[0];
+        if (!yearsExtremes[1]) {
+            yearsExtremes[1] = yearsExtremes[0];
         }
 
         url = url.replace(/{groupId}/g, groupId);
         url = url.replace(/{region}/g, region);
-        url = url.replace(/{yearFrom}/g, yearRange[0]);
-        url = url.replace(/{yearTo}/g, yearRange[1]);
+        url = url.replace(/{yearFrom}/g, yearsExtremes[0]);
+        url = url.replace(/{yearTo}/g, yearsExtremes[1]);
 
 
         statsUrl = statsUrl.replace(/{groupId}/g, groupId);
-        statsUrl = statsUrl.replace(/{yearFrom}/g, yearRange[0]);
-        statsUrl = statsUrl.replace(/{yearTo}/g, yearRange[1]);
+        statsUrl = statsUrl.replace(/{yearFrom}/g, yearsExtremes[0]);
+        statsUrl = statsUrl.replace(/{yearTo}/g, yearsExtremes[1]);
         //debugger;
 
         //url = "data/gdp_per_capita.json";
