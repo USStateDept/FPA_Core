@@ -14,6 +14,15 @@
 
     var geoJSONHandler = function(response, type) {
 
+        function onEachFeature(feature, layer) {
+            // does this feature have a property named popupContent?
+            if (feature.properties) {
+
+                layer.bindPopup(feature.properties.sovereignt);
+            }
+        }
+
+
         if (!geoJsonLayers[type]) {
             //debugger;
             geoJsonLayers[type] = L.geoJson(response, {
@@ -24,7 +33,8 @@
                     dashArray: '3',
                     fillOpacity: 0.3,
                     fillColor: '#666666'
-                }
+                },
+                onEachFeature: onEachFeature
             });
 
         }
