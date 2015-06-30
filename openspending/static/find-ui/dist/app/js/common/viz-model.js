@@ -244,7 +244,7 @@
             current.filter = true;
             vizModel.selectionTracker(current);
 
-            window.highlightOnMap(selectedCountry, "country");
+            window.highlightOnMap(selectedCountry, "country", vizModel);
             //highlight country on map
 
             // $('#vizTabs a[href="#select-indicator"]').tab('show');
@@ -311,13 +311,19 @@
 
         },
 
+        clearActiveIndicators: function() {
+
+            vizModel.activeIndicators.removeAll();
+
+        },
+
         selectCountryGroup: function() {
 
 
 
             var groupId = arguments[0].id;
 
-            window.changeGroup(groupId);
+            //window.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);
             vizModel.activeRegion(""); //set active region to undefined

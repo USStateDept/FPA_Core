@@ -345,6 +345,13 @@
   background-color: #eae6e6;
   padding: 20px;
 }
+.app .expand-button {
+  z-index: 1000;
+  position: relative;
+  cursor: pointer;
+  top: 50px;
+  left: -5px;
+}
 .flags-countries {
   width: 60px;
   height: 29px;

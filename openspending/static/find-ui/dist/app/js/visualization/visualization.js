@@ -15,9 +15,8 @@
     var geoJSONHandler = function(response, type) {
 
         function onEachFeature(feature, layer) {
-            // does this feature have a property named popupContent?
-            if (feature.properties) {
 
+            if (feature.properties) {
                 layer.bindPopup(feature.properties.sovereignt);
             }
         }

@@ -214,36 +214,50 @@
         model.countriesModelMaster(_.clone(response.data, true));
     }
 
-    window.highlightOnMap = function(region, type) {
+    window.highlightOnMap = function(region, type, model) {
 
         var label = region.label;
+        var activeCountries = model.activeCountries();
+        var countriesGeounit = _.map(activeCountries, function(country) {
+            return country.label;
+        });
+
+
         var style = function(feature) {
 
-            if (label == feature.properties.sovereignt) {
-                return {
-                    weight: 2,
-                    opacity: 1,
-                    color: 'red',
-                    dashArray: '3',
-                    fillOpacity: 0.3,
-                    fillColor: '#ff0000'
-                };
-            } else {
-                return {
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.3,
-                    fillColor: '#666666'
-                };
+                if (_.indexOf(countriesGeounit, feature.properties.sovereignt) >= 0) {
+                    return {
+                        weight: 2,
+                        opacity: 1,
+                        color: 'white',
+                        dashArray: '3',
+                        fillOpacity: 0.3,
+                        fillColor: '#666666'
+                    };
+                } else {
+                    return {
+                        weight: 2,
+                        opacity: 0,
+                        color: 'white',
+                        dashArray: '3',
+                        fillOpacity: 0.0,
+                        fillColor: '#666666'
+                    };
+                }
+            }
+            // debugger;
+        window.map.removeLayer(geoJsonLayers["sovereignt"]);
+
+        function onEachFeature(feature, layer) {
+            // does this feature have a property named popupContent?
+            if (feature.properties) {
+                layer.bindPopup(feature.properties.sovereignt);
             }
         }
 
-        window.map.removeLayer(geoJsonLayers["sovereignt"]);
-
         L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
-            style: style
+            style: style,
+            onEachFeature: onEachFeature
         }).addTo(window.map);
     }
 

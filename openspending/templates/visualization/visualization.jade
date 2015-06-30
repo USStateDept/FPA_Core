@@ -132,17 +132,29 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .col-md-4.map-col
                 .row
                   .col-md-12#map
-                span.badge(style="z-index:1000",data-bind="click:expandMap") Expand Map
+                    span.expand-button.glyphicon.glyphicon-fullscreen(data-bind="click:expandMap")
               
           //- BY TEST
           #select-indicator.tabs-app.tab-pane.active(role='tabpanel') 
-            .row(style="padding:10px")
-              .col-md-2
-              .col-md-10
-                div(data-bind="foreach:activeIndicators")
-                  div
-                    .glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
-                    span(data-bind="html:label")                 
+            //- .row(style="padding:10px")
+            //-   .col-md-2
+            //-   .col-md-10
+            //-     div(data-bind="foreach:activeIndicators")
+            //-       div
+            //-         .glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
+            //-         span(data-bind="html:label")
+            .row.title
+              .col-md-12
+                .dropdown.pull-left(data-bind="visible:activeIndicators().length>0",style="margin-left:10px")
+                  button#dropdownMenuSelectedIndicators.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
+                      .glyphicon.glyphicon-menu-down
+                      span() Selected Indicators
+                      span.badge(data-bind="html:activeIndicators().length")
+                  ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="foreach:activeIndicators")
+
+                    li(role='presentation')
+                      a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
+                a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0") Clear All               
             .row
               .col-md-2
                 .tabbable.tabs-left
