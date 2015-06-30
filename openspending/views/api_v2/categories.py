@@ -86,6 +86,10 @@ def dataorgs():
             continue
         keyname = indicator.name
         years = indicator.years
+        the_years=[]
+        the_years=years.split(",")
+        the_years=map(int,the_years)
+        the_years.sort()
         dataorg = getattr(indicator, "dataorg", None)
         if not dataorg:
             dataorg = "None"
@@ -145,7 +149,7 @@ def dataorgs():
                             "source":dataorg,
                             "category":category,
                             "subcategory":subcategory,
-                            "years":years
+                            "years":the_years
                         }
         outputschema['data']['indicators']['data'][keyname] = indicatorschema
         outputschema['data']['indicators']['total'] += 1
