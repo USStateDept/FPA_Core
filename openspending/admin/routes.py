@@ -304,13 +304,23 @@ class MetadataOrgManagerView(sqla.ModelView):
         }
     }
 
-
-
-
     def is_accessible(self):
         return require.account.is_admin()
 
+        
+class SourcesView(sqla.ModelView):
 
+    column_list = ('label', 'dataType','dataorg','url','updated_at')
+    
+    form_excluded_columns = ('source','name','created_at','runs','dataviews','datalastupdated')
+    
+    #form_columns = ('label',)
+    
+    can_delete = False
+    can_create = False
+
+    def is_accessible(self):
+        return require.account.is_admin()
 
 
 def register_admin(flaskadmin, db):
@@ -349,7 +359,7 @@ def register_admin(flaskadmin, db):
 
     flaskadmin.add_view(TagsView(Tags, db.session, endpoint='tagsadmin', category='SysAdmin'))
 
-
+    flaskadmin.add_view(SourcesView(Dataset, db.session, endpoint='sourcesadmin', category='Indicators', name="Sources"))
 
     return flaskadmin
 

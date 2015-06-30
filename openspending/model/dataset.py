@@ -67,6 +67,8 @@ class Dataset(db.Model):
                            backref=backref('datasets', lazy='dynamic'))
                            
     years = Column(Unicode(1000))
+    
+    stats = Column(Unicode(50))
 
     #TODO
     #tag stuff
