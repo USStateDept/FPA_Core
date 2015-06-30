@@ -85,6 +85,7 @@ def dataorgs():
         if not getattr(indicator, "mapping", None):
             continue
         keyname = indicator.name
+        years = indicator.years
         dataorg = getattr(indicator, "dataorg", None)
         if not dataorg:
             dataorg = "None"
@@ -143,7 +144,8 @@ def dataorgs():
                             "description":getattr(indicator, "description", "No Description"),
                             "source":dataorg,
                             "category":category,
-                            "subcategory":subcategory
+                            "subcategory":subcategory,
+                            "years":years
                         }
         outputschema['data']['indicators']['data'][keyname] = indicatorschema
         outputschema['data']['indicators']['total'] += 1
