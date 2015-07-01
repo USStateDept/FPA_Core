@@ -244,7 +244,7 @@
             current.filter = true;
             vizModel.selectionTracker(current);
 
-            window.highlightOnMap(selectedCountry, "country", vizModel);
+            window.highlightOnMap(vizModel);
             //highlight country on map
 
             // $('#vizTabs a[href="#select-indicator"]').tab('show');
@@ -309,11 +309,44 @@
                 vizModel.countriesModelMaster.push(country);
             });
 
+            window.highlightOnMap(vizModel, true)
+
         },
 
         clearActiveIndicators: function() {
 
             vizModel.activeIndicators.removeAll();
+
+
+            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
+            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
+
+
+            vizModel.indicatorsModel.removeAll();
+            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
+                indicator.selected = false;
+                vizModel.indicatorsModel.push(indicator);
+            });
+
+
+            vizModel.categoriesModel.removeAll();
+            _.forEach(categoriesModel, function(category) {
+                _.forEach(category.indicators, function(indicator) {
+                    indicator.selected = false;
+                });
+                vizModel.categoriesModel.push(category);
+            });
+            //debugger;
+
+            vizModel.sourcesModel.removeAll();
+            _.forEach(sourcesModel, function(source) {
+                _.forEach(source.indicators, function(indicator) {
+                    indicator.selected = false;
+                });
+                vizModel.sourcesModel.push(source);
+            });
+
+            window.flipCardEvent();
 
         },
 
@@ -369,6 +402,7 @@
 
             })
 
+            window.highlightOnMap(vizModel, true);
             //filter country view by region
 
         },

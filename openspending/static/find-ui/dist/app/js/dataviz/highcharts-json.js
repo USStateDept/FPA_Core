@@ -21,11 +21,12 @@
         });
 
         switch (true) {
-            case ((groupId == "all" || groupBy == "countries") && region.length > 0):
-                debugger;
+            case ((groupId == "all" || groupBy == "countries") && region.length == 0):
+                // debugger;
                 cutBy = "sovereignt";
                 break;
             default:
+                // debugger;
                 cutBy = groupId;
                 break;
         }

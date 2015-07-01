@@ -21,6 +21,7 @@
             }
         }
 
+        window.countriesJson = response;
 
         if (!geoJsonLayers[type]) {
             //debugger;

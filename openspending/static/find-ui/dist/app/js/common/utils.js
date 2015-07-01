@@ -214,11 +214,18 @@
         model.countriesModelMaster(_.clone(response.data, true));
     }
 
-    window.highlightOnMap = function(region, type, model) {
+    window.highlightOnMap = function(model, all) {
 
-        var label = region.label;
-        var activeCountries = model.activeCountries();
-        var countriesGeounit = _.map(activeCountries, function(country) {
+        //var all = false;
+        //if all then select all countries in countriesModel, else activeCountries
+
+        var countries = model.countriesModel();
+
+        if (model.activeCountries().length > 0) {
+            countries = model.activeCountries();
+        }
+
+        var countriesGeounit = _.map(countries, function(country) {
             return country.label;
         });
 
@@ -255,10 +262,22 @@
             }
         }
 
-        L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
-            style: style,
-            onEachFeature: onEachFeature
-        }).addTo(window.map);
+        geoJsonLayers["sovereignt"] = L.geoJson(window.countriesJson, {
+            onEachFeature: onEachFeature,
+            style: style
+        });
+
+
+        setTimeout(function() {
+            map.addLayer(geoJsonLayers["sovereignt"]);
+            /*L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
+                style: style,
+                onEachFeature: onEachFeature
+            }).addTo(window.map);*/
+            // var group = new L.featureGroup([marker1, marker2]);
+            // map.fitBounds(group.getBounds());
+        }, 0);
+
     }
 
 }())

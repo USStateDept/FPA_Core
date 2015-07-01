@@ -204,7 +204,13 @@ body {
   background-color: transparent;
   border-color: transparent;
   font-weight: bold;
-  font-weight: 400;
+}
+.selection-list .btn-default {
+  font-size: 18px;
+  color: #244c80;
+}
+.dropdown-menu>li>a {
+  padding: 3px 3px;
 }
 .app .btn-group:nth-child(2) {
   border-left: 1px solid #ccc;

@@ -660,14 +660,15 @@
     var indicatorListLoadHandler = function(response) {
 
         //calculate the year extremes
-        var years = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
-
+        /*var years = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
+        debugger;
         //TODO: remove this once the years are present
         for (var indicatorId in response.data.indicators.data) {
             response.data.indicators.data[indicatorId].years = years;
-        }
+        }*/
 
         for (var indicatorId in response.data.indicators.data) {
+            var years = response.data.indicators.data[indicatorId].years;
             var yearStart = years[0];
             var yearEnd = years[years.length - 1];
             var years = response.data.indicators.data[indicatorId].years;
@@ -677,14 +678,15 @@
                 yearsExtremes.push(yearEnd);
             } else {
                 if (yearStart < yearsExtremes[0]) {
-                    yearsExtremes[0] = yearStart;
+                    // yearsExtremes[0] = yearStart;
+                    yearsExtremes[0] = 1990;
                 }
-                if (yearEnd < yearsExtremes[1]) {
+                if (yearEnd > yearsExtremes[1]) {
                     yearsExtremes[1] = yearEnd;
                 }
             }
         }
-
+        //debugger;
         //create slider first
         createYearSlider(yearsExtremes[0], yearsExtremes[1]);
 

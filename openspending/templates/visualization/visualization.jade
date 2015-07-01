@@ -66,7 +66,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             .row
               p
             
-            .row.title
+            .row
               .col-md-12
                 .dropdown.pull-left
                   button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
@@ -84,17 +84,19 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:$data,click:$root.selectCountryGroupRegion")
 
-                .dropdown.pull-left(data-bind="visible:activeCountries().length>0",style="margin-left:10px")
+                .dropdown.selection-list.pull-left(data-bind="visible:activeCountries().length>0",style="margin-left:10px")
 
                   button#dropdownMenuSelectedCountries.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
                       .glyphicon.glyphicon-menu-down
-                      span() Selected Countries
+                      span() &nbsp;Selected Countries&nbsp;
                       span.badge(data-bind="html:activeCountries().length")
+                      a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear List
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="foreach:activeCountries")
 
                     li(role='presentation')
+                      span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
-                a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0") Clear All
+                
               //-.col-md-4
                   //-button.btn.btn-default(type='button') Select All
                   //-button.btn.btn-default(type='button') Deselect All
@@ -143,18 +145,27 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             //-       div
             //-         .glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
             //-         span(data-bind="html:label")
-            .row.title
-              .col-md-12
-                .dropdown.pull-left(data-bind="visible:activeIndicators().length>0",style="margin-left:10px")
+            .row
+              p
+            .row
+              p
+            .row
+              .col-md-2
+              .col-md-10
+                .dropdown.selection-list.pull-left(data-bind="visible:activeIndicators().length>0",style="margin-left:10px")
                   button#dropdownMenuSelectedIndicators.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
                       .glyphicon.glyphicon-menu-down
-                      span() Selected Indicators
+                      span() &nbsp;Selected Indicators&nbsp;
                       span.badge(data-bind="html:activeIndicators().length")
+                      a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear List
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="foreach:activeIndicators")
 
                     li(role='presentation')
+                      span.glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
-                a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0") Clear All               
+                
+            .row
+              p               
             .row
               .col-md-2
                 .tabbable.tabs-left
