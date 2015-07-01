@@ -314,8 +314,33 @@ class SourcesView(sqla.ModelView):
     
     form_excluded_columns = ('source','name','created_at','runs','dataviews','datalastupdated')
     
-    #form_columns = ('label',)
+    form_columns = ('label', 'dataorg', 'description', 'tags', 'updated_at', 'years', 'stats', 'managers', 'loaded', 'published', 'tested')
     
+    form_widget_args = {
+        'label':{
+            'style': 'width:100%'
+        },
+        'dataorg':{
+            'style': 'width:100%'
+        },
+        'description': {
+            'rows': 10,
+            'style': 'width:100%;'
+        },
+		'updated_at':{
+            'style': 'width:50%'
+        },
+        'years':{
+            'style': 'width:100%'
+        },
+        'stats':{
+            'style': 'width:50%'
+        },
+        'managers':{
+            'style': 'width:100%'
+        }
+    }
+
     can_delete = False
     can_create = False
 
