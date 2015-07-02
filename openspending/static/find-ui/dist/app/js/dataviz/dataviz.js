@@ -1,24 +1,42 @@
 (function() {
 
+    window.clickedIndicator = false;
+    window.expandedCategory = false;
 
     var hashParams = window.getHashParams();
     var yearsExtremes = []; //default, will be calculated
 
-    var yearsFilter = hashParams.f.split("|");
-    var indicators = hashParams.i.split("|");
-    var group = hashParams.g;
-    var region = hashParams.r;
-    var chart = hashParams.c;
-    var countries = hashParams.cn.split("|");
+
 
     var activeData;
     var regionalAverageData, regionalAverageSeries;
     var regionalAverageIndex;
     var groupBy = "countries";
+    var groupByRegion = false;
     var modalTitle = "";
     var modalMessage = "";
 
+    var yearsFilter = hashParams.f.split("|");
+    var indicators = hashParams.i.split("|");
+    var group = hashParams.g;
+    var region = hashParams.r;
+    var chartType = hashParams.c;
+    var countries = hashParams.cn.split("|");
+    groupByRegion = parseInt(hashParams.grp);
+
     var statsData, statsDataSeries;
+
+    var eventBind = function() {
+
+
+
+        //var val = $('#filter-years').slider("option", "value");
+        window.flipCardEvent();
+
+        // $('.dropdown-toggle').dropdown();
+
+
+    }
 
     $('#modal').modal({
         show: false,
@@ -162,6 +180,8 @@
 
         },
 
+        activeIndicators: ko.observableArray([]),
+
         activeYears: ko.observableArray([1990, 2014]),
 
         categoriesModel: ko.observableArray([]),
@@ -231,6 +251,8 @@
             "regions": []
         }),
 
+        groupByRegion: ko.observable(false),
+
         activeRegion: ko.observable(""),
 
         clearActiveCountries: function() {
@@ -239,8 +261,172 @@
 
         },
 
-        selectCountry: function() {
-            debugger;
+        removeIndicator: function(selectedIndicator) {
+
+            var indicatorIndex = _.indexOf(model.activeIndicators(), selectedIndicator);
+            var categoriesModel = _.clone(model.categoriesModel(), true);
+            var sourcesModel = _.clone(model.sourcesModel(), true);
+
+            model.activeIndicators.splice(indicatorIndex, 1);
+            model.indicatorsModel.removeAll();
+            _.forEach(model.indicatorsModelMaster(), function(indicator) {
+                if (selectedIndicator.id == indicator.id) {
+                    indicator.selected = !indicator.selected;
+                }
+                model.indicatorsModel.push(indicator);
+            });
+
+
+            model.categoriesModel.removeAll();
+            _.forEach(categoriesModel, function(category) {
+                _.forEach(category.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                model.categoriesModel.push(category);
+            });
+            //debugger;
+
+            model.sourcesModel.removeAll();
+            _.forEach(sourcesModel, function(source) {
+                _.forEach(source.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                model.sourcesModel.push(source);
+            });
+
+            window.flipCardEvent();
+
+        },
+
+        selectSubcategory: function(selectedSubcategory, evt) {
+            evt.stopPropagation();
+            var currentTarget = evt.currentTarget;
+            var displayValue = $(currentTarget).next().css("display");
+            if (displayValue == "none") {
+                $(currentTarget).next().css("display", "block");
+            } else {
+                $(currentTarget).next().css("display", "none");
+            }
+
+        },
+
+        selectIndicatorMultiple: function(selectedIndicator, evt, direct) {
+
+
+
+            clickedIndicator = true;
+
+            var categoriesModel = _.clone(model.categoriesModel(), true);
+            var sourcesModel = _.clone(model.sourcesModel(), true);
+
+            model.activeIndicators.removeAll();
+            model.indicatorsModel.removeAll();
+            _.forEach(model.indicatorsModelMaster(), function(indicator) {
+                if (selectedIndicator.id == indicator.id) {
+                    indicator.selected = !indicator.selected;
+                }
+                if (indicator.selected) {
+                    model.activeIndicators.push(indicator)
+                }
+                model.indicatorsModel.push(indicator);
+            });
+
+            model.categoriesModel.removeAll();
+            _.forEach(categoriesModel, function(category) {
+                _.forEach(category.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                model.categoriesModel.push(category);
+            });
+
+
+            model.sourcesModel.removeAll();
+            _.forEach(sourcesModel, function(source) {
+                _.forEach(source.indicators, function(indicator) {
+                    if (selectedIndicator.id == indicator.id) {
+
+                        indicator.selected = !indicator.selected;
+                    }
+                });
+                model.sourcesModel.push(source);
+            });
+
+            window.flipCardEvent();
+
+        },
+
+        selectCountry: function(selectedCountry) {
+            var selectedCountry = arguments[0];
+            if (selectedCountry.selected) {
+                return false;
+            }
+            var countryLabel = selectedCountry.label;
+            var countryId = selectedCountry.iso_a2;
+
+            model.activeCountries.push(selectedCountry);
+
+            var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
+            model.countriesModelMaster.removeAll();
+
+            var countriesModel = _.clone(model.countriesModel(), true);
+            model.countriesModel.removeAll();
+            _.forEach(countriesModel, function(country) {
+                if (countryId == country.iso_a2) {
+                    country.selected = !country.selected;
+                }
+                model.countriesModel.push(country);
+            });
+
+            _.forEach(countriesModelMaster, function(country) {
+                if (countryId == country.iso_a2) {
+                    country.selected = !country.selected;
+                }
+                model.countriesModelMaster.push(country);
+            });
+        },
+
+        clearActiveIndicators: function() {
+
+            model.activeIndicators.removeAll();
+
+
+            var categoriesModel = _.clone(model.categoriesModel(), true);
+            var sourcesModel = _.clone(model.sourcesModel(), true);
+
+
+            model.indicatorsModel.removeAll();
+            _.forEach(model.indicatorsModelMaster(), function(indicator) {
+                indicator.selected = false;
+                model.indicatorsModel.push(indicator);
+            });
+
+
+            model.categoriesModel.removeAll();
+            _.forEach(categoriesModel, function(category) {
+                _.forEach(category.indicators, function(indicator) {
+                    indicator.selected = false;
+                });
+                model.categoriesModel.push(category);
+            });
+            //debugger;
+
+            model.sourcesModel.removeAll();
+            _.forEach(sourcesModel, function(source) {
+                _.forEach(source.indicators, function(indicator) {
+                    indicator.selected = false;
+                });
+                model.sourcesModel.push(source);
+            });
+
+            window.flipCardEvent();
+
         },
 
         selectCountryGroup: function() {
@@ -330,7 +516,7 @@
             indicators = [indicator.id];
 
             var _deferredMetaList = window.loadIndicatorsMeta(indicators);
-            var _deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupBy);
+            var _deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
             //var _deferredList = window.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
@@ -375,7 +561,7 @@
             }
 
             //debugger;
-            var deff = window.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupBy);
+            var deff = window.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupByRegion);
 
 
 
@@ -606,8 +792,8 @@
         indicatorsMeta.shift(); //remove first two
         indicatorsMeta.shift();
 
-
-        var sortedData = window.prepareHighchartsJson(responseData[0], responseStats[0], indicatorsMeta, chart, indicators, group, region, groupBy);
+        //debugger;
+        var sortedData = window.prepareHighchartsJson(responseData[0], responseStats[0], indicatorsMeta, chartType, indicators, group, region, groupByRegion);
         var highChartsJson = sortedData.highcharts;
         //regionalAverageData = sortedData.average;
 
@@ -618,7 +804,9 @@
             load: function() {
                 //debugger;
                 var xAxis = this.series[0].xAxis;
-
+                if (chartType == "bar") {
+                    yearsFilter[0] = yearsFilter[1];
+                }
                 xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
 
 
@@ -674,17 +862,24 @@
             var years = response.data.indicators.data[indicatorId].years;
 
             if (yearsExtremes.length == 0) {
+
                 yearsExtremes.push(yearStart);
                 yearsExtremes.push(yearEnd);
+
             } else {
+
                 if (yearStart < yearsExtremes[0]) {
-                    // yearsExtremes[0] = yearStart;
-                    yearsExtremes[0] = 1990;
+                    yearsExtremes[0] = yearStart;
                 }
+
                 if (yearEnd > yearsExtremes[1]) {
                     yearsExtremes[1] = yearEnd;
                 }
             }
+        }
+
+        if (yearsExtremes[0] < 1990) {
+            yearsExtremes[0] = 1990;
         }
         //debugger;
         //create slider first
@@ -698,7 +893,7 @@
             groupBy = "indicators";
         }
         var deferredMetaList = window.loadIndicatorsMeta(indicators);
-        var deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupBy);
+        var deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
         deferredList = deferredList.concat(deferredMetaList);
 
         //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
@@ -706,6 +901,8 @@
         $.when.apply($, deferredList).done(function(response) {
             indicatorDataLoadHandler(arguments);
         });
+
+        eventBind();
 
     }
 

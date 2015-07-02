@@ -24,7 +24,24 @@
         });
     }
 
-    window.loadIndicatorData = function(indicators, groupId, region, yearsExtremes, countries, groupBy) {
+    window.loadIndicatorData = function(indicators, groupId, region, yearsExtremes, countries, groupByRegion) {
+        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=line&g=all&r=&cn=&grp=0
+
+
+
+
+        // if groupId is not 'all', and groupByRegion is true - then group by region
+        // if groupId is not 'all', and groupByRegion is false, and no countries are provided, then use countries from region
+        // if groupId is 'all', use countries list
+        // if groupId is 'all', and no countres selected, show all countries
+        // if countries list is provided, and groupByRegion is false, then use countries list
+
+
+        var hasCountries = (countries.length > 0 && countries[0] !== "");
+        var hasGroup = groupId != "all";
+        var isMultivariate = indicators.length > 1; //eligible for scatter plot
+        var groupByIndicator = isMultivariate;
+
         var indicatorIds = [];
 
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
@@ -35,21 +52,42 @@
 
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
 
-        var multiVariate = indicators.length > 1; //eligible for scatter plot
+        if (!hasGroup && !hasCountries) {
+            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=&grp=0
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        }
 
-        if (groupId != "all" && (countries.length == 0 || countries[0] == "")) {
+        if (!hasGroup && hasCountries) {
+            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=&cn=bahrain|kuwait&grp=0
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        }
+
+        if (hasGroup && groupByRegion) {
+            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=dod_cmd&r=USCENTCOM&cn=&grp=1
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+
+
+        }
+
+        if (hasGroup && !groupByRegion && !hasCountries) { //show all countries in this region
+            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=dod_cmd&r=USCENTCOM&cn=&grp=0
+            debugger;
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time&cut=geometry__country_level0@{groupId}:{region}";
+        }
+
+        if (!groupByRegion && hasCountries) { //show selected countries
+            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=dod_cmd&r=USCENTCOM&cn=bahrain|kuwait&grp=0
+            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+
+            urlTemplate += "&cut=geometry__country_level0@name:" + countries.join(";");
+        }
+
+
+
+        /*if (hasGroup && hasCountries) {
             //debugger;
-            if (multiVariate) {
 
-                if (groupBy && (groupBy == "countries")) {
-                    groupId += ":name";
-                }
-
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            }
-
-            if (!multiVariate) {
+            if (!isMultivariate) { //Bar, Line chart
 
                 var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
@@ -64,25 +102,40 @@
             }
 
 
+            if (isMultivariate) { //Scatter Plot
+
+                if (groupByIndicator && !groupByRegion) {
+                    groupId += ":name";
+                }
+
+                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+
+            }
+
+
+
+
             // var statsUrl = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
             // //to cut by country
-        } else {
-            //debugger;
+        }*/
+
+        /*if (!hasGroup) { // show all
+
             var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
             // "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
-        }
+        }*/
 
 
         var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
 
 
-        if (countries.length > 0 && countries[0].length > 0) {
+        /*if (hasCountries && !groupByRegion) {
             //debugger;
             urlTemplate += "&cut=geometry__country_level0@name:" + countries.join(";")
-        }
+        }*/
 
 
 

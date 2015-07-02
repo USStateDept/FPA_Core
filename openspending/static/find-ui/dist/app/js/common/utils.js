@@ -1,4 +1,47 @@
 (function() {
+
+    window.flipCardEvent = function() {
+
+        $(".flip").click(function() {
+
+
+
+            if (window.expandedCategory) {
+                window.expandedCategory = false;
+                return;
+            }
+
+            if (window.clickedIndicator) {
+                window.clickedIndicator = false;
+                return;
+            }
+
+            $(".flip").css("z-index", 10);
+            $(this).css("z-index", 1000);
+            $(".flip").find("div.list-group").removeClass("shadow");
+
+            $(this).find("div.list-group").addClass("shadow");
+
+            var isFlipped = $(this).find(".card").hasClass("flipped");
+
+            $(".flip").find(".card").removeClass("flipped");
+            $(".flip").removeClass("flippedCol");
+            //- $(".list-group").css("display": "none");
+
+            if (isFlipped) {
+                //$(this).find(".card").removeClass("flipped");
+                // $(this).find(".list-group").removeClass("show-me");
+
+            } else {
+                $(this).find(".card").addClass("flipped");
+                $(this).addClass("flippedCol");
+
+                //$(this).find(".list-group").addClass("show-me");
+            }
+            return true;
+        });
+    }
+
     window.getHashParams = function() {
 
         var hashParams = {};
@@ -220,7 +263,7 @@
         //if all then select all countries in countriesModel, else activeCountries
 
         var countries = model.countriesModel();
-
+        var features = [];
         if (model.activeCountries().length > 0) {
             countries = model.activeCountries();
         }
@@ -233,13 +276,16 @@
         var style = function(feature) {
 
                 if (_.indexOf(countriesGeounit, feature.properties.sovereignt) >= 0) {
+                    //debugger;
+                    var polygon = L.multiPolygon(feature.geometry.coordinates);
+                    features.push(polygon);
                     return {
                         weight: 2,
                         opacity: 1,
                         color: 'white',
                         dashArray: '3',
-                        fillOpacity: 0.3,
-                        fillColor: '#666666'
+                        fillOpacity: 0.5,
+                        fillColor: '#FF0000'
                     };
                 } else {
                     return {
@@ -270,12 +316,16 @@
 
         setTimeout(function() {
             map.addLayer(geoJsonLayers["sovereignt"]);
+
+
+
             /*L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
                 style: style,
                 onEachFeature: onEachFeature
             }).addTo(window.map);*/
-            // var group = new L.featureGroup([marker1, marker2]);
-            // map.fitBounds(group.getBounds());
+            var group = new L.featureGroup(features);
+
+            map.fitBounds(group.getBounds());
         }, 0);
 
     }

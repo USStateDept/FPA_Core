@@ -1,6 +1,6 @@
 (function() {
 
-    window.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, group, region, groupBy) {
+    window.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, group, region, groupByRegion) {
 
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
@@ -20,8 +20,9 @@
             return meta[0].label;
         });
 
+        //
         switch (true) {
-            case ((groupId == "all" || groupBy == "countries") && region.length == 0):
+            case (groupId == "all" && !groupByRegion):
                 // debugger;
                 cutBy = "sovereignt";
                 break;
@@ -30,12 +31,12 @@
                 cutBy = groupId;
                 break;
         }
-
-        if (!multiVariate && region.length > 0) {
+        //debugger;
+        if (!multiVariate && region.length > 0 && !groupByRegion) {
             cutBy = "sovereignt"
         }
 
-
+        //debugger;
         var timeCell = {};
         _.forEach(data.cell, function(c) {
             if (c.hierarchy == "time") {
@@ -45,12 +46,12 @@
 
         var fromYear = timeCell.from[0];
         var toYear = timeCell.to[0];
-
+        /*debugger;
         if (type == "bar") {
-
+            debugger;
             // fromYear = parseInt(toYear);
             toYear = parseInt(fromYear);
-        }
+        }*/
         var categories = [];
 
         for (var i = fromYear; i <= toYear; i++) {
@@ -105,7 +106,7 @@
         }
 
         //debugger;
-        if (!multiVariate || region.length == 0 || groupBy == "countries") {
+        if (!multiVariate || region.length == 0) {
             //debugger;
             //TODO : do this in one loop
             _.forEach(cells, function(c) {

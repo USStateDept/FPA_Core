@@ -21,7 +21,7 @@
 
             evt.stopPropagation();
 
-            clickedIndicator = true;
+            window.clickedIndicator = true;
 
             var groupId = vizModel.activeGroup().id;
             if (groupId != "all") {
@@ -126,7 +126,7 @@
                 return;
             }
 
-            clickedIndicator = true;
+            window.clickedIndicator = true;
 
             var categoriesModel = _.clone(vizModel.categoriesModel(), true);
             var sourcesModel = _.clone(vizModel.sourcesModel(), true);
@@ -171,6 +171,9 @@
 
         selectVizualization: function(type) {
 
+            var groupByRegion = vizModel.groupByRegion();
+            var allowMultivariate = ["scatter", "radar", "tree"];
+            var allowSinglevariate = ["line", "bar"];
             var indicators = _.map(vizModel.activeIndicators(), function(indicator) {
                 return indicator.id;
             });
@@ -183,15 +186,43 @@
                 return country.geounit;
             });
 
+            //validate
+            var isMultivariate = indicators.length > 1;
+
+            if (isMultivariate && _.indexOf(allowMultivariate, type) > -1) {
+                //proceed
+            }
+
+            if (isMultivariate && _.indexOf(allowMultivariate, type) < 0) {
+                alert("Multiple indicators are supported by Scatter, Radar, and Tree charts");
+                return;
+            }
+
+            if (!isMultivariate && _.indexOf(allowSinglevariate, type) > -1) {
+                //proceed
+            }
+
+            if (!isMultivariate && _.indexOf(allowSinglevariate, type) < 0) {
+                alert("Single indicators are supported by Line and Bar charts")
+                return;
+            }
+
 
             //TODO: Calculate Year Extremes, change activeYears to extremes
             var hashString = //"y=1990|2014" + // + vizModel.activeYears().join("|")
                 "f=" + vizModel.activeYears().join("|") +
                 "&i=" + indicators.join("|") +
                 //"&l=" + indicatorLabels.join("|") +
-                "&c=" + type + "&g=" + vizModel.activeGroup().id +
+                "&c=" + type +
+                "&g=" + vizModel.activeGroup().id +
                 "&r=" + vizModel.activeRegion() +
                 "&cn=" + countries.join("|");
+
+            if (groupByRegion) {
+                hashString += "&grp=1";
+            } else {
+                hashString += "&grp=0";
+            }
 
             window.location.href = "/data-visualization#" + hashString;
 
@@ -376,7 +407,7 @@
                         vizModel.countryGroupRegions(_.clone(countryGroup.regions, true));
                         vizModel.selectCountryGroupRegion(countryGroup.regions[0]);
                     }
-                })
+                });
 
             }
 
@@ -427,7 +458,7 @@
 
         expandCategory: function(model, evt) {
 
-            expandedCategory = true;
+            window.expandedCategory = true;
 
 
         },
@@ -504,6 +535,13 @@
 
         },
 
+        groupChange: function() {
+
+            debugger;
+
+        },
+
+
 
         activeCard: ko.observable(""),
 
@@ -541,6 +579,7 @@
 
         activeRegion: ko.observable(""),
 
+        groupByRegion: ko.observable(false),
 
         countriesModel: ko.observableArray([]),
 
@@ -578,5 +617,9 @@
 
 
     }
+
+    window.vizModel.groupByRegion.subscribe(function(newValue) {
+
+    });
 
 }())

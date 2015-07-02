@@ -3,7 +3,9 @@
     /**
      * Start the Wiard mode
      **/
-    var clickedIndicator = false;
+    window.clickedIndicator = false;
+    window.expandedCategory = false;
+
     var mapCreated = false;
     window.map;
     window.geoJsonLayers = {};
@@ -31,8 +33,8 @@
                     opacity: 1,
                     color: 'white',
                     dashArray: '3',
-                    fillOpacity: 0.3,
-                    fillColor: '#666666'
+                    fillOpacity: 0.5,
+                    fillColor: '#FF0000'
                 },
                 onEachFeature: onEachFeature
             });
@@ -100,50 +102,10 @@
 
     }
 
-    window.flipCardEvent = function() {
-
-        $(".flip").click(function() {
 
 
 
-            if (expandedCategory) {
-                expandedCategory = false;
-                return;
-            }
 
-            if (clickedIndicator) {
-                clickedIndicator = false;
-                return;
-            }
-
-            $(".flip").css("z-index", 10);
-            $(this).css("z-index", 1000);
-            $(".flip").find("div.list-group").removeClass("shadow");
-
-            $(this).find("div.list-group").addClass("shadow");
-
-            var isFlipped = $(this).find(".card").hasClass("flipped");
-
-            $(".flip").find(".card").removeClass("flipped");
-            $(".flip").removeClass("flippedCol");
-            //- $(".list-group").css("display": "none");
-
-            if (isFlipped) {
-                //$(this).find(".card").removeClass("flipped");
-                // $(this).find(".list-group").removeClass("show-me");
-
-            } else {
-                $(this).find(".card").addClass("flipped");
-                $(this).addClass("flippedCol");
-
-                //$(this).find(".list-group").addClass("show-me");
-            }
-            return true;
-        });
-    }
-
-
-    var expandedCategory = false;
 
 
     //KNOCKOUT MODEL
