@@ -82,6 +82,9 @@
             urlTemplate += "&cut=geometry__country_level0@name:" + countries.join(";");
         }
 
+        //multivariate
+        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita_ppp|gdp_total&c=scatter&g=dod_cmd&r=USCENTCOM&cn=&grp=1
+
 
 
         /*if (hasGroup && hasCountries) {

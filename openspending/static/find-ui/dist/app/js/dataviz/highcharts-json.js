@@ -82,8 +82,8 @@
         //debugger;
         //debugger;
 
-        if (multiVariate && region.length > 0 && (groupBy == "indicators")) {
-            //debugger;
+        if (multiVariate) { // && region.length > 0 && (groupBy == "indicators")
+
             _.forEach(indicators, function(indicator) {
                 series[indicator] = []
             });
@@ -102,7 +102,7 @@
                 //series[c["geometry__country_level0." + cutBy]].push();
                 // }
             });
-
+            //debugger;
         }
 
         //debugger;
