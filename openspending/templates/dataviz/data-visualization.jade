@@ -304,7 +304,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               
           .row
             p
-          .row.countries-list()
+          .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
             .col-md-12.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
               .row.f32(data-bind="foreach:countriesModel")
                 .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")

@@ -260,7 +260,6 @@ body {
 }
 .carousel-fade .carousel-inner .item {
   opacity: 0;
-  -webkit-transition-property: opacity;
   transition-property: opacity;
 }
 .carousel-fade .carousel-inner .item.active {
@@ -468,5 +467,8 @@ body {
 /*App Stylus*/
 /*Header Stylus*/
 /*Header Stylus*/
+/*Map Stylus*/
+/*Map Stylus*/
+ Stylus*/
 /*Map Stylus*/
 /*Map Stylus*/

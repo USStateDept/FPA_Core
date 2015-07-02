@@ -90,7 +90,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       .glyphicon.glyphicon-menu-down
                       span() &nbsp;Selected Countries&nbsp;
                       span.badge(data-bind="html:activeCountries().length")
-                      a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear List
+                      a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="foreach:activeCountries")
 
                     li(role='presentation')
@@ -128,11 +128,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 
             .row
               p
-            .row.countries-list()
+            .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
               .col-md-8.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
                 .row.f32(data-bind="foreach:countriesModel")
                   .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
-                    div.flag-item( data-bind='click:$root.selectCountry,css:{selected:selected}')
+                    div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                       div.flag(data-bind="css:iso_a2.toLowerCase()")
                       span.flags-labels(style="vertical-align:middle" data-bind="html:label")
               .col-md-8.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:groupByRegion() && activeGroup().id !='all'")
@@ -165,7 +165,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       .glyphicon.glyphicon-menu-down
                       span() &nbsp;Selected Indicators&nbsp;
                       span.badge(data-bind="html:activeIndicators().length")
-                      a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear List
+                      a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="foreach:activeIndicators")
 
                     li(role='presentation')

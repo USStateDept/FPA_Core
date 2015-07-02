@@ -194,7 +194,10 @@
             }
 
             if (isMultivariate && _.indexOf(allowMultivariate, type) < 0) {
-                alert("Multiple indicators are supported by Scatter, Radar, and Tree charts");
+                window.modalTitle = "Alert";
+                window.modalMessage = "Multiple indicators are supported by Scatter, Radar, and Tree charts";
+                $('#modal').modal('show');
+                //alert("Multiple indicators are supported by Scatter, Radar, and Tree charts");
                 return;
             }
 
@@ -203,7 +206,10 @@
             }
 
             if (!isMultivariate && _.indexOf(allowSinglevariate, type) < 0) {
-                alert("Single indicators are supported by Line and Bar charts")
+                window.modalTitle = "Alert";
+                window.modalMessage = "Single indicators are supported by Line and Bar charts";
+                $('#modal').modal('show');
+                //alert("Single indicators are supported by Line and Bar charts")
                 return;
             }
 

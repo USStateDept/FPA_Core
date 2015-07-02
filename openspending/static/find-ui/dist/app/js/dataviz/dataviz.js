@@ -71,6 +71,7 @@
             url = url.replace("{encodeUrl}", encodeUrl);
 
             window.loadUrlShorten(url).then(function(response) {
+                modalTitle = "Share";
                 modalMessage = response.response.data.entry[0].short_url;
                 $('#modal').modal('show');
             });
@@ -259,6 +260,23 @@
 
             model.activeCountries.removeAll();
 
+            var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
+            model.countriesModelMaster.removeAll();
+
+            var countriesModel = _.clone(model.countriesModel(), true);
+            model.countriesModel.removeAll();
+            _.forEach(countriesModel, function(country) {
+                country.selected = false;
+                model.countriesModel.push(country);
+            });
+
+            _.forEach(countriesModelMaster, function(country) {
+                country.selected = false;
+                model.countriesModelMaster.push(country);
+            });
+
+
+
         },
 
         removeIndicator: function(selectedIndicator) {
@@ -390,6 +408,43 @@
                 }
                 model.countriesModelMaster.push(country);
             });
+        },
+
+        removeCountry: function() {
+
+            var selectedCountry = arguments[0];
+            var activeCountries = model.activeCountries();
+            var selectedIndex = _.indexOf(activeCountries, selectedCountry);
+
+            model.activeCountries.splice(selectedIndex, 1);
+
+            var countryLabel = selectedCountry.label;
+            var countryId = selectedCountry.iso_a2;
+
+            var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
+            model.countriesModelMaster.removeAll();
+
+            var countriesModel = _.clone(model.countriesModel(), true);
+            model.countriesModel.removeAll();
+            _.forEach(countriesModel, function(country) {
+                if (countryId == country.iso_a2) {
+                    country.selected = !country.selected;
+                }
+                model.countriesModel.push(country);
+            });
+
+            _.forEach(countriesModelMaster, function(country) {
+                if (countryId == country.iso_a2) {
+                    country.selected = !country.selected;
+                }
+                model.countriesModelMaster.push(country);
+            });
+
+            // _.each(activeCountries, function(country){
+            // 	if (geounit)
+            // });
+            // vizModel.activeCountries.push(selectedCountry);
+
         },
 
         clearActiveIndicators: function() {
