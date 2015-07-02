@@ -568,7 +568,10 @@
                 $('#viz-container').highcharts().destroy();
             };
 
-            indicators = [indicator.id];
+            //indicators = [indicator.id];
+            indicators = _.map(model.activeIndicators(), function(indicator) {
+                return indicator.id;
+            });
 
             var _deferredMetaList = window.loadIndicatorsMeta(indicators);
             var _deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
@@ -595,8 +598,13 @@
             var _groupBy;
             var _region = "";
             var cutBy = "sovereignt";
+            var groupByRegion = model.groupByRegion();
 
-            if (!arguments[0].geounit && obj === "group") { //if region
+            _countries = _.map(model.activeCountries(), function(country) {
+                return country.geounit;
+            })
+
+            if (groupByRegion) { //if region
 
                 _groupId = model.activeGroup().id;
                 _region = model.activeRegion();
@@ -604,9 +612,7 @@
 
             } else { // if country
 
-                if (arguments[0].geounit) {
-                    _countries = [arguments[0].geounit];
-                } else {
+                if (!_countries.length) {
                     _groupId = model.activeGroup().id;
                     _region = model.activeRegion();
                     _countries = [];
@@ -614,7 +620,7 @@
 
 
             }
-
+            cutBy;
             //debugger;
             var deff = window.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupByRegion);
 
@@ -622,12 +628,14 @@
 
             $.when(deff[0], deff[1]).done(function(responseData, responseStats) {
                 //add to existing chart
-                if (cutBy == "sovereignt") {
+                /*if (cutBy == "sovereignt") {
                     var cells = responseData[0].cells;
                 } else {
                     var cells = responseStats[0].cells;
-                }
+                }*/
 
+                var cells = responseData[0].cells;
+                //debugger;
                 //debugger;
 
                 var dataByYear = {};

@@ -2,11 +2,9 @@
 
 {% block page_title %}Indicators{% endblock %}
 
-
 {% block banner %}
 
 {% endblock %}
-
 
 {% block optional_head %}
 link(href='{{ static_path("find-ui/dist/app/css/visualization.css") }}', rel='stylesheet')
@@ -73,12 +71,14 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                     .glyphicon.glyphicon-menu-down
                     span() &nbsp;Selected Indicators&nbsp;
                     span.badge(data-bind="html:activeIndicators().length")
-                    a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear List
+                    a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear
                 ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="foreach:activeIndicators")
 
                   li(role='presentation')
                     span.glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
                     a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
+              .dropdown.pull-right(data-bind="visible:activeIndicators().length > 0")
+                button.btn.btn-default.dropdown-toggle(type='button' data-bind="click:$root.redrawChart") Swap Indicator
           .row
             p 
           .row
@@ -249,7 +249,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                     .glyphicon.glyphicon-menu-down
                     span() &nbsp;Selected Countries&nbsp;
                     span.badge(data-bind="html:activeCountries().length")
-                    a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear List
+                    a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear
                 ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="foreach:activeCountries")
 
                   li(role='presentation')
@@ -260,6 +260,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 input#groupBy(type="checkbox" data-bind="checked:groupByRegion")
                 label(for="groupBy") Group By Regions
 
+          .row.title
+            .col-md-12
+              .dropdown.pull-right(data-bind="visible:groupByRegion() || activeCountries().length > 0")
+                button.btn.btn-default.dropdown-toggle(type='button' data-bind="click:addComparator") Add Comparator
           //-   .col-md-2
           //-     .dropdown
           //-       button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true') Country Groups
@@ -305,13 +309,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
           .row
             p
           .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
-            .col-md-12.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
+            .col-md-12.countries-col(style="height:300px;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
               .row.f32(data-bind="foreach:countriesModel")
                 .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
                   div.flag-item( data-bind='click:$root.selectCountry,css:{selected:selected}')
                     div.flag(data-bind="css:iso_a2.toLowerCase()")
                     span.flags-labels(style="vertical-align:middle" data-bind="html:label")
-            .col-md-12.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:groupByRegion() && activeGroup().id !='all'")
+            .col-md-12.countries-col(style="height:300px;overflow-y:auto" data-bind="visible:groupByRegion() && activeGroup().id !='all'")
               .row(data-bind="foreach:countryGroupRegions")
                 .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
                   div(data-bind='html:$data')
