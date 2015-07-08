@@ -11,31 +11,25 @@
     var activeData;
     var regionalAverageData, regionalAverageSeries;
     var regionalAverageIndex;
-    var groupBy = "countries";
-    var groupByRegion = false;
+    //var groupBy = "countries";
+    //var groupByRegion = false;
     var modalTitle = "";
     var modalMessage = "";
 
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
-    var group = hashParams.g;
-    var region = hashParams.r;
+    //var group = hashParams.g;
+    //var region = hashParams.r;
     var chartType = hashParams.c;
-    var countries = hashParams.cn.split("|");
-    groupByRegion = parseInt(hashParams.grp);
+    var regions = hashParams.r.split("|");
+    //groupByRegion = parseInt(hashParams.grp);
 
     var statsData, statsDataSeries;
-
+    debugger;
     var eventBind = function() {
-
-
-
         //var val = $('#filter-years').slider("option", "value");
         window.flipCardEvent();
-
         // $('.dropdown-toggle').dropdown();
-
-
     }
 
     $('#modal').modal({

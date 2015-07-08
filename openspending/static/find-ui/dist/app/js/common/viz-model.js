@@ -183,7 +183,7 @@
             });
 
             var countries = _.map(vizModel.activeCountries(), function(country) {
-                return country.geounit;
+                return country.geounit; //either country or region
             });
 
             //validate
@@ -213,6 +213,7 @@
                 return;
             }
 
+            //debugger;
 
             //TODO: Calculate Year Extremes, change activeYears to extremes
             var hashString = //"y=1990|2014" + // + vizModel.activeYears().join("|")
@@ -220,21 +221,22 @@
                 "&i=" + indicators.join("|") +
                 //"&l=" + indicatorLabels.join("|") +
                 "&c=" + type +
-                "&g=" + vizModel.activeGroup().id +
-                "&r=" + vizModel.activeRegion() +
-                "&cn=" + countries.join("|");
+                //"&g=" + vizModel.activeGroup().id +
+                //"&r=" + vizModel.activeRegion() +
+                "&r=" + countries.join("|");
 
-            if (groupByRegion) {
+            /*if (groupByRegion) {
                 hashString += "&grp=1";
             } else {
                 hashString += "&grp=0";
-            }
+            }*/
 
             window.location.href = "/data-visualization#" + hashString;
 
 
 
         },
+
 
         selectCountry: function(selectedCountry, evt, direct) {
 
@@ -249,14 +251,45 @@
                 return false;
             }
             var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.iso_a2;
+            var countryId = selectedCountry.id;
 
             vizModel.activeCountries.push(selectedCountry);
 
             var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
             vizModel.countriesModelMaster.removeAll();
 
-            var countriesModel = _.clone(vizModel.countriesModel(), true);
+
+            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
+            vizModel.countryGroupings.removeAll();
+
+            var activeGroupId = vizModel.activeGroup().id;
+
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                _.forEach(countryGroup.regions, function(region) {
+                    if (region.id == countryId) {
+                        debugger;
+                        region.selected = true;
+                    }
+                    _.forEach(region.countries, function(country) { //for each Country
+                        if (country.id == countryId) {
+                            country.selected = true;
+                        }
+                    });
+
+                });
+            });
+
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (activeGroupId == countryGroup.id) {
+                    vizModel.activeGroup(countryGroup);
+                }
+                vizModel.countryGroupings.push(countryGroup);
+            });
+
+
+            return;
+
+            /*var countriesModel = _.clone(vizModel.countriesModel(), true);
             vizModel.countriesModel.removeAll();
             _.forEach(countriesModel, function(country) {
                 if (countryId == country.iso_a2) {
@@ -281,7 +314,7 @@
             current.filter = true;
             vizModel.selectionTracker(current);
 
-            window.highlightOnMap(vizModel);
+            window.highlightOnMap(vizModel);*/
             //highlight country on map
 
             // $('#vizTabs a[href="#select-indicator"]').tab('show');
@@ -431,9 +464,9 @@
             var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
 
             _.forEach(countriesModelMaster, function(country) {
-                if (selectedRegion == "all") {
+                if (selectedRegion.id == "all") {
                     vizModel.countriesModel.push(country);
-                } else if (_.has(country.regions, selectedGroup.id) && country.regions[selectedGroup.id] == selectedRegion) {
+                } else if (_.has(country.regions, selectedGroup.id) && country.regions[selectedGroup.id] == selectedRegion.id) {
                     vizModel.countriesModel.push(country);
                 }
 
@@ -579,7 +612,7 @@
 
         activeGroup: ko.observable({
             "id": "all",
-            "label": "All",
+            "label": "All Countries",
             "regions": []
         }),
 
@@ -593,7 +626,7 @@
 
         countryGroupings: ko.observableArray([{
             "id": "all",
-            "label": "All",
+            "label": "All Countries",
             "regions": []
         }, {
             "id": "continent",

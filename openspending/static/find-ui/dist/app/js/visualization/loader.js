@@ -52,6 +52,41 @@
 
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
 
+
+        //http://localhost:5000/data-visualization#f=1990|2014&i=child_health&c=line&r=argentina|albania|india|dos_region:EUR|dos_region:SCA
+
+        //Countries
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:1990-2014&order=time&cut=geometry__country_level0@name:argentina;albania;india
+
+        //regions in same group
+        //if one region, repeat at end
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__country_level0@dos_region|geometry__time&format=json&cut=geometry__time:1990-2014&order=time&cut=geometry__country_level0@dos_region:EUR;EUR
+
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__country_level0@dos_region|geometry__time&format=json&cut=geometry__time:1990-2014&order=time&cut=geometry__country_level0@dos_region:EUR;SCA
+
+
+        //regions across 2 groups
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__country_level0@dod_cmd|geometry__time&drilldown=geometry__country_level0@dos_region|geometry__time&format=json&cut=geometry__time:1990-2014&order=time&cut=geometry__country_level0@dod_cmd:USCENTCOM;USSOUTHCOM&cut=geometry__country_level0@dos_region:EUR;SCA
+
+        //all regions in a group
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__country_level0@dos_region|geometry__time&format=json&cut=geometry__time:1990-2014&order=time
+
+        //all regions across 2 groups
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__country_level0@dos_region|geometry__time&drilldown=geometry__country_level0@dod_cmd|geometry__time&format=json&cut=geometry__time:1990-2014&order=time
+
+        var urlCountries = "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time" +
+            "&cut=geometry__country_level0@name:" + countries.join(";");
+
+
+
+
+        var urlRegions = "&drilldown=geometry__country_level0@{groupId}|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time" +
+            "&cut=geometry__country_level0@{groupId}:{region}";
+
+        var urlGroup = "&drilldown=geometry__country_level0@{groupId}|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time" +
+            "&cut=geometry__country_level0@{groupId}:{region}";
+
+
         if (!hasGroup && !hasCountries) {
             //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=&grp=0
             var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
@@ -81,55 +116,6 @@
 
             urlTemplate += "&cut=geometry__country_level0@name:" + countries.join(";");
         }
-
-        //multivariate
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita_ppp|gdp_total&c=scatter&g=dod_cmd&r=USCENTCOM&cn=&grp=1
-
-
-
-        /*if (hasGroup && hasCountries) {
-            //debugger;
-
-            if (!isMultivariate) { //Bar, Line chart
-
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-                // debugger;
-                if (region.length > 0) {
-                    urlTemplate += "&cut=geometry__country_level0@{groupId}:{region}";
-                }
-                //cut down to countries in this region
-                //&cut=geometry__country_level0@{groupId}:{region}
-
-                //"drilldown=geometry__country_level0@dos_region|geometry__time@time&cut=geometry__time:1990-2014&order=time
-            }
-
-
-            if (isMultivariate) { //Scatter Plot
-
-                if (groupByIndicator && !groupByRegion) {
-                    groupId += ":name";
-                }
-
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            }
-
-
-
-
-            // var statsUrl = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            // //to cut by country
-        }*/
-
-        /*if (!hasGroup) { // show all
-
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            // "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-        }*/
 
 
         var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";

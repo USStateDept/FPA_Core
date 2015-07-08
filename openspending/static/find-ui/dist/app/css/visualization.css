@@ -377,6 +377,9 @@
 .f32 .flag {
   vertical-align: text-bottom;
 }
+.country-group {
+  background-color: #5c74b4;
+}
 .custom-country {
   padding: 10px;
 }

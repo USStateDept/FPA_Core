@@ -216,36 +216,73 @@
 
         var countryGroupings = _.clone(model.countryGroupings(), true);
 
-
+        //push regions in country groupings
         _.forEach(countryGroupings, function(countryGroup, i) {
 
             var groupId = countryGroup.id;
 
             if (countryGroup.id != "all") {
-
-                _.forEach(response.data, function(country) {
+                var trackRegion = [];
+                _.forEach(response.data, function(country) { //for each Country
 
                     //find level this country belongs to in this group
                     var region = country.regions[groupId];
-                    if (_.indexOf(countryGroup.regions, region) < 0) {
-                        countryGroup.regions.push(region);
+                    var regionObj = {
+                        id: region,
+                        label: region,
+                        geounit: groupId + ":" + region,
+                        countries: [],
+                        selected: false
                     }
 
+                    if (_.indexOf(trackRegion, region) < 0) {
+                        trackRegion.push(region);
+                        //debugger;
+                        countryGroup.regions.push(regionObj);
+                    }
+
+                });
+            } else {
+                countryGroup.regions.push({ //push a region called All for All
+                    id: "all",
+                    label: "All Countries",
+                    countries: [],
+                    selected: false
                 });
             }
 
 
         });
 
+        //push country in regions
+        _.forEach(countryGroupings, function(countryGroup, i) {
+
+            _.forEach(countryGroup.regions, function(region) {
+
+                _.forEach(response.data, function(country) { //for each Country
+                    var regionId = region.id;
+
+                    var c = countryGroup;
+
+                    if (country.regions[countryGroup.id] == regionId || regionId == "all") {
+                        country.selected = false;
+                        country.id = country.iso_a2;
+                        region.countries.push(country);
+                    }
+
+                });
+
+            });
+
+        });
+
+
+
         model.countryGroupings.removeAll();
 
         _.forEach(countryGroupings, function(countryGroup, i) {
             model.countryGroupings.push(countryGroup);
-        })
-
-
-
-
+        });
 
 
         _.forEach(response.data, function(country) {
@@ -255,6 +292,8 @@
 
         model.countriesModel(response.data);
         model.countriesModelMaster(_.clone(response.data, true));
+
+        model.activeGroup(countryGroupings[0]);
     }
 
     window.highlightOnMap = function(model, all) {
@@ -276,8 +315,9 @@
         var style = function(feature) {
 
                 if (_.indexOf(countriesGeounit, feature.properties.sovereignt) >= 0) {
-                    //debugger;
+
                     var polygon = L.multiPolygon(feature.geometry.coordinates);
+
                     features.push(polygon);
                     return {
                         weight: 2,
@@ -313,19 +353,30 @@
             style: style
         });
 
+        return;
 
         setTimeout(function() {
+
             map.addLayer(geoJsonLayers["sovereignt"]);
-
-
-
             /*L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
                 style: style,
                 onEachFeature: onEachFeature
             }).addTo(window.map);*/
-            var group = new L.featureGroup(features);
 
-            map.fitBounds(group.getBounds());
+            var group = new L.featureGroup(features);
+            var bounds = group.getBounds();
+
+
+            var southWestLng = bounds._southWest.lng;
+            var northEastLng = bounds._northEast.lng;
+
+            bounds._southWest.lng = bounds._southWest.lat;
+            bounds._southWest.lat = southWestLng;
+            bounds._northEast.lng = bounds._northEast.lat;
+            bounds._northEast.lat = northEastLng;
+
+
+            map.fitBounds(bounds);
         }, 0);
 
     }
