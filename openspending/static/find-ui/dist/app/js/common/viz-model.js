@@ -238,15 +238,28 @@
         },
 
 
-        selectCountry: function(selectedCountry, evt, direct) {
+        selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) { /* breakdown by regions or countries*/
 
-            if (direct) {
+            var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
+
+            selectedCountry = _.clone(selectedCountry, true);
+
+            if (isGroup) { //breakdown a group
+                selectedCountry.label += " Regions";
+            }
+
+            if (!isGroup && breakdown) { //breakdown a region
+                selectedCountry.label += " Countries";
+                selectedCountry.geounit += ":all";
+            }
+
+            if (goToVisualize) {
                 //TODO: Calculate Year Extremes
-                window.location.href = "data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=" + selectedCountry.geounit
+                window.location.href = "data-visualization#f=1990|2014&i=gdp_per_capita&c=line&r" + selectedCountry.geounit
                 return;
             }
 
-            var selectedCountry = arguments[0];
+            // var selectedCountry = arguments[0];
             if (selectedCountry.selected) {
                 return false;
             }
@@ -265,9 +278,11 @@
             var activeGroupId = vizModel.activeGroup().id;
 
             _.forEach(countryGroupings, function(countryGroup, i) {
+                if (countryGroup.id == countryId) {
+                    countryGroup.selected = true;
+                }
                 _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId) {
-                        debugger;
+                    if (region.id == countryId && region.label == countryLabel) {
                         region.selected = true;
                     }
                     _.forEach(region.countries, function(country) { //for each Country
@@ -286,38 +301,6 @@
                 vizModel.countryGroupings.push(countryGroup);
             });
 
-
-            return;
-
-            /*var countriesModel = _.clone(vizModel.countriesModel(), true);
-            vizModel.countriesModel.removeAll();
-            _.forEach(countriesModel, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
-                }
-                vizModel.countriesModel.push(country);
-            });
-
-            _.forEach(countriesModelMaster, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
-                }
-                vizModel.countriesModelMaster.push(country);
-            });
-
-            //vizModel.countriesModel(response.data);
-            //vizModel.countriesModelMaster(_.clone(response.data, true));
-
-            // vizModel.activeCountries.push(arguments[0]);
-
-            var current = vizModel.selectionTracker();
-            current.filter = true;
-            vizModel.selectionTracker(current);
-
-            window.highlightOnMap(vizModel);*/
-            //highlight country on map
-
-            // $('#vizTabs a[href="#select-indicator"]').tab('show');
         },
 
 
@@ -331,7 +314,40 @@
             vizModel.activeCountries.splice(selectedIndex, 1);
 
             var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.iso_a2;
+            var countryId = selectedCountry.id;
+
+            //vizModel.activeCountries.removeAll();
+
+            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
+            vizModel.countryGroupings.removeAll();
+
+            var activeGroupId = vizModel.activeGroup().id;
+            // debugger;
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (countryGroup.id == countryId) {
+                    countryGroup.selected = false;
+                }
+                _.forEach(countryGroup.regions, function(region) {
+                    if (region.id == countryId && region.label == countryLabel) {
+                        region.selected = false;
+                    }
+                    _.forEach(region.countries, function(country) { //for each Country
+                        if (country.id == countryId) {
+                            country.selected = false;
+                        }
+                    });
+
+                });
+            });
+
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (activeGroupId == countryGroup.id) {
+                    vizModel.activeGroup(countryGroup);
+                }
+                vizModel.countryGroupings.push(countryGroup);
+            });
+
+            return;
 
             var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
             vizModel.countriesModelMaster.removeAll();
@@ -363,6 +379,31 @@
         clearActiveCountries: function() {
 
             vizModel.activeCountries.removeAll();
+
+            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
+            vizModel.countryGroupings.removeAll();
+
+            var activeGroupId = vizModel.activeGroup().id;
+
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                countryGroup.selected = false;
+                _.forEach(countryGroup.regions, function(region) {
+                    region.selected = false;
+                    _.forEach(region.countries, function(country) { //for each Country
+                        country.selected = false;
+                    });
+
+                });
+            });
+
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (activeGroupId == countryGroup.id) {
+                    vizModel.activeGroup(countryGroup);
+                }
+                vizModel.countryGroupings.push(countryGroup);
+            });
+
+            return;
 
             var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
             vizModel.countriesModelMaster.removeAll();

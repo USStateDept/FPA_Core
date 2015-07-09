@@ -25,7 +25,7 @@
     //groupByRegion = parseInt(hashParams.grp);
 
     var statsData, statsDataSeries;
-    debugger;
+
     var eventBind = function() {
         //var val = $('#filter-years').slider("option", "value");
         window.flipCardEvent();
@@ -842,21 +842,98 @@
 
     var indicatorDataLoadHandler = function(args) {
 
-        var responseData = args[0];
+
+        var responseDeferred = args;
+
+        var indicatorsMeta = _.remove(responseDeferred, function(r) {
+            return !r[0].cells;
+        });
+
+
+        var indicatorsData = responseDeferred;
+
+        _.forEach(indicatorsData, function(response) {
+
+            var data = response[0];
+            var levels = data.levels;
+            var cutBy = "name";
+            //debugger;
+            for (var levelId in levels) {
+                if (levelId != "geometry__time") {
+
+                    if (levelId == "geometry__country_level0") {
+                        cutBy = "name";
+                    } else {
+                        var len = "geometry__country_level0@".length;
+                        cutBy = levelId.substring(len, levelId.length);
+                    }
+                }
+            }
+
+            data.cutBy = cutBy;
+            // debugger;
+        });
+        //debugger;
+        //normalize the data now
+
+        var mergedCells = [];
+
+        _.forEach(indicatorsData, function(response) {
+
+            var data = response[0];
+            var cutBy = data.cutBy;
+
+            _.forEach(data.cells, function(cell) {
+
+                cell.region = cell["geometry__country_level0." + cutBy];
+                cell.year = cell.geometry__time;
+
+                delete cell.geometry__time;
+                delete cell["geometry__country_level0." + cutBy];
+                delete cell.num_entries;
+
+                for (var id in cell) {
+                    if (id.indexOf("__amount_max") > -1) {
+                        delete cell[id];
+                    }
+
+                    if (id.indexOf("__amount_min") > -1) {
+                        delete cell[id];
+                    }
+
+                    if (id.indexOf("__amount_sum") > -1) {
+                        delete cell[id];
+                    }
+                }
+
+            });
+
+            mergedCells = mergedCells.concat(data.cells);
+
+        });
+
+
+        //var responseData = args[0];
+        var responseData = {
+            cells: mergedCells
+        }
+
         var responseStats = args[1];
 
-        var indicatorsMeta = [].splice.call(args, 0);
-        indicatorsMeta.shift(); //remove first two
-        indicatorsMeta.shift();
+        // var indicatorsMeta = [].splice.call(args, 0);
+        // indicatorsMeta.shift(); //remove first two
+        // indicatorsMeta.shift();
 
         //debugger;
-        var sortedData = window.prepareHighchartsJson(responseData[0], responseStats[0], indicatorsMeta, chartType, indicators, group, region, groupByRegion);
+        var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators);
+
         var highChartsJson = sortedData.highcharts;
         //regionalAverageData = sortedData.average;
 
         highChartsJson.title.text = "";
         //highChartsJson.chart.type = chart;
         highChartsJson.yAxis.title.text = "";
+
         highChartsJson.chart.events = {
             load: function() {
                 //debugger;
@@ -881,7 +958,7 @@
 
 
 
-        showTable(responseData[0]);
+        showTable(responseData);
     }
     var useNarrowExtremes = true;
 
@@ -950,7 +1027,7 @@
             groupBy = "indicators";
         }
         var deferredMetaList = window.loadIndicatorsMeta(indicators);
-        var deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+        var deferredList = window.loadIndicatorData(indicators, regions, yearsExtremes);
         deferredList = deferredList.concat(deferredMetaList);
 
         //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
