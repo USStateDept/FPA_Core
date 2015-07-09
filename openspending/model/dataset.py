@@ -185,7 +185,7 @@ class Dataset(db.Model):
         self.description = data.get('description')
         self.dataType = data.get('dataType')
         self.dataorg = DataOrg.by_id(data.get('dataorg'))
-
+        self.stats = data.get('stats')
 
     def as_dict(self):
         the_years=[]
@@ -208,7 +208,8 @@ class Dataset(db.Model):
             'has_data': self.has_data,
             'source': self.source_id,
             'status': load_status,
-            'years':the_years
+            'years':the_years,
+            'stats':self.stats
         }
 
 
