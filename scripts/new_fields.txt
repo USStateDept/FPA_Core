@@ -1,0 +1,323 @@
+Political Stability and Absence of Violence~http://info.worldbank.org/governance/wgi/index.aspx#home~~Percentile Rank
+Share of renewables in electricity generation~http://www.eia.gov/cfapps/ipdbproject/iedindex3.cfm?tid=6&pid=29&aid=12&cid=all,&syid=1980&eyid=2012&unit=BKWH~~Billion Kilowatt hours
+Net emissions from forest conversion ~http://faostat3.fao.org/faostat-gateway/go/to/download/G2/GF/E~~gigagrams CO2eq
+Casualties caused by Terrorist Incidents~http://www.start.umd.edu/gtd/~~Casualities per year
+Prevalence of stunted children under five [MCP SCALING]~~~
+GHG Emissions by Sector - Waste~~annually~MtCO2e
+Combatting WMD [CDA Index]~~~
+Counter Terrorism [CDA Index]~~~
+Stabilization & Security Reform [CDA Index]~~~
+Prevalence of underweight children~http://apps.who.int/gho/indicatorregistry/App_Main/view_indicator.aspx?iid=27~~
+Prevalence of underweight women~~~
+Combatting Transnational Crime [CDA Index]~~~
+Counter Narcotics [CDA Index]~~~
+GDP per capita, PPP ~http://data.worldbank.org/indicator/NY.GDP.PCAP.PP.CD~~constant international $
+Terrorist Incidents~http://www.start.umd.edu/gtd/~~Number per year
+EGRA: Mean score of oral reading fluency on grade 2~http://datatopics.worldbank.org/education/~~
+Terrorist Incidents [MCP SCALING]~~~
+Conflict Mitigation [CDA Index]~~~
+Access to electricity~http://data.worldbank.org/indicator/EG.ELC.ACCS.ZS~~% of population
+Exports of goods and services ~http://data.worldbank.org/indicator/NE.EXP.GNFS.ZS~~% of GDP
+Man-made Disaster Exposure [CDA Index]~~~
+Estimate of health coverage~http://www.ilo.org/wcmsp5/groups/public/---dgreports/---dcomm/documents/publication/wcms_245201.pdf~~% of population
+Natural Disaster Exposure [CDA Index]~~~
+Conflict Mitigation [MCP Scaling]~~~
+Health & WASH [CDA Index]~~~
+Disaster Risk Management [CDA Index]~~~
+Occupation Composition by Sector (Ag, Industry, Services)~https://www.cia.gov/library/publications/the-world-factbook/fields/2048.html#xx~~
+Food Security [CDA Index]~~~
+Mitigating Infrastructure [CDA Index]~~~
+Socioeconomic Vulnerabilities [CDA Index]~~~
+Population displacement [CDA Index]~~~
+Average (or median) availability of a set of selected essential medicines (%) in public health facilities~http://apps.who.int/gho/data/node.main.488?lang=en~~
+Conflict intensity~~~
+Business Start-Up (Days and cost to start a business)~http://data.mcc.gov/metadata/selection-FY15-business_start_up_FY15~annually~
+Individuals using the Internet~~~
+Road Density~http://data.worldbank.org/indicator/IS.ROD.DNST.K2~~
+Point-of-sale terminals (per 100,000 adults)~http://data.worldbank.org/indicator/FB.POS.TOTL.P5~~per 100,000 adults
+Cash surplus/deficit~http://data.worldbank.org/indicator/GC.BAL.CASH.GD.ZS~~% of GDP
+GHG Emissions by Sector - Agriculture~~annually~MtC02e
+GDP Composition by Sector (Ag, Industry, Services)~https://www.cia.gov/library/publications/the-world-factbook/fields/2012.html#xx~~
+Export Sector [CDA Scaling]~~annually~
+Strength of Legal Rights~http://data.worldbank.org/indicator/IC.LGL.CRED.XQ~~
+Political Globalization (DRG?)~http://globalization.kof.ethz.ch/~~Score
+Nuclear Proliferation Control~~~Score based on category
+Conflict History - Years since last conflict ended~http://www.systemicpeace.org/inscrdata.html~~
+Percentage of population affected by natural disasters~http://emdat.be/advanced_search/index.html~~% of total population per year
+Child Health~http://www.mcc.gov/pages/selection/indicator/child-health-indicator~~
+Control of Corruption [MCC Adjusted]~~~
+Ecosystem Vitality~http://epi.yale.edu/downloads~~
+GHG Emissions by GDP-PPP~~annually~tC02e / Million $ GDP
+Energy Security [CDA Scaling]~~annually~
+Security Apparatus [MCP SCALING]~~~
+Political Stability and Absence of Violence [MCP SCALING]~~~
+Regulatory Quality [MCC Adjusted]~~~
+Political Globalization [MCP SCALING]~~~
+EGRA: Mean score of oral reading fluency on grade 3~http://datatopics.worldbank.org/education/~~
+Fiscal Policy, net lending / net borrowing~~annually~% GDP
+Children < 5yrs with diarrhea receiving Oral re-hydration salt (ORS)~~~Percent
+Domestic credit to private sector ~http://data.worldbank.org/indicator/FS.AST.PRVT.GD.ZS~~% of GDP
+Electric power consumption~http://data.worldbank.org/indicator/EG.USE.ELEC.KH.PC~~kWh per capita
+Germanwatch Global Climate Risk Index~http://germanwatch.org/en/cri~~
+Aggregated emissions from the agriculture sector ~http://faostat3.fao.org/faostat-gateway/go/to/download/G1/GT/E~~gigagrams CO2eq
+Number of children of primary school age~~~
+Domestic Food Price Volatility Index~http://www.fao.org/economic/ess/ess-fs/ess-fadata/en/~annually~
+Global Competitiveness Score~http://www3.weforum.org/docs/WEF_GlobalCompetitivenessReport_2014-15.pdf~~
+Trafficking in Persons~~~Score based on category
+HIV-Estimated adults (15+) living with HIV~http://www.unaids.org/en/media/unaids/contentassets/documents/epidemiology/2013/gr2013/GR2013_HIV_Estimates_AnnexTable.xls~~Adults
+Primary education completion ratio (Girls)~http://data.worldbank.org/indicator/SE.PRM.CMPT.FE.ZS~~
+Adults using mobile money in the past year~http://worldbank.270a.info/classification/indicator/WP11674.1.html~~
+Education gender gap [MCP SCALING] ~~~
+Expenditure on Primary School, Gov as % of total gov expenditure on education~http://data.worldbank.org/indicator/SE.XPD.PRIM.ZS~~% of public education expenditure
+Public spending on education, total (% of government expenditure)~http://data.worldbank.org/indicator/SE.XPD.TOTL.GB.ZS~~% total government expenditure
+Primary Energy Use (by source)~~~
+Intellectual Property Rights~~~Score based on category
+Urban population growth~http://data.worldbank.org/indicator/SP.URB.GROW~~annual %
+Nuclear Proliferation Control [MCP SCALING]~~~
+Criminalization of the State [MCP SCALING]~~~
+Violent Crimes [MCP SCALING]~~~
+Physical Integrity Index [MCP SCALING]~~~
+Political Gender Gap [MCP SCALING]~~~
+Freedom of the Press (Media Freedom) [MCP SCALING]~~~
+Enrollment in primary education~http://data.worldbank.org/indicator/SE.PRM.ENRR~~
+Percentage of population displaced~http://www.unhcr.org/pages/4a013eb06.html~~% of total population per year
+Poverty headcount ratio at $2 a day (PPP)~http://data.worldbank.org/indicator/SI.POV.2DAY~~
+Time to import~http://data.worldbank.org/indicator/IC.IMP.DURS~~days
+Gross School enrollment, secondary [MCP SCALING]~~~1 to 5
+Documents to export~http://data.worldbank.org/indicator/IC.EXP.DOCS~~number
+GDP, total~http://data.worldbank.org/indicator/NY.GDP.MKTP.KD~~Constant 2005 US$
+Domestic Food Price Index~http://www.fao.org/economic/ess/ess-fs/ess-fadata/en/~annually~
+GHG Emissions by Sector - Energy~~annually~MtC02e
+Children < 5yrs with diarrhea receiving Zinc~~~
+Children < 5yrs with diarrhea receiving Oral re-hydration salt (ORS) + Zinc~~~
+Ease of Doing Business - distance to frontier score~http://data.worldbank.org/indicator/IC.BUS.DFRN.XQ~~
+GDP Growth~http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG~~% of GDP
+Children < 5yrs with symptoms of acute respiratory infection taken to a facility~~~
+Gross enrollment rate, primary (%)~http://data.worldbank.org/indicator/SE.PRM.ENRR~~
+Money Laundering~http://www.state.gov/j/inl/rls/nrcrpt/2014/vol2/222471.htm~~Score based on category
+GHG Emissions by Sector - Industrial Processes~~annually~MtC02e
+Control of Corruption~http://info.worldbank.org/governance/wgi/index.aspx#home~~
+Electric power transmission and distribution losses ~http://data.worldbank.org/indicator/EG.ELC.LOSS.ZS~~% of output
+GHG Emissions by Sector - Total~~annually~MtC02e
+TB-Estimated incidence of TB (all forms) per 100 000 population~~~per 100,000 adults and children
+Political Gender Gap~http://www.weforum.org/reports/global-gender-gap-report-2013~~
+Prevalence of exclusive breast feeding of children under six months of age~http://data.worldbank.org/indicator/SH.STA.BFED.ZS~~
+General government total expenditure~http://data.worldbank.org/indicator/NE.DAB.TOTL.ZS~~% of GDP
+GHG Emissions by Sector - Land-Use Change and Forestry~~annually~MtC02e
+Life expectancy at birth, female~http://data.worldbank.org/indicator/SP.DYN.LE00.FE.IN~Annual~years
+Health Expenditure, Public~http://data.worldbank.org/indicator/SH.XPD.PUBL.ZS~~% of GDP
+Total Primary Energy Consumption per Capita~http://www.eia.gov/cfapps/ipdbproject/iedindex3.cfm?tid=44&pid=45&aid=2&cid=all,&syid=1980&eyid=2011&unit=MBTUPP~~Million Btu per Person
+Estimate of population enrolled in a health insurance scheme~~~
+Literacy rate, adult total [MCP SCALING]~~~1 to 5
+High-technology exports ~http://data.worldbank.org/indicator/TX.VAL.TECH.MF.ZS/countries/1W?display=graph~~% of manufactured exports
+Automated teller machines (ATMs) (per 100,000 adults)~http://data.worldbank.org/indicator/FB.ATM.TOTL.P5~~
+Life expectancy at birth, male~http://data.worldbank.org/indicator/SP.DYN.LE00.MA.IN~Annual~years
+IFAD Rural Sector Performance Assessments (aka PBAS)~http://www.ifad.org/operations/pbas/scores.pdf~~
+GHG Emissions by Sector - Bunker Fuels~~annually~MtC02e
+High-technology exports [MCP SCALING]~~~1 to 5
+Expenditure on education per student, in US $ (Public education expenditure per student (% GDP), all levels)~http://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS~annually~
+Political Rights~http://www.freedomhouse.org/report-types/freedom-world~~1 To 7
+Povery gap at $1.25 a day (PPP)~http://data.worldbank.org/indicator/SI.POV.GAPS~~
+Prevalence of anemia in women of reproductive age~http://data.worldbank.org/indicator/SH.ANM.NPRG.ZS~~
+Energy-related Carbon Dioxide Emissions (by sector)~~~
+TB Prevalence Rate~~~per 100,000 population
+TB-Estimated number of deaths from TB (all forms, excluding HIV)~http://www.who.int/tb/country/data/download/en/index.html~~per 100,000 population
+Cash surplus/deficit [MCP SCALING]~~~1 to 5
+Child Malnutrition (weight for age, children under 5)~http://data.worldbank.org/indicator/SH.STA.MALN.ZS~~% of children under 5
+Employees, services, male~http://data.worldbank.org/indicator/SL.SRV.EMPL.MA.ZS~~% of male employment
+EGRA: Mean score of reading comprehension on grade 2~http://datatopics.worldbank.org/education/~~
+Casualties caused by Terrorist Incidents [MCP SCALING]~~~
+Time to Register Property~http://data.worldbank.org/indicator/IC.PRP.DURS~~days
+Government Effectiveness~http://info.worldbank.org/governance/wgi/index.aspx#home~~-2.5 to 2.5
+Exports of goods and services [MCP SCALING]~~~1 to 5
+Sanitation - Access to improved sanitation facilities~http://data.worldbank.org/indicator/SH.STA.ACSN~~% of population with access
+EGRA: Mean score of oral reading fluency on grade 6~http://datatopics.worldbank.org/education/~~
+Access to Land~~~
+Percent of Births Attended by a Skilled Doctor, Nurse or Midwife~http://data.worldbank.org/indicator/SH.STA.BRTC.ZS~~
+Literacy rate, adult total~http://data.worldbank.org/indicator/SE.ADT.LITR.ZS~~% of people ages 15 to 24
+Human Development Index~~~score
+Total Carbon Dioxide Emissions from the Consumption of Energy~http://www.eia.gov/cfapps/ipdbproject/IEDIndex3.cfm?tid=90&pid=44&aid=8~~Million Metric Tons
+EGRA: Mean score of reading comprehension on grade 6~http://datatopics.worldbank.org/education/~~
+EGRA: Mean score of reading comprehension on grade 3~http://datatopics.worldbank.org/education/~~
+Weighted Adult Mortality Average, Total [MCP SCALING]~~~1 to 5
+Trade Policy [CDA Scaling]~~annually~
+Water - Access to improved water source~http://data.worldbank.org/indicator/SH.H2O.SAFE.ZS~~% of population with access
+Account at a formal financial institution~~~(% age 15+)
+Account at a formal financial institution, female~~~(% age 15+)
+Carbon stock in living forest biomass ~http://www.fao.org/forestry/fra/fra2010/en/~~million tonnes
+Chemical and Biological Weapons Control [MCP SCALING]~~~
+Chemical and Biological Weapons Control~http://www.bis.doc.gov/index.php/forms-documents/doc_view/419-part-745-chemical-weapons-convention-requirements~~Score based on category
+Trade Policy~~~
+Ecosystem Vitality [MCP SCALING]~~~1 to 5
+Rate of infants born low birth weight~http://data.worldbank.org/indicator/SH.STA.BRTW.ZS~~
+Deforestation rate~http://www.fao.org/docrep/013/i1757e/i1757e.pdf~~(rate of gain or loss in the % of the remaining forest area each year from)
+Control of Corruption [MCP SCALING]~~~1 to 5
+Violent Crimes~http://www.unodc.org/unodc/en/data-and-analysis/homicide.html~~Ratio per 100,000 people
+GDP per unit of energy use [MCP SCALING]~~~1 to 5
+Rule of Law~http://info.worldbank.org/governance/wgi/index.aspx#home~~
+Government Willingness and Capacity to Counter Narcotics~~~
+Rule of Law [MCC Adjusted]~~~
+Government Effectiveness [MCC Adjusted]~~~
+Government Spending on Education [CDA Scaling]~~annually~
+Political Rights [MCP SCALING]~~~1 to 5
+Rule of Law [MCP SCALING]~~~1 to 5
+Money Laundering [MCP SCALING]~~~1 to 5
+Adults in the lower 40% of income with an account a formal financial institution~~~(% age 15+)
+Cost to export~http://data.worldbank.org/indicator/IC.EXP.COST.CD~~US$ per container
+Cost to import~http://data.worldbank.org/indicator/IC.IMP.COST.CD~~US$ per container
+Current account balance~http://www.imf.org/external/pubs/ft/weo/2013/02/weodata/weoselgr.aspx~~US $ (current)
+Foreign direct investment, net inflows~http://data.worldbank.org/indicator/BX.KLT.DINV.WD.GD.ZS~~% of GDP
+GDP, per capita~http://data.worldbank.org/indicator/NY.GDP.PCAP.KD~~Constant 2005 US$
+GNI Per Capita (Atlas Method) Estimates and Thresholds~http://data.worldbank.org/indicator/NY.GNP.PCAP.CD~~current US$
+Inflation, consumer prices ~http://data.worldbank.org/indicator/FP.CPI.TOTL.ZG~~% change
+Unemployment, youth female~http://data.worldbank.org/indicator/SL.UEM.1524.FE.NE.ZS~Annual~% of female labor force ages 15-24
+Unemployment, youth male~http://data.worldbank.org/indicator/SL.UEM.1524.MA.NE.ZS~~% of male labor force ages 15-24
+Unemployment, youth total~http://data.worldbank.org/http://data.worldbank.org/indicator/SL.UEM.1524.NE.ZS~Annual~% of total labor force ages 15-24
+GAIN Index~http://index.gain.org/~~
+Land Rights and Access~http://www.mcc.gov/pages/selection/indicator/land-rights-and-access-indicator~~
+Number of people affected by natural disasters~http://emdat.be/advanced_search/index.html~~Total # per year
+GINI index~http://data.worldbank.org/indicator/SI.POV.GINI~~
+Poverty headcount ratio at $1.25 a day (PPP)~http://data.worldbank.org/indicator/SI.POV.DDAY~~% of population
+PIRLS reading mean~http://datatopics.worldbank.org/education/~~Mean Reading Level
+PISA reading mean~http://datatopics.worldbank.org/education/~~
+Index of Economic Freedom~http://www.heritage.org/index/explore?view=by-region-country-year~~Number
+HIV-Estimated children (0-14) living with HIV~http://data.worldbank.org/indicator/SH.HIV.0014~~Children 0-14
+GDP per capita, PPP [MCP SCALING]~~~1 to 5
+Employees, agriculture, female~http://data.worldbank.org/indicator/SL.AGR.EMPL.FE.ZS~~% of female employment
+Employees, agriculture, male~http://data.worldbank.org/indicator/SL.AGR.EMPL.MA.ZS~~% of male employment
+Energy imports, net ~http://data.worldbank.org/indicator/EG.IMP.CONS.ZS~~% of energy use
+GDP per unit of energy use ~http://data.worldbank.org/indicator/EG.GDP.PUSE.KO.PP~~PPP $ per kg of oil equivalent
+General government revenue~http://data.worldbank.org/indicator/GC.REV.XGRT.GD.ZS~~% of GDP
+Gross Intake Rate (first grade of primary)~http://data.worldbank.org/indicator/SE.PRM.GINT.ZS~~
+Gross enrollment rate, secondary (%)~http://data.worldbank.org/indicator/SE.SEC.ENRR~~
+SACMEQ reading mean~http://datatopics.worldbank.org/education/~~
+Prevalence of undernourishment~http://data.worldbank.org/indicator/SN.ITK.DEFC.ZS~~Percent
+LLECE 6th reading mean~http://datatopics.worldbank.org/education/~~Mean Math Level
+Carbon Intensity of Electricity Generation~http://www.iea.org/media/statistics/co2highlights.pdf~never~(grams CO2eq per kWh)
+HIV-People living with HIV~http://www.unaids.org/en/media/unaids/contentassets/documents/epidemiology/2013/gr2013/GR2013_HIV_Estimates_AnnexTable.xls~~Adults and children
+IFPRI Global Hunger Index~http://www.ifpri.org/book-8018/node/8058~never~
+Net Intake Rate (First grade of primary)~http://data.worldbank.org/indicator/SE.PRM.NINT.ZS~~
+Economic Gender Gap~~~
+LLECE 3th reading mean~http://datatopics.worldbank.org/education/~~Mean Math Level
+Cumulative drop-out rate to the last grade of primary education (%)~~~Percent
+Secondary education enrollment ratio (Girls)~http://data.worldbank.org/indicator/SE.SEC.ENRR.FE~~
+Gross graduation ratio from primary education (%)~~Annual~Percent
+Gross graduation ratio from lower secondary education (%)~~Annual~
+Number of out-of-school adolescents of lower secondary school age~~Annual~
+Documents to import~http://data.worldbank.org/indicator/IC.IMP.DOCS~~number
+Expenditure on education, in US $ (Public spending on education, total (% of GDP))~~~US $
+HIV prevalence rate, Adults (15 - 49)~http://data.worldbank.org/indicator/SH.DYN.AIDS.ZS~~
+Maternal Mortality Ratio (MMR)~http://data.worldbank.org/indicator/SH.STA.MMRT.NE~~per 100,000 live births
+Total population displaced~http://popstats.unhcr.org/Default.aspx~~Number per year
+MCPR: Modern method contraceptive prevalence rate~~~Percent
+New entrants to Grade 1 of primary education (number)~~~
+Early initiation of breastfeeding (within 1 hour)~~~
+Net enrollment rate, secondary (%)~http://data.worldbank.org/indicator/SE.SEC.NENR~~Percent
+Net enrollment rate, primary (%)~http://data.worldbank.org/indicator/SE.PRM.NENR~~Percent
+Literacy Rate of 15-24 year old population~~~Percent
+Prevalence of anemia among children 6-59 months~http://data.worldbank.org/indicator/SH.ANM.CHLD.ZS~~
+Physician Density~http://apps.who.int/ghodata~~Per 1,000 population
+Health Expenditure, total~http://www.who.int/health-accounts/ghed/en/~~(% of total GDP)
+Conflict History [MCP SCALING]~~~
+Health expenditure, Out-of-pocket [MCP SCALING]~~~1 to 5
+Employees, industry, female~http://data.worldbank.org/indicator/SL.IND.EMPL.FE.ZS~~% of female employment
+General government gross debt~http://www.imf.org/external/pubs/ft/weo/2013/02/weodata/weoselgr.aspx~~% of GDP
+HIV incidence rate, Adults (15 - 49)~http://www.unaids.org/en/media/unaids/contentassets/documents/epidemiology/2013/gr2013/GR2013_HIV_Estimates_AnnexTable.xls~~Percent
+Unemployment with tertiary education, female~http://data.worldbank.org/indicator/SL.UEM.TERT.FE.ZS~~% of female unemployment
+Unemployment with tertiary education, male~http://data.worldbank.org/indicator/SL.UEM.TERT.MA.ZS~~% of male unemployment
+Unemployment, female~http://data.worldbank.org/indicator/SL.UEM.TOTL.FE.ZS~~% of female labor force
+Unemployment, male~http://data.worldbank.org/indicator/SL.UEM.TOTL.MA.ZS~~% of male labor force
+TB-Estimated incidence of TB cases who are HIV-positive~http://www.who.int/tb/country/data/download/en/index.html~Annual~Adults and children
+Time to export~http://data.worldbank.org/indicator/IC.EXP.DURS~~days
+TB-Estimated incidence of TB cases who are HIV-positive per 100 000 population~http://www.who.int/tb/country/data/download/en/index.html~Annual~per 100,000 population
+Regulatory Quality~http://info.worldbank.org/governance/wgi/index.aspx#reports~~
+TB-Estimated number of MDR-TB cases among all notified pulmonary TB cases~http://www.who.int/tb/country/data/download/en/index.html~Annual~Adults and children
+TB-Estimated prevalence of TB (all forms) per 100 000 population~http://www.who.int/tb/country/data/download/en/index.html~~Adults and children
+TB-Estimated number of incident cases (all forms)~http://data.worldbank.org/indicator/SH.TBS.INCD~~Adults and children
+Under Five Mortality Rate (U5MR)~http://data.worldbank.org/indicator/SH.DYN.MORT~~
+Gross School enrollment, tertiary [MCP SCALING]~~~1 to 5
+Employees, industry, male~http://data.worldbank.org/indicator/SL.IND.EMPL.MA.ZS~~% of male employment
+Employees, services, female~http://data.worldbank.org/indicator/SL.SRV.EMPL.FE.ZS~~% of female employment
+Hyogo Framework for Action (HFA) Level of Progress~http://www.preventionweb.net/applications/hfa/qbnhfa/~~
+Trafficking in Persons [MCP SCALING]~~~1 to 5
+Gender in the Economy~http://www.mcc.gov/pages/selection/indicator/gender-in-the-economy-indicator~~
+Prevalence of wasted children under five years of age~~~
+Expenditure on Secondary School, Gov as % of total gov expenditure on education~http://data.worldbank.org/indicator/SE.XPD.SECO.ZS~~% of public education expenditure
+Manufactures exports ~http://data.worldbank.org/indicator/TX.VAL.MANF.ZS.UN~~% of merchandise exports
+Dietary Energy Supply Adequacy~http://www.fao.org/economic/ess/ess-fs/ess-fadata/en/#.VPR2hlPF8zk~~
+Freedom of Information~~~
+Foreign direct investment, net inflows [MCP SCALING]~~~1 to 5
+Electric power transmission and distribution losses [MCP SCALING]~~~1 to 5
+Natural Resource Protection~http://www.mcc.gov/pages/selection/indicator/natural-resource-protection~~
+Domestic credit to private sector [MCP SCALING]~~~1 to 5
+Health expenditure, public [MCP SCALING]~~~1 to 5
+Health expenditure, Out-of-pocket~http://data.worldbank.org/indicator/SH.XPD.OOPC.TO.ZS~~Percent
+Energy imports, net [MCP SCALING]~~~1 to 5
+Fixed broadband Internet subscribers~http://data.worldbank.org/indicator/IT.NET.BBND.P2~~per 100 people
+Internet users~http://data.worldbank.org/indicator/IT.NET.USER.P2~annually~per 100 people
+Mobile Cellular Subscriptions~http://data.worldbank.org/indicator/IT.CEL.SETS.P2~annually~per 100 people
+Mobile Cellular Subscriptions, total~http://data.worldbank.org/indicator/IT.CEL.SETS~~
+Inflation, consumer prices [MCP SCALING]~~~1 to 5
+GINI index [MCP SCALING]~~~1 to 5
+Scientific and technical journal articles~http://data.worldbank.org/indicator/IP.JRN.ARTC.SC~~
+Researchers in R&D~http://data.worldbank.org/indicator/SP.POP.SCIE.RD.P6~~per million people
+Research and development expenditure~http://data.worldbank.org/indicator/GB.XPD.RSDV.GD.ZS~~% of GDP
+Newborn Mortality Rate (NMR)~http://data.worldbank.org/indicator/SH.DYN.NMRT~~
+Life expectancy at birth, total [MCP SCALING]~~~1 to 5
+Expenditure on Education per Capita, 3 Year Average [MCP SCALING]~~~1 to 5
+Public Expenditure on Primary Education~~~Percent of GDP
+Number of out-of-school children of primary school age~~~
+Time required to start a business~http://data.worldbank.org/indicator/IC.REG.DURS~~days
+Urban population~http://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS~Annual~% of total
+Population growth~http://data.worldbank.org/indicator/SP.POP.GROW~~Percent
+Sanitation - Access to improved sanitation facilities [MCP SCALING]~~~1 to 5
+Maternal mortality ratio [MCP SCALING]~~~1 to 5
+Regulatory Quality [MCP SCALING]~~~1 to 5
+Manufactures exports [MCP SCALING]~~~1 to 5
+Under-Five Mortality rate [MCP SCALING]~~~1 to 5
+Modern contraceptive prevalence [MCP SCALING]~~~1 to 5
+Ease of Doing Business - [MCP SCALING]~~~1 to 5
+Telephone lines~http://data.worldbank.org/indicator/IT.MLT.MAIN.P2~~per 100 people
+Immunization Rates~~~
+Gross intake ratio to the last grade of lower secondary general education (%)~~Annual~Percent
+Prevalence of anemia among women of reproductive age~http://data.worldbank.org/indicator/SH.ANM.NPRG.ZS~~
+Women with secondary or higher education~http://datatopics.worldbank.org/education/~~Women with secondary or higher education
+Population~http://data.worldbank.org/indicator/SP.POP.TOTL/countries~~
+Insecticide treated net (ITN) ownership by households~~~
+Government Effectiveness [MCP SCALING]~~~1 to 5
+Average (or median) availability of a set of selected essential medicines (%) in private health facilities~http://apps.who.int/gho/data/node.main.488?lang=en~~
+Cost of business start-up procedures~http://data.worldbank.org/indicator/IC.REG.COST.PC.ZS~~% of GNI per capita
+Depth of Credit Information~http://data.worldbank.org/indicator/IC.CRD.INFO.XQ~~
+Literacy rate, adult male~http://data.worldbank.org/indicator/SE.ADT.LITR.MA.ZS~~% of males ages 15 to 24
+Measles Immunization Coverage ~http://data.worldbank.org/indicator/SH.IMM.MEAS~~% of children ages 12-23 months
+TB-Estimated prevalence of TB (all forms)~http://www.who.int/tb/country/data/download/en/index.html~~per 100,000 population
+Economic gender gap [MCP SCALING]~~~
+Freedom of the Press~https://www.freedomhouse.org/report-types/freedom-press~~
+Percent of children 6-59 months given Vit. A in the past 6 months~http://data.worldbank.org/indicator/SN.ITK.VITA.ZS~~
+Physical Integrity Index~http://www.humanrightsdata.com/p/data-documentation.html~~Score
+Civil Liberties~http://www.freedomhouse.org/report-types/freedom-world~~1 To 7
+Forest area ~http://data.worldbank.org/indicator/AG.LND.FRST.K2~~% of land area
+Patent applications, residents~http://data.worldbank.org/indicator/IP.PAT.RESD~~patent applications
+Prevalence of children who are overweight~http://data.worldbank.org/indicator/SH.STA.OWGH.ZS~~% of children under 5)
+Civil Liberties [MCP SCALING]~~~1 to 5
+TB-Estimated mortality of TB cases (all forms, excluding HIV) per 100 000 population~http://www.who.int/tb/country/data/download/en/index.html~~Adults and children
+Prevalence of children 6-23 months receiving a minimum acceptable diet (MAD)~~~
+Forest area percentage~http://data.worldbank.org/indicator/AG.LND.FRST.ZS~annually~% of land area
+Immunization, received DPT3 vaccine by 12 months of age~~~Percent
+Pupil-teacher ratio in primary education (headcount basis)~http://data.worldbank.org/indicator/SE.PRM.ENRL.TC.ZS~~Teachers
+Unemployment with tertiary education~http://data.worldbank.org/indicator/SL.UEM.TERT.ZS~~% of total unemployment
+HIV-AIDS-related deaths in adults and children~http://data.worldbank.org/indicator/SH.DYN.AIDS.DH~~Persons
+Unemployment, total~http://data.worldbank.org/indicator/SL.UEM.TOTL.ZS~Annual~% of total labor force
+Prevalence of stunted children under five years of age~~~
+Intellectual Property Rights [MCP SCALING]~~~1 to 5
+Gross intake ratio to the last grade of primary education (%)~~~Percent
+Education expenditure, as % of total gov expenditure~~~% total gov expenditure
+Number of children of secondary school age~~~
+Total Fertility Rate~~~
+Security Apparatus~http://fsi.fundforpeace.org/~~Score
+Criminalization of the State~http://ffp.statesindex.org/rankings-2012-sortable~~Score
+Enrollment in secondary education~http://data.worldbank.org/indicator/SE.SEC.ENRR~~
+TB case detection rate (all forms), percent~http://data.worldbank.org/indicator/SH.TBS.DTEC.ZS~~%, all forms
+Life expectancy at birth, total~~~
+Access to Credit (strength of legal rights, depth of credit information)~~~
+Literacy rate, adult female~http://data.worldbank.org/indicator/SE.ADT.LITR.FE.ZS~~% of females ages 15 to 24

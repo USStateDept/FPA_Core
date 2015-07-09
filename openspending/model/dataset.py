@@ -69,6 +69,15 @@ class Dataset(db.Model):
     years = Column(Unicode(1000))
     
     stats = Column(Unicode(50))
+    
+    update_freq = Column(Unicode(255))
+    orgurl = Column(Unicode(500))
+    units = Column(Unicode(255))
+    
+    webservice = Column(Unicode(500))
+    agency = Column(Unicode(255))
+    organization = Column(Unicode(255))
+    notes = Column(Unicode(4000))
 
     #TODO
     #tag stuff
@@ -185,7 +194,7 @@ class Dataset(db.Model):
         self.description = data.get('description')
         self.dataType = data.get('dataType')
         self.dataorg = DataOrg.by_id(data.get('dataorg'))
-
+        self.stats = data.get('stats')
 
     def as_dict(self):
         the_years=[]
@@ -208,7 +217,8 @@ class Dataset(db.Model):
             'has_data': self.has_data,
             'source': self.source_id,
             'status': load_status,
-            'years':the_years
+            'years':the_years,
+            'stats':self.stats
         }
 
 
