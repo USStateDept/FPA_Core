@@ -69,6 +69,15 @@ class Dataset(db.Model):
     years = Column(Unicode(1000))
     
     stats = Column(Unicode(50))
+    
+    update_freq = Column(Unicode(255))
+    orgurl = Column(Unicode(500))
+    units = Column(Unicode(255))
+    
+    webservice = Column(Unicode(500))
+    agency = Column(Unicode(255))
+    organization = Column(Unicode(255))
+    notes = Column(Unicode(4000))
 
     #TODO
     #tag stuff
