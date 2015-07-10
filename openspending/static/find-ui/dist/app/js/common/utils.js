@@ -301,7 +301,7 @@
         model.activeGroup(countryGroupings[0]);
     }
 
-    window.highlightOnMap = function(model, all) {
+    window.utils.highlightOnMap = function(model, all) {
 
         //var all = false;
         //if all then select all countries in countriesModel, else activeCountries
@@ -470,13 +470,17 @@
         //debugger;
 
         _.forEach(cells, function(c) {
-            dataByYear[c.year.toString()] = [];
-            series[c.region] = []
+            if (c.region) {
+                dataByYear[c.year.toString()] = [];
+                series[c.region] = [];
+            }
         });
 
         _.forEach(cells, function(c) {
-            series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
-            dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
+            if (c.region) {
+                series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
+                dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
+            }
         });
 
         /*debugger;
@@ -620,79 +624,55 @@
             series: seriesArray
         }
 
-        var jsonScatter = {
+        var jsonBubble = {
+
             chart: {
-                type: 'scatter',
+                type: 'bubble',
                 zoomType: 'xy'
             },
-            title: {
-                text: 'Height Versus Weight of 507 Individuals by Gender'
-            },
-            subtitle: {
-                text: 'Source: Heinz  2003'
-            },
-            xAxis: {
-                title: {
-                    enabled: true,
-                    text: 'Height (cm)'
-                },
-                startOnTick: true,
-                endOnTick: true,
-                showLastLabel: true
-            },
-            yAxis: {
-                title: {
-                    text: 'Weight (kg)'
-                }
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'left',
-                verticalAlign: 'top',
-                x: 100,
-                y: 70,
-                floating: true,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-                borderWidth: 1
-            },
-            plotOptions: {
-                scatter: {
-                    marker: {
-                        radius: 5,
-                        states: {
-                            hover: {
-                                enabled: true,
-                                lineColor: 'rgb(100,100,100)'
-                            }
-                        }
-                    },
-                    states: {
-                        hover: {
-                            marker: {
-                                enabled: false
-                            }
-                        }
-                    },
-                    tooltip: {
-                        headerFormat: '<b>{series.name}</b><br>',
-                        pointFormat: '{point.x} cm, {point.y} kg'
-                    }
-                }
-            },
-            series: [{
-                name: 'Country A',
-                color: 'rgba(223, 83, 83, .5)',
-                data: [
-                    [2010, 51.6],
-                    [2011, 59.0]
-                ]
 
-            }, {
-                name: 'Country B',
-                color: 'rgba(119, 152, 191, .5)',
+            title: {
+                text: 'Highcharts Bubbles'
+            },
+
+            series: [{
                 data: [
-                    [2010, 65.6],
-                    [2011, 71.8]
+                    [97, 36, 79],
+                    [94, 74, 60],
+                    [68, 76, 58],
+                    [64, 87, 56],
+                    [68, 27, 73],
+                    [74, 99, 42],
+                    [7, 93, 87],
+                    [51, 69, 40],
+                    [38, 23, 33],
+                    [57, 86, 31]
+                ]
+            }, {
+                data: [
+                    [25, 10, 87],
+                    [2, 75, 59],
+                    [11, 54, 8],
+                    [86, 55, 93],
+                    [5, 3, 58],
+                    [90, 63, 44],
+                    [91, 33, 17],
+                    [97, 3, 56],
+                    [15, 67, 48],
+                    [54, 25, 81]
+                ]
+            }, {
+                data: [
+                    [47, 47, 21],
+                    [20, 12, 4],
+                    [6, 76, 91],
+                    [38, 30, 60],
+                    [57, 98, 64],
+                    [61, 17, 80],
+                    [83, 60, 13],
+                    [67, 78, 75],
+                    [64, 12, 10],
+                    [30, 77, 82]
                 ]
             }]
         }

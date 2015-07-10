@@ -93,7 +93,7 @@
         }
 
         if (regionsWithAllCountries.length) {
-
+            debugger;
             //first get all groups together
             var groups = [],
                 groupRegions = {};
@@ -117,7 +117,7 @@
 
             for (groupId in groupRegions) {
                 urls.push({
-                    url: urlRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
+                    url: urlAllCountriesInRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
                     level: "countries",
                     geounits: groupRegions[groupId]
                 });
@@ -150,7 +150,7 @@
 
             for (groupId in groupRegions) {
                 urls.push({
-                    url: urlAllCountriesInRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
+                    url: urlRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
                     level: "regions",
                     geounits: groupRegions[groupId]
                 });
@@ -163,7 +163,7 @@
             level: "statistics",
             geounits: "global"
         });
-
+        //debugger;
         var defferreds = [];
 
         _.forEach(urls, function(item) {

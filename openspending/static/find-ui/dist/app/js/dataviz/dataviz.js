@@ -751,7 +751,7 @@
         var cells = data.cells;
 
         _.forEach(cells, function(cell, i) {
-            cell.id = 'id_' + i
+            cell.id = i
         });
         //debugger;
         //population_growth__amount_min
@@ -930,9 +930,9 @@
         var highChartsJson = sortedData.highcharts;
         //regionalAverageData = sortedData.average;
 
-        highChartsJson.title.text = "";
+        //highChartsJson.title.text = "";
         //highChartsJson.chart.type = chart;
-        highChartsJson.yAxis.title.text = "";
+        // highChartsJson.yAxis.title.text = "";
 
         highChartsJson.chart.events = {
             load: function() {

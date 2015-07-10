@@ -420,7 +420,7 @@
                 vizModel.countriesModelMaster.push(country);
             });
 
-            window.highlightOnMap(vizModel, true)
+            window.utils.highlightOnMap(vizModel, true)
 
         },
 
@@ -513,7 +513,7 @@
 
             })
 
-            window.highlightOnMap(vizModel, true);
+            window.utils.highlightOnMap(vizModel, true);
             //filter country view by region
 
         },
