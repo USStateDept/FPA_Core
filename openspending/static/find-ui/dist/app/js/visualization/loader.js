@@ -68,6 +68,18 @@
 
         var urlAllCountriesInRegionsInGroupTemplate = urlPrefix + "&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@{groupId}:{regions}";
 
+        //Individual Countries
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@name:argentina;albania;india
+
+        //Regions in a group 
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
+
+        //All Countries in one or many regions of a group
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
+
+        //all regions in a group
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time
+
 
         var urls = [];
 
@@ -93,7 +105,7 @@
         }
 
         if (regionsWithAllCountries.length) {
-            debugger;
+            //debugger;
             //first get all groups together
             var groups = [],
                 groupRegions = {};

@@ -72,7 +72,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
                       .glyphicon.glyphicon-menu-down
                       span(data-bind="html:activeGroup().label")
-                  div.noun-tree-140111(data-bind="click:function(data,evt){selectCountry(activeGroup(),evt,false,true)}")
+                  div.noun-tree-140111(data-bind="visible:(activeGroup().id != 'all'),click:function(data,evt){selectCountry(activeGroup(),evt,false,true)}" title="All Regions in this Group")
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroups', data-bind="foreach:countryGroupings")
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
@@ -136,7 +136,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
                     span.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                       span.flags-labels(style="vertical-align:middle" data-bind="html:label")
-                    div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}")
+                    div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
                   span(data-bind="foreach:$data.countries")
                     .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
                       div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')

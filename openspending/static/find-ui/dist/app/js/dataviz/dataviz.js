@@ -849,6 +849,10 @@
             return !r[0].cells;
         });
 
+        var statsData = _.remove(responseDeferred, function(r) {
+            return r[0].attributes.length == 1 && r[0].attributes[0] == "geometry__time";
+        });
+
 
         var indicatorsData = responseDeferred;
 
@@ -918,7 +922,7 @@
             cells: mergedCells
         }
 
-        var responseStats = args[1];
+        var responseStats = statsData[0];
 
         // var indicatorsMeta = [].splice.call(args, 0);
         // indicatorsMeta.shift(); //remove first two
@@ -937,14 +941,21 @@
         highChartsJson.chart.events = {
             load: function() {
                 //debugger;
+                var allowedSetExtremeCharts = ["line", "bar"];
                 var xAxis = this.series[0].xAxis;
                 if (chartType == "bar") {
                     yearsFilter[0] = yearsFilter[1];
                 }
-                xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
+
+
 
 
                 $("#loading").hide();
+
+                if (_.indexOf(allowedSetExtremeCharts, chartType) > -1) {
+                    xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
+                }
+
 
 
 

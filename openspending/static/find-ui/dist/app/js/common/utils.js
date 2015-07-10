@@ -407,38 +407,10 @@
             return meta[0].label;
         });
 
-        //
-        /*switch (true) {
-            case (groupId == "all" && !groupByRegion):
-                // debugger;
-                cutBy = "sovereignt";
-                break;
-            default:
-                // debugger;
-                cutBy = groupId;
-                break;
-        }*/
-        //debugger;
-        /*if (!multiVariate && region.length > 0 && !groupByRegion) {
-            cutBy = "sovereignt"
-        }*/
-
-        //debugger;
-        /*var timeCell = {};
-        _.forEach(data.cell, function(c) {
-            if (c.hierarchy == "time") {
-                timeCell = c;
-            }
-        });*/
 
         var fromYear = 1990; //timeCell.from[0];
         var toYear = 2015; //timeCell.to[0];
-        /*debugger;
-        if (type == "bar") {
-            debugger;
-            // fromYear = parseInt(toYear);
-            toYear = parseInt(fromYear);
-        }*/
+
         var categories = [];
 
         for (var i = fromYear; i <= toYear; i++) {
@@ -446,22 +418,22 @@
         }
 
         var series = {
-            // "Global Minimum": [],
-            // "Global Maximum": [],
-            // "Global Average": [],
+            "Global Minimum": [],
+            "Global Maximum": [],
+            "Global Average": [],
         };
 
 
         //Add stats to series
 
-        /*_.forEach(statsCells, function(c) {
+        _.forEach(statsCells, function(c) {
             //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
             //if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
             series["Global Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
             series["Global Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
             series["Global Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
             // }
-        });*/
+        });
 
         //debugger;
         var seriesArray = [];
@@ -483,58 +455,7 @@
             }
         });
 
-        /*debugger;
 
-        if (multiVariate) { // && region.length > 0 && (groupBy == "indicators")
-
-            _.forEach(indicators, function(indicator) {
-                series[indicator] = []
-            });
-            //indicatorId = "gdp_per_capita";
-            _.forEach(cells, function(c) {
-                // if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
-                //rada
-                _.forEach(indicators, function(indicator) {
-                    //debugger;
-                    if (c["geometry__country_level0." + cutBy] == region) {
-
-                        series[indicator].push([c["geometry__time"], c[indicator + "__amount_" + dataType]])
-                    }
-                });
-
-                //series[c["geometry__country_level0." + cutBy]].push();
-                // }
-            });
-            //debugger;
-        }
-
-        //debugger;
-        if (!multiVariate || region.length == 0) {
-            //debugger;
-            //TODO : do this in one loop
-            _.forEach(cells, function(c) {
-                dataByYear[c["geometry__time"].toString()] = [];
-                series[c["geometry__country_level0." + cutBy]] = []
-            });
-            //indicatorId = "gdp_per_capita";
-            _.forEach(cells, function(c) {
-                //if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
-                //rada
-                //debugger;
-                series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicatorId + "__amount_" + dataType]]);
-                dataByYear[c["geometry__time"]].push(c[indicatorId + "__amount" + dataType]);
-                // }
-            });
-
-            // for (var year in dataByYear) {
-            //     var total = _.reduce(dataByYear[year], function(total, n) {
-            //         return total + n;
-            //     });
-            //     var average = total / dataByYear[year].length;
-            //     seriesAverage.push([parseInt(year), average]);
-            // }
-
-        }*/
 
 
         var counter = 1;
@@ -558,13 +479,10 @@
 
             // }
         }
-
+        //debugger;
         seriesArray[0].zIndex = seriesArray.length + 1;
         seriesArray[1].zIndex = seriesArray.length + 2;
         seriesArray[2].zIndex = seriesArray.length + 3;
-
-
-
 
         //debugger;
 
