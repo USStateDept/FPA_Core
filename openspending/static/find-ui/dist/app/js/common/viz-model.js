@@ -313,6 +313,16 @@
                 vizModel.countryGroupings.push(countryGroup);
             });
 
+
+            var filterValue = $("#filterCountries")[0].value;
+
+
+            vizModel.filterCountries(null, {
+                currentTarget: {
+                    value: filterValue
+                }
+            });
+
         },
 
 

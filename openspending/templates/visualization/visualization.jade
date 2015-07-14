@@ -122,7 +122,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             //-     a(data-bind="click:clearActiveCountries") Clear All
             .row
               .col-md-12
-                input.btn-block(data-bind="value:filterCountry,valueUpdate:'keyup',event:{keyup:filterCountries},visible:!groupByRegion()" placeHolder="Find a Country")
+                input.btn-block#filterCountries(data-bind="value:filterCountry,valueUpdate:'keyup',event:{keyup:filterCountries},visible:!groupByRegion()" placeHolder="Find a Country")
             .row
               p
             .row
