@@ -13,7 +13,7 @@ from cubes import Workspace
 from flask.ext.login import current_user
 from flask import request
 #from cubes.extensions import extensions
-#from google.refine import refine
+#from google.refine import refineo
 
 from openspending import default_settings
 #from settings import OPENREFINE_SERVER 

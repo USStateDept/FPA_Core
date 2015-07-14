@@ -2,6 +2,7 @@ import json
 from lxml import etree
 import io
 import csv
+from unidecode import unidecode
 
 
 AVAILABLE_FUNCTIONS = [
@@ -12,9 +13,13 @@ AVAILABLE_FUNCTIONS = [
 
 
 def json_to_csv(resptext):
-    jsonobj = json.loads(str(resptext))
+    if isinstance(resptext, unicode):
+        jsonobj = json.loads(unidecode(resptext))
+    else:
+        jsonobj= json.loads(resptext)
     outputfile = io.BytesIO()
-    csvdictwrite = csv.DictWriter(outputfile, jsonobj[0].keys())
+    csvdictwrite = csv.DictWriter(outputfile, jsonobj[0].keys(),\
+        extrasaction='ignore')
     rowheaders = {}
     for colkey in jsonobj[0].keys():
         rowheaders[colkey] = colkey

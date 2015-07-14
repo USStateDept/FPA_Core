@@ -53,7 +53,7 @@ class Dataview(db.Model):
                             backref=backref('dataviews', lazy='dynamic'))
 
     account_id = Column(Integer, ForeignKey('account.id'))
-    account = relationship(Account, backref=backref("dataviews", uselist=False))
+    account = relationship(Account, backref=backref("dataviews"))
 
     cloned_dataview_id = Column(Integer, ForeignKey('dataview.id'))
 
