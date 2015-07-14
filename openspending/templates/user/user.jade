@@ -1,0 +1,60 @@
+{% extends "base.jade" %}
+
+{% block page_title %}User{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+
+{% block optional_head %}
+
+{% endblock %}
+
+{% block content %}
+style
+  {% include "user/dv.css" %}
+.flash
+  p {{ message }}
+.container.content-text
+  .row
+    .col-md-12
+      .row
+        h1 User Profile
+      .row
+        p
+      .row
+        p This is the user profile page.
+        p Click 
+          a(href="/user/adddv") here to add an example dv row!
+        p This is meant to show the framework of how we can handle this and is not the final / production version.
+      .row
+        h2 Saved Data Views
+        table.dv_table
+          {% for views in dataviews %}
+          {% if loop.first %}
+          tr
+            th Name
+            th Description
+            th Created Date
+            th URL Hash
+            th Action
+          {% endif %}
+          tr
+            td {{ views.title }}
+            td {{ views.description }}
+            td {{ views.created_at }}
+            td {{ views.urlhash }}
+            td.center
+              a(href="/user/removedv/{{ views.id }}") X
+          {% else %}
+          tr
+            td(colspan=5).no-border.no-dv-yet You have not saved any dataviews yet.
+          {% endfor %}
+{% endblock %}
+
+{% block footer_scripts %}
+
+
+{% endblock %}
