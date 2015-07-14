@@ -122,7 +122,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             //-     a(data-bind="click:clearActiveCountries") Clear All
             .row
               .col-md-12
-                input.btn-block(data-bind="event:{keyup:filterCountries},visible:!groupByRegion()" placeHolder="Find a Country")
+                input.btn-block#filterCountries(data-bind="value:filterCountry,valueUpdate:'keyup',event:{keyup:filterCountries},visible:!groupByRegion()" placeHolder="Find a Country")
             .row
               p
             .row
@@ -137,8 +137,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                     span.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                       span.flags-labels(style="vertical-align:middle" data-bind="html:label")
                     div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
-                  span(data-bind="foreach:$data.countries")
-                    .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
+                  span(data-bind="foreach:$data.countries,css:{hasCountryFilter:$root.hasCountryFilter}")
+                    .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
                       div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                         div.flag(data-bind="css:iso_a2.toLowerCase()")
                         span.flags-labels(style="vertical-align:middle" data-bind="html:label")
