@@ -39,11 +39,13 @@ nav.navbar.navbar-default.navbar-fixed-top
           ul.dropdown-menu.account-dropdown
             {% if current_user.admin %}
             li
-              strong User Profile
+              p
+                strong User Profile
               a(href="/user") User Profile
             li.divider
             li
-              strong Admin Only
+              p
+                strong Admin Only
               a(href="/admin") Admin Section
               a(href="{{ url_for('findadmin.dataloader') }}") Data Loader
             {% endif %}

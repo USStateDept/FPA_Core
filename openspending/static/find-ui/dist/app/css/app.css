@@ -210,8 +210,13 @@ body {
   color: #244c80;
 }
 .dropdown-menu>li>a {
-  padding: 3px 3px;
+  padding: 3px 10px;
 }
+.dropdown-menu>li>p {
+  padding: 3px 5px;
+}
+body .app ul.dropdown-menu.account-dropdown,
+background green,
 .app .btn-group:nth-child(2) {
   border-left: 1px solid #ccc;
 }
@@ -288,12 +293,12 @@ body {
   .app .jumbotron {
     padding: 10px;
   }
-  .navbar-nav > li > a {
-    padding: 20px;
-  }
-  .category-wrapper {
-    height: 210px;
-  }
+}
+.navbar-nav > li > a {
+  padding: 20px;
+}
+.category-wrapper {
+  height: 210px;
 }
 @media (min-width: 992px) {
   .category-wrapper {
