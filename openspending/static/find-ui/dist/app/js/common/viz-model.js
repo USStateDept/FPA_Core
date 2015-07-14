@@ -101,7 +101,7 @@
                 vizModel.sourcesModel.push(source);
             });
 
-            window.flipCardEvent();
+            window.utils.flipCardEvent();
 
         },
 
@@ -165,15 +165,27 @@
                 vizModel.sourcesModel.push(source);
             });
 
-            window.flipCardEvent();
+            window.utils.flipCardEvent();
+
+            var filterValue = $("#filterIndicators")[0].value;
+
+
+            vizModel.filterIndicators(null, {
+                currentTarget: {
+                    value: filterValue
+                }
+            });
 
         },
 
         selectVizualization: function(type) {
 
             var groupByRegion = vizModel.groupByRegion();
-            var allowMultivariate = ["scatter", "radar", "tree"];
+
+            var allowMultivariate = ["bubble", "radar", "tree"];
+
             var allowSinglevariate = ["line", "bar"];
+
             var indicators = _.map(vizModel.activeIndicators(), function(indicator) {
                 return indicator.id;
             });
@@ -457,7 +469,7 @@
                 vizModel.sourcesModel.push(source);
             });
 
-            window.flipCardEvent();
+            window.utils.flipCardEvent();
 
         },
 
@@ -577,7 +589,7 @@
         }),
 
         filterIndicators: function(m, evt) {
-            var charCode = evt.charCode;
+
             var value = evt.currentTarget.value;
 
             var indicators = vizModel.indicatorsModelMaster();
@@ -597,7 +609,6 @@
 
         filterCountries: function(m, evt) {
 
-            var charCode = evt.charCode;
             var value = evt.currentTarget.value;
 
             var countries = vizModel.countriesModelMaster();

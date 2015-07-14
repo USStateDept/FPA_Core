@@ -128,6 +128,9 @@
             });
 
             for (groupId in groupRegions) {
+
+
+
                 urls.push({
                     url: urlAllCountriesInRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
                     level: "countries",
@@ -152,8 +155,9 @@
 
             _.forEach(groups, function(groupId) {
                 groupRegions[groupId] = [];
-                _.forEach(regionsWithAllCountries, function(group) {
+                _.forEach(regionsInGroups, function(group) {
                     var groupMatch = group.indexOf(groupId + ":") == 0; //first occurence of :
+
                     if (groupMatch) {
                         groupRegions[groupId].push(group.split(":")[1]); //middle is region, ex dod_cmd:USCENTCOM
                     }
@@ -161,6 +165,10 @@
             });
 
             for (groupId in groupRegions) {
+                //hack since EUR shoudl be replaced with EUR;EUR
+                if (groupRegions[groupId].length == 1) {
+                    groupRegions[groupId][0] += ";" + groupRegions[groupId][0];
+                }
                 urls.push({
                     url: urlRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
                     level: "regions",

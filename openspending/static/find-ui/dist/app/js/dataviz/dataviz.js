@@ -3,9 +3,9 @@
     window.clickedIndicator = false;
     window.expandedCategory = false;
 
-    var hashParams = window.getHashParams();
+    var hashParams = window.utils.getHashParams();
     var yearsExtremes = []; //default, will be calculated
-
+    var yearsExtremesForData = [];
 
 
     var activeData;
@@ -28,7 +28,7 @@
 
     var eventBind = function() {
         //var val = $('#filter-years').slider("option", "value");
-        window.flipCardEvent();
+        window.utils.flipCardEvent();
         // $('.dropdown-toggle').dropdown();
     }
 
@@ -311,7 +311,7 @@
                 model.sourcesModel.push(source);
             });
 
-            window.flipCardEvent();
+            window.utils.flipCardEvent();
 
         },
 
@@ -370,7 +370,7 @@
                 model.sourcesModel.push(source);
             });
 
-            window.flipCardEvent();
+            window.utils.flipCardEvent();
 
         },
 
@@ -474,7 +474,7 @@
                 model.sourcesModel.push(source);
             });
 
-            window.flipCardEvent();
+            window.utils.flipCardEvent();
 
         },
 
@@ -682,7 +682,7 @@
         //track hash update
         window.onhashchange = function(evt) {
             var newURL = evt.newURL;
-            var _hashParams = window.getHashParams();
+            var _hashParams = window.utils.getHashParams();
             yearsFilter = _hashParams.f.split("|");
 
             setExtremes(yearsFilter[0], yearsFilter[1]);
@@ -724,10 +724,10 @@
                 }
 
                 //update hash
-                var currentHash = window.getHashParams();
+                var currentHash = window.utils.getHashParams();
                 currentHash.f = startYear + "|" + endYear;
 
-                window.updateHash(currentHash);
+                window.utils.updateHash(currentHash);
                 //redrawChart(startYear, endYear);
             },
             slide: function(event, ui) {
@@ -929,7 +929,7 @@
         // indicatorsMeta.shift();
 
         //debugger;
-        var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators);
+        var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
 
         var highChartsJson = sortedData.highcharts;
         //regionalAverageData = sortedData.average;
@@ -1026,11 +1026,37 @@
         if (yearsExtremes[0] < 1990) {
             yearsExtremes[0] = 1990;
         }
+
+        //get year extremes for the indicators selected
+
+        _.forEach(indicators, function(indicatorId) {
+            var years = response.data.indicators.data[indicatorId].years;
+            var yearStart = years[0];
+            var yearEnd = years[years.length - 1];
+
+            if (yearsExtremesForData.length == 0) {
+
+                yearsExtremesForData.push(yearStart);
+                yearsExtremesForData.push(yearEnd);
+
+            } else {
+
+                if (yearStart < yearsExtremesForData[0]) {
+                    yearsExtremesForData[0] = yearStart;
+                }
+
+                if (yearEnd > yearsExtremesForData[1]) {
+                    yearsExtremesForData[1] = yearEnd;
+                }
+            }
+
+        });
+
         //debugger;
         //create slider first
         createYearSlider(yearsExtremes[0], yearsExtremes[1]);
 
-        window.bindIndicators(response, model);
+        window.utils.bindIndicators(response, model);
 
         //now get the data
         if (indicators.length > 1) {
@@ -1044,7 +1070,7 @@
         //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
 
         $.when.apply($, deferredList).done(function(response) {
-            indicatorDataLoadHandler(arguments);
+            indicatorDataLoadHandler(arguments, yearsExtremes);
         });
 
         eventBind();
@@ -1056,7 +1082,7 @@
 
     var countriesListLoadHandler = function(response) {
 
-        window.bindCountries(response, model);
+        window.utils.bindCountries(response, model);
 
     }
 
