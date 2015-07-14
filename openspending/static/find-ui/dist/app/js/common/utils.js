@@ -222,6 +222,7 @@
 
             var groupId = countryGroup.id;
             countryGroup.selected = false;
+            countryGroup.filtered = false;
             countryGroup.geounit = groupId + ":all";
 
             if (countryGroup.id != "all") {
@@ -235,7 +236,8 @@
                         label: region,
                         geounit: groupId + ":" + region,
                         countries: [],
-                        selected: false
+                        selected: false,
+                        filtered: false
                     }
 
                     if (_.indexOf(trackRegion, region) < 0) {
@@ -251,7 +253,8 @@
                     id: "all",
                     label: "All Countries",
                     countries: [],
-                    selected: false
+                    selected: false,
+                    filtered: false
                 });
 
             }
@@ -271,6 +274,7 @@
 
                     if (country.regions[countryGroup.id] == regionId || regionId == "all") {
                         country.selected = false;
+                        country.filtered = false;
                         country.id = country.iso_a2;
                         region.countries.push(country);
                     }

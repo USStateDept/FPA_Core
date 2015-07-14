@@ -611,16 +611,32 @@
 
             var value = evt.currentTarget.value;
 
-            var countries = vizModel.countriesModelMaster();
-            vizModel.countriesModel.removeAll();
+            var activeGroup = _.clone(vizModel.activeGroup(), true);
+
+
+
+
+            _.forEach(activeGroup.regions, function(r) {
+                var countries = r.countries;
+
+                _.forEach(countries, function(c) {
+                    if (c.label.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                        c.filtered = true;
+                    } else {
+                        c.filtered = false;
+                    }
+                })
+            });
+
+
+            //debugger;
+            //            vizModel.activeGroup({});
+
+            vizModel.activeGroup(activeGroup);
+
             //model.newSearch(false);
 
-            for (var x in countries) {
 
-                if (countries[x].label.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                    vizModel.countriesModel.push(countries[x]);
-                }
-            }
 
             return true;
 
@@ -632,15 +648,14 @@
 
         },
 
+        filterCountry: ko.observable(""),
+
+        hasCountryFilter: ko.observable(false),
 
 
         activeCard: ko.observable(""),
 
-
-
         activeYears: ko.observableArray([1990, 2014]),
-
-
 
         activeIndicator: ko.observable(""),
 
@@ -708,6 +723,12 @@
 
 
     }
+
+
+
+    window.vizModel.filterCountry.subscribe(function(newValue) {
+        vizModel.hasCountryFilter(newValue.length > 0);
+    });
 
     window.vizModel.groupByRegion.subscribe(function(newValue) {
 

@@ -699,20 +699,25 @@
         var minYearFilter = parseInt(yearsFilter[0]);
         var maxYearFilter = parseInt(yearsFilter[1]);
 
+        var isRange = false;
 
-        $("#filter-years").slider({
-            range: true,
+        if (chartType == "line") {
+            isRange = true;
+        }
+
+        var sliderOptions = {
+            range: isRange,
             min: minYear,
             max: maxYear,
-            values: [minYearFilter, maxYearFilter],
+
             change: function(event, ui) {
 
-                //debugger;
+                var isRange = ui.values;
                 //var series = $('#viz-container').highcharts().series
 
-                var startYear = ui.values[0];
+                var startYear = isRange ? ui.values[0] : ui.value;
 
-                var endYear = ui.values[1];
+                var endYear = isRange ? ui.values[1] : ui.value;
 
                 var yearLabel = startYear;
 
@@ -731,12 +736,23 @@
                 //redrawChart(startYear, endYear);
             },
             slide: function(event, ui) {
-
+                //  debugger;
 
                 // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
 
             }
-        }).slider("pips", {
+        }
+
+        if (chartType == "line") {
+            sliderOptions.values = [minYearFilter, maxYearFilter];
+            sliderOptions.min = minYear;
+            sliderOptions.max = maxYear;
+        } else {
+            sliderOptions.value = maxYearFilter;
+        }
+
+
+        $("#filter-years").slider(sliderOptions).slider("pips", {
             /* options go here as an object */
         }).slider("float", {
             /* options go here as an object */
