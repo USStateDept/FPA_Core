@@ -310,11 +310,11 @@ class MetadataOrgManagerView(sqla.ModelView):
         
 class SourcesView(sqla.ModelView):
 
-    column_list = ('label', 'dataType','dataorg','url','updated_at')
+    column_list = ('label', 'dataType','dataorg','webservice','updated_at')
     
     form_excluded_columns = ('source','name','created_at','runs','dataviews','datalastupdated')
     
-    form_columns = ('label', 'dataorg', 'description', 'tags', 'updated_at', 'years', 'stats', 'managers', 'loaded', 'published', 'tested')
+    form_columns = ('label','units', 'dataorg','webservice','orgurl' ,'description', 'tags', 'updated_at','update_freq', 'years', 'stats','agency', 'managers', 'loaded', 'published', 'tested','stats','notes')
     
     form_widget_args = {
         'label':{

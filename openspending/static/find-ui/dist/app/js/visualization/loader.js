@@ -24,187 +24,182 @@
         });
     }
 
-    window.loadIndicatorData = function(indicators, groupId, region, yearsExtremes, countries, groupByRegion) {
+    window.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
         //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=line&g=all&r=&cn=&grp=0
+        //dod_cmd:USCENTCOM:all|dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina
+
+        // geounits = "dod_cmd:USCENTCOM:all|dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina".split("|");
+        // geounits = "dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina".split("|");
+        // geounits = "dod_cmd:USCENTCOM|kuwait|qatar|dod_cmd:USSOUTHCOM|argentina".split("|");
 
 
+        var indicatorIds = indicators;
 
 
-        // if groupId is not 'all', and groupByRegion is true - then group by region
-        // if groupId is not 'all', and groupByRegion is false, and no countries are provided, then use countries from region
-        // if groupId is 'all', use countries list
-        // if groupId is 'all', and no countres selected, show all countries
-        // if countries list is provided, and groupByRegion is false, then use countries list
-
-
-        var hasCountries = (countries.length > 0 && countries[0] !== "");
-        var hasGroup = groupId != "all";
-        var isMultivariate = indicators.length > 1; //eligible for scatter plot
-        var groupByIndicator = isMultivariate;
-
-        var indicatorIds = [];
-
-        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}";
-
-        _.forEach(indicators, function(indicator) {
-            indicatorIds.push(indicator);
+        // sort by types of geo units to drill down API calls
+        var countries = _.remove(geounits, function(c) {
+            return c.indexOf(":") < 0;
         });
 
+        var groupsWithAllRegions = _.remove(geounits, function(c) {
+            return c.match(/:+/g).length == 1 && c.indexOf(":all") == c.length - 4; //4 is the length of :all
+        });
+
+        var regionsWithAllCountries = _.remove(geounits, function(c) {
+            return c.match(/:+/g).length == 2 && c.indexOf(":all") == c.length - 4; //4 is the length of :all
+        });
+
+        var regionsInGroups = geounits;
+
+        //////////////////////////////////////////////
+
+
+
+        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
+        urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
+        urlPrefix = urlPrefix.replace(/{yearTo}/g, yearsExtremes[1]);
 
-        if (!hasGroup && !hasCountries) {
-            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=&grp=0
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        var urlCountriesTemplate = urlPrefix + "&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@name:{countries}"; //argentina;albania;india
+
+        var urlAllRegionsInGroupTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time";
+
+        var urlRegionsInGroupTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time&cut=geometry__country_level0@{groupId}:{regions}";
+
+        var urlAllCountriesInRegionsInGroupTemplate = urlPrefix + "&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@{groupId}:{regions}";
+
+        //Individual Countries
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@name:argentina;albania;india
+
+        //Regions in a group 
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
+
+        //All Countries in one or many regions of a group
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
+
+        //all regions in a group
+        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time
+
+
+        var urls = [];
+
+        if (countries.length) {
+            urls.push({
+                url: urlCountriesTemplate.replace(/{countries}/g, countries.join(";")),
+                level: "countries",
+                geounits: countries
+            });
         }
 
-        if (!hasGroup && hasCountries) {
-            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=all&r=&cn=&cn=bahrain|kuwait&grp=0
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-        }
-
-        if (hasGroup && groupByRegion) {
-            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=dod_cmd&r=USCENTCOM&cn=&grp=1
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-
-        }
-
-        if (hasGroup && !groupByRegion && !hasCountries) { //show all countries in this region
-            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=dod_cmd&r=USCENTCOM&cn=&grp=0
-            debugger;
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time&cut=geometry__country_level0@{groupId}:{region}";
-        }
-
-        if (!groupByRegion && hasCountries) { //show selected countries
-            //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita&c=line&g=dod_cmd&r=USCENTCOM&cn=bahrain|kuwait&grp=0
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            urlTemplate += "&cut=geometry__country_level0@name:" + countries.join(";");
-        }
-
-        //multivariate
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_per_capita_ppp|gdp_total&c=scatter&g=dod_cmd&r=USCENTCOM&cn=&grp=1
-
-
-
-        /*if (hasGroup && hasCountries) {
+        if (groupsWithAllRegions.length) {
             //debugger;
+            _.forEach(groupsWithAllRegions, function(group) {
+                var groupId = group.substring(0, group.indexOf(":all"));
+                urls.push({
+                    url: urlAllRegionsInGroupTemplate.replace(/{groupId}/g, groupId),
+                    level: "regions",
+                    geounits: groupId
+                });
+            });
 
-            if (!isMultivariate) { //Bar, Line chart
-
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-                // debugger;
-                if (region.length > 0) {
-                    urlTemplate += "&cut=geometry__country_level0@{groupId}:{region}";
-                }
-                //cut down to countries in this region
-                //&cut=geometry__country_level0@{groupId}:{region}
-
-                //"drilldown=geometry__country_level0@dos_region|geometry__time@time&cut=geometry__time:1990-2014&order=time
-            }
-
-
-            if (isMultivariate) { //Scatter Plot
-
-                if (groupByIndicator && !groupByRegion) {
-                    groupId += ":name";
-                }
-
-                var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            }
-
-
-
-
-            // var statsUrl = urlPrefix + "&drilldown=geometry__country_level0@{groupId}|geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            // //to cut by country
-        }*/
-
-        /*if (!hasGroup) { // show all
-
-            var urlTemplate = urlPrefix + "&drilldown=geometry__country_level0@sovereignt|geometry__time&format=json&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-            // "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-        }*/
-
-
-        var statsUrl = urlPrefix + "&drilldown=geometry__time&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
-
-
-        /*if (hasCountries && !groupByRegion) {
-            //debugger;
-            urlTemplate += "&cut=geometry__country_level0@name:" + countries.join(";")
-        }*/
-
-
-
-        var url = urlTemplate.replace(/{indicator_id}/g, indicatorIds.join("|"));
-        //debugger;
-
-
-
-        if (!yearsExtremes[1]) {
-            yearsExtremes[1] = yearsExtremes[0];
         }
 
-        url = url.replace(/{groupId}/g, groupId);
-        url = url.replace(/{region}/g, region);
-        url = url.replace(/{yearFrom}/g, yearsExtremes[0]);
-        url = url.replace(/{yearTo}/g, yearsExtremes[1]);
+        if (regionsWithAllCountries.length) {
+            //debugger;
+            //first get all groups together
+            var groups = [],
+                groupRegions = {};
+
+            _.forEach(regionsWithAllCountries, function(group) {
+                var groupId = group.substring(0, group.indexOf(":")); //first occurence of :
+                if (_.indexOf(groups, groupId) < 0) {
+                    groups.push(groupId);
+                }
+            });
+
+            _.forEach(groups, function(groupId) {
+                groupRegions[groupId] = [];
+                _.forEach(regionsWithAllCountries, function(group) {
+                    var groupMatch = group.indexOf(groupId + ":") == 0; //first occurence of :
+                    if (groupMatch) {
+                        groupRegions[groupId].push(group.split(":")[1]); //middle is region, ex dod_cmd:USCENTCOM:all
+                    }
+                });
+            });
+
+            for (groupId in groupRegions) {
 
 
-        statsUrl = statsUrl.replace(/{groupId}/g, groupId);
-        statsUrl = statsUrl.replace(/{yearFrom}/g, yearsExtremes[0]);
-        statsUrl = statsUrl.replace(/{yearTo}/g, yearsExtremes[1]);
-        //debugger;
 
-        //url = "data/gdp_per_capita.json";
-        //gdp_per_capita
-        //literacy_rate_adult_total
-        //control_of_corruption
-
-        //url = "http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__time|geometry__country_level0@name&format=json"
-        // url = "http://api.worldbank.org/countries/all/indicators/NY.GDP.PCAP.KD?per_page=14200&format=jsonP";
-        //debugger;
-
-        //stats
-
-
-        var statsDeferred = $.ajax({
-            url: statsUrl,
-            //jsonp: "prefix",
-            //dataType: "jsonp",
-            dataType: "json",
-            // xhrFields: {
-            //     "withCredentials": true
-            // },
-
-            data: {
-
+                urls.push({
+                    url: urlAllCountriesInRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
+                    level: "countries",
+                    geounits: groupRegions[groupId]
+                });
             }
-            //success: handlerFunc
-        });
 
-        var dataDeferred = $.ajax({
-            url: url,
-            //jsonp: "prefix",
-            //dataType: "jsonp",
-            dataType: "json",
-            // xhrFields: {
-            //     "withCredentials": true
-            // },
+        }
 
-            data: {
+        if (regionsInGroups.length) {
 
+            //first get all groups together
+            var groups = [],
+                groupRegions = {};
+
+            _.forEach(regionsInGroups, function(group) {
+                var groupId = group.substring(0, group.indexOf(":")); //first occurence of :
+                if (_.indexOf(groups, groupId) < 0) {
+                    groups.push(groupId);
+                }
+            });
+
+            _.forEach(groups, function(groupId) {
+                groupRegions[groupId] = [];
+                _.forEach(regionsInGroups, function(group) {
+                    var groupMatch = group.indexOf(groupId + ":") == 0; //first occurence of :
+
+                    if (groupMatch) {
+                        groupRegions[groupId].push(group.split(":")[1]); //middle is region, ex dod_cmd:USCENTCOM
+                    }
+                });
+            });
+
+            for (groupId in groupRegions) {
+                //hack since EUR shoudl be replaced with EUR;EUR
+                if (groupRegions[groupId].length == 1) {
+                    groupRegions[groupId][0] += ";" + groupRegions[groupId][0];
+                }
+                urls.push({
+                    url: urlRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
+                    level: "regions",
+                    geounits: groupRegions[groupId]
+                });
             }
-            //success: handlerFunc
+
+        }
+
+        urls.push({
+            url: urlPrefix + "&drilldown=geometry__time",
+            level: "statistics",
+            geounits: "global"
         });
         //debugger;
-        return [dataDeferred, statsDeferred];
+        var defferreds = [];
+
+        _.forEach(urls, function(item) {
+            var d = $.ajax({
+                url: item.url,
+                dataType: "json",
+                data: {
+
+                }
+            });
+            defferreds.push(d);
+
+        });
+
+        return defferreds;
+
     }
 
     window.loadCountries = function(url, handlerFunc) {

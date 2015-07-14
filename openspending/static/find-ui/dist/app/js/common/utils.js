@@ -1,6 +1,7 @@
 (function() {
+    window.utils = {};
 
-    window.flipCardEvent = function() {
+    window.utils.flipCardEvent = function() {
 
         $(".flip").click(function() {
 
@@ -42,7 +43,7 @@
         });
     }
 
-    window.getHashParams = function() {
+    window.utils.getHashParams = function() {
 
         var hashParams = {};
         var e,
@@ -59,14 +60,14 @@
         return hashParams;
     }
 
-    window.updateHash = function(hashObj) {
+    window.utils.updateHash = function(hashObj) {
 
         var result = decodeURIComponent($.param(hashObj));
         window.location.hash = result; //console.log("fdfsd");
     }
 
 
-    window.bindIndicators = function(response, model) {
+    window.utils.bindIndicators = function(response, model) {
         //debugger;
         var categoriesAll = response.data.categories;
         var subcategoriesAll = response.data.subcategories;
@@ -210,42 +211,83 @@
         model.indicatorsModelMaster(_.clone(indicatorsModel, true));
     }
 
-    window.bindCountries = function(response, model) {
+    window.utils.bindCountries = function(response, model) {
 
 
 
         var countryGroupings = _.clone(model.countryGroupings(), true);
 
-
+        //push regions in country groupings
         _.forEach(countryGroupings, function(countryGroup, i) {
 
             var groupId = countryGroup.id;
+            countryGroup.selected = false;
+            countryGroup.geounit = groupId + ":all";
 
             if (countryGroup.id != "all") {
-
-                _.forEach(response.data, function(country) {
+                var trackRegion = [];
+                _.forEach(response.data, function(country) { //for each Country
 
                     //find level this country belongs to in this group
                     var region = country.regions[groupId];
-                    if (_.indexOf(countryGroup.regions, region) < 0) {
-                        countryGroup.regions.push(region);
+                    var regionObj = {
+                        id: region,
+                        label: region,
+                        geounit: groupId + ":" + region,
+                        countries: [],
+                        selected: false
+                    }
+
+                    if (_.indexOf(trackRegion, region) < 0) {
+                        trackRegion.push(region);
+                        //debugger;
+                        countryGroup.regions.push(regionObj);
                     }
 
                 });
+            } else {
+
+                countryGroup.regions.push({ //push a region called All for All
+                    id: "all",
+                    label: "All Countries",
+                    countries: [],
+                    selected: false
+                });
+
             }
 
 
         });
 
+        //push country in regions
+        _.forEach(countryGroupings, function(countryGroup, i) {
+
+            _.forEach(countryGroup.regions, function(region) {
+
+                _.forEach(response.data, function(country) { //for each Country
+                    var regionId = region.id;
+
+                    var c = countryGroup;
+
+                    if (country.regions[countryGroup.id] == regionId || regionId == "all") {
+                        country.selected = false;
+                        country.id = country.iso_a2;
+                        region.countries.push(country);
+                    }
+
+                });
+
+            });
+
+        });
+
+
+
         model.countryGroupings.removeAll();
 
         _.forEach(countryGroupings, function(countryGroup, i) {
             model.countryGroupings.push(countryGroup);
-        })
-
-
-
-
+        });
 
 
         _.forEach(response.data, function(country) {
@@ -255,9 +297,11 @@
 
         model.countriesModel(response.data);
         model.countriesModelMaster(_.clone(response.data, true));
+
+        model.activeGroup(countryGroupings[0]);
     }
 
-    window.highlightOnMap = function(model, all) {
+    window.utils.highlightOnMap = function(model, all) {
 
         //var all = false;
         //if all then select all countries in countriesModel, else activeCountries
@@ -276,8 +320,9 @@
         var style = function(feature) {
 
                 if (_.indexOf(countriesGeounit, feature.properties.sovereignt) >= 0) {
-                    //debugger;
+
                     var polygon = L.multiPolygon(feature.geometry.coordinates);
+
                     features.push(polygon);
                     return {
                         weight: 2,
@@ -313,21 +358,361 @@
             style: style
         });
 
+        return;
 
         setTimeout(function() {
+
             map.addLayer(geoJsonLayers["sovereignt"]);
-
-
-
             /*L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
                 style: style,
                 onEachFeature: onEachFeature
             }).addTo(window.map);*/
-            var group = new L.featureGroup(features);
 
-            map.fitBounds(group.getBounds());
+            var group = new L.featureGroup(features);
+            var bounds = group.getBounds();
+
+
+            var southWestLng = bounds._southWest.lng;
+            var northEastLng = bounds._northEast.lng;
+
+            bounds._southWest.lng = bounds._southWest.lat;
+            bounds._southWest.lat = southWestLng;
+            bounds._northEast.lng = bounds._northEast.lat;
+            bounds._northEast.lat = northEastLng;
+
+
+            map.fitBounds(bounds);
         }, 0);
 
+    }
+
+    window.utils.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, yearsExtremesForData) {
+
+        //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
+        //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
+
+        var cells = data.cells;
+        //debugger;
+        var statsCells = statsData.cells;
+        var indicatorId = indicators[0];
+        var title = indicators[0];
+        //var groupId = group;
+        //var cutBy = "name";
+        var dataType = "avg"; //sum,avg
+        var multiVariate = indicators.length > 1; //eligible for scatter plot
+        // var seriesAverage = [];
+        // var dataByYear = [];
+
+        var titleArray = _.map(indicatorsMeta, function(meta) {
+            return meta[0].label;
+        });
+
+
+        var fromYear = 1990; //timeCell.from[0];
+        var toYear = 2015; //timeCell.to[0];
+
+        var categories = [];
+
+        for (var i = fromYear; i <= toYear; i++) {
+            categories.push(parseInt(i));
+        }
+
+        var series = {
+            "Global Minimum": [],
+            "Global Maximum": [],
+            "Global Average": [],
+        };
+
+
+        //Add stats to series
+
+        _.forEach(statsCells, function(c) {
+            //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
+            //if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
+            series["Global Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
+            series["Global Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
+            series["Global Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
+            // }
+        });
+
+
+
+        //debugger;
+        var seriesArray = [];
+
+        //debugger;
+        //debugger;
+
+        _.forEach(cells, function(c) {
+            if (c.region) {
+                //dataByYear[c.year.toString()] = [];
+                series[c.region] = [];
+            }
+        });
+
+        _.forEach(cells, function(c) {
+            if (c.region) {
+                series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
+                //dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
+            }
+        });
+
+
+
+
+        var counter = 1;
+        var countriesArr = [];
+        for (var countryName in series) {
+            var visible = false;
+            // if (defaultVisibleCountries.indexOf(countryName) > -1) {
+            visible = true;
+            //  }
+            //window.averageSeries = series[countryName];
+            // if (defaultCountries.indexOf(countryName) > -1) {
+            seriesArray.push({
+                name: countryName,
+                data: series[countryName],
+                visible: counter > 3 ? true : false,
+                zIndex: counter++
+            });
+
+            countriesArr.push(countryName);
+
+
+            // }
+        }
+        //debugger;
+        seriesArray[0].zIndex = seriesArray.length + 1;
+        seriesArray[1].zIndex = seriesArray.length + 2;
+        seriesArray[2].zIndex = seriesArray.length + 3;
+
+        //debugger;
+
+        var chartObj = {
+
+            type: type
+        };
+
+        if (type == "radar") {
+            chartObj.polar = true;
+            chartObj["type"] = "line";
+        }
+
+        var jsonLine = {
+            chart: chartObj,
+            title: {
+
+                text: titleArray.join(" & "),
+                x: -20
+            },
+            subtitle: {
+
+                text: titleArray.join(" & "),
+                x: -20
+            },
+            xAxis: {
+                //categories: categories
+                title: {
+                    enabled: true,
+                    text: ''
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 0.25,
+                    color: '#FFFFCC'
+                }]
+            },
+            tooltip: {
+                valueSuffix: ''
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0,
+                width: 200,
+                itemWidth: 100
+            },
+            series: seriesArray
+        }
+
+        //debugger;
+        // x - indicator 1
+        // y indicator 2
+        // one year
+        // one region
+        // size on bubble would be the third indicator
+        // user should be able to switch between the x, y and z
+
+        if (type == "bubble") {
+
+            seriesArray = [];
+
+            var indicator1 = indicators[0];
+            var indicator2 = indicators[1];
+            var indicator3 = indicators[2];
+
+            //debugger;
+            //debugger;
+
+            _.forEach(cells, function(c) {
+                if (c.region) {
+                    series[c.region] = [];
+                }
+            });
+
+            _.forEach(cells, function(c) {
+                if (c.region) {
+                    /* series[c.region].push({
+                        year: c.year,
+                        data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
+                    });*/
+                    if (c[indicator1 + "__amount_" + dataType] && c[indicator2 + "__amount_" + dataType] && c[indicator3 + "__amount_" + dataType]) {
+
+                        series[c.region] = {
+                            year: c.year,
+                            data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
+                        };
+
+                    }
+
+                }
+            });
+            //debugger;
+            var counter = 1;
+            var countriesArr = [];
+            for (var countryName in series) {
+                var visible = false;
+                // if (defaultVisibleCountries.indexOf(countryName) > -1) {
+                visible = true;
+                //  }
+                //window.averageSeries = series[countryName];
+                // if (defaultCountries.indexOf(countryName) > -1) {
+                seriesArray.push({
+                    name: countryName,
+                    data: series[countryName].data,
+                    visible: counter > 3 ? true : false,
+                    zIndex: counter++
+                });
+
+                // }
+            }
+            debugger;
+
+        }
+
+        var jsonBubble = {
+
+            chart: {
+                type: 'bubble',
+                zoomType: 'xy'
+            },
+
+            title: {
+                text: 'Highcharts Bubbles'
+            },
+
+            series: seriesArray
+        }
+
+        var jsonBar = {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'World\'s largest cities per 2014'
+            },
+            subtitle: {
+                text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Population (millions)'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+            },
+            series: [{
+                name: 'Population',
+                data: [
+                    ['Shanghai', 23.7],
+                    ['Lagos', 16.1],
+                    ['Instanbul', 14.2],
+                    ['Karachi', 14.0],
+                    ['Mumbai', 12.5],
+                    ['Moscow', 12.1],
+                    ['São Paulo', 11.8],
+                    ['Beijing', 11.7],
+                    ['Guangzhou', 11.1],
+                    ['Delhi', 11.1],
+                    ['Shenzhen', 10.5],
+                    ['Seoul', 10.4],
+                    ['Jakarta', 10.0],
+                    ['Kinshasa', 9.3],
+                    ['Tianjin', 9.3],
+                    ['Tokyo', 9.0],
+                    ['Cairo', 8.9],
+                    ['Dhaka', 8.9],
+                    ['Mexico City', 8.9],
+                    ['Lima', 8.9]
+                ],
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.1f}', // one decimal
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            }]
+        }
+
+        var json;
+
+        switch (type) {
+            case "line":
+                json = jsonLine;
+                break;
+            case "bar":
+                json = jsonBar;
+                break;
+            case "bubble":
+                json = jsonBubble;
+                break;
+        }
+
+        //debugger;
+        return {
+            highcharts: json
+            //average: seriesAverage
+        };
     }
 
 }())
