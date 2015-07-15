@@ -115,7 +115,7 @@
         });
 
         //var val = $('#filter-years').slider("option", "value");
-        flipCardEvent();
+        window.utils.flipCardEvent();
 
         // $('.dropdown-toggle').dropdown();
 
@@ -136,14 +136,14 @@
 
     var countriesListLoadHandler = function(response) {
 
-        window.bindCountries(response, model);
+        window.utils.bindCountries(response, model);
     }
 
 
 
     var indicatorListLoadHandler = function(response) {
 
-        window.bindIndicators(response, model);
+        window.utils.bindIndicators(response, model);
 
 
         //enable knockout

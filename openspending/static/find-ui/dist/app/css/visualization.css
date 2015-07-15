@@ -396,6 +396,12 @@
 .custom-country {
   padding: 10px;
 }
+.hasCountryFilter .country-wrapper {
+  display: none;
+}
+.hasCountryFilter .country-wrapper.filtered {
+  display: block;
+}
 .btn.facebook {
   width: 75px;
   height: 40px;

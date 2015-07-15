@@ -1,7 +1,7 @@
 (function() {
     window.utils = {};
 
-    window.flipCardEvent = function() {
+    window.utils.flipCardEvent = function() {
 
         $(".flip").click(function() {
 
@@ -43,7 +43,7 @@
         });
     }
 
-    window.getHashParams = function() {
+    window.utils.getHashParams = function() {
 
         var hashParams = {};
         var e,
@@ -60,14 +60,14 @@
         return hashParams;
     }
 
-    window.updateHash = function(hashObj) {
+    window.utils.updateHash = function(hashObj) {
 
         var result = decodeURIComponent($.param(hashObj));
         window.location.hash = result; //console.log("fdfsd");
     }
 
 
-    window.bindIndicators = function(response, model) {
+    window.utils.bindIndicators = function(response, model) {
         //debugger;
         var categoriesAll = response.data.categories;
         var subcategoriesAll = response.data.subcategories;
@@ -211,7 +211,7 @@
         model.indicatorsModelMaster(_.clone(indicatorsModel, true));
     }
 
-    window.bindCountries = function(response, model) {
+    window.utils.bindCountries = function(response, model) {
 
 
 
@@ -222,6 +222,7 @@
 
             var groupId = countryGroup.id;
             countryGroup.selected = false;
+            countryGroup.filtered = false;
             countryGroup.geounit = groupId + ":all";
 
             if (countryGroup.id != "all") {
@@ -235,7 +236,8 @@
                         label: region,
                         geounit: groupId + ":" + region,
                         countries: [],
-                        selected: false
+                        selected: false,
+                        filtered: false
                     }
 
                     if (_.indexOf(trackRegion, region) < 0) {
@@ -251,7 +253,8 @@
                     id: "all",
                     label: "All Countries",
                     countries: [],
-                    selected: false
+                    selected: false,
+                    filtered: false
                 });
 
             }
@@ -271,6 +274,7 @@
 
                     if (country.regions[countryGroup.id] == regionId || regionId == "all") {
                         country.selected = false;
+                        country.filtered = false;
                         country.id = country.iso_a2;
                         region.countries.push(country);
                     }
@@ -386,7 +390,7 @@
 
     }
 
-    window.utils.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, group, region, groupByRegion) {
+    window.utils.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, yearsExtremesForData) {
 
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
@@ -396,12 +400,12 @@
         var statsCells = statsData.cells;
         var indicatorId = indicators[0];
         var title = indicators[0];
-        var groupId = group;
+        //var groupId = group;
         //var cutBy = "name";
         var dataType = "avg"; //sum,avg
         var multiVariate = indicators.length > 1; //eligible for scatter plot
         // var seriesAverage = [];
-        var dataByYear = [];
+        // var dataByYear = [];
 
         var titleArray = _.map(indicatorsMeta, function(meta) {
             return meta[0].label;
@@ -435,6 +439,8 @@
             // }
         });
 
+
+
         //debugger;
         var seriesArray = [];
 
@@ -443,7 +449,7 @@
 
         _.forEach(cells, function(c) {
             if (c.region) {
-                dataByYear[c.year.toString()] = [];
+                //dataByYear[c.year.toString()] = [];
                 series[c.region] = [];
             }
         });
@@ -451,7 +457,7 @@
         _.forEach(cells, function(c) {
             if (c.region) {
                 series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
-                dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
+                //dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
             }
         });
 
@@ -496,7 +502,7 @@
             chartObj["type"] = "line";
         }
 
-        var json = {
+        var jsonLine = {
             chart: chartObj,
             title: {
 
@@ -542,6 +548,71 @@
             series: seriesArray
         }
 
+        //debugger;
+        // x - indicator 1
+        // y indicator 2
+        // one year
+        // one region
+        // size on bubble would be the third indicator
+        // user should be able to switch between the x, y and z
+
+        if (type == "bubble") {
+
+            seriesArray = [];
+
+            var indicator1 = indicators[0];
+            var indicator2 = indicators[1];
+            var indicator3 = indicators[2];
+
+            //debugger;
+            //debugger;
+
+            _.forEach(cells, function(c) {
+                if (c.region) {
+                    series[c.region] = [];
+                }
+            });
+
+            _.forEach(cells, function(c) {
+                if (c.region) {
+                    /* series[c.region].push({
+                        year: c.year,
+                        data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
+                    });*/
+                    if (c[indicator1 + "__amount_" + dataType] && c[indicator2 + "__amount_" + dataType] && c[indicator3 + "__amount_" + dataType]) {
+
+                        series[c.region] = {
+                            year: c.year,
+                            data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
+                        };
+
+                    }
+
+                }
+            });
+            //debugger;
+            var counter = 1;
+            var countriesArr = [];
+            for (var countryName in series) {
+                var visible = false;
+                // if (defaultVisibleCountries.indexOf(countryName) > -1) {
+                visible = true;
+                //  }
+                //window.averageSeries = series[countryName];
+                // if (defaultCountries.indexOf(countryName) > -1) {
+                seriesArray.push({
+                    name: countryName,
+                    data: series[countryName].data,
+                    visible: counter > 3 ? true : false,
+                    zIndex: counter++
+                });
+
+                // }
+            }
+            debugger;
+
+        }
+
         var jsonBubble = {
 
             chart: {
@@ -553,46 +624,92 @@
                 text: 'Highcharts Bubbles'
             },
 
+            series: seriesArray
+        }
+
+        var jsonBar = {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'World\'s largest cities per 2014'
+            },
+            subtitle: {
+                text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Population (millions)'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+            },
             series: [{
+                name: 'Population',
                 data: [
-                    [97, 36, 79],
-                    [94, 74, 60],
-                    [68, 76, 58],
-                    [64, 87, 56],
-                    [68, 27, 73],
-                    [74, 99, 42],
-                    [7, 93, 87],
-                    [51, 69, 40],
-                    [38, 23, 33],
-                    [57, 86, 31]
-                ]
-            }, {
-                data: [
-                    [25, 10, 87],
-                    [2, 75, 59],
-                    [11, 54, 8],
-                    [86, 55, 93],
-                    [5, 3, 58],
-                    [90, 63, 44],
-                    [91, 33, 17],
-                    [97, 3, 56],
-                    [15, 67, 48],
-                    [54, 25, 81]
-                ]
-            }, {
-                data: [
-                    [47, 47, 21],
-                    [20, 12, 4],
-                    [6, 76, 91],
-                    [38, 30, 60],
-                    [57, 98, 64],
-                    [61, 17, 80],
-                    [83, 60, 13],
-                    [67, 78, 75],
-                    [64, 12, 10],
-                    [30, 77, 82]
-                ]
+                    ['Shanghai', 23.7],
+                    ['Lagos', 16.1],
+                    ['Instanbul', 14.2],
+                    ['Karachi', 14.0],
+                    ['Mumbai', 12.5],
+                    ['Moscow', 12.1],
+                    ['São Paulo', 11.8],
+                    ['Beijing', 11.7],
+                    ['Guangzhou', 11.1],
+                    ['Delhi', 11.1],
+                    ['Shenzhen', 10.5],
+                    ['Seoul', 10.4],
+                    ['Jakarta', 10.0],
+                    ['Kinshasa', 9.3],
+                    ['Tianjin', 9.3],
+                    ['Tokyo', 9.0],
+                    ['Cairo', 8.9],
+                    ['Dhaka', 8.9],
+                    ['Mexico City', 8.9],
+                    ['Lima', 8.9]
+                ],
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.1f}', // one decimal
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
             }]
+        }
+
+        var json;
+
+        switch (type) {
+            case "line":
+                json = jsonLine;
+                break;
+            case "bar":
+                json = jsonBar;
+                break;
+            case "bubble":
+                json = jsonBubble;
+                break;
         }
 
         //debugger;

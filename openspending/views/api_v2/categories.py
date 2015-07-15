@@ -85,11 +85,14 @@ def dataorgs():
         if not getattr(indicator, "mapping", None):
             continue
         keyname = indicator.name
-        years = indicator.years
-        the_years=[]
-        the_years=years.split(",")
-        the_years=map(int,the_years)
-        the_years.sort()
+        years = getattr(indicator,"years",None)
+        if years:
+            the_years=[]
+            the_years=years.split(",")
+            the_years=map(int,the_years)
+            the_years.sort()
+        else:
+            the_years= []
         dataorg = getattr(indicator, "dataorg", None)
         if not dataorg:
             dataorg = "None"

@@ -84,7 +84,7 @@ html, body
 	
 .app .navbar-collapse.collapse
 	height $heightHeader !important
-	
+    
 .app .bg-none
 	background none
 	
@@ -256,8 +256,15 @@ html, body
 	
 .dropdown-menu>li>a
 	//-display inline
-	padding 3px 3px
-	
+	padding 3px 10px
+
+.dropdown-menu>li>p
+	//-display inline
+	padding 3px 5px
+
+body .app ul.dropdown-menu.account-dropdown
+    background green
+
 .app .btn-group:nth-child(2)
 	border-left 1px solid #ccc
 	
@@ -334,16 +341,16 @@ html, body
 	
 .slick-header-columns,.slick-header-column
 	height 100% !important
-		
+
 /****** MEDIA QUERIES ************/
 	
 //small
 @media (min-width: 768px)
 	
 	.app .jumbotron
-		padding 10px
-		
-	.navbar-nav > li > a
+		padding 10px	
+	
+    .navbar-nav > li > a
 		padding 20px
 		
 	.category-wrapper
