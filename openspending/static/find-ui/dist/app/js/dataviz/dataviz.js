@@ -862,7 +862,7 @@
             "id":0
         }
     ];
-debugger;
+    
         $("#data-table").slickgrid({
             columns: columns,
             data: data,
