@@ -1,6 +1,8 @@
 (function() {
     window.utils = {};
 
+    window.utils.masterCells = [];
+
     window.utils.flipCardEvent = function() {
 
         $(".flip").click(function() {
@@ -429,7 +431,6 @@
 
 
         //Add stats to series
-
         _.forEach(statsCells, function(c) {
             //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
             //if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
@@ -444,17 +445,20 @@
         //debugger;
         var seriesArray = [];
 
+        window.utils.masterCells = window.utils.masterCells.concat(cells);
+
+        var _cells = window.utils.masterCells;
         //debugger;
         //debugger;
 
-        _.forEach(cells, function(c) {
+        _.forEach(_cells, function(c) {
             if (c.region) {
                 //dataByYear[c.year.toString()] = [];
                 series[c.region] = [];
             }
         });
 
-        _.forEach(cells, function(c) {
+        _.forEach(_cells, function(c) {
             if (c.region) {
                 series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
                 //dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
@@ -559,27 +563,51 @@
         if (type == "bubble") {
 
             seriesArray = [];
-
+            var latestYear = yearsExtremesForData[1];
             var indicator1 = indicators[0];
             var indicator2 = indicators[1];
             var indicator3 = indicators[2];
 
             //debugger;
             //debugger;
+            _.forEach(statsCells, function(c) {
 
-            _.forEach(cells, function(c) {
+                if (latestYear === c.geometry__time) {
+
+                    series["Global Minimum"] = {
+                        data: [c[indicator1 + "__amount_min"], c[indicator2 + "__amount_min"], c[indicator3 + "__amount_min"]],
+                        year: c.geometry__time
+                    };
+                    series["Global Maximum"] = {
+                        data: [c[indicator1 + "__amount_max"], c[indicator2 + "__amount_max"], c[indicator3 + "__amount_max"]],
+                        year: c.geometry__time
+                    };
+                    series["Global Average"] = {
+                        data: [c[indicator1 + "__amount_avg"], c[indicator2 + "__amount_avg"], c[indicator3 + "__amount_avg"]],
+                        year: c.geometry__time
+                    };
+
+                }
+            });
+
+
+
+            _.forEach(_cells, function(c) {
                 if (c.region) {
                     series[c.region] = [];
                 }
             });
 
-            _.forEach(cells, function(c) {
+            _.forEach(_cells, function(c) {
                 if (c.region) {
                     /* series[c.region].push({
                         year: c.year,
                         data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
                     });*/
-                    if (c[indicator1 + "__amount_" + dataType] && c[indicator2 + "__amount_" + dataType] && c[indicator3 + "__amount_" + dataType]) {
+                    //debugger;
+
+                    //if (c[indicator1 + "__amount_" + dataType] && c[indicator2 + "__amount_" + dataType] && c[indicator3 + "__amount_" + dataType] ) {
+                    if (latestYear == c.year) {
 
                         series[c.region] = {
                             year: c.year,
@@ -602,14 +630,16 @@
                 // if (defaultCountries.indexOf(countryName) > -1) {
                 seriesArray.push({
                     name: countryName,
-                    data: series[countryName].data,
+                    data: [series[countryName].data],
                     visible: counter > 3 ? true : false,
                     zIndex: counter++
                 });
 
+                // debugger;
+
                 // }
             }
-            debugger;
+            //  debugger;
 
         }
 
@@ -621,7 +651,7 @@
             },
 
             title: {
-                text: 'Highcharts Bubbles'
+                text: ''
             },
 
             series: seriesArray
@@ -632,10 +662,10 @@
                 type: 'column'
             },
             title: {
-                text: 'World\'s largest cities per 2014'
+                text: ''
             },
             subtitle: {
-                text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+                text: ''
             },
             xAxis: {
                 type: 'category',

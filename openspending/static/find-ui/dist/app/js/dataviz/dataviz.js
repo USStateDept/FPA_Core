@@ -684,8 +684,13 @@
             var newURL = evt.newURL;
             var _hashParams = window.utils.getHashParams();
             yearsFilter = _hashParams.f.split("|");
+            if (chartType == "line") {
+                setExtremes(yearsFilter[0], yearsFilter[1]);
+            } else {
+                debugger;
+                showNewYear(yearsFilter[1]);
+            }
 
-            setExtremes(yearsFilter[0], yearsFilter[1]);
         }
 
 
@@ -1001,6 +1006,12 @@
 
 
     }
+
+    var showNewYear = function(year) {
+
+        var activeChart = $('#viz-container').highcharts();
+
+    };
 
 
     //deferred.done(indicatorDataLoadHandler);
