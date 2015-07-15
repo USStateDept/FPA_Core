@@ -14,6 +14,7 @@ div.container
   div.row
     div.span6
       h3 Login
+      {% formfill form_fill with form_errors %}
       form.basic.login.form-horizontal(id="login", action="{{ url_for('account.login') }}", method="POST")
         input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
         fieldset
@@ -25,6 +26,7 @@ div.container
             input(name="password", type="password")
         div.form-actions
           input.btn.bt-primary(value="Login", type="submit")
+      {% endformfill %}
       p.help-block Forgot your password?
         a(href="{{ url_for('account.trigger_reset') }}") Request a password reset.
     div.span6
