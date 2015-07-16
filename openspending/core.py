@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, redirect, session
+from flask import Flask, redirect, session, abort
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.cache import Cache
