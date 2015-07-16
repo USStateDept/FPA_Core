@@ -4,6 +4,7 @@
 #from flask.ext.superadmin.model.base import BaseModelAdmin
 from flask.ext import wtf
 from flask_admin.contrib import sqla
+from flask.ext.admin.contrib.sqla.view import func
 from wtforms.fields import StringField, PasswordField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 from flask import flash, current_app
@@ -312,9 +313,17 @@ class SourcesView(sqla.ModelView):
 
     column_list = ('label', 'dataType','dataorg','webservice','updated_at')
     
+    column_searchable_list = ('label',)
+    
     form_excluded_columns = ('source','name','created_at','runs','dataviews','datalastupdated')
     
     form_columns = ('label','units', 'dataorg','webservice','orgurl' ,'description', 'tags', 'updated_at','update_freq', 'years', 'stats','agency', 'managers', 'loaded', 'published', 'tested','stats','notes')
+    
+    #column_filters = ('webservice',)
+    
+    #session.query(func.count(User.id)).\
+    #    group_by(User.name)
+
     
     form_widget_args = {
         'label':{
@@ -347,7 +356,17 @@ class SourcesView(sqla.ModelView):
     def is_accessible(self):
         return require.account.is_admin()
 
+#class DTView(sqla.ModelView):
 
+    #def get_count_query(self):
+    #    return self.view.session.query(func.count(dataType))
+    
+    #def dt(self):
+    #    return dataset.get_count_query(self)
+    
+    #def is_accessible(self):
+    #    return require.account.is_admin()
+        
 def register_admin(flaskadmin, db):
 
     from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview, Feedback, Tags
@@ -386,6 +405,8 @@ def register_admin(flaskadmin, db):
 
     flaskadmin.add_view(SourcesView(Dataset, db.session, endpoint='sourcesadmin', category='Indicators', name="Sources"))
 
+    #flaskadmin.add_view(DTView(Dataset, db.session, endpoint='dtadmin', category='Indicators', name="DT"))
+    
     return flaskadmin
 
 
