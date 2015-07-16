@@ -654,6 +654,27 @@
                 text: ''
             },
 
+            xAxis: {
+                //categories: categories
+                title: {
+                    enabled: true,
+                    text: indicatorsMeta[0][0].label
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: indicatorsMeta[1][0].label
+                }
+            },
+            zAxis: {
+                title: {
+                    text: indicatorsMeta[2][0].label
+                }
+            },
+
             series: seriesArray
         }
 
