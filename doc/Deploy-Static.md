@@ -1,8 +1,8 @@
 Prerequisite
 ============
-Install Cloudberry
-Have credentials to access AWS S3
-Add the S3 bucket in Cloudberry
+> Install Cloudberry
+> Have credentials to access AWS S3
+> Add the S3 bucket in Cloudberry
 
 Paths
 =====
