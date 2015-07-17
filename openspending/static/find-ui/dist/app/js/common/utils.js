@@ -1,6 +1,8 @@
 (function() {
     window.utils = {};
 
+    window.utils.masterCells = [];
+
     window.utils.flipCardEvent = function() {
 
         $(".flip").click(function() {
@@ -429,7 +431,6 @@
 
 
         //Add stats to series
-
         _.forEach(statsCells, function(c) {
             //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
             //if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
@@ -444,17 +445,20 @@
         //debugger;
         var seriesArray = [];
 
+        window.utils.masterCells = window.utils.masterCells.concat(cells);
+
+        var _cells = window.utils.masterCells;
         //debugger;
         //debugger;
 
-        _.forEach(cells, function(c) {
+        _.forEach(_cells, function(c) {
             if (c.region) {
                 //dataByYear[c.year.toString()] = [];
                 series[c.region] = [];
             }
         });
 
-        _.forEach(cells, function(c) {
+        _.forEach(_cells, function(c) {
             if (c.region) {
                 series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
                 //dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
@@ -559,27 +563,51 @@
         if (type == "bubble") {
 
             seriesArray = [];
-
+            var latestYear = yearsExtremesForData[1];
             var indicator1 = indicators[0];
             var indicator2 = indicators[1];
             var indicator3 = indicators[2];
 
             //debugger;
             //debugger;
+            _.forEach(statsCells, function(c) {
 
-            _.forEach(cells, function(c) {
+                if (latestYear === c.geometry__time) {
+
+                    series["Global Minimum"] = {
+                        data: [c[indicator1 + "__amount_min"], c[indicator2 + "__amount_min"], c[indicator3 + "__amount_min"]],
+                        year: c.geometry__time
+                    };
+                    series["Global Maximum"] = {
+                        data: [c[indicator1 + "__amount_max"], c[indicator2 + "__amount_max"], c[indicator3 + "__amount_max"]],
+                        year: c.geometry__time
+                    };
+                    series["Global Average"] = {
+                        data: [c[indicator1 + "__amount_avg"], c[indicator2 + "__amount_avg"], c[indicator3 + "__amount_avg"]],
+                        year: c.geometry__time
+                    };
+
+                }
+            });
+
+
+
+            _.forEach(_cells, function(c) {
                 if (c.region) {
                     series[c.region] = [];
                 }
             });
 
-            _.forEach(cells, function(c) {
+            _.forEach(_cells, function(c) {
                 if (c.region) {
                     /* series[c.region].push({
                         year: c.year,
                         data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
                     });*/
-                    if (c[indicator1 + "__amount_" + dataType] && c[indicator2 + "__amount_" + dataType] && c[indicator3 + "__amount_" + dataType]) {
+                    //debugger;
+
+                    //if (c[indicator1 + "__amount_" + dataType] && c[indicator2 + "__amount_" + dataType] && c[indicator3 + "__amount_" + dataType] ) {
+                    if (latestYear == c.year) {
 
                         series[c.region] = {
                             year: c.year,
@@ -602,101 +630,126 @@
                 // if (defaultCountries.indexOf(countryName) > -1) {
                 seriesArray.push({
                     name: countryName,
-                    data: series[countryName].data,
+                    data: [series[countryName].data],
                     visible: counter > 3 ? true : false,
                     zIndex: counter++
                 });
 
+                // debugger;
+
                 // }
             }
-            debugger;
+            //  debugger;
 
-        }
+            var jsonBubble = {
 
-        var jsonBubble = {
+                chart: {
+                    type: 'bubble',
+                    zoomType: 'xy'
+                },
 
-            chart: {
-                type: 'bubble',
-                zoomType: 'xy'
-            },
-
-            title: {
-                text: 'Highcharts Bubbles'
-            },
-
-            series: seriesArray
-        }
-
-        var jsonBar = {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'World\'s largest cities per 2014'
-            },
-            subtitle: {
-                text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
-            },
-            xAxis: {
-                type: 'category',
-                labels: {
-                    rotation: -45,
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
-            },
-            yAxis: {
-                min: 0,
                 title: {
-                    text: 'Population (millions)'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            tooltip: {
-                pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
-            },
-            series: [{
-                name: 'Population',
-                data: [
-                    ['Shanghai', 23.7],
-                    ['Lagos', 16.1],
-                    ['Instanbul', 14.2],
-                    ['Karachi', 14.0],
-                    ['Mumbai', 12.5],
-                    ['Moscow', 12.1],
-                    ['São Paulo', 11.8],
-                    ['Beijing', 11.7],
-                    ['Guangzhou', 11.1],
-                    ['Delhi', 11.1],
-                    ['Shenzhen', 10.5],
-                    ['Seoul', 10.4],
-                    ['Jakarta', 10.0],
-                    ['Kinshasa', 9.3],
-                    ['Tianjin', 9.3],
-                    ['Tokyo', 9.0],
-                    ['Cairo', 8.9],
-                    ['Dhaka', 8.9],
-                    ['Mexico City', 8.9],
-                    ['Lima', 8.9]
-                ],
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.1f}', // one decimal
-                    y: 10, // 10 pixels down from the top
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
+                    text: ''
+                },
+
+                xAxis: {
+                    //categories: categories
+                    title: {
+                        enabled: true,
+                        text: indicatorsMeta[0][0].label
+                    },
+                    startOnTick: true,
+                    endOnTick: true,
+                    showLastLabel: true
+                },
+                yAxis: {
+                    title: {
+                        text: indicatorsMeta[1][0].label
                     }
-                }
-            }]
+                },
+                zAxis: {
+                    title: {
+                        text: indicatorsMeta[2][0].label
+                    }
+                },
+
+                series: seriesArray
+            }
+
+            var jsonBar = {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Population (millions)'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+                },
+                series: [{
+                    name: 'Population',
+                    data: [
+                        ['Shanghai', 23.7],
+                        ['Lagos', 16.1],
+                        ['Instanbul', 14.2],
+                        ['Karachi', 14.0],
+                        ['Mumbai', 12.5],
+                        ['Moscow', 12.1],
+                        ['São Paulo', 11.8],
+                        ['Beijing', 11.7],
+                        ['Guangzhou', 11.1],
+                        ['Delhi', 11.1],
+                        ['Shenzhen', 10.5],
+                        ['Seoul', 10.4],
+                        ['Jakarta', 10.0],
+                        ['Kinshasa', 9.3],
+                        ['Tianjin', 9.3],
+                        ['Tokyo', 9.0],
+                        ['Cairo', 8.9],
+                        ['Dhaka', 8.9],
+                        ['Mexico City', 8.9],
+                        ['Lima', 8.9]
+                    ],
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        y: 10, // 10 pixels down from the top
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                }]
+            }
+
         }
+
+
 
         var json;
 

@@ -117,12 +117,12 @@
 
         },
 
-        selectIndicatorMultiple: function(selectedIndicator, evt, direct) {
+        selectIndicatorMultiple: function(selectedIndicator, evt, goToVisualize) {
 
 
-            if (direct) {
+            if (goToVisualize) {
                 //TODO: Calculate Year Extremes
-                window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&g=dos_region&r=&cn=";
+                window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&r=dos_region:all";
                 return;
             }
 
@@ -267,7 +267,7 @@
 
             if (goToVisualize) {
                 //TODO: Calculate Year Extremes
-                window.location.href = "data-visualization#f=1990|2014&i=gdp_per_capita&c=line&r" + selectedCountry.geounit
+                window.location.href = "data-visualization#f=1990|2014&i=gdp_per_capita&c=line&r=" + selectedCountry.geounit
                 return;
             }
 

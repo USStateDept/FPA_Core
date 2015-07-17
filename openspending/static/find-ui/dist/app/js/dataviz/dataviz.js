@@ -6,7 +6,7 @@
     var hashParams = window.utils.getHashParams();
     var yearsExtremes = []; //default, will be calculated
     var yearsExtremesForData = [];
-
+    var indicatorsMeta;
 
     var activeData;
     var regionalAverageData, regionalAverageSeries;
@@ -684,8 +684,12 @@
             var newURL = evt.newURL;
             var _hashParams = window.utils.getHashParams();
             yearsFilter = _hashParams.f.split("|");
+            if (chartType == "line") {
+                setExtremes(yearsFilter[0], yearsFilter[1]);
+            } else {
+                updateChartData(yearsFilter[1]);
+            }
 
-            setExtremes(yearsFilter[0], yearsFilter[1]);
         }
 
 
@@ -923,7 +927,7 @@
 
         var responseDeferred = args;
 
-        var indicatorsMeta = _.remove(responseDeferred, function(r) {
+        indicatorsMeta = _.remove(responseDeferred, function(r) {
             return !r[0].cells;
         });
 
@@ -1063,6 +1067,28 @@
 
 
     }
+
+    var updateChartData = function(year) {
+
+        var activeChart = $('#viz-container').highcharts();
+        //first three series are the stats
+        var json = window.utils.prepareHighchartsJson({
+            cells: window.utils.masterCells
+        }, {
+            cells: []
+        }, indicatorsMeta, chartType, indicators, [year, year]);
+
+        var series = json.highcharts.series;
+
+        _.forEach(series, function(s, i) {
+            var data = s.data;
+            if (i >= 2) {
+                activeChart.series[i].setData(data, true);
+            }
+        })
+
+
+    };
 
 
     //deferred.done(indicatorDataLoadHandler);

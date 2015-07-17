@@ -78,12 +78,14 @@ def register():
         #get the domain
         print data['email']
         if (data['email'].find('@') == -1 or data['email'].find('.') == -1):
+            flash_error("You must use a valid USG email address")
             raise colander.Invalid(AccountRegister.email,
                     "You must use a valid USG email address")
 
         domain = data['email'][data['email'].find('@') + 1:]
 
         if 'EMAIL_WHITELIST' not in current_app.config.keys():
+            flash_error("Your email is not current supported.  The login option is only available for US Government offices at this time.")
             raise colander.Invalid(AccountRegister.email,
                 "System not set correctly.  Please contact the administrator.")
 
@@ -94,6 +96,7 @@ def register():
                 domainvalid = True
 
         if not domainvalid:
+            flash_error("Your email is not current supported.  The login option is only available for US Government offices at this time.")
             raise colander.Invalid(AccountRegister.email,
                 "Your email is not available for registration.  Currently it is only available for US Government emails.")
 
@@ -101,6 +104,8 @@ def register():
 
         # Check if the username already exists, return an error if so
         if Account.by_email(data['email']):
+            flash_error("Login Name already exists.  Click reset password.")
+
             #resend the hash here to the email and notify the user
             raise colander.Invalid(
                 AccountRegister.email,
@@ -127,7 +132,10 @@ def register():
         return redirect(url_for('account.email_message', id=account.id))
     except colander.Invalid as i:
         errors = i.asdict()
-    values["csrf_token"] = generate_csrf_token()
+    if request.form.get("csrf_token",None):
+        values['csrf_token'] = request.form.get('csrf_token')
+    else:
+        values["csrf_token"] = generate_csrf_token()
     return render_template('account/login.jade', form_fill=values,
                            form_errors=errors)
 
@@ -153,11 +161,17 @@ def verify():
 
     
         #request.form.loginhash = {"data":loginhash}
-        values = {'loginhash': loginhash, "csrf_token": generate_csrf_token()}
-        return render_template('account/verify.jade', account=account, form_fill=values)
+        if request.form.get("csrf_token",None):
+            values = {'loginhash': loginhash, 
+                        "csrf_token": request.form.get('csrf_token')}
+        else:
+            values = {'loginhash': loginhash, 
+                    "csrf_token": generate_csrf_token()}
+        return render_template('account/verify.jade',
+                account=account, 
+                form_fill=values)
 
     else:
-
         loginhash = request.form.get('loginhash')
         if not loginhash:
             message = "We cannot find your unique URL"
@@ -175,7 +189,14 @@ def verify():
         # Check if passwords match, return error if not
         if password1 != password2:
             error = "Your passwords do not match"
-            return render_template('account/verify.jade', loginhash=loginhash, account=account, error=error)
+            values = {'loginhash': loginhash, 
+                        "csrf_token": request.form.get('csrf_token')}
+
+            return render_template('account/verify.jade', 
+                loginhash=loginhash, 
+                account=account, 
+                error=error,
+                form_fill=values)
 
         account.password = generate_password_hash(password1)
         #reset that hash but don't send it.
@@ -186,6 +207,8 @@ def verify():
 
         flash_success("Password saved and you are now verified.  Thank you.")
         login_user(account, remember=True)
+
+
 
 
 
