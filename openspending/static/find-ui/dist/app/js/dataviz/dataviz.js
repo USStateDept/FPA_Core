@@ -803,69 +803,69 @@
         
         console.log(JSON.stringify(data));
         
+        // Reformat columns array for wide data grid
         columns = [
             {"id":"indicator", "name":"indicator", "field":"indicator", "width":"200","sortable":"true"},
             {"id":"country", "name":"country", "field":"country", "width":"200","sortable":"true"}
         ];
-        /*columns = [
-            {"name":"indicator"},
-            {"name":"country"}
-        ];*/        
+        
+        
         //Get years and append to columns
         data.forEach(function(entry){
             
             var yearExists = 0;
             columns.forEach(function(column){
-                if("y" + entry['year'] == column['name'])
+                if(entry['year'] == column['name'])
                     yearExists = 1;
             });
             
             if (!yearExists)
-                columns.push({"id":"y" + entry['year'], "name":"y" + entry['year'], "field":"y" + entry['year'], "width":"200","sortable":"true"});
-                //columns.push({"name":"y" + entry['year']});
-            
+                columns.push({"id":entry['year'], "name":entry['year'], "field":entry['year'], "width":"200","sortable":"true"});
         });
         
+        // Columns array needs an ID for slickgrid
         columns.push({"id":"id", "name":"id", "field":"id", "width":"200","sortable":"true"});
-        //columns.push({"name":"id"});
         
-        data = [
-        {
-            "indicator":"gdp",
-            "country":"USA",
-            "y1990":"1990",
-            "y1991":"1991",
-            "y1992":"1991",
-            "y1993":"1991",
-            "y1994":"1991",
-            "y1995":"1991",
-            "y1996":"1991",
-            "y1997":"1991",
-            "y1998":"1991",
-            "y1999":"1991",
-            "y2000":"1991",
-            "y2001":"1991",
-            "y2002":"1991",
-            "y2003":"1991",
-            "y2004":"1991",
-            "y2005":"1991",
-            "y2006":"1991",
-            "y2007":"1991",
-            "y2008":"1991",
-            "y2009":"1991",
-            "y2010":"1991",
-            "y2011":"1991",
-            "y2012":"1991",
-            "y2013":"1991",
-            "y2014":"1991",
-            "y2015":"2015",
-            "id":0
+        // Create the array in a wide format
+        var dataWide = new Array;
+        
+        function createDataWide(id, indicator, country){
+            var dataTempObj = {};
+            dataTempObj['indicator'] = indicator;
+                dataTempObj['country'] = country;
+                data.forEach(function(entry, i){
+                    if (dataTempObj['indicator'] == Object.keys(entry)[0] && dataTempObj['country'] == entry['region']){
+                        dataTempObj[entry['year']] = entry[indicator];
+                    }
+                });
+                dataTempObj['id'] = id;
+                dataWide.push(dataTempObj);
         }
-    ];
-    
+        
+        data.forEach(function(entry){    
+            
+            var indicator = Object.keys(entry)[0];
+            
+            if (dataWide.length == 0){
+                createDataWide(0, indicator, entry['region']);
+            } else {
+                var indicatorCountryExists = 0;
+                var id = 0;
+                dataWide.forEach(function(dataEntry, i){
+                    if (dataEntry['indicator'] == indicator && dataEntry['country'] == entry['region'] ) {
+                        indicatorCountryExists = 1;
+                    }
+                    id = i + 1;
+                });
+                if (!indicatorCountryExists){
+                    createDataWide(id, indicator, entry['region']);
+                }
+            }
+        });
+        
         $("#data-table").slickgrid({
             columns: columns,
-            data: data,
+            data: dataWide,
             slickGridOptions: {
                 enableCellNavigation: true,
                 enableColumnReorder: true,
