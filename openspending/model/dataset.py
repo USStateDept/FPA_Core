@@ -118,8 +118,8 @@ class Dataset(db.Model):
                 print "failed to load the dataorg for dataset"
                 print e
 
-    def get_count_query(self):
-        return self.session.query(func.count(dataType))
+    #def get_count_query(self):
+    #    return self.session.query(func.count(dataType))
     
     def to_json_dump(self):
         """ Returns a JSON representation of an SQLAlchemy-backed object.
