@@ -800,14 +800,74 @@
 
         var columns;
         var data;
-
+        
         // Example 3: sortable, reorderable columns
         columns = columnsSortable.slice();
         data = cells.slice();
-
+        
+        // Reformat columns array for wide data grid
+        columns = [
+            {"id":"indicator", "name":"indicator", "field":"indicator", "width":"200","sortable":"true"},
+            {"id":"country", "name":"country", "field":"country", "width":"200","sortable":"true"}
+        ];
+        
+        
+        //Get years and append to columns
+        data.forEach(function(entry){
+            
+            var yearExists = 0;
+            columns.forEach(function(column){
+                if(entry['year'] == column['name'])
+                    yearExists = 1;
+            });
+            
+            if (!yearExists)
+                columns.push({"id":entry['year'], "name":entry['year'], "field":entry['year'], "width":"200","sortable":"true"});
+        });
+        
+        // Columns array needs an ID for slickgrid
+        columns.push({"id":"id", "name":"id", "field":"id", "width":"200","sortable":"true"});
+        
+        // Create the array in a wide format
+        var dataWide = new Array;
+        
+        function createDataWide(id, indicator, country){
+            var dataTempObj = {};
+            dataTempObj['indicator'] = indicator;
+                dataTempObj['country'] = country;
+                data.forEach(function(entry, i){
+                    if (dataTempObj['indicator'] == Object.keys(entry)[0] && dataTempObj['country'] == entry['region']){
+                        dataTempObj[entry['year']] = entry[indicator];
+                    }
+                });
+                dataTempObj['id'] = id;
+                dataWide.push(dataTempObj);
+        }
+        
+        data.forEach(function(entry){    
+            
+            var indicator = Object.keys(entry)[0];
+            
+            if (dataWide.length == 0){
+                createDataWide(0, indicator, entry['region']);
+            } else {
+                var indicatorCountryExists = 0;
+                var id = 0;
+                dataWide.forEach(function(dataEntry, i){
+                    if (dataEntry['indicator'] == indicator && dataEntry['country'] == entry['region'] ) {
+                        indicatorCountryExists = 1;
+                    }
+                    id = i + 1;
+                });
+                if (!indicatorCountryExists){
+                    createDataWide(id, indicator, entry['region']);
+                }
+            }
+        });
+        
         $("#data-table").slickgrid({
             columns: columns,
-            data: data,
+            data: dataWide,
             slickGridOptions: {
                 enableCellNavigation: true,
                 enableColumnReorder: true,
