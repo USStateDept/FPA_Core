@@ -805,8 +805,6 @@
         columns = columnsSortable.slice();
         data = cells.slice();
         
-        console.log(JSON.stringify(data));
-        
         // Reformat columns array for wide data grid
         columns = [
             {"id":"indicator", "name":"indicator", "field":"indicator", "width":"200","sortable":"true"},
