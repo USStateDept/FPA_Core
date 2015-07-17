@@ -317,7 +317,7 @@ class SourcesView(sqla.ModelView):
     
     form_excluded_columns = ('source','name','created_at','runs','dataviews','datalastupdated')
     
-    form_columns = ('label','units', 'dataorg','webservice','orgurl' ,'description', 'tags', 'updated_at','update_freq', 'years', 'stats','agency', 'managers', 'loaded', 'published', 'tested','stats','notes')
+    form_columns = ('label','units', 'dataorg','webservice','orgurl' ,'description', 'tags', 'updated_at','update_freq','update_cycle', 'years', 'stats','agency', 'managers', 'loaded', 'published', 'tested','stats','notes')
     
     #column_filters = ('webservice',)
     
