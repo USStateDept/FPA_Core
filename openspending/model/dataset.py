@@ -78,7 +78,7 @@ class Dataset(db.Model):
     agency = Column(Unicode(255))
     organization = Column(Unicode(255))
     notes = Column(Unicode(4000))
-
+    update_cycle = Column(Unicode(255))
     #TODO
     #tag stuff
 
@@ -118,7 +118,9 @@ class Dataset(db.Model):
                 print "failed to load the dataorg for dataset"
                 print e
 
-
+    #def get_count_query(self):
+    #    return self.session.query(func.count(dataType))
+    
     def to_json_dump(self):
         """ Returns a JSON representation of an SQLAlchemy-backed object.
         """

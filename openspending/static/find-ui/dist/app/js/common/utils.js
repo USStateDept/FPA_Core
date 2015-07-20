@@ -663,6 +663,7 @@
 
 
 
+
         }
 
         if (type == "bar") {
@@ -675,35 +676,47 @@
             //Add stats to series
             _.forEach(statsCells, function(c) {
                 if (latestYear == c.geometry__time) {
-                    data.push({
-                        name: "Global Minimum",
-                        data: [c[indicatorId + "__amount_min"]]
-                    });
-                    data.push({
-                        name: "Global Maximum",
-                        data: [c[indicatorId + "__amount_max"]]
-                    });
-                    data.push({
-                        name: "Global Average",
-                        data: [c[indicatorId + "__amount_avg"]]
-                    });
+                    data.push([
+                        "Global Minimum",
+                        c[indicatorId + "__amount_min"]
+
+                    ]);
+                    data.push([
+                        "Global Maximum",
+                        c[indicatorId + "__amount_max"]
+
+                    ]);
+                    data.push([
+                        "Global Average",
+                        c[indicatorId + "__amount_avg"]
+
+                    ]);
                 }
             });
 
 
             _.forEach(_cells, function(c) {
                 if (c.region && latestYear == c.year) {
-                    //data.push([c.region, c[indicatorId + "__amount_" + dataType]]);
-                    data.push({
+                    //debugger;
+                    data.push([c.region, c[indicatorId + "__amount_" + dataType]]);
+                    /* data.push({
                         name: "Global Minimum",
-                        data: [c[indicatorId + "__amount_" + dataType]]
-                    });
+                        data: [
+                            [c[indicatorId + "__amount_" + dataType]]
+                        ]
+                    });*/
                 }
             });
 
+            // [
+            //             ['Firefox', 55.0],
+            //             ['IE', 16.8],
+            //             ['Safari', 7.5],
+            //             ['Opera', 7.2],
+            //             ['Others', 0.7]
+            //         ]
 
-
-            debugger;
+            //debugger;
             seriesArray = [{
                 name: indicatorsMeta[0][0].label,
                 data: data,
@@ -755,9 +768,8 @@
                 },
                 series: seriesArray
             }
+
         }
-
-
 
         var json;
 
