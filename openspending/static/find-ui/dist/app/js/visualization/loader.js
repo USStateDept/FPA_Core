@@ -27,10 +27,13 @@
     window.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
 
         //line
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=line&g=all&r=&cn=&grp=0
+        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=line&r=usaid_reg:OAPA|canada
+
+        //bar
+        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=bar&r=usaid_reg:OAPA|canada
 
         //bubble
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_growth|gdp_per_capita|health_expenditure_public&c=bubble&r=usaid_reg:OAPA
+        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_growth|gdp_per_capita|health_expenditure_public&c=bubble&r=usaid_reg:OAPA|canada
 
         //dod_cmd:USCENTCOM:all|dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina
 

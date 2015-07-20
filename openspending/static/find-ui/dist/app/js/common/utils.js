@@ -448,6 +448,8 @@
         window.utils.masterCells = window.utils.masterCells.concat(cells);
 
         var _cells = window.utils.masterCells;
+
+
         //debugger;
         //debugger;
 
@@ -559,11 +561,13 @@
         // one region
         // size on bubble would be the third indicator
         // user should be able to switch between the x, y and z
+        var latestYear = yearsExtremesForData[1];
 
         if (type == "bubble") {
 
             seriesArray = [];
-            var latestYear = yearsExtremesForData[1];
+
+
             var indicator1 = indicators[0];
             var indicator2 = indicators[1];
             var indicator3 = indicators[2];
@@ -590,8 +594,6 @@
                 }
             });
 
-
-
             _.forEach(_cells, function(c) {
                 if (c.region) {
                     series[c.region] = [];
@@ -600,44 +602,27 @@
 
             _.forEach(_cells, function(c) {
                 if (c.region) {
-                    /* series[c.region].push({
-                        year: c.year,
-                        data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
-                    });*/
-                    //debugger;
-
-                    //if (c[indicator1 + "__amount_" + dataType] && c[indicator2 + "__amount_" + dataType] && c[indicator3 + "__amount_" + dataType] ) {
                     if (latestYear == c.year) {
-
                         series[c.region] = {
                             year: c.year,
                             data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
                         };
-
                     }
-
                 }
             });
+
             //debugger;
             var counter = 1;
             var countriesArr = [];
             for (var countryName in series) {
                 var visible = false;
-                // if (defaultVisibleCountries.indexOf(countryName) > -1) {
                 visible = true;
-                //  }
-                //window.averageSeries = series[countryName];
-                // if (defaultCountries.indexOf(countryName) > -1) {
                 seriesArray.push({
                     name: countryName,
                     data: [series[countryName].data],
                     visible: counter > 3 ? true : false,
                     zIndex: counter++
                 });
-
-                // debugger;
-
-                // }
             }
             //  debugger;
 
@@ -676,6 +661,66 @@
                 series: seriesArray
             }
 
+
+
+        }
+
+        if (type == "bar") {
+            //debugger;
+
+            seriesArray = [];
+
+            var data = [];
+
+            //Add stats to series
+            _.forEach(statsCells, function(c) {
+                if (latestYear == c.geometry__time) {
+                    data.push({
+                        name: "Global Minimum",
+                        data: [c[indicatorId + "__amount_min"]]
+                    });
+                    data.push({
+                        name: "Global Maximum",
+                        data: [c[indicatorId + "__amount_max"]]
+                    });
+                    data.push({
+                        name: "Global Average",
+                        data: [c[indicatorId + "__amount_avg"]]
+                    });
+                }
+            });
+
+
+            _.forEach(_cells, function(c) {
+                if (c.region && latestYear == c.year) {
+                    //data.push([c.region, c[indicatorId + "__amount_" + dataType]]);
+                    data.push({
+                        name: "Global Minimum",
+                        data: [c[indicatorId + "__amount_" + dataType]]
+                    });
+                }
+            });
+
+
+
+            debugger;
+            seriesArray = [{
+                name: indicatorsMeta[0][0].label,
+                data: data,
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.1f}', // one decimal
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            }];
+
             var jsonBar = {
                 chart: {
                     type: 'column'
@@ -699,54 +744,17 @@
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Population (millions)'
+                        text: indicatorsMeta[0][0].label
                     }
                 },
                 legend: {
                     enabled: false
                 },
                 tooltip: {
-                    pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+                    pointFormat: indicatorsMeta[0][0].label
                 },
-                series: [{
-                    name: 'Population',
-                    data: [
-                        ['Shanghai', 23.7],
-                        ['Lagos', 16.1],
-                        ['Instanbul', 14.2],
-                        ['Karachi', 14.0],
-                        ['Mumbai', 12.5],
-                        ['Moscow', 12.1],
-                        ['São Paulo', 11.8],
-                        ['Beijing', 11.7],
-                        ['Guangzhou', 11.1],
-                        ['Delhi', 11.1],
-                        ['Shenzhen', 10.5],
-                        ['Seoul', 10.4],
-                        ['Jakarta', 10.0],
-                        ['Kinshasa', 9.3],
-                        ['Tianjin', 9.3],
-                        ['Tokyo', 9.0],
-                        ['Cairo', 8.9],
-                        ['Dhaka', 8.9],
-                        ['Mexico City', 8.9],
-                        ['Lima', 8.9]
-                    ],
-                    dataLabels: {
-                        enabled: true,
-                        rotation: -90,
-                        color: '#FFFFFF',
-                        align: 'right',
-                        format: '{point.y:.1f}', // one decimal
-                        y: 10, // 10 pixels down from the top
-                        style: {
-                            fontSize: '13px',
-                            fontFamily: 'Verdana, sans-serif'
-                        }
-                    }
-                }]
+                series: seriesArray
             }
-
         }
 
 

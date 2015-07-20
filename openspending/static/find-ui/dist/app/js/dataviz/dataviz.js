@@ -1016,14 +1016,33 @@
             cells: []
         }, indicatorsMeta, chartType, indicators, [year, year]);
 
-        var series = json.highcharts.series;
 
-        _.forEach(series, function(s, i) {
-            var data = s.data;
-            if (i >= 2) {
-                activeChart.series[i].setData(data, true);
-            }
-        })
+
+
+
+        if (chartType == "bubble") {
+            var seriesArray = json.highcharts.series;
+            _.forEach(seriesArray, function(s, i) {
+                var data = s.data;
+                if (i >= 2) {
+                    activeChart.series[i].setData(data, true);
+                }
+            });
+        }
+
+        if (chartType == "bar") {
+            var series = json.highcharts.series[0];
+            debugger;
+            activeChart.series[0].setData(series.data, true);
+            /*_.forEach(series.data, function(d, i) {
+                var data = d;
+                if (i >= 2) {
+                    debugger;
+                    activeChart.series[0].setData(series.data, true);
+                }
+            });*/
+        }
+
 
 
     };
