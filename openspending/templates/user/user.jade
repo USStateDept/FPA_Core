@@ -26,8 +26,6 @@ style
         p
       .row
         p This is the user profile page.
-        p Click 
-          a(href="/user/adddv") here to add an example dv row.
         p This is meant to show the framework of how we can handle this and is not the final / production version.
       .row
         h2 Saved Data Views
@@ -35,17 +33,14 @@ style
           {% for views in dataviews %}
           {% if loop.first %}
           tr
-            th Name
-            th Description
             th Created Date
-            th URL Hash
+            th Visualization URL
             th Action
           {% endif %}
           tr
-            td {{ views.title }}
-            td {{ views.description }}
             td {{ views.created_at }}
-            td {{ views.urlhash }}
+            td 
+              a(href="/data-visualization{{ views.settings.hash }}"){{ views.settings.hash }}
             td.center
               a(href="/user/removedv/{{ views.id }}") X
           {% else %}

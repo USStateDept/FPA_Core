@@ -1,5 +1,6 @@
 import colander
 import logging
+import urllib
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import current_user
 from flask import current_app
@@ -20,8 +21,12 @@ def dataloader():
 @blueprint.route('/user/adddv', methods=['GET'])    
 def saveData():
     """ save a dv to the current  user """
+    """ unquote the js uri encoding """
+    viz_hash = urllib.unquote(request.query_string)
+    """ re add the #"""
+    viz_hash = '#'+viz_hash[2:]
     if current_user.id:
-      newrow = Dataview({'title':'Test','description':'This is a test','account_id':current_user.id})
+      newrow = Dataview({'account_id':current_user.id,'settings':{'hash':viz_hash}})
       db.session.add(newrow)
       db.session.commit()
       msg = 'Saved visualization'
