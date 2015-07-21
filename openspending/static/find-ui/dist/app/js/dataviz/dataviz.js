@@ -888,13 +888,11 @@
             "id": "indicator",
             "name": "indicator",
             "field": "indicator",
-            "width": "200",
             "sortable": "true"
         }, {
             "id": "country",
             "name": "country",
             "field": "country",
-            "width": "200",
             "sortable": "true"
         }];
 
@@ -913,7 +911,6 @@
                     "id": entry['year'],
                     "name": entry['year'],
                     "field": entry['year'],
-                    "width": "200",
                     "sortable": "true"
                 });
         });
@@ -923,7 +920,6 @@
             "id": "id",
             "name": "id",
             "field": "id",
-            "width": "200",
             "sortable": "true"
         });
 
@@ -963,14 +959,51 @@
                 }
             }
         });
+        
+        var options = {
+            enableCellNavigation: true,
+            enableColumnReorder: true,
+            forceFitColumns: false,
+            defaultColumnWidth: 150,
+            rowHeight: 35
+        }
+        
+        var dataView = new Slick.Data.DataView();
 
-        $("#data-table").slickgrid({
+        // Pass it as a data provider to SlickGrid.
+        var grid = new Slick.Grid("#data-table", dataView, columns, options);
+        
+        // Make the grid respond to DataView change events.
+        dataView.onRowCountChanged.subscribe(function (e, args) {
+          grid.updateRowCount();
+          grid.render();
+        });
+
+        dataView.onRowsChanged.subscribe(function (e, args) {
+          grid.invalidateRows(args.rows);
+          grid.render();
+        });
+        
+        dataView.setItems(dataWide);
+        
+        grid.onSort.subscribe(function(e, args) {
+            var comparer = function(a, b) {
+                return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
+            }
+
+            dataView.sort(comparer, args.sortAsc);
+        });
+        
+        /*$("#data-table").slickgrid({
             columns: columns,
             data: dataWide,
             slickGridOptions: {
-                enableCellNavigation: true,
-                enableColumnReorder: true,
-                forceFitColumns: true,
+                //enableCellNavigation: true,
+                //enableColumnReorder: true,
+                forceFitColumns: false,
+                autoExpandColumns: true,
+                //resizeable: true,
+                //width: 100,
                 rowHeight: 35
             },
             // handleCreate takes some extra options:
@@ -1014,7 +1047,7 @@
                 // action fixes the situation.
 
             }
-        });
+        });*/
 
     }
 
