@@ -1,5 +1,5 @@
 (function() {
-
+    window.loader = {};
     //     GDP per Capita
     // http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&drilldown=geometry__time|geometry__country_level0@name&format=csv
 
@@ -8,7 +8,7 @@
 
     // Control of Corruption
     // http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes=control_of_corruption&drilldown=geometry__time|geometry__country_level0@name&format=csv
-    window.loadIndicatorList = function(url, handlerFunc) {
+    window.loader.loadIndicatorList = function(url, handlerFunc) {
 
         //url = "data/indicators2.json";
 
@@ -24,10 +24,10 @@
         });
     }
 
-    window.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
+    window.loader.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
 
         //line
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=line&r=usaid_reg:OAPA|canada
+        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=bar&r=usaid_reg:OAPA|canada
 
         //bar
         //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=bar&r=usaid_reg:OAPA|canada
@@ -211,7 +211,7 @@
 
     }
 
-    window.loadCountries = function(url, handlerFunc) {
+    window.loader.loadCountries = function(url, handlerFunc) {
         // url = "data/access-to-improved.json";
         //url = "static/find-ui/dist/data/countries.json";
         url = "/api/3/countries_list";
@@ -226,7 +226,7 @@
         });
     }
 
-    window.loadGeoJSON = function(type, handlerFunc) {
+    window.loader.loadGeoJSON = function(type, handlerFunc) {
 
         url = "/static/json/" + type + "_None.geojson";
         $.ajax({
@@ -243,7 +243,7 @@
 
     }
 
-    window.loadIndicatorsMeta = function(indicators) {
+    window.loader.loadIndicatorsMeta = function(indicators) {
 
         var defferreds = [];
 
@@ -272,7 +272,7 @@
     }
 
 
-    window.loadUrlShorten = function(url) {
+    window.loader.loadUrlShorten = function(url) {
         var deferred = $.ajax({
 
             url: url,

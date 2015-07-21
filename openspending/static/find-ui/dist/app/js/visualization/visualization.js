@@ -3,6 +3,7 @@
     /**
      * Start the Wiard mode
      **/
+    window.visualization = {};
     window.clickedIndicator = false;
     window.expandedCategory = false;
 
@@ -75,16 +76,16 @@
 
     }
 
-    window.changeGroup = function(groupId) {
+    window.visualization.changeGroup = function(groupId) {
 
         if (groupId == "all") {
             groupId = "sovereignt";
         }
 
-        window.loadGeoJSON(groupId, geoJSONHandler);
+        window.loader.loadGeoJSON(groupId, geoJSONHandler);
     }
 
-    window.createMap = function() {
+    window.visualization.createMap = function() {
 
         var defaultType = "sovereignt";
 
@@ -94,15 +95,13 @@
 
             map = L.map('map').setView([0, 0], 1);
 
-            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                maxZoom: 18,
-                id: 'examples.map-i875mjb7',
-                accessToken: 'pk.eyJ1Ijoid2lzZWd1eSIsImEiOiI5N2IxYWYxMzU2YmZhOTU3ZjM4ZDRjZDBlMzNkYzU0NSJ9._T6Dz2ZFA4p9VZMdT2SmjA'
+                maxZoom: 18
             }).addTo(map);
 
             //load geojson
-            window.loadGeoJSON(defaultType, geoJSONHandler);
+            window.loader.loadGeoJSON(defaultType, geoJSONHandler);
         }
 
     }
@@ -153,8 +152,8 @@
 
     }
 
-    window.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
-    window.loadCountries("", countriesListLoadHandler);
+    window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
+    window.loader.loadCountries("", countriesListLoadHandler);
 
     // Under Five mortality rate
 

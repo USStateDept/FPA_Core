@@ -44,6 +44,20 @@
         modal.find('.modal-body').text(modalMessage);
     });
 
+    $('#opener').on('click', function() {
+        var panel = $('#slide-panel');
+        if (panel.hasClass("visible")) {
+            panel.removeClass('visible').animate({
+                'margin-left': '-400px'
+            });
+        } else {
+            panel.addClass('visible').animate({
+                'margin-left': '0px'
+            });
+        }
+        return false;
+    });
+
     var model = {
 
         shareUrl: function() {
@@ -64,7 +78,7 @@
             var url = "https://go.usa.gov/api/shorten.jsonp?login=find&apiKey=513b798e10d6c101ac6ac7fdd405d0e7&longUrl={encodeUrl}";
             url = url.replace("{encodeUrl}", encodeUrl);
 
-            window.loadUrlShorten(url).then(function(response) {
+            window.loader.loadUrlShorten(url).then(function(response) {
                 modalTitle = "Share";
                 modalMessage = response.response.data.entry[0].short_url;
                 $('#modal').modal('show');
@@ -567,11 +581,11 @@
                 return indicator.id;
             });
 
-            var _deferredMetaList = window.loadIndicatorsMeta(indicators);
-            var _deferredList = window.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+            var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
-            //var _deferredList = window.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
 
             $.when.apply($, _deferredList).done(function(response) {
                 indicatorDataLoadHandler(arguments);
@@ -616,7 +630,7 @@
             }
             cutBy;
             //debugger;
-            var deff = window.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupByRegion);
+            var deff = window.loader.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupByRegion);
 
 
 
@@ -1220,8 +1234,8 @@
             //switch to group by indicators
             groupBy = "indicators";
         }
-        var deferredMetaList = window.loadIndicatorsMeta(indicators);
-        var deferredList = window.loadIndicatorData(indicators, regions, yearsExtremes);
+        var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+        var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
         deferredList = deferredList.concat(deferredMetaList);
 
         //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
@@ -1234,7 +1248,7 @@
 
     }
 
-    window.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
+    window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
 
 
     var countriesListLoadHandler = function(response) {
@@ -1243,7 +1257,7 @@
 
     }
 
-    window.loadCountries("", countriesListLoadHandler);
+    window.loader.loadCountries("", countriesListLoadHandler);
 
     initialize();
 

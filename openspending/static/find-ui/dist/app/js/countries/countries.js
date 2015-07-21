@@ -1,7 +1,7 @@
 (function() {
 
     setTimeout(function() {
-        window.createMap();
+        window.visualization.createMap();
     }, 10);
 
 }())

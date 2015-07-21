@@ -9,7 +9,7 @@
             switch (type) {
                 case "countries":
                     setTimeout(function() {
-                        window.createMap();
+                        window.visualization.createMap();
                     }, 10);
 
                     break;
@@ -489,7 +489,7 @@
 
             var groupId = arguments[0].id;
 
-            //window.changeGroup(groupId);
+            //window.visualization.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);
             vizModel.activeRegion(""); //set active region to undefined
