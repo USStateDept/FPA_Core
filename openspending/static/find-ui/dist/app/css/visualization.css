@@ -423,6 +423,13 @@
   background: url("../images/noun_share_33345.png") center center no-repeat;
   background-size: contain;
 }
+.btn.saveVZ {
+  width: 75px;
+  height: 40px;
+  border: none;
+  background: url("../images/noun_cloud_84986.png") center center no-repeat;
+  background-size: contain;
+}
 #data-table,
 #indicators,
 #comparator {

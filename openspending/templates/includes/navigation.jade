@@ -37,12 +37,12 @@ nav.navbar.navbar-default.navbar-fixed-top
             strong 
             {{ current_user.fullname }}
           ul.dropdown-menu.account-dropdown
-            {% if current_user.admin %}
             li
               p
                 strong User Profile
               a(href="/user") User Profile
             li.divider
+            {% if current_user.admin %}
             li
               p
                 strong Admin Only
