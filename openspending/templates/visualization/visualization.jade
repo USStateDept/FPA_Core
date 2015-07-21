@@ -76,16 +76,6 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroups', data-bind="foreach:countryGroupings")
                     li(role='presentation')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
-
-
-                //- .dropdown.pull-left(data-bind="visible:countryGroupRegions().length>0 && !groupByRegion()",style="margin-left:10px")
-                //-   button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
-                //-       .glyphicon.glyphicon-menu-down
-                //-       span(data-bind="html:activeRegion().label")
-                //-   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
-                //-     li(role='presentation')
-                //-       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroupRegion")
-
                 .dropdown.selection-list.pull-left(data-bind="visible:activeCountries().length>0 && !groupByRegion()",style="margin-left:10px")
 
                   button#dropdownMenuSelectedCountries.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
@@ -98,28 +88,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                     li(role='presentation')
                       span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
-
-                //- .dropdown.pull-left(data-bind="visible:activeGroup().id != 'all'")
-                //-   input#groupBy(type="checkbox" data-bind="checked:groupByRegion")
-                //-   label(for="groupBy") Group By Regions
-                
-              //-.col-md-4
-                  //-button.btn.btn-default(type='button') Select All
-                  //-button.btn.btn-default(type='button') Deselect All
-              //- .col-md-8
-              //-   .pull-right#filter-countries-label(data-bind="visible:activeCountries().length==0,html:activeGroup().label + ' ' + activeRegion()")
-
-            
-
             .row
               p
-            //- .row(data-bind="visible:activeCountries().length>0")
-            //-   .col-md-10(data-bind="foreach:activeCountries")
-            //-     div
-            //-       .glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
-            //-       span.flags-labels(data-bind="html:label")
-            //-   .col-md-2
-            //-     a(data-bind="click:clearActiveCountries") Clear All
             .row
               .col-md-12
                 input.btn-block#filterCountries(data-bind="value:filterCountry,valueUpdate:'keyup',event:{keyup:filterCountries},visible:!groupByRegion()" placeHolder="Find a Country")
@@ -142,10 +112,6 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                         div.flag(data-bind="css:iso_a2.toLowerCase()")
                         span.flags-labels(style="vertical-align:middle" data-bind="html:label")
-              //- .col-md-8.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:groupByRegion() && activeGroup().id !='all'")
-              //-   .row(data-bind="foreach:countryGroupRegions")
-              //-     .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
-              //-       div(data-bind='html:$data')
               .col-md-4.map-col
                 .row
                   .col-md-12#map
@@ -153,13 +119,6 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               
           //- BY TEST
           #select-indicator.tabs-app.tab-pane.active(role='tabpanel') 
-            //- .row(style="padding:10px")
-            //-   .col-md-2
-            //-   .col-md-10
-            //-     div(data-bind="foreach:activeIndicators")
-            //-       div
-            //-         .glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
-            //-         span(data-bind="html:label")
             .row
               p
             .row

@@ -369,26 +369,6 @@
                 vizModel.countryGroupings.push(countryGroup);
             });
 
-            return;
-
-            var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
-            vizModel.countriesModelMaster.removeAll();
-
-            var countriesModel = _.clone(vizModel.countriesModel(), true);
-            vizModel.countriesModel.removeAll();
-            _.forEach(countriesModel, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
-                }
-                vizModel.countriesModel.push(country);
-            });
-
-            _.forEach(countriesModelMaster, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
-                }
-                vizModel.countriesModelMaster.push(country);
-            });
 
             // _.each(activeCountries, function(country){
             // 	if (geounit)

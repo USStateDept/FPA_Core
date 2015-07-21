@@ -176,24 +176,16 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                               span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
                               span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON    
             #comparator.tab-pane.active
-              .row.title
+              .row
                 .col-md-12
                   .dropdown.pull-left
                     button#dropdownMenuGroups.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
                         .glyphicon.glyphicon-menu-down
                         span(data-bind="html:activeGroup().label")
+                    div.noun-tree-140111(data-bind="visible:(activeGroup().id != 'all'),click:function(data,evt){selectCountry(activeGroup(),evt,false,true)}" title="All Regions in this Group")
                     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroups', data-bind="foreach:countryGroupings")
                       li(role='presentation')
                         a(role='menuitem', tabindex='-1', href='#',data-bind="html:label,click:$root.selectCountryGroup")
-
-                  .dropdown.pull-left(data-bind="visible:countryGroupRegions().length>0 && !groupByRegion()",style="margin-left:10px")
-                    button#dropdownMenuGroupRegions.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
-                        .glyphicon.glyphicon-menu-down
-                        span(data-bind="html:activeRegion()")
-                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuGroupRegions', data-bind="foreach:countryGroupRegions")
-                      li(role='presentation')
-                        a(role='menuitem', tabindex='-1', href='#',data-bind="html:$data,click:$root.selectCountryGroupRegion")
-
                   .dropdown.selection-list.pull-left(data-bind="visible:activeCountries().length>0 && !groupByRegion()",style="margin-left:10px")
 
                     button#dropdownMenuSelectedCountries.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='true')
@@ -206,11 +198,6 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       li(role='presentation')
                         span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
                         a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
-
-                  .dropdown.pull-left(data-bind="visible:activeGroup().id != 'all'")
-                    input#groupBy(type="checkbox" data-bind="checked:groupByRegion")
-                    label(for="groupBy") Group By Regions
-
               .row.title
                 .col-md-12
                   .dropdown.pull-right(data-bind="visible:groupByRegion() || activeCountries().length > 0")
@@ -228,16 +215,17 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .row
                 p
               .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
-                .col-md-12.countries-col(style="height:300px;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
-                  .row.f32(data-bind="foreach:countriesModel")
-                    .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
-                      div.flag-item( data-bind='click:$root.selectCountry,css:{selected:selected}')
-                        div.flag(data-bind="css:iso_a2.toLowerCase()")
+                .col-md-8.countries-col(style="height:400px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
+                  .row.f32(data-bind="foreach:activeGroup().regions")
+                    .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
+                      span.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                         span.flags-labels(style="vertical-align:middle" data-bind="html:label")
-                .col-md-12.countries-col(style="height:300px;overflow-y:auto" data-bind="visible:groupByRegion() && activeGroup().id !='all'")
-                  .row(data-bind="foreach:countryGroupRegions")
-                    .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
-                      div(data-bind='html:$data')
+                      div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
+                    span(data-bind="foreach:$data.countries,css:{hasCountryFilter:$root.hasCountryFilter}")
+                      .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
+                        div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                          div.flag(data-bind="css:iso_a2.toLowerCase()")
+                          span.flags-labels(style="vertical-align:middle" data-bind="html:label")
 
   .row.tabs-app
     .col-md-12

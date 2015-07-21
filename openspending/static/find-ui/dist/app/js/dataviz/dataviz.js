@@ -99,16 +99,16 @@
             debugger;
 
         },
-        
+
         saveVZ: function() {
 
             var viz_hash = encodeURI(location.hash).substring(1);
-            if ( viz_hash != "" ){
-                $.get("/user/adddv?h="+viz_hash, function(){
+            if (viz_hash != "") {
+                $.get("/user/adddv?h=" + viz_hash, function() {
                     //update some sort of flash message here? 
                 });
             } else {
-               //failure message here?               
+                //failure message here?               
             }
         },
 
@@ -400,33 +400,76 @@
 
         },
 
-        selectCountry: function(selectedCountry) {
-            var selectedCountry = arguments[0];
+        selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
+            var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
+
+            selectedCountry = _.clone(selectedCountry, true);
+
+            if (isGroup) { //breakdown a group
+                selectedCountry.label += " Regions";
+            }
+
+            if (!isGroup && breakdown) { //breakdown a region
+                selectedCountry.label += " Countries";
+                selectedCountry.geounit += ":all";
+            }
+
+            if (goToVisualize) {
+                //TODO: Calculate Year Extremes
+                window.location.href = "data-visualization#f=1990|2014&i=gdp_per_capita&c=line&r=" + selectedCountry.geounit
+                return;
+            }
+
+            // var selectedCountry = arguments[0];
             if (selectedCountry.selected) {
                 return false;
             }
             var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.iso_a2;
+            var countryId = selectedCountry.id;
 
             model.activeCountries.push(selectedCountry);
 
             var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
             model.countriesModelMaster.removeAll();
 
-            var countriesModel = _.clone(model.countriesModel(), true);
-            model.countriesModel.removeAll();
-            _.forEach(countriesModel, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
+
+            var countryGroupings = _.clone(model.countryGroupings(), true);
+            model.countryGroupings.removeAll();
+
+            var activeGroupId = model.activeGroup().id;
+
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (countryGroup.id == countryId) {
+                    countryGroup.selected = true;
                 }
-                model.countriesModel.push(country);
+                _.forEach(countryGroup.regions, function(region) {
+                    if (region.id == countryId && region.label == countryLabel) {
+                        region.selected = true;
+                    }
+                    _.forEach(region.countries, function(country) { //for each Country
+                        if (country.id == countryId) {
+                            country.selected = true;
+                        }
+                    });
+
+                });
             });
 
-            _.forEach(countriesModelMaster, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (activeGroupId == countryGroup.id) {
+                    model.activeGroup(countryGroup);
                 }
-                model.countriesModelMaster.push(country);
+                model.countryGroupings.push(countryGroup);
+            });
+
+
+            var filterValue = $("#filterCountries")[0].value;
+
+
+            model.filterCountries(null, {
+                currentTarget: {
+                    value: filterValue
+                }
             });
         },
 
@@ -439,31 +482,38 @@
             model.activeCountries.splice(selectedIndex, 1);
 
             var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.iso_a2;
+            var countryId = selectedCountry.id;
 
-            var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
-            model.countriesModelMaster.removeAll();
+            //model.activeCountries.removeAll();
 
-            var countriesModel = _.clone(model.countriesModel(), true);
-            model.countriesModel.removeAll();
-            _.forEach(countriesModel, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
+            var countryGroupings = _.clone(model.countryGroupings(), true);
+            model.countryGroupings.removeAll();
+
+            var activeGroupId = model.activeGroup().id;
+            // debugger;
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (countryGroup.id == countryId) {
+                    countryGroup.selected = false;
                 }
-                model.countriesModel.push(country);
+                _.forEach(countryGroup.regions, function(region) {
+                    if (region.id == countryId && region.label == countryLabel) {
+                        region.selected = false;
+                    }
+                    _.forEach(region.countries, function(country) { //for each Country
+                        if (country.id == countryId) {
+                            country.selected = false;
+                        }
+                    });
+
+                });
             });
 
-            _.forEach(countriesModelMaster, function(country) {
-                if (countryId == country.iso_a2) {
-                    country.selected = !country.selected;
+            _.forEach(countryGroupings, function(countryGroup, i) {
+                if (activeGroupId == countryGroup.id) {
+                    model.activeGroup(countryGroup);
                 }
-                model.countriesModelMaster.push(country);
+                model.countryGroupings.push(countryGroup);
             });
-
-            // _.each(activeCountries, function(country){
-            // 	if (geounit)
-            // });
-            // vizModel.activeCountries.push(selectedCountry);
 
         },
 
@@ -611,91 +661,93 @@
             model.addComparator("group");
         },
 
-        addComparator: function(obj) {
+        addComparator: function(model) {
+            debugger;
+            model.countryGroup();
+            debugger;
+            // var _groupId = "all";
+            // var _countries = [];
+            // var _groupBy;
+            // var _region = "";
+            // var cutBy = "sovereignt";
+            // var groupByRegion = model.groupByRegion();
 
-            var _groupId = "all";
-            var _countries = [];
-            var _groupBy;
-            var _region = "";
-            var cutBy = "sovereignt";
-            var groupByRegion = model.groupByRegion();
+            // _countries = _.map(model.activeCountries(), function(country) {
+            //     return country.geounit;
+            // })
 
-            _countries = _.map(model.activeCountries(), function(country) {
-                return country.geounit;
-            })
+            // if (groupByRegion) { //if region
 
-            if (groupByRegion) { //if region
+            //     _groupId = model.activeGroup().id;
+            //     _region = model.activeRegion();
+            //     cutBy = _groupId;
 
-                _groupId = model.activeGroup().id;
-                _region = model.activeRegion();
-                cutBy = _groupId;
+            // } else { // if country
 
-            } else { // if country
-
-                if (!_countries.length) {
-                    _groupId = model.activeGroup().id;
-                    _region = model.activeRegion();
-                    _countries = [];
-                }
-
-
-            }
-            cutBy;
-            //debugger;
-            var deff = window.loader.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupByRegion);
+            //     if (!_countries.length) {
+            //         _groupId = model.activeGroup().id;
+            //         _region = model.activeRegion();
+            //         _countries = [];
+            //     }
 
 
-
-            $.when(deff[0], deff[1]).done(function(responseData, responseStats) {
-                //add to existing chart
-                /*if (cutBy == "sovereignt") {
-                    var cells = responseData[0].cells;
-                } else {
-                    var cells = responseStats[0].cells;
-                }*/
-
-                var cells = responseData[0].cells;
-                //debugger;
-                //debugger;
-
-                var dataByYear = {};
-                var series = {};
-                var seriesArray = [];
-                //
-                //by country
-                _.forEach(cells, function(c) {
-                    dataByYear[c["geometry__time"].toString()] = [];
-                    series[c["geometry__country_level0." + cutBy]] = []
-                });
-
-                _.forEach(cells, function(c) {
-                    //if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
-                    series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicators[0] + "__amount_sum"]]);
-                    dataByYear[c["geometry__time"]].push(c[indicators[0] + "__amount_sum"]);
-                    //}
-                });
-
-
-                var chart = $('#viz-container').highcharts();
-
-                for (var countryName in series) {
-
-                    chart.addSeries({
-                        name: countryName,
-                        data: series[countryName],
-                        visible: true
-                    }, false /*redraw*/ );
+            // }
+            // cutBy;
+            // //debugger;
+            // var deff = window.loader.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupByRegion);
 
 
 
-                }
+            // $.when(deff[0], deff[1]).done(function(responseData, responseStats) {
+            //     //add to existing chart
+            //     /*if (cutBy == "sovereignt") {
+            //         var cells = responseData[0].cells;
+            //     } else {
+            //         var cells = responseStats[0].cells;
+            //     }*/
 
-                chart.redraw();
+            //     var cells = responseData[0].cells;
+            //     //debugger;
+            //     //debugger;
+
+            //     var dataByYear = {};
+            //     var series = {};
+            //     var seriesArray = [];
+            //     //
+            //     //by country
+            //     _.forEach(cells, function(c) {
+            //         dataByYear[c["geometry__time"].toString()] = [];
+            //         series[c["geometry__country_level0." + cutBy]] = []
+            //     });
+
+            //     _.forEach(cells, function(c) {
+            //         //if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
+            //         series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicators[0] + "__amount_sum"]]);
+            //         dataByYear[c["geometry__time"]].push(c[indicators[0] + "__amount_sum"]);
+            //         //}
+            //     });
+
+
+            //     var chart = $('#viz-container').highcharts();
+
+            //     for (var countryName in series) {
+
+            //         chart.addSeries({
+            //             name: countryName,
+            //             data: series[countryName],
+            //             visible: true
+            //         }, false /*redraw*/ );
+
+
+
+            //     }
+
+            //     chart.redraw();
 
 
 
 
-            });
+            // });
 
         }
     }
