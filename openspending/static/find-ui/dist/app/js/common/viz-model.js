@@ -425,24 +425,8 @@
                 vizModel.countryGroupings.push(countryGroup);
             });
 
-            return;
+            window.utils.highlightOnMap(vizModel, []);
 
-            var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
-            vizModel.countriesModelMaster.removeAll();
-
-            var countriesModel = _.clone(vizModel.countriesModel(), true);
-            vizModel.countriesModel.removeAll();
-            _.forEach(countriesModel, function(country) {
-                country.selected = false;
-                vizModel.countriesModel.push(country);
-            });
-
-            _.forEach(countriesModelMaster, function(country) {
-                country.selected = false;
-                vizModel.countriesModelMaster.push(country);
-            });
-
-            window.utils.highlightOnMap(vizModel, true)
 
         },
 
@@ -489,7 +473,7 @@
 
             var groupId = arguments[0].id;
 
-            //window.visualization.changeGroup(groupId);
+            window.visualization.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);
             vizModel.activeRegion(""); //set active region to undefined
@@ -518,6 +502,9 @@
         },
 
         selectCountryGroupRegion: function() {
+
+            debugger;
+
             var selectedRegion = arguments[0];
             var selectedGroup = vizModel.activeGroup();
 

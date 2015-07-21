@@ -307,7 +307,7 @@
         model.activeGroup(countryGroupings[0]);
     }
 
-    window.utils.highlightOnMap = function(model, all) {
+    window.utils.highlightOnMap = function(model, geounits) {
 
         //var all = false;
         //if all then select all countries in countriesModel, else activeCountries

@@ -35,7 +35,7 @@
         function onEachFeature(feature, layer) {
 
             if (feature.properties) {
-                layer.bindPopup(feature.properties.sovereignt);
+                layer.bindPopup(feature.properties.name);
             }
         }
 
@@ -47,26 +47,28 @@
                 style: {
                     weight: 2,
                     opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.5,
-                    fillColor: '#FF0000'
+                    color: 'gray',
+                    //dashArray: '3',
+                    fillOpacity: 0.2,
+                    fillColor: '#cccccc'
                 },
                 onEachFeature: onEachFeature
             });
 
-        }
-
-
-
-        for (var _type in geoJsonLayers) {
-            if (type == _type) {
-                map.addLayer(geoJsonLayers[_type]);
-            } else {
-                map.removeLayer(geoJsonLayers[_type]);
+            for (var _type in geoJsonLayers) {
+                if (type == _type) {
+                    map.addLayer(geoJsonLayers[_type]);
+                }
             }
+
         }
 
+
+
+
+        /*else {
+                map.removeLayer(geoJsonLayers[_type]);
+            }*/
 
         //geoJsonLayers[type].addTo(map);
         //debugger;
@@ -88,7 +90,7 @@
     window.visualization.createMap = function() {
 
         var defaultType = "sovereignt";
-
+        //
         if (!mapCreated) {
 
             mapCreated = true;
@@ -101,7 +103,8 @@
             }).addTo(map);
 
             //load geojson
-            window.loader.loadGeoJSON(defaultType, geoJSONHandler);
+            window.visualization.changeGroup("all");
+            //window.loader.loadGeoJSON(defaultType, geoJSONHandler);
         }
 
     }

@@ -1,0 +1,73 @@
+.app .icon-category-70:after {
+  content: '\e608';
+}
+.app .icon-category-10:after,
+.app .icon-category-peace-and-security:after {
+  content: '\e60d';
+}
+.app .icon-category-20:after,
+.app .icon-category-cross-sectoral:after,
+.app .icon-category-democracy-human-rights-and-governance:after {
+  content: '\e606';
+}
+.app .icon-category-50:after,
+.app .icon-category-economic-growth:after {
+  content: '\e602';
+}
+.app .icon-category-40:after,
+.app .icon-category-education-and-social-services:after {
+  content: '\e603';
+}
+.app .icon-category-30:after,
+.app .icon-category-health:after {
+  content: '\e607';
+}
+.app .icon-category-90:after,
+.app .icon-category-cross-sectoral:after {
+  content: '\e600';
+}
+.app .icon-category-60:after,
+.app .icon-category-environment:after {
+  content: '\e604';
+}
+.app .icon-category-80:after,
+.app .icon-category-humanitarian-assistance:after {
+  content: '\e605';
+}
+.app [class^="icon-"],
+.app [class*=" icon-"] {
+  font-family: $familyF;
+  font-size: 66px;
+  text-align: center;
+}
+.app .noun_vote_29586 {
+  background: url("../images/noun_vote_29586.png") center center no-repeat;
+}
+.app .noun_community-health-advocate_3746 {
+  background: url("../images/noun_community-health-advocate_3746.png") center center no-repeat;
+}
+.app .noun_education_79148 {
+  background: url("../images/noun_education_79148.png") center center no-repeat;
+}
+.app .noun_economic-growth_28093 {
+  background: url("../images/noun_economic-growth_28093.png") center center no-repeat;
+}
+.app .noun_help_28806 {
+  background: url("../images/noun_help_28806.png") center center no-repeat;
+}
+.app .noun_group_28631 {
+  background: url("../images/noun_group_28631.png") center center no-repeat;
+}
+.app .noun_globe_76672 {
+  background: url("../images/noun_globe_76672.png") center center no-repeat;
+}
+.well h4 {
+  text-align: center;
+}
+.app .category {
+  height: 100px;
+  background-size: contain;
+}
+.app .category-wrapper {
+  border-radius: $radius0;
+}

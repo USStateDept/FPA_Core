@@ -142,10 +142,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                         div.flag(data-bind="css:iso_a2.toLowerCase()")
                         span.flags-labels(style="vertical-align:middle" data-bind="html:label")
-              .col-md-8.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:groupByRegion() && activeGroup().id !='all'")
-                .row(data-bind="foreach:countryGroupRegions")
-                  .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
-                    div(data-bind='html:$data')
+              //- .col-md-8.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:groupByRegion() && activeGroup().id !='all'")
+              //-   .row(data-bind="foreach:countryGroupRegions")
+              //-     .col-md-6.col-sm-12.col-xs-12(style="line-height:25px")
+              //-       div(data-bind='html:$data')
               .col-md-4.map-col
                 .row
                   .col-md-12#map
