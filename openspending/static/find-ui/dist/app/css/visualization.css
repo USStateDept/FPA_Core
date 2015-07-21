@@ -437,6 +437,10 @@
   width: 100%;
   overflow: auto;
 }
+.slick-viewport,
+.slick-header {
+  font-size: 12px;
+}
 #slide-panel {
   width: 400px;
   height: 400px;
@@ -447,13 +451,16 @@
   left: 0px;
   z-index: 2000;
   margin-left: -400px;
+  box-shadow: 10px 10px 5px #eee;
 }
 #opener {
   float: right;
   margin: -10px -30px 0px 0px;
   border-radius: 0;
-  height: 200px;
   width: 30px;
+}
+#opener .btn:focus {
+  outline: none;
 }
 #content {
   overflow-y: auto;
