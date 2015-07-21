@@ -835,11 +835,13 @@
         columns = [{
             "id": "indicator",
             "name": "indicator",
-            "field": "indicator"
+            "field": "indicator",
+            "sortable": "true"
         }, {
             "id": "country",
             "name": "country",
-            "field": "country"
+            "field": "country",
+            "sortable": "true"
         }];
 
 
@@ -856,7 +858,8 @@
                 columns.push({
                     "id": entry['year'],
                     "name": entry['year'],
-                    "field": entry['year']
+                    "field": entry['year'],
+                    "sortable": "true"
                 });
         });
 
@@ -864,7 +867,8 @@
         columns.push({
             "id": "id",
             "name": "id",
-            "field": "id"
+            "field": "id",
+            "sortable": "true"
         });
 
         // Create the array in a wide format
