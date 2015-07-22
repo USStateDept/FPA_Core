@@ -307,74 +307,108 @@
         model.activeGroup(countryGroupings[0]);
     }
 
-    window.utils.highlightOnMap = function(model, geounits) {
+    window.utils.removeOnMap = function(model, geounits) {
+        debugger;
+    },
 
-        //var all = false;
+    window.utils.clearOnMap = function(model) {
+        debugger;
+    },
+
+    window.utils.highlightOnMap = function(model, geounit) {
+        //debugger;
+        var featuresAdded = [];
         //if all then select all countries in countriesModel, else activeCountries
+        var isCountry = geounit.iso_a2;
 
-        var countries = model.countriesModel();
-        var features = [];
+        if (isCountry) {
+            level = "sovereignt";
+        } else {
+            level = geounit.geounit.split(":")[0];
+        }
+
+        //first remove the layer
+        var activeCountries = model.activeCountries();
+
+        var listOfLabels = _.map(activeCountries, function(_a) {
+            return _a.label;
+        });
+
+
+        window.map.removeLayer(window.visualization.geoJsonLayers[level]);
+
+        var style = function(feature) {
+
+            if ((feature.properties[level] == geounit.label) || _.indexOf(listOfLabels, feature.properties[level]) > -1) {
+
+                var polygon = L.multiPolygon(feature.geometry.coordinates);
+
+                featuresAdded.push(polygon);
+                return {
+                    weight: 2,
+                    opacity: 1,
+                    color: '#FFFFFF',
+                    //dashArray: '3',
+                    fillOpacity: 0.5,
+                    fillColor: '#00FF00'
+                };
+            } else {
+                return {
+                    weight: 0,
+                    opacity: 0,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.0,
+                    fillColor: '#666666'
+                };
+            }
+        }
+
+        var onEachFeature = function(feature, layer) {
+
+            // does this feature have a property named popupContent?
+            if (feature.properties) {
+                var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
+                layer.bindPopup(name);
+            }
+        }
+        window.visualization.geoJsonLayers[level] = L.geoJson(window.visualization.geoJson[level], {
+            onEachFeature: onEachFeature,
+            style: style
+        });
+        //debugger;
+        map.addLayer(window.visualization.geoJsonLayers[level]);
+
+        /*var countries = model.countriesModel();
+
         if (model.activeCountries().length > 0) {
             countries = model.activeCountries();
         }
 
         var countriesGeounit = _.map(countries, function(country) {
             return country.label;
-        });
+        });*/
 
 
-        var style = function(feature) {
 
-                if (_.indexOf(countriesGeounit, feature.properties.sovereignt) >= 0) {
+        // debugger;
 
-                    var polygon = L.multiPolygon(feature.geometry.coordinates);
 
-                    features.push(polygon);
-                    return {
-                        weight: 2,
-                        opacity: 1,
-                        color: 'white',
-                        dashArray: '3',
-                        fillOpacity: 0.5,
-                        fillColor: '#FF0000'
-                    };
-                } else {
-                    return {
-                        weight: 2,
-                        opacity: 0,
-                        color: 'white',
-                        dashArray: '3',
-                        fillOpacity: 0.0,
-                        fillColor: '#666666'
-                    };
-                }
-            }
-            // debugger;
-        window.map.removeLayer(geoJsonLayers["sovereignt"]);
 
-        function onEachFeature(feature, layer) {
-            // does this feature have a property named popupContent?
-            if (feature.properties) {
-                layer.bindPopup(feature.properties.sovereignt);
-            }
-        }
 
-        geoJsonLayers["sovereignt"] = L.geoJson(window.countriesJson, {
-            onEachFeature: onEachFeature,
-            style: style
-        });
+
 
         return;
 
         setTimeout(function() {
 
-            map.addLayer(geoJsonLayers["sovereignt"]);
+
             /*L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
                 style: style,
                 onEachFeature: onEachFeature
             }).addTo(window.map);*/
 
-            var group = new L.featureGroup(features);
+            var group = new L.featureGroup(featuresAdded);
             var bounds = group.getBounds();
 
 

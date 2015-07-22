@@ -323,11 +323,16 @@
                 }
             });
 
+
+
+            window.utils.highlightOnMap(vizModel, selectedCountry);
+
         },
 
 
 
         removeCountry: function() {
+
 
             var selectedCountry = arguments[0];
             var activeCountries = vizModel.activeCountries();
@@ -369,6 +374,8 @@
                 vizModel.countryGroupings.push(countryGroup);
             });
 
+            window.utils.removeOnMap(vizModel, selectedCountry);
+
 
             // _.each(activeCountries, function(country){
             // 	if (geounit)
@@ -405,7 +412,9 @@
                 vizModel.countryGroupings.push(countryGroup);
             });
 
-            window.utils.highlightOnMap(vizModel, []);
+            //window.utils.highlightOnMap(vizModel, null);
+
+            window.utils.clearOnMap(vizModel);
 
 
         },
@@ -483,7 +492,7 @@
 
         selectCountryGroupRegion: function() {
 
-            debugger;
+            //debugger;
 
             var selectedRegion = arguments[0];
             var selectedGroup = vizModel.activeGroup();
@@ -502,7 +511,8 @@
 
             })
 
-            window.utils.highlightOnMap(vizModel, true);
+            //debugger;
+            //window.utils.highlightOnMap(vizModel, true);
             //filter country view by region
 
         },

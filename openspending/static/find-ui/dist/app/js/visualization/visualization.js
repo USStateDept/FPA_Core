@@ -9,7 +9,8 @@
 
     var mapCreated = false;
     window.map;
-    window.geoJsonLayers = {};
+    window.visualization.geoJsonLayers = {};
+    window.visualization.geoJson = {};
 
     window.modalTitle = "";
     window.modalMessage = "";
@@ -35,46 +36,41 @@
         function onEachFeature(feature, layer) {
 
             if (feature.properties) {
-                layer.bindPopup(feature.properties.name);
+                // console.log(feature.properties);
+                var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
+                layer.bindPopup(name);
             }
         }
 
-        window.countriesJson = response;
+        window.visualization.lastGeoJson = response;
 
-        if (!geoJsonLayers[type]) {
-            //debugger;
-            geoJsonLayers[type] = L.geoJson(response, {
-                style: {
-                    weight: 2,
-                    opacity: 1,
-                    color: 'gray',
-                    //dashArray: '3',
-                    fillOpacity: 0.2,
-                    fillColor: '#cccccc'
-                },
-                onEachFeature: onEachFeature
-            });
+        //if (!window.visualization.geoJsonLayers[type]) {
+        //if layer doesnt exist then add it and symbolize as invisible 
+        window.visualization.geoJson[type] = response;
 
-            for (var _type in geoJsonLayers) {
-                if (type == _type) {
-                    map.addLayer(geoJsonLayers[_type]);
-                }
+        window.visualization.geoJsonLayers[type] = L.geoJson(response, {
+            style: {
+
+                weight: 0, //no border
+                opacity: 1,
+                color: 'gray',
+                //dashArray: '3',
+                fillOpacity: 0.0, //DO NOT DISLAY
+                fillColor: '#cccccc'
+            },
+            onEachFeature: onEachFeature
+        });
+
+        for (var _type in window.visualization.geoJsonLayers) {
+            if (type == _type) {
+                map.addLayer(window.visualization.geoJsonLayers[_type]);
             }
-
         }
 
+        /*} else {
+            //if layer exists bring it on top
 
-
-
-        /*else {
-                map.removeLayer(geoJsonLayers[_type]);
-            }*/
-
-        //geoJsonLayers[type].addTo(map);
-        //debugger;
-        // geoJsonLayer = L.geoJson(this.collection.toJSON(), {
-        //     onEachFeature: _self.onEachFeature
-        // });
+        }*/
 
     }
 
@@ -84,7 +80,14 @@
             groupId = "sovereignt";
         }
 
-        window.loader.loadGeoJSON(groupId, geoJSONHandler);
+        if (!window.visualization.geoJsonLayers[groupId]) {
+            window.loader.loadGeoJSON(groupId, geoJSONHandler);
+        } else {
+            //debugger;
+            //move this layer on top
+            //TODO: Leroy
+        }
+
     }
 
     window.visualization.createMap = function() {
@@ -102,7 +105,7 @@
                 maxZoom: 18
             }).addTo(map);
 
-            //load geojson
+            //load geojson for countries
             window.visualization.changeGroup("all");
             //window.loader.loadGeoJSON(defaultType, geoJSONHandler);
         }
