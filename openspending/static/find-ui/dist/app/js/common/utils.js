@@ -320,27 +320,46 @@
         var featuresAdded = [];
         //if all then select all countries in countriesModel, else activeCountries
         var isCountry = geounit.iso_a2;
+        var drillDown = false;
 
         if (isCountry) {
             level = "sovereignt";
         } else {
             level = geounit.geounit.split(":")[0];
+            drillDown = _.indexOf(geounit.geounit.split(":"), "all") > -1;
         }
 
         //first remove the layer
         var activeCountries = model.activeCountries();
-
         var listOfLabels = _.map(activeCountries, function(_a) {
             return _a.label;
         });
+
+        var drillDownLabels = [];
+
+        if (drillDown) {
+            if (geounit.countries) {
+                level = "sovereignt";
+                var drillDownLabels = _.map(geounit.countries, function(_a) {
+                    return _a.label;
+                });
+            }
+            if (geounit.regions) {
+                level = geounit.geounit.split(":")[0];
+                var drillDownLabels = _.map(geounit.regions, function(_a) {
+                    return _a.label;
+                });
+
+            }
+        }
 
 
         window.map.removeLayer(window.visualization.geoJsonLayers[level]);
 
         var style = function(feature) {
 
-            if ((feature.properties[level] == geounit.label) || _.indexOf(listOfLabels, feature.properties[level]) > -1) {
-
+            if ((drillDown && (_.indexOf(drillDownLabels, feature.properties[level]) > -1)) || (feature.properties[level] == geounit.label) || _.indexOf(listOfLabels, feature.properties[level]) > -1) {
+                //debugger;
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
 
                 featuresAdded.push(polygon);
