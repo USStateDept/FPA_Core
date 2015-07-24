@@ -31,7 +31,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             a(href='#select-indicator', aria-controls='vizualize', role='tab', data-toggle='tab',class='selectable')
               h4
                 //-span(data-bind="visible:!selectionTracker().filter") 1. Select Filters
-                span() 1. Indicators
+                span() Indicators
                 //-span.selected-tab-value(data-bind="html:activeCountries().length + 'Country',visible:selectionTracker().filter")
                 //-linespan.glyphicon.glyphicon-remove(data-bind="click:clearFilter,visible:selectionTracker().filter")                               
           li(role='presentation',data-bind="click:function(){selectView('countries')}")
@@ -39,14 +39,14 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               //-data-bind="css:{selectable:selectionTracker().filter},attr:{'data-toggle':selectionTracker().filter?'tab':'none'}"
               h4
                 //-span(data-bind="visible:!selectionTracker().indicator") 2. Select Indicator
-                span() 2. Countries
+                span() Countries
                 //-span.selected-tab-value(data-bind="html:activeIndicator,visible:selectionTracker().indicator")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearIndicator,visible:selectionTracker().indicator")
           li(role='presentation',data-bind="click:function(){selectView('chart')}")
             a(href='#select-vizualization', aria-controls='vizualize', role='tab',data-bind="attr:{'data-toggle':activeIndicators().length > 0?'tab':'none'},css:{selectable:activeIndicators().length>0}")
               h4
                 //-span(data-bind="visible:!selectionTracker().vizualization") 3. Choose Vizualization
-                span() 3. Chart Type
+                span() Chart Type
                 //-span.selected-tab-value(data-bind="html:activeChart,visible:selectionTracker().vizualization")
                 //-span.glyphicon.glyphicon-remove(data-bind="click:clearChart,visible:selectionTracker().vizualization")
           //- li(role='presentation')
