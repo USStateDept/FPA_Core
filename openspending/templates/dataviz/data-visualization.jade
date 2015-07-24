@@ -47,7 +47,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       div#filter-years
       .row
         p
-  #slide-panel
+ 
+ //- #slide-panel
     a.btn#opener
       i.glyphicon.glyphicon-align-justify
     .container-full#content
@@ -225,7 +226,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
                         div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                           div.flag(data-bind="css:iso_a2.toLowerCase()")
-                          span.flags-labels(style="vertical-align:middle" data-bind="html:label")
+                          span.flags-labels(style="vertical-align:middle" data-bind="html:label") 
+  
 
   .row.tabs-app
     .col-md-12
