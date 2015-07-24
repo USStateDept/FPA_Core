@@ -1,0 +1,221 @@
+{% extends "base.jade" %}
+
+{% block page_title %}FAQ{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+
+{% block optional_head %}
+
+{% endblock %}
+
+{% block content %}
+.container.content-text
+    .row
+        .col-md-12
+    .row
+      h1 Frequently Asked Questions
+    .row
+      h2 GENERAL
+    .row
+      div 
+        span.question(onclick="toggle_answer(this)")
+          img.faq
+        b  What is FIND?<br/>
+        .answer The F Interagency Network Databank (FIND) is an online tool that enables users to explore and analyze national level data, and then share what they discover. FIND was designed around the needs of U.S. government analysts but this convenient and user-friendly site can also benefit a broad-range of stakeholders, including the U.S. public, civil society organizations, universities, foreign aid donors, Congress and partner country governments. For more information please see our 
+          a(href='/about') About
+          |  page. 
+    .row
+      div
+        span.question(onclick="toggle_answer(this)")
+          img.faq
+        b What is F?<br/>
+        .answer As part of the U.S. Department of State, the Office of U.S. Foreign Assistance Resources (F) ensures the strategic and effective allocation, management, and use of foreign assistance resources. F reports to the 
+          a(href='http://www.state.gov/s/dmr/') Deputy Secretary for Management and Resources 
+          | and is headed by 
+          a(href='http://www.state.gov/r/pa/ei/biog/233332.htm') Hari Sastry 
+          | .
+    .row
+        div
+          span.question(onclick="toggle_answer(this)")
+            img.faq
+          b What does U.S. government foreign assistance mean?<br/>
+          .answer The U.S. Government has a long history of providing foreign assistance to respond to global needs, assist people overseas struggling to build a better life, and make the world safer. It is this compassion and action that stands as a hallmark of the U.S. and reflects the true character of this nation. <br/>
+            | According to Section 634(b) of the Foreign Assistance Act of 1961, as amended: 
+            ol (b) For purposes of this section—
+              li "foreign assistance" means any tangible or intangible item provided by the United States Government to a foreign country or international organization under this or any other Act, including but not limited to any training, service, or technical advice, any item of real, personal, or mixed property, any agricultural commodity, United States dollars, and any currencies of any foreign country which are owned by the United States Government; and
+              li "provided by the United States Government" includes, but is not limited to, foreign assistance provided by means of gift, loan, sale, credit, or guaranty.
+                | In simpler terms, official foreign assistance is the unilateral transfers of U.S. resources (funds, goods, and services) by the U.S. Government to or for the benefit of foreign entities (including international and regional organizations) without any reciprocal payment or transfer of resources from the foreign entities. Foreign assistance is not just confined to funds or commodities, it also includes the provision of technical assistance, capacity building, training, education, and other services, as well as the direct costs required to implement foreign assistance. 
+                | The designation of foreign assistance is based on whether foreign entities receive direct benefits from programs supported by U.S. Government resources without paying for them. U.S. transfers to international or regional organizations where the U.S. reaps direct benefits from the operation of the organization do not qualify as foreign assistance. While authorized primarily under the Foreign Assistance Act of 1961, as amended, U.S. Government foreign assistance is also authorized by other legislation.
+    .row
+        div
+        span.question(onclick="toggle_answer(this)")
+          img.faq
+        b There are acronyms on the site that I’m not familiar with—how do I find out what they stand for?<br/>
+        span.answer  See the 
+          a(href='/glossary') Glossary of Terms 
+          | for definitions of different terms used on the FIND site. 
+    .row
+        div
+        span.question(onclick="toggle_answer(this)")
+            img.faq
+        b The visualizations are great but I want to make a more customized graph. How can I do that?<br/>
+        span.answer  If you would like to access the data underlying a visualization you’ve created in FIND, you can do so by clicking on the tabular view or you can download the data as a CSV or Excel file. You can also download larger datasets and/or portions of datasets.
+    .row
+        div
+        span.question(onclick="toggle_answer(this)")
+            img.faq
+         b Where can I find information about U.S. foreign assistance funding?<br/>
+        span.answer  See ForeignAssistance.gov. The site is in the process of including all U.S. government foreign assistance budget, financial, and programmatic data reported by country, sector, implementing agent, and other data elements. ForeignAssistance.gov also plans to include project level information in the future, which will include details on which contractors, non-governmental organizations, or grantees are receiving federal funds to conduct foreign assistance projects. Until that data is available, U.S. government foreign assistance project information is available on U.S. government agency websites such as USAID.gov and MCC.gov.
+    .row
+        div
+        span.question(onclick="toggle_answer(this)")
+            img.faq
+         b How can I contact the FIND team?<br/>
+        span.answer  Please 
+          a(href='/contact') Contact Us 
+          | to report incorrect data, broken links, or other technical or usability issues. Before contacting us, you may be able to find the answer to your question in the list of Frequently Asked Questions. For questions about the federal government not related to FIND, visit USA.gov or call 1(800) FED INFO (1-800-333-4636) (8am - 8 pm ET Monday - Friday).
+    h2 DATA
+    .row
+        div
+          span.question(onclick="toggle_answer(this)")
+              img.faq
+          b How often is the data updated?<br/>
+          span.answer  Data in FIND is updated on a regular basis, typically in April, August and December. When a data source updates its data, that update will be included in the next scheduled FIND update. You can see when the data in FIND was last updated by… [EXPLAIN].
+    .row
+        div
+          span.question(onclick="toggle_answer(this)")
+              img.faq
+          b What data sources are included in FIND?<br/>
+          span.answer  Data included in FIND are pulled from a variety of publicly available sources. See the 
+            a(href='/sources') Sources 
+            | page for a full overview. Additionally, the data in FIND pertain to national-level measures and do not directly reflect the results of individual U.S. foreign assistance programs. 
+    .row
+        div
+          span.question(onclick="toggle_answer(this)")
+              img.faq
+          b What does the U.S. government use this data for?<br/>
+          span.answer  Data is one of the fundamental elements needed to track progress toward shared goals. National-level data can be useful for developing a better understanding of the context in which foreign assistance programs operate and help inform strategic planning, budget formulation and other policy processes.  
+            |  As noted in the QDDR, “Making progress on U.S. policy priorities will require a data-driven, evidence-based approach. The amount, availability, and variability of data is expanding exponentially, and it has the potential to inform us about a range of issues.”
+    .row
+        div
+          span.question(onclick="toggle_answer(this)")
+              img.faq
+          b Are these the only data the U.S. government uses when making foreign assistance decisions?<br/>
+          span.answer  No, a number of factors are considered when managing U.S. foreign assistance. National level data is used alongside several other inputs to develop a more thorough understanding of historical trends and current conditions, which collectively inform a collaborative approach. 
+    h2 AGENCY QUESTIONS
+    h3 Department of State
+    .row
+        div
+          span.question(onclick="toggle_answer(this)")
+            img.faq
+          b What is the Department of State?<br/>
+          span.answer  As the lead U.S. foreign affairs agency, the U.S. Department of State has over 265 diplomatic locations around the world, including embassies, consulates, and missions to international organizations. The Department also maintains diplomatic relations with most countries in the world, as well as with many international organizations.<br/>
+            | The Secretary of State, the ranking member of the Cabinet and fourth in line of presidential succession, is the President's principal advisor on foreign policy and the person chiefly responsible for representing the United States abroad. The primary goal of the Secretary of State and the U.S. Department of State is to shape a freer, more secure, and more prosperous world through formulating and implementing the President's foreign policy, while supporting and protecting American interests abroad.
+    .row
+        div
+        span.question(onclick="toggle_answer(this)")
+              img.faq
+         b When was the Department of State created?<br/>
+        span.answer  On September 15, 1789, Congress passed "An Act to provide for the safe keeping of the Acts, Records, and Seal of the United States, and for other purposes." This law changed the name of the Department of Foreign Affairs to the Department of State because certain domestic duties were assigned to the agency. These included:
+          ul
+            li Receipt, publication, distribution, and preservation of the laws of the United States;<br/>
+            li Preparation, sealing, and recording of the commissions of Presidential appointees;<br/>
+            li Preparation and authentication of copies of records and authentication of copies under the Department's seal;<br/>
+            li Custody of the Great Seal of the United States;<br/>
+            li Custody of the records of the former Secretary of the Continental Congress, except for those of the Treasury and War Departments.<br/>
+            li Other domestic duties that the Department was responsible for at various times included issuance of patents on inventions, publication of the census returns, management of the mint, control of copyrights, and regulation of immigration. Most domestic functions have been transferred to other agencies. Those that remain in the Department are: storage and use of the Great Seal, performance of protocol functions for the White House, drafting of certain Presidential proclamations, and replies to public inquiries.<br/>
+            li Please visit the Department of State's 
+              a(href='http://history.state.gov') Office of the Historian 
+              | page for more information.<br/>
+    h3 USAID
+    .row
+      div
+      span.question(onclick="toggle_answer(this)")
+              img.faq
+        b What is USAID?<br/>
+        span.answer  The U.S. Agency for International Development (USAID) is an independent federal government agency whose mission is to advance broad-based economic growth, democracy and human progress around the world.<br/>
+          |  Since its inception in 1961, USAID has carried out U.S. foreign policy by promoting broad-scale human progress in the developing world, at the same time it expands stable, free societies, creates markets and trade partners for the United States, and fosters good will abroad.<br/>
+          |  For more information see USAID's 
+          a(href='http://www.usaid.gov/who-we-are/') Who We Are
+            |  page.
+      div
+        span.question(onclick="toggle_answer(this)")
+              img.faq
+        b When was USAID created?<br/>
+        span.answer  Following the success of the reconstruction of Europe after World War II through the Marshall Plan and the Truman Administration's Point Four Program -- the 1950 program to engage in technically-based international economic development -- President John F. Kennedy signed the Foreign Assistance Act into law in 1961 and USAID was created by executive order. Since that time, USAID has been the principal U.S. agency to extend assistance to countries recovering from disaster, trying to escape poverty, and engaging in democratic reforms.<br/>
+          |  Please visit 
+          a(href='http://www.usaid.gov/who-we-are/usaid-history') USAID History
+          |  page for more information.<br/>
+    h3 MCC
+    .row
+      div
+        span.question(onclick="toggle_answer(this)")
+              img.faq 
+        b What is MCC?<br/>
+        span.answer  The Millennium Challenge Corporation (MCC) is an innovative and independent U.S. foreign aid agency that is helping lead the fight against global poverty.<br/>
+    .row
+      div
+        span.question(onclick="toggle_answer(this)")
+          img.faq
+        b When was MCC created?<br/>
+        span.answer  Created by the U.S. Congress in January 2004 with strong bipartisan support, MCC is changing the conversation on how best to deliver smart U.S. foreign assistance by focusing on good policies, country ownership, and results.<br/>
+    .row
+      div
+        span.question(onclick="toggle_answer(this)")
+          img.faq
+        b What does MCC do?<br/>
+        span.answer  MCC provides these well-performing countries with large-scale grants to fund country-led solutions for reducing poverty through sustainable economic growth. MCC grants complement other U.S. and international development programs. There are two primary types of MCC grants: compacts and threshold programs.<br/>
+          |  Compacts are large, five-year grants for countries that pass MCC’s eligibility criteria.<br/>
+          |  Threshold programs are smaller grants awarded to countries that come close to passing these criteria and are firmly committed to improving their policy performance.<br/>
+    h3 Department of Defense
+    .row
+      div
+        span.question(onclick="toggle_answer(this)")
+          img.faq
+        b When was the Department of Defense created?<br/>
+        span.answer  The Department of Defense (DOD) is the successor agency to the National Military Establishment created by the National Security Act of 1947 (50 U.S.C. 401). It was established as an executive department of the Government by the National Security Act Amendments of 1949 with the Secretary of Defense as its head (5 U.S.C. 101). Since that time, many legislative and administrative changes have occurred, evolving the Department into the structure under which it currently operates.<br/>
+    .row
+      div
+        b What is the mission of the Department of Defense?<br/>
+        span.answer  The mission of the Department of Defense is to provide the military forces needed to deter war and to protect the security of our country. The department's headquarters is at the Pentagon.<br/>
+          |  The Department is also the largest employer in the world with more than 3.2 million servicemen and servicewomen, plus the civilians that support them.<br/>
+          |  Under the President, who is also Commander in Chief, the Secretary of Defense exercises authority, direction, and control over the Department, which includes the separately organized military departments of Army, Navy, and Air Force.<br/>
+    .row
+      span.question(onclick="toggle_answer(this)")
+        img.faq
+      b What is the Department of Defense’s role in foreign security assistance? <br/>
+      span.answer  DOD is responsible for ensuring U.S. defense strategy and policy priorities are closely synchronized with Security Sector Assistance (SSA) efforts, especially where a key objective is to strengthen the capacity and willingness of foreign security forces to operate alongside of, in lieu of, or in support of U.S. forces. In these cases, DOD may provide assistance in coordination with the Department of State. DOD plays a critical role in strategic planning, assessment, program design, and implementing SSA programs, and supports SSA interagency processes by providing relevant expertise and information on U.S. national defense objectives.<br/>
+    h3 U.S. Census Bureau
+    .row
+      span.question(onclick="toggle_answer(this)")
+        img.faq
+      b What is the U.S. Census Bureau?<br/> 
+      span.answer  The U.S. Census Bureau has been headquartered in Suitland, Md. since 1942, and currently employs about 4,285 staff members. The Census Bureau is part of the U.S. Department of Commerce. The U.S. Census Bureau is overseen by the Economics and Statistics Administration (ESA) within the Department of Commerce. The Economics and Statistics Administration provides high-quality economic analysis and fosters the missions of the U.S. Census Bureau and the Bureau of Economic Analysis.<br/>
+    .row
+      div
+      span.question(onclick="toggle_answer(this)")
+        img.faq      
+      b What does the U.S. Census Bureau do?<br/>
+      span.answer  The Census Bureau's mission is to serve as the leading source of quality data about the nation's people and economy. Census honors privacy, protects confidentiality, shares expertise globally, and conducts its work openly.<br/>
+        |  The Census Bureau is guided on this mission by scientific objectivity, a strong and capable workforce, devotion to research-based innovation, and abiding commitment to its customers.<br/>
+{% endblock %}
+
+{% block footer_scripts %}
+script.
+    $(document).ready(function(){
+      $("img.faq").attr("src","/static/find-ui/dist/app/images/noun_6789_cc.png").height(24).width(24);
+      $(".answer").hide();
+    });
+    function toggle_answer(elem){
+       $(elem).siblings(".answer").toggle();
+       if ( $(elem).siblings(".answer").is(":visible") ){
+          $(elem).children("img").attr("src","/static/find-ui/dist/app/images/noun_6790_cc.png");
+       } else {
+         $(elem).children("img").attr("src","/static/find-ui/dist/app/images/noun_6789_cc.png");
+       }
+    }
+{% endblock %}
