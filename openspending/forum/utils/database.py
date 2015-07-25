@@ -6,7 +6,7 @@
     :copyright: (c) 2015 by the FlaskBB Team.
     :license: BSD, see LICENSE for more details.
 """
-from flaskbb.extensions import db
+from openspending.core import db
 
 
 class CRUDMixin(object):

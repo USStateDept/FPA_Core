@@ -21,7 +21,7 @@ from openspending.forum.utils.database import CRUDMixin
 from openspending.forum.utils.settings import flaskbb_config
 
 moderators = db.Table(
-    'moderators',
+    'forum_moderators',
     db.Column('user_id', db.Integer(), db.ForeignKey('account.id'),
               nullable=False),
     db.Column('forum_id', db.Integer(),
@@ -30,7 +30,7 @@ moderators = db.Table(
 
 
 topictracker = db.Table(
-    'topictracker',
+    'forum_topictracker',
     db.Column('user_id', db.Integer(), db.ForeignKey('account.id'),
               nullable=False),
     db.Column('forum_topic_id', db.Integer(),
