@@ -20,8 +20,6 @@ from openspending import default_settings
 #from settings import LOCKDOWN_FORCE
 from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
-#from flask.ext.superadmin import Admin, model
-import flask_admin as admin
 from flask import g
 import flask_whooshalchemy as whoosearch
 
@@ -102,9 +100,8 @@ def create_web_app(**config):
         register_views(app)
 
         from openspending.admin.routes import register_admin
-        flaskadmin = admin.Admin(app, name='FIND Admin')
-        #flaskadmin = Admin(app, url='/admin', name='admin2')
-        register_admin(flaskadmin, db)
+
+        register_admin(app, db)
 
         from openspending.model import Dataset
         from openspending.model.country import Country
