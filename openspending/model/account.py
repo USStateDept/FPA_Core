@@ -9,6 +9,8 @@ from sqlalchemy.types import Integer, Unicode, Boolean
 
 from openspending.core import db, login_manager
 from openspending.model.dataset import Dataset
+from openspending.forum.forum.models import (Post, Topic, topictracker, TopicsRead,
+                                  ForumsRead)
 
 REGISTER_NAME_RE = r"^[a-zA-Z0-9_\-]{3,255}$"
 
@@ -85,6 +87,12 @@ class Account(db.Model):
                             secondary=account_dataset_table,
                             backref=backref('managers', lazy='dynamic'))
 
+    tracked_topics = \
+            db.relationship("Topic", secondary=topictracker,
+                            primaryjoin=(topictracker.c.user_id == id),
+                            backref=db.backref("topicstracked", lazy="dynamic"),
+                            lazy="dynamic")
+
     def __init__(self):
         self.api_key = make_uuid()
 
@@ -112,6 +120,11 @@ class Account(db.Model):
         if self.password:
             h.update(self.password)
         return h.hexdigest()
+
+    #helper for forums
+    @property 
+    def username(self):
+        return self.fullname
  
     def is_anonymous(self):
         return False

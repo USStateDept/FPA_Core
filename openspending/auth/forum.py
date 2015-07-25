@@ -48,7 +48,7 @@ def is_admin(user):
 
     :param user:  The user who should be checked.
     """
-    return get_attr(user, "admin" False)
+    return get_attr(user, "admin", False)
 
 
 def is_admin_or_moderator(user):

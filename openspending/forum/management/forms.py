@@ -19,11 +19,10 @@ from wtforms.ext.sqlalchemy.fields import (QuerySelectField,
 from sqlalchemy.orm.session import make_transient, make_transient_to_detached
 from flask_babelex import lazy_gettext as _
 
-from flaskbb.utils.fields import BirthdayField
-from flaskbb.utils.widgets import SelectBirthdayWidget, MultiSelect
-from flaskbb.extensions import db
-from flaskbb.forum.models import Forum, Category
-from flaskbb.user.models import User, Group
+from openspending.forum.utils.widgets import MultiSelect
+from openspending.core import db
+from openspending.forum.forum.models import Forum, Category
+from openspending.model.account import Account as User
 
 USERNAME_RE = r'^[\w.+-]+$'
 is_username = regexp(USERNAME_RE,
@@ -46,226 +45,226 @@ def select_primary_group():
     return Group.query.filter(Group.guest != True).order_by(Group.id)
 
 
-class UserForm(Form):
-    username = StringField(_("Username"), validators=[
-        DataRequired(message=_("A Username is required.")),
-        is_username])
+# class UserForm(Form):
+#     username = StringField(_("Username"), validators=[
+#         DataRequired(message=_("A Username is required.")),
+#         is_username])
 
-    email = StringField(_("E-Mail Address"), validators=[
-        DataRequired(message=_("A E-Mail Address is required.")),
-        Email(message=_("Invalid E-Mail Address."))])
+#     email = StringField(_("E-Mail Address"), validators=[
+#         DataRequired(message=_("A E-Mail Address is required.")),
+#         Email(message=_("Invalid E-Mail Address."))])
 
-    password = PasswordField("Password", validators=[
-        Optional()])
+#     password = PasswordField("Password", validators=[
+#         Optional()])
 
-    birthday = BirthdayField(_("Birthday"), format="%d %m %Y",
-                             widget=SelectBirthdayWidget(),
-                             validators=[Optional()])
+#     birthday = BirthdayField(_("Birthday"), format="%d %m %Y",
+#                              widget=SelectBirthdayWidget(),
+#                              validators=[Optional()])
 
-    gender = SelectField(_("Gender"), default="None", choices=[
-        ("None", ""),
-        ("Male", _("Male")),
-        ("Female", _("Female"))])
+#     gender = SelectField(_("Gender"), default="None", choices=[
+#         ("None", ""),
+#         ("Male", _("Male")),
+#         ("Female", _("Female"))])
 
-    location = StringField(_("Location"), validators=[
-        Optional()])
+#     location = StringField(_("Location"), validators=[
+#         Optional()])
 
-    website = StringField(_("Website"), validators=[
-        Optional(), URL()])
+#     website = StringField(_("Website"), validators=[
+#         Optional(), URL()])
 
-    avatar = StringField(_("Avatar"), validators=[
-        Optional(), URL()])
+#     avatar = StringField(_("Avatar"), validators=[
+#         Optional(), URL()])
 
-    signature = TextAreaField(_("Forum Signature"), validators=[
-        Optional(), Length(min=0, max=250)])
+#     signature = TextAreaField(_("Forum Signature"), validators=[
+#         Optional(), Length(min=0, max=250)])
 
-    notes = TextAreaField(_("Notes"), validators=[
-        Optional(), Length(min=0, max=5000)])
+#     notes = TextAreaField(_("Notes"), validators=[
+#         Optional(), Length(min=0, max=5000)])
 
-    primary_group = QuerySelectField(
-        _("Primary Group"),
-        query_factory=select_primary_group,
-        get_label="name")
+#     primary_group = QuerySelectField(
+#         _("Primary Group"),
+#         query_factory=select_primary_group,
+#         get_label="name")
 
-    secondary_groups = QuerySelectMultipleField(
-        _("Secondary Groups"),
-        # TODO: Template rendering errors "NoneType is not callable"
-        #       without this, figure out why.
-        query_factory=select_primary_group,
-        get_label="name")
+#     secondary_groups = QuerySelectMultipleField(
+#         _("Secondary Groups"),
+#         # TODO: Template rendering errors "NoneType is not callable"
+#         #       without this, figure out why.
+#         query_factory=select_primary_group,
+#         get_label="name")
 
-    submit = SubmitField(_("Save"))
+#     submit = SubmitField(_("Save"))
 
-    def validate_username(self, field):
-        if hasattr(self, "user"):
-            user = User.query.filter(
-                db.and_(
-                    User.username.like(field.data),
-                    db.not_(User.id == self.user.id)
-                )
-            ).first()
-        else:
-            user = User.query.filter(User.username.like(field.data)).first()
+#     def validate_username(self, field):
+#         if hasattr(self, "user"):
+#             user = User.query.filter(
+#                 db.and_(
+#                     User.username.like(field.data),
+#                     db.not_(User.id == self.user.id)
+#                 )
+#             ).first()
+#         else:
+#             user = User.query.filter(User.username.like(field.data)).first()
 
-        if user:
-            raise ValidationError(_("This Username is already taken."))
+#         if user:
+#             raise ValidationError(_("This Username is already taken."))
 
-    def validate_email(self, field):
-        if hasattr(self, "user"):
-            user = User.query.filter(
-                db.and_(
-                    User.email.like(field.data),
-                    db.not_(User.id == self.user.id)
-                )
-            ).first()
-        else:
-            user = User.query.filter(User.email.like(field.data)).first()
+#     def validate_email(self, field):
+#         if hasattr(self, "user"):
+#             user = User.query.filter(
+#                 db.and_(
+#                     User.email.like(field.data),
+#                     db.not_(User.id == self.user.id)
+#                 )
+#             ).first()
+#         else:
+#             user = User.query.filter(User.email.like(field.data)).first()
 
-        if user:
-            raise ValidationError(_("This E-Mail Address is already taken."))
+#         if user:
+#             raise ValidationError(_("This E-Mail Address is already taken."))
 
-    def save(self):
-        data = self.data
-        data.pop('submit', None)
-        user = User(**data)
-        return user.save()
-
-
-class AddUserForm(UserForm):
-    pass
+#     def save(self):
+#         data = self.data
+#         data.pop('submit', None)
+#         user = User(**data)
+#         return user.save()
 
 
-class EditUserForm(UserForm):
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
-        kwargs['obj'] = self.user
-        UserForm.__init__(self, *args, **kwargs)
+# class AddUserForm(UserForm):
+#     pass
 
 
-class GroupForm(Form):
-    name = StringField(_("Group Name"), validators=[
-        DataRequired(message=_("A Group name is required."))])
-
-    description = TextAreaField(_("Description"), validators=[
-        Optional()])
-
-    admin = BooleanField(
-        _("Is Admin Group?"),
-        description=_("With this option the group has access to "
-                      "the admin panel.")
-    )
-    super_mod = BooleanField(
-        _("Is Super Moderator Group?"),
-        description=_("Check this if the users in this group are allowed to "
-                      "moderate every forum.")
-    )
-    mod = BooleanField(
-        _("Is Moderator Group?"),
-        description=_("Check this if the users in this group are allowed to "
-                      "moderate specified forums.")
-    )
-    banned = BooleanField(
-        _("Is Banned Group?"),
-        description=_("Only one Banned group is allowed.")
-    )
-    guest = BooleanField(
-        _("Is Guest Group?"),
-        description=_("Only one Guest group is allowed.")
-    )
-    editpost = BooleanField(
-        _("Can edit posts"),
-        description=_("Check this if the users in this group can edit posts.")
-    )
-    deletepost = BooleanField(
-        _("Can delete posts"),
-        description=_("Check this is the users in this group can delete posts.")
-    )
-    deletetopic = BooleanField(
-        _("Can delete topics"),
-        description=_("Check this is the users in this group can delete "
-                      "topics.")
-    )
-    posttopic = BooleanField(
-        _("Can create topics"),
-        description=_("Check this is the users in this group can create "
-                      "topics.")
-    )
-    postreply = BooleanField(
-        _("Can post replies"),
-        description=_("Check this is the users in this group can post replies.")
-    )
-
-    mod_edituser = BooleanField(
-        _("Moderators can edit user profiles"),
-        description=_("Allow moderators to edit a another users profile "
-                      "including password and email changes.")
-    )
-
-    mod_banuser = BooleanField(
-        _("Moderators can ban users"),
-        description=_("Allow moderators to ban other users.")
-    )
-
-    submit = SubmitField(_("Save"))
-
-    def validate_name(self, field):
-        if hasattr(self, "group"):
-            group = Group.query.filter(
-                db.and_(
-                    Group.name.like(field.data),
-                    db.not_(Group.id == self.group.id)
-                )
-            ).first()
-        else:
-            group = Group.query.filter(Group.name.like(field.data)).first()
-
-        if group:
-            raise ValidationError(_("This Group name is already taken."))
-
-    def validate_banned(self, field):
-        if hasattr(self, "group"):
-            group = Group.query.filter(
-                db.and_(
-                    Group.banned,
-                    db.not_(Group.id == self.group.id)
-                )
-            ).count()
-        else:
-            group = Group.query.filter_by(banned=True).count()
-
-        if field.data and group > 0:
-            raise ValidationError(_("There is already a Banned group."))
-
-    def validate_guest(self, field):
-        if hasattr(self, "group"):
-            group = Group.query.filter(
-                db.and_(
-                    Group.guest,
-                    db.not_(Group.id == self.group.id)
-                )
-            ).count()
-        else:
-            group = Group.query.filter_by(guest=True).count()
-
-        if field.data and group > 0:
-            raise ValidationError(_("There is already a Guest group."))
-
-    def save(self):
-        data = self.data
-        data.pop('submit', None)
-        group = Group(**data)
-        return group.save()
+# class EditUserForm(UserForm):
+#     def __init__(self, user, *args, **kwargs):
+#         self.user = user
+#         kwargs['obj'] = self.user
+#         UserForm.__init__(self, *args, **kwargs)
 
 
-class EditGroupForm(GroupForm):
-    def __init__(self, group, *args, **kwargs):
-        self.group = group
-        kwargs['obj'] = self.group
-        GroupForm.__init__(self, *args, **kwargs)
+# class GroupForm(Form):
+#     name = StringField(_("Group Name"), validators=[
+#         DataRequired(message=_("A Group name is required."))])
+
+#     description = TextAreaField(_("Description"), validators=[
+#         Optional()])
+
+#     admin = BooleanField(
+#         _("Is Admin Group?"),
+#         description=_("With this option the group has access to "
+#                       "the admin panel.")
+#     )
+#     super_mod = BooleanField(
+#         _("Is Super Moderator Group?"),
+#         description=_("Check this if the users in this group are allowed to "
+#                       "moderate every forum.")
+#     )
+#     mod = BooleanField(
+#         _("Is Moderator Group?"),
+#         description=_("Check this if the users in this group are allowed to "
+#                       "moderate specified forums.")
+#     )
+#     banned = BooleanField(
+#         _("Is Banned Group?"),
+#         description=_("Only one Banned group is allowed.")
+#     )
+#     guest = BooleanField(
+#         _("Is Guest Group?"),
+#         description=_("Only one Guest group is allowed.")
+#     )
+#     editpost = BooleanField(
+#         _("Can edit posts"),
+#         description=_("Check this if the users in this group can edit posts.")
+#     )
+#     deletepost = BooleanField(
+#         _("Can delete posts"),
+#         description=_("Check this is the users in this group can delete posts.")
+#     )
+#     deletetopic = BooleanField(
+#         _("Can delete topics"),
+#         description=_("Check this is the users in this group can delete "
+#                       "topics.")
+#     )
+#     posttopic = BooleanField(
+#         _("Can create topics"),
+#         description=_("Check this is the users in this group can create "
+#                       "topics.")
+#     )
+#     postreply = BooleanField(
+#         _("Can post replies"),
+#         description=_("Check this is the users in this group can post replies.")
+#     )
+
+#     mod_edituser = BooleanField(
+#         _("Moderators can edit user profiles"),
+#         description=_("Allow moderators to edit a another users profile "
+#                       "including password and email changes.")
+#     )
+
+#     mod_banuser = BooleanField(
+#         _("Moderators can ban users"),
+#         description=_("Allow moderators to ban other users.")
+#     )
+
+#     submit = SubmitField(_("Save"))
+
+#     def validate_name(self, field):
+#         if hasattr(self, "group"):
+#             group = Group.query.filter(
+#                 db.and_(
+#                     Group.name.like(field.data),
+#                     db.not_(Group.id == self.group.id)
+#                 )
+#             ).first()
+#         else:
+#             group = Group.query.filter(Group.name.like(field.data)).first()
+
+#         if group:
+#             raise ValidationError(_("This Group name is already taken."))
+
+#     def validate_banned(self, field):
+#         if hasattr(self, "group"):
+#             group = Group.query.filter(
+#                 db.and_(
+#                     Group.banned,
+#                     db.not_(Group.id == self.group.id)
+#                 )
+#             ).count()
+#         else:
+#             group = Group.query.filter_by(banned=True).count()
+
+#         if field.data and group > 0:
+#             raise ValidationError(_("There is already a Banned group."))
+
+#     def validate_guest(self, field):
+#         if hasattr(self, "group"):
+#             group = Group.query.filter(
+#                 db.and_(
+#                     Group.guest,
+#                     db.not_(Group.id == self.group.id)
+#                 )
+#             ).count()
+#         else:
+#             group = Group.query.filter_by(guest=True).count()
+
+#         if field.data and group > 0:
+#             raise ValidationError(_("There is already a Guest group."))
+
+#     def save(self):
+#         data = self.data
+#         data.pop('submit', None)
+#         group = Group(**data)
+#         return group.save()
 
 
-class AddGroupForm(GroupForm):
-    pass
+# class EditGroupForm(GroupForm):
+#     def __init__(self, group, *args, **kwargs):
+#         self.group = group
+#         kwargs['obj'] = self.group
+#         GroupForm.__init__(self, *args, **kwargs)
+
+
+# class AddGroupForm(GroupForm):
+#     pass
 
 
 class ForumForm(Form):
@@ -316,12 +315,6 @@ class ForumForm(Form):
         description=_("Disable new posts and topics in this forum.")
     )
 
-    groups = QuerySelectMultipleField(
-        _("Group Access to Forum"),
-        query_factory=selectable_groups,
-        get_label="name",
-        description=_("Select user groups that can access this forum.")
-    )
 
     submit = SubmitField(_("Save"))
 

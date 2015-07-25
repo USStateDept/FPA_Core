@@ -23,8 +23,8 @@ from babel.dates import format_timedelta
 from flask_babelex import lazy_gettext as _
 from flask_login import current_user
 
-from flaskbb.utils.settings import flaskbb_config
-from flaskbb.utils.markup import markdown
+from openspending.forum.utils.settings import flaskbb_config
+from openspending.forum.utils.markup import markdown
 
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
@@ -60,9 +60,9 @@ def do_topic_action(topics, user, action, reverse):
                     For example, to unlock a topic, ``reverse`` should be
                     set to ``True``.
     """
-    from flaskbb.utils.permissions import can_moderate, can_delete_topic
-    from flaskbb.user.models import User
-    from flaskbb.forum.models import Post
+    from openspending.forum.utils.permissions import can_moderate, can_delete_topic
+    from openspending.model.account import Account as User
+    from openspending.forum.forum.models import Post
 
     modified_topics = 0
     if action != "delete":

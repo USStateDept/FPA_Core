@@ -13,22 +13,28 @@ from datetime import datetime, timedelta
 from flask import url_for, abort
 from sqlalchemy.orm import aliased
 
-from flaskbb.extensions import db
-from flaskbb.utils.decorators import can_access_forum, can_access_topic
-from flaskbb.utils.helpers import slugify, get_categories_and_forums, \
+from openspending.core import db
+from openspending.forum.utils.decorators import can_access_forum, can_access_topic
+from openspending.forum.utils.helpers import slugify, get_categories_and_forums, \
     get_forums
-from flaskbb.utils.database import CRUDMixin
-from flaskbb.utils.settings import flaskbb_config
+from openspending.forum.utils.database import CRUDMixin
+from openspending.forum.utils.settings import flaskbb_config
 
-
+moderators = db.Table(
+    'moderators',
+    db.Column('user_id', db.Integer(), db.ForeignKey('account.id'),
+              nullable=False),
+    db.Column('forum_id', db.Integer(),
+              db.ForeignKey('forum_forums.id', use_alter=True, name="fk_forum_id"),
+              nullable=False))
 
 
 topictracker = db.Table(
     'topictracker',
-    db.Column('user_id', db.Integer(), db.ForeignKey('users.id'),
+    db.Column('user_id', db.Integer(), db.ForeignKey('account.id'),
               nullable=False),
-    db.Column('topic_id', db.Integer(),
-              db.ForeignKey('topics.id',
+    db.Column('forum_topic_id', db.Integer(),
+              db.ForeignKey('forum_topics.id',
                             use_alter=True, name="fk_tracker_topic_id"),
               nullable=False))
 
@@ -38,14 +44,14 @@ topictracker = db.Table(
 class TopicsRead(db.Model, CRUDMixin):
     __tablename__ = "forum_topicsread"
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"),
+    user_id = db.Column(db.Integer, db.ForeignKey("account.id"),
                         primary_key=True)
     topic_id = db.Column(db.Integer,
-                         db.ForeignKey("topics.id", use_alter=True,
+                         db.ForeignKey("forum_topics.id", use_alter=True,
                                        name="fk_tr_topic_id"),
                          primary_key=True)
     forum_id = db.Column(db.Integer,
-                         db.ForeignKey("forums.id", use_alter=True,
+                         db.ForeignKey("forum_forums.id", use_alter=True,
                                        name="fk_tr_forum_id"),
                          primary_key=True)
     last_read = db.Column(db.DateTime, default=datetime.utcnow())
@@ -54,10 +60,10 @@ class TopicsRead(db.Model, CRUDMixin):
 class ForumsRead(db.Model, CRUDMixin):
     __tablename__ = "forum_forumsread"
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"),
+    user_id = db.Column(db.Integer, db.ForeignKey("account.id"),
                         primary_key=True)
     forum_id = db.Column(db.Integer,
-                         db.ForeignKey("forums.id", use_alter=True,
+                         db.ForeignKey("forum_forums.id", use_alter=True,
                                        name="fk_fr_forum_id"),
                          primary_key=True)
     last_read = db.Column(db.DateTime, default=datetime.utcnow())
@@ -68,18 +74,18 @@ class Report(db.Model, CRUDMixin):
     __tablename__ = "forum_reports"
 
     id = db.Column(db.Integer, primary_key=True)
-    reporter_id = db.Column(db.Integer, db.ForeignKey("users.id"),
+    reporter_id = db.Column(db.Integer, db.ForeignKey("account.id"),
                             nullable=False)
     reported = db.Column(db.DateTime, default=datetime.utcnow())
-    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("forum_posts.id"), nullable=False)
     zapped = db.Column(db.DateTime)
-    zapped_by = db.Column(db.Integer, db.ForeignKey("users.id"))
+    zapped_by = db.Column(db.Integer, db.ForeignKey("account.id"))
     reason = db.Column(db.Text)
 
     post = db.relationship("Post", backref="report", lazy="joined")
-    reporter = db.relationship("User", lazy="joined",
+    reporter = db.relationship("Account", lazy="joined",
                                foreign_keys=[reporter_id])
-    zapper = db.relationship("User", lazy="joined", foreign_keys=[zapped_by])
+    zapper = db.relationship("Account", lazy="joined", foreign_keys=[zapped_by])
 
     def __repr__(self):
         return "<{} {}>".format(self.__class__.__name__, self.id)
@@ -113,11 +119,11 @@ class Post(db.Model, CRUDMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     topic_id = db.Column(db.Integer,
-                         db.ForeignKey("topics.id",
+                         db.ForeignKey("forum_topics.id",
                                        use_alter=True,
                                        name="fk_post_topic_id",
                                        ondelete="CASCADE"))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=True)
     username = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
@@ -241,12 +247,12 @@ class Topic(db.Model, CRUDMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     forum_id = db.Column(db.Integer,
-                         db.ForeignKey("forums.id",
+                         db.ForeignKey("forum_forums.id",
                                        use_alter=True,
                                        name="fk_topic_forum_id"),
                          nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("account.id"))
     username = db.Column(db.String(200), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
     last_updated = db.Column(db.DateTime, default=datetime.utcnow())
@@ -256,13 +262,13 @@ class Topic(db.Model, CRUDMixin):
     post_count = db.Column(db.Integer, default=0)
 
     # One-to-one (uselist=False) relationship between first_post and topic
-    first_post_id = db.Column(db.Integer, db.ForeignKey("posts.id",
+    first_post_id = db.Column(db.Integer, db.ForeignKey("forum_posts.id",
                                                         ondelete="CASCADE"))
     first_post = db.relationship("Post", backref="first_post", uselist=False,
                                  foreign_keys=[first_post_id])
 
     # One-to-one
-    last_post_id = db.Column(db.Integer, db.ForeignKey("posts.id"))
+    last_post_id = db.Column(db.Integer, db.ForeignKey("forum_posts.id"))
 
     last_post = db.relationship("Post", backref="last_post", uselist=False,
                                 foreign_keys=[last_post_id])
@@ -535,7 +541,7 @@ class Forum(db.Model, CRUDMixin):
     __searchable__ = ['title', 'description']
 
     id = db.Column(db.Integer, primary_key=True)
-    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"),
+    category_id = db.Column(db.Integer, db.ForeignKey("forum_categories.id"),
                             nullable=False)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
@@ -548,13 +554,13 @@ class Forum(db.Model, CRUDMixin):
     topic_count = db.Column(db.Integer, default=0, nullable=False)
 
     # One-to-one
-    last_post_id = db.Column(db.Integer, db.ForeignKey("posts.id"))
+    last_post_id = db.Column(db.Integer, db.ForeignKey("forum_posts.id"))
     last_post = db.relationship("Post", backref="last_post_forum",
                                 uselist=False, foreign_keys=[last_post_id])
 
     # Not nice, but needed to improve the performance
     last_post_title = db.Column(db.String(255))
-    last_post_user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    last_post_user_id = db.Column(db.Integer, db.ForeignKey("account.id"))
     last_post_username = db.Column(db.String(255))
     last_post_created = db.Column(db.DateTime, default=datetime.utcnow())
 
@@ -568,19 +574,13 @@ class Forum(db.Model, CRUDMixin):
 
     # Many-to-many
     moderators = db.relationship(
-        "User",
+        "Account",
         secondary=moderators,
         primaryjoin=(moderators.c.forum_id == id),
         backref=db.backref("forummoderator", lazy="dynamic"),
         lazy="joined"
     )
-    groups = db.relationship(
-        "Group",
-        secondary=forumgroups,
-        primaryjoin=(forumgroups.c.forum_id == id),
-        backref="forumgroups",
-        lazy="joined",
-    )
+
 
     # Properties
     @property
@@ -903,40 +903,21 @@ class Category(db.Model, CRUDMixin):
                      forumsread object.
         """
         # import Group model locally to avoid cicular imports
-        from flaskbb.user.models import Group
         if user.is_authenticated():
             # get list of user group ids
-            user_groups = [gr.id for gr in user.groups]
             # filter forums by user groups
-            user_forums = Forum.query.\
-                filter(Forum.groups.any(Group.id.in_(user_groups))).\
-                subquery()
-
-            forum_alias = aliased(Forum, user_forums)
             # get all
             forums = cls.query.\
-                join(forum_alias, cls.id == forum_alias.category_id).\
                 outerjoin(ForumsRead,
-                          db.and_(ForumsRead.forum_id == forum_alias.id,
-                                  ForumsRead.user_id == user.id)).\
-                add_entity(forum_alias).\
+                          db.and_(ForumsRead.user_id == user.id)).\
                 add_entity(ForumsRead).\
-                order_by(Category.position, Category.id,
-                         forum_alias.position).\
+                order_by(Category.position, Category.id).\
                 all()
         else:
-            guest_group = Group.get_guest_group()
             # filter forums by guest groups
-            guest_forums = Forum.query.\
-                filter(Forum.groups.any(Group.id == guest_group.id)).\
-                subquery()
 
-            forum_alias = aliased(Forum, guest_forums)
             forums = cls.query.\
-                join(forum_alias, cls.id == forum_alias.category_id).\
-                add_entity(forum_alias).\
-                order_by(Category.position, Category.id,
-                         forum_alias.position).\
+                order_by(Category.position, Category.id).\
                 all()
 
         return get_categories_and_forums(forums, user)
@@ -955,39 +936,18 @@ class Category(db.Model, CRUDMixin):
         :param user: The user object is needed to check if we also need their
                      forumsread object.
         """
-        from flaskbb.user.models import Group
         if user.is_authenticated():
             # get list of user group ids
-            user_groups = [gr.id for gr in user.groups]
-            # filter forums by user groups
-            user_forums = Forum.query.\
-                filter(Forum.groups.any(Group.id.in_(user_groups))).\
-                subquery()
 
-            forum_alias = aliased(Forum, user_forums)
             forums = cls.query.\
                 filter(cls.id == category_id).\
-                join(forum_alias, cls.id == forum_alias.category_id).\
                 outerjoin(ForumsRead,
-                          db.and_(ForumsRead.forum_id == forum_alias.id,
-                                  ForumsRead.user_id == user.id)).\
-                add_entity(forum_alias).\
+                          db.and_(ForumsRead.user_id == user.id)).\
                 add_entity(ForumsRead).\
-                order_by(forum_alias.position).\
                 all()
         else:
-            guest_group = Group.get_guest_group()
-            # filter forums by guest groups
-            guest_forums = Forum.query.\
-                filter(Forum.groups.any(Group.id == guest_group.id)).\
-                subquery()
-
-            forum_alias = aliased(Forum, guest_forums)
             forums = cls.query.\
                 filter(cls.id == category_id).\
-                join(forum_alias, cls.id == forum_alias.category_id).\
-                add_entity(forum_alias).\
-                order_by(forum_alias.position).\
                 all()
 
         if not forums:

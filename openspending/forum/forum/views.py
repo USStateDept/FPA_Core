@@ -12,22 +12,22 @@
 import datetime
 
 from flask import (Blueprint, redirect, url_for, current_app,
-                   request, flash, jsonify)
+                   request, flash, jsonify, render_template)
 from flask_login import login_required, current_user
 from flask_babelex import gettext as _
 
-from openspeding.core import db
-from flaskbb.utils.settings import flaskbb_config
-from flaskbb.utils.helpers import (get_online_users, time_diff, format_quote,
-                                   render_template, do_topic_action)
-from flaskbb.utils.permissions import (can_post_reply, can_post_topic,
+from openspending.core import db
+from openspending.forum.utils.settings import flaskbb_config
+from openspending.forum.utils.helpers import (get_online_users, time_diff, format_quote,
+                                   do_topic_action)
+from openspending.auth.forum import (can_post_reply, can_post_topic,
                                        can_delete_topic, can_delete_post,
                                        can_edit_post, can_moderate)
-from flaskbb.forum.models import (Category, Forum, Topic, Post, ForumsRead,
+from openspending.forum.forum.models import (Category, Forum, Topic, Post, ForumsRead,
                                   TopicsRead)
-from flaskbb.forum.forms import (QuickreplyForm, ReplyForm, NewTopicForm,
+from openspending.forum.forum.forms import (QuickreplyForm, ReplyForm, NewTopicForm,
                                  ReportForm, UserSearchForm, SearchPageForm)
-from flaskbb.user.models import User
+from openspending.model.account import Account as User
 
 forum = Blueprint("forum", __name__)
 
@@ -42,25 +42,18 @@ def index():
     post_count = Post.query.count()
     newest_user = User.query.order_by(User.id.desc()).first()
 
-    # Check if we use redis or not
-    if not current_app.config["REDIS_ENABLED"]:
-        online_users = User.query.filter(User.lastseen >= time_diff()).count()
 
-        # Because we do not have server side sessions, we cannot check if there
-        # are online guests
-        online_guests = None
-    else:
-        online_users = len(get_online_users())
-        online_guests = len(get_online_users(guest=True))
+    # online_users = len(get_online_users())
+    # online_guests = len(get_online_users(guest=True))
 
     return render_template("forum/index.html",
                            categories=categories,
                            user_count=user_count,
                            topic_count=topic_count,
                            post_count=post_count,
-                           newest_user=newest_user,
-                           online_users=online_users,
-                           online_guests=online_guests)
+                           newest_user=newest_user)
+                           # online_users=online_users,
+                           # online_guests=online_guests)
 
 
 @forum.route("/category/<int:category_id>")
@@ -533,10 +526,7 @@ def markread(forum_id=None, slug=None):
 
 @forum.route("/who-is-online")
 def who_is_online():
-    if current_app.config['REDIS_ENABLED']:
-        online_users = get_online_users()
-    else:
-        online_users = User.query.filter(User.lastseen >= time_diff()).all()
+    online_users = User.query.filter(User.lastseen >= time_diff()).all()
     return render_template("forum/online_users.html",
                            online_users=online_users)
 

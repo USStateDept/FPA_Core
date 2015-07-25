@@ -14,8 +14,8 @@ from wtforms import (TextAreaField, StringField, SelectMultipleField,
 from wtforms.validators import DataRequired, Optional, Length
 from flask_babelex import lazy_gettext as _
 
-from flaskbb.forum.models import Topic, Post, Report, Forum
-from flaskbb.user.models import User
+from openspending.forum.forum.models import Topic, Post, Report, Forum
+from openspending.model.account import Account as User
 
 
 class QuickreplyForm(Form):

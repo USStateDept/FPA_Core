@@ -12,13 +12,13 @@ from wtforms import (TextField, IntegerField, FloatField, BooleanField,
                      SelectField, SelectMultipleField, validators)
 from flask_wtf import Form
 
-from flaskbb._compat import max_integer, text_type, iteritems
-from flaskbb.extensions import db, cache
-from flaskbb.utils.database import CRUDMixin
+from openspending.forum._compat import max_integer, text_type, iteritems
+from openspending.core import db, cache
+from openspending.forum.utils.database import CRUDMixin
 
 
 class SettingsGroup(db.Model, CRUDMixin):
-    __tablename__ = "settingsgroup"
+    __tablename__ = "forum_settingsgroup"
 
     key = db.Column(db.String(255), primary_key=True)
     name = db.Column(db.String(255), nullable=False)
@@ -28,12 +28,12 @@ class SettingsGroup(db.Model, CRUDMixin):
 
 
 class Setting(db.Model, CRUDMixin):
-    __tablename__ = "settings"
+    __tablename__ = "forum_settings"
 
     key = db.Column(db.String(255), primary_key=True)
     value = db.Column(db.PickleType, nullable=False)
     settingsgroup = db.Column(db.String,
-                              db.ForeignKey('settingsgroup.key',
+                              db.ForeignKey('forum_settingsgroup.key',
                                             use_alter=True,
                                             name="fk_settingsgroup"),
                               nullable=False)
