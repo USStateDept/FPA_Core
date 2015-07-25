@@ -42,3 +42,4 @@ https://github.com/USStateDept/Flask-WhooshAlchemy/archive/v.60.zip
 xlrd==0.9.3
 openpyxl==2.2.2
 jsmin==2.1.1
+Flask-DebugToolbar==0.10.0
