@@ -72,6 +72,8 @@ class Account(db.Model):
     api_key = Column(Unicode(2000), default=make_uuid)
     admin = Column(Boolean, default=False)
 
+    moderator= Column(Boolean, default=False)
+
     verified = Column(Boolean, default=False) 
 
     #use this in the future to mark based on domain
