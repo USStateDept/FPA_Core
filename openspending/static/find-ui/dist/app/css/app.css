@@ -43,6 +43,7 @@ body {
   font-weight: 400;
   font-size: 16px;
   font-style: normal;
+  cursor: pointer;
 }
 .app .navbar-default .navbar-nav > li:nth-child(2) > a {
   font-weight: 200;
@@ -265,7 +266,6 @@ background green,
 }
 .carousel-fade .carousel-inner .item {
   opacity: 0;
-  -webkit-transition-property: opacity;
   transition-property: opacity;
 }
 .carousel-fade .carousel-inner .item.active {
