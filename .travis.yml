@@ -11,7 +11,7 @@ services:
 before_install:
   - virtualenv ./pyenv --distribute
   - source ./pyenv/bin/activate
-  - sudo service postgresql restart 9.3
+  #- sudo service postgresql restart 9.3
 install:
   # To install external filter binaries, we first need to install
   # RubyGems and Node/NPM. I'm not sure why, since it seems clear
