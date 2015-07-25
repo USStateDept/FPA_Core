@@ -33,3 +33,4 @@ datauploads
 openspending/whoosh_index
 whoosh_index
 filecache
+npm-debug.log
