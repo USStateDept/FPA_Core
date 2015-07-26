@@ -8,13 +8,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>
-        {% block title %}
-            {%- if not page_title -%}
-                {{ flaskbb_config["PROJECT_TITLE"] }} - {{ flaskbb_config["PROJECT_SUBTITLE"] }}
-            {%- else -%}
-                {{ page_title }} - {{ flaskbb_config["PROJECT_TITLE"] }}
-            {%- endif -%}
-        {% endblock %}
+
         </title>
 
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -37,14 +31,14 @@
 
     <body>
         {% block navigation %}
-            {% include theme('navigation.html') %}
+            {% include 'forum/navigation.html' %}
         {% endblock %}
 
 
         <div class="container">
             {% block messages %}
                 <div id="flashed-messages">
-                    {% include theme('flashed_messages.html') %}
+                    {% include 'forum/flashed_messages.html' %}
                 </div>
             {% endblock %}
 
@@ -54,12 +48,7 @@
 
 
         {% block footer %}
-        <div id="footer">
-            <div class="container">
-                <p class="text-muted credit pull-left">powered by <a href="http://flask.pocoo.org">Flask</a></p>
-                <p class="text-muted credit pull-right">&copy; 2013 - 2015 - <a href="http://flaskbb.org">FlaskBB.org</a></p>
-            </div>
-        </div>
+
         {% endblock %}
 
 

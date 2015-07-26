@@ -46,7 +46,7 @@ def index():
     # online_users = len(get_online_users())
     # online_guests = len(get_online_users(guest=True))
 
-    return render_template("forum/index.html",
+    return render_template("forum/forum/index.html",
                            categories=categories,
                            user_count=user_count,
                            topic_count=topic_count,
@@ -62,7 +62,7 @@ def view_category(category_id, slug=None):
     category, forums = Category.\
         get_forums(category_id=category_id, user=current_user)
 
-    return render_template("forum/category.html", forums=forums,
+    return render_template("forum/forum/category.html", forums=forums,
                            category=category)
 
 
@@ -83,7 +83,7 @@ def view_forum(forum_id, slug=None):
     )
 
     return render_template(
-        "forum/forum.html", forum=forum_instance,
+        "forum/forum/forum.html", forum=forum_instance,
         topics=topics, forumsread=forumsread,
     )
 
@@ -124,7 +124,7 @@ def view_topic(topic_id, slug=None):
             post = form.save(current_user, topic)
             return view_post(post.id)
 
-    return render_template("forum/topic.html", topic=topic, posts=posts,
+    return render_template("forum/forum/topic.html", topic=topic, posts=posts,
                            last_seen=time_diff(), form=form)
 
 
@@ -157,7 +157,7 @@ def new_topic(forum_id, slug=None):
     if request.method == "POST":
         if "preview" in request.form and form.validate():
             return render_template(
-                "forum/new_topic.html", forum=forum_instance,
+                "forum/forum/new_topic.html", forum=forum_instance,
                 form=form, preview=form.content.data
             )
         if "submit" in request.form and form.validate():
@@ -166,7 +166,7 @@ def new_topic(forum_id, slug=None):
             return redirect(url_for('forum.view_topic', topic_id=topic.id))
 
     return render_template(
-        "forum/new_topic.html", forum=forum_instance, form=form
+        "forum/forum/new_topic.html", forum=forum_instance, form=form
     )
 
 
@@ -341,7 +341,7 @@ def manage_forum(forum_id, slug=None):
             return redirect(mod_forum_url)
 
     return render_template(
-        "forum/edit_forum.html", forum=forum_instance, topics=topics,
+        "forum/forum/edit_forum.html", forum=forum_instance, topics=topics,
         available_forums=available_forums, forumsread=forumsread,
     )
 
@@ -368,7 +368,7 @@ def new_post(topic_id, slug=None):
             post = form.save(current_user, topic)
             return view_post(post.id)
 
-    return render_template("forum/new_post.html", topic=topic, form=form)
+    return render_template("forum/forum/new_post.html", topic=topic, form=form)
 
 
 @forum.route(
@@ -397,7 +397,7 @@ def reply_post(topic_id, post_id):
     else:
         form.content.data = format_quote(post.username, post.content)
 
-    return render_template("forum/new_post.html", topic=post.topic, form=form)
+    return render_template("forum/forum/new_post.html", topic=post.topic, form=form)
 
 
 @forum.route("/post/<int:post_id>/edit", methods=["POST", "GET"])
@@ -426,7 +426,7 @@ def edit_post(post_id):
     else:
         form.content.data = post.content
 
-    return render_template("forum/new_post.html", topic=post.topic, form=form)
+    return render_template("forum/forum/new_post.html", topic=post.topic, form=form)
 
 
 @forum.route("/post/<int:post_id>/delete", methods=["POST"])
@@ -463,7 +463,7 @@ def report_post(post_id):
         form.save(current_user, post)
         flash(_("Thanks for reporting."), "success")
 
-    return render_template("forum/report_post.html", form=form)
+    return render_template("forum/forum/report_post.html", form=form)
 
 
 @forum.route("/post/<int:post_id>/raw", methods=["POST", "GET"])
@@ -527,7 +527,7 @@ def markread(forum_id=None, slug=None):
 @forum.route("/who-is-online")
 def who_is_online():
     online_users = User.query.filter(User.lastseen >= time_diff()).all()
-    return render_template("forum/online_users.html",
+    return render_template("forum/forum/online_users.html",
                            online_users=online_users)
 
 
@@ -540,12 +540,12 @@ def memberlist():
     if search_form.validate():
         users = search_form.get_results().\
             paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
-        return render_template("forum/memberlist.html", users=users,
+        return render_template("forum/forum/memberlist.html", users=users,
                                search_form=search_form)
     else:
         users = User.query.\
             paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
-        return render_template("forum/memberlist.html", users=users,
+        return render_template("forum/forum/memberlist.html", users=users,
                                search_form=search_form)
 
 
@@ -561,7 +561,7 @@ def topictracker():
         order_by(Topic.last_updated.desc()).\
         paginate(page, flaskbb_config['TOPICS_PER_PAGE'], True)
 
-    return render_template("forum/topictracker.html", topics=topics)
+    return render_template("forum/forum/topictracker.html", topics=topics)
 
 
 @forum.route("/topictracker/<int:topic_id>/add", methods=["POST"])
@@ -593,4 +593,4 @@ def search():
         return render_template('forum/search_result.html', form=form,
                                result=result)
 
-    return render_template('forum/search_form.html', form=form)
+    return render_template('forum/forum/search_form.html', form=form)

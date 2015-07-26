@@ -1,4 +1,5 @@
 import logging
+import os
 from flask import Flask, redirect, session, abort
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
@@ -22,6 +23,7 @@ from openspending.lib.routing import NamespaceRouteRule
 from openspending.lib.routing import FormatConverter, NoDotConverter
 from flask import g
 import flask_whooshalchemy as whoosearch
+from flask_debugtoolbar import DebugToolbarExtension
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -113,6 +115,9 @@ def create_web_app(**config):
 
         from openspending.assets.assets import register_assets
         register_assets(assets)  
+
+        if os.environ.get("FLASK_DEBUGTOOLBAR", False):
+            toolbar = DebugToolbarExtension(app)
 
 
     return app
