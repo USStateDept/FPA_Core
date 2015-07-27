@@ -30,6 +30,7 @@ def saveData():
       viz_hash = '#'+viz_hash[2:]
       if not viz_hash:
         viz_hash="test"
+      logging.info("new row ================ %s ",viz_hash)
       newrow = Dataview({'account_id':current_user.id,'settings':{'hash':viz_hash}})
       db.session.add(newrow)
       db.session.commit()
