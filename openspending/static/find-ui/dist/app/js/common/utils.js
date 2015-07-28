@@ -615,8 +615,95 @@
         // size on bubble would be the third indicator
         // user should be able to switch between the x, y and z
         var latestYear = yearsExtremesForData[1];
+		
+        if (type == "scatter") {
 
-        if (type == "bubble") {
+            seriesArray = [];
+
+            var indicator1 = indicators[0];
+            var indicator2 = indicators[1];
+
+			series = [];
+			var globalType;
+			var indicatorSuffix;
+			
+			for (i=0; i < 3; i ++){
+				switch(i) {
+					case 0:
+						globalType = "Global Minimum";
+						indicatorSuffix = "min";
+						break;
+					case 1:
+						globalType = "Global Maximum";
+						indicatorSuffix = "max";
+						break;
+					case 2:
+						globalType = "Global Average";
+						indicatorSuffix = "avg";
+						break;
+				}
+				dataArray = [];
+				_.forEach(statsCells, function(c) {
+					dataArray.push({x:c[indicator1 + "__amount_" + indicatorSuffix], y:c[indicator2 + "__amount_" + indicatorSuffix], year:c.year});
+				});
+				series.push({
+					name: globalType,
+					data: dataArray,
+					visible: false,
+					tooltip: {
+						pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}' 
+					},
+				});
+			}
+			
+            _.forEach(_cells, function(c) {
+				if (latestYear === c.year) {
+					dataArray = [];
+					_.forEach(_cells, function(d) {
+						if (c.region === d.region) {
+							dataArray.push({x:d[indicator1 + "__amount_" + dataType], y:d[indicator2 + "__amount_" + dataType], year:d.year});
+						}
+					});
+					series.push({
+						name: c.region,
+						data: dataArray,
+						tooltip: {
+							pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}' 
+						},
+					});
+				}
+            });
+
+            var jsonScatter = {
+
+                chart: {
+                    type: 'scatter',
+                    zoomType: 'xy'
+                },
+
+                title: {
+                    text: ''
+                },
+
+                xAxis: {
+                    title: {
+                        enabled: true,
+                        text: indicatorsMeta[0][0].label
+                    },
+                    startOnTick: true,
+                    endOnTick: true,
+                    showLastLabel: true
+                },
+                yAxis: {
+                    title: {
+                        text: indicatorsMeta[1][0].label
+                    }
+                },
+                series: series
+            }
+        }
+		
+		if (type == "bubble") {
 
             seriesArray = [];
 
@@ -713,12 +800,8 @@
 
                 series: seriesArray
             }
-
-
-
-
         }
-
+		
         if (type == "bar") {
             //debugger;
 
@@ -835,6 +918,9 @@
                 break;
             case "bubble":
                 json = jsonBubble;
+                break;
+			case "scatter":
+                json = jsonScatter;
                 break;
         }
 

@@ -23,11 +23,14 @@ def dataloader():
 @blueprint.route('/user/adddv', methods=['GET'])    
 def saveData():
     """ save a dv to the current  user """
-    """ unquote the js uri encoding """
-    viz_hash = urllib.unquote(request.query_string)
-    """ re add the #"""
-    viz_hash = '#'+viz_hash[2:]
     if current_user.is_authenticated() and current_user.id:
+      """ unquote the js uri encoding """
+      viz_hash = urllib.unquote(request.query_string)
+      """ re add the #"""
+      viz_hash = '#'+viz_hash[2:]
+      if not viz_hash:
+        viz_hash="test"
+      logging.info("new row ================ %s ",viz_hash)
       newrow = Dataview({'account_id':current_user.id,'settings':{'hash':viz_hash}})
       db.session.add(newrow)
       db.session.commit()
