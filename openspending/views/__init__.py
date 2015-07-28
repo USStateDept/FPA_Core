@@ -13,11 +13,8 @@ from openspending.views.search import blueprint as search
 from openspending.views.viz import blueprint as viz
 from openspending.views.admin import blueprint as findadmin
 from openspending.views.user import blueprint as user
-<<<<<<< HEAD
 from openspending.forum.forum.views import forum
-=======
 from openspending.views.faq import blueprint as faq
->>>>>>> 2f1b3bb601494ee9ecc84822c28699995c786467
 # from openspending.views.badge import blueprint as badge
 # from openspending.views.view import blueprint as view
 # from openspending.views.editor import blueprint as editor
