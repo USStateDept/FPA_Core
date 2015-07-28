@@ -182,7 +182,7 @@
 
             var groupByRegion = vizModel.groupByRegion();
 
-            var allowMultivariate = ["bubble", "radar", "tree"];
+            var allowMultivariate = ["scatter", "bubble", "radar", "tree"];
 
             var allowSinglevariate = ["line", "bar"];
 

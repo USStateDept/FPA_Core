@@ -926,12 +926,12 @@
         // Create the array in a wide format
         var dataWide = new Array;
 
-        function createDataWide(id, indicator, country) {
+        function createDataWide(id, indicator, country, i) {
             var dataTempObj = {};
             dataTempObj['indicator'] = indicator;
             dataTempObj['country'] = country;
-            data.forEach(function(entry, i) {
-                if (dataTempObj['indicator'] == Object.keys(entry)[0] && dataTempObj['country'] == entry['region']) {
+            data.forEach(function(entry) {
+                if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
                     dataTempObj[entry['year']] = entry[indicator];
                 }
             });
@@ -940,24 +940,28 @@
         }
 
         data.forEach(function(entry) {
-
-            var indicator = Object.keys(entry)[0];
-
-            if (dataWide.length == 0) {
-                createDataWide(0, indicator, entry['region']);
-            } else {
-                var indicatorCountryExists = 0;
-                var id = 0;
-                dataWide.forEach(function(dataEntry, i) {
-                    if (dataEntry['indicator'] == indicator && dataEntry['country'] == entry['region']) {
-                        indicatorCountryExists = 1;
-                    }
-                    id = i + 1;
-                });
-                if (!indicatorCountryExists) {
-                    createDataWide(id, indicator, entry['region']);
-                }
-            }
+			
+			var numIndicators = Object.keys(entry).length - 3;
+			
+			for (i=0; i < numIndicators; i ++){
+				var indicator = Object.keys(entry)[i];
+				
+				if (dataWide.length == 0) {
+					createDataWide(0, indicator, entry['region'], i);
+				} else {
+					var indicatorCountryExists = 0;
+					var id = 0;
+					dataWide.forEach(function(dataEntry, i) {
+						if (dataEntry['indicator'] == indicator && dataEntry['country'] == entry['region']) {
+							indicatorCountryExists = 1;
+						}
+						id = i + 1;
+					});
+					if (!indicatorCountryExists) {
+						createDataWide(id, indicator, entry['region'], i);
+					}
+				}
+			}
         });
         
         var options = {
@@ -967,7 +971,7 @@
             defaultColumnWidth: 150,
             rowHeight: 35
         }
-        
+		
         var dataView = new Slick.Data.DataView();
 
         // Pass it as a data provider to SlickGrid.
@@ -1149,7 +1153,7 @@
         //highChartsJson.title.text = "";
         //highChartsJson.chart.type = chart;
         // highChartsJson.yAxis.title.text = "";
-
+		//debugger;
         highChartsJson.chart.events = {
             load: function() {
                 //debugger;
@@ -1209,7 +1213,15 @@
         }, indicatorsMeta, chartType, indicators, [year, year]);
 
 
-
+		if (chartType == "scatter") {
+            var seriesArray = json.highcharts.series;
+            _.forEach(seriesArray, function(s, i) {
+                var data = s.data;
+                if (i > 2) {
+                    activeChart.series[i].setData(data, true);
+                }
+            });
+        }
 
 
         if (chartType == "bubble") {
