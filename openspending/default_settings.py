@@ -71,3 +71,7 @@ CELERY_ROUTES = {
         'queue': 'loading'
     },
 }
+
+
+
+WTF_CSRF_ENABLED= False
