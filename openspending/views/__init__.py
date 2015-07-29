@@ -45,7 +45,7 @@ def register_views(app):
     app.register_blueprint(findadmin)
     app.register_blueprint(user)
     app.register_blueprint(forum, url_prefix='/forum')
-    app.register_blueprint(forum, url_prefix='/admin/forum')
+    app.register_blueprint(management, url_prefix='/admin/forum')
     app.register_blueprint(faq)
     # app.register_blueprint(badge)
     # app.register_blueprint(view)
