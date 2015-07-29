@@ -9,6 +9,28 @@
     :license: BSD, see LICENSE for more details.
 """
 
+from functools import wraps
+from flask.ext.login import current_user
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not is_admin(current_user):
+            abort(403)
+        else:
+            return f(*args, **kwargs)
+    return decorated
+
+
+def moderator_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not is_moderator(current_user):
+            abort(403)
+        else:
+            return f(*args, **kwargs)
+    return decorated
+
 
 def check_perm(user, perm, forum, post_user_id=None):
     """Checks if the `user` has a specified `perm` in the `forum`
@@ -40,7 +62,7 @@ def is_moderator(user):
 
     :param user: The user who should be checked.
     """
-    return get_attr(user, "moderator", False) or get_attr(user, "admin", False)
+    return getattr(user, "moderator", False) or getattr(user, "admin", False)
 
 
 def is_admin(user):
@@ -48,7 +70,7 @@ def is_admin(user):
 
     :param user:  The user who should be checked.
     """
-    return get_attr(user, "admin", False)
+    return getattr(user, "admin", False)
 
 
 def is_admin_or_moderator(user):
@@ -56,7 +78,7 @@ def is_admin_or_moderator(user):
 
     :param user: The user who should be checked.
     """
-    return get_attr(user, "moderator", False) or get_attr(user, "admin", False)
+    return getattr(user, "moderator", False) or getattr(user, "admin", False)
 
 
 def can_moderate(user, forum=None, perm=None):

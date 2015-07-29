@@ -734,10 +734,6 @@ class Forum(db.Model, CRUDMixin):
         if self.id:
             db.session.merge(self)
         else:
-            if groups is None:
-                # importing here because of circular dependencies
-                from flaskbb.user.models import Group
-                self.groups = Group.query.order_by(Group.name.asc()).all()
             db.session.add(self)
 
         db.session.commit()
