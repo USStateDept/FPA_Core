@@ -1,7 +1,7 @@
 {% set page_title = category.title %}
 {% set active_forum_nav=True %}
 
-{% extends theme("layout.html") %}
+{% extends "forum/layout.html" %}
 {% block forumcontent %}
 
 <ol class="breadcrumb">
@@ -9,6 +9,6 @@
     <li class="active">{{ category.title }}</li>
 </ol>
 
-{% include theme("forum/category_layout.html") %}
+{% include theme("forum/forum/category_layout.html") %}
 
 {% endblock %}

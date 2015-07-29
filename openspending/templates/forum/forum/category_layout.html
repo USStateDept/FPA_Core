@@ -59,7 +59,7 @@
                     <div class="forum-moderators">
                         {% trans %}Moderators{% endtrans %}:
                         {% for moderator in forum.moderators %}
-                        <a href="{{ url_for('user.profile', username=moderator.username) }}">{{ moderator.username }}</a>{% if not loop.last %}, {% endif %}
+                        {% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </div>
                     {% endif %}
@@ -79,7 +79,7 @@
 
                     {% trans %}by{% endtrans %}
                     {% if forum.last_post_user_id %}
-                    <a href="{{ url_for('user.profile', username=forum.last_post_username) }}">{{ forum.last_post_username }}</a>
+                    <a href="#">{{ forum.last_post_username }}</a>
                     {% else %}
                     {{ forum.last_post_username }}
                     {% endif %}

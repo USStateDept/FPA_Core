@@ -1,7 +1,7 @@
-{% set page_title = _("New Topic") %}
+{% set page_title = "New Topic" %}
 {% set active_forum_nav=True %}
 
-{% extends theme("layout.html") %}
+{% extends "forum/layout.html" %}
 
 {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}">

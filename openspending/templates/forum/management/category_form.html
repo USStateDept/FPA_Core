@@ -1,15 +1,15 @@
 {% set page_title = title %}
 {% set active_management_forum_nav=True %}
 
-{% extends theme("management/management_layout.html") %}
+{% extends "forum/management/management_layout.html" %}
 {% block management_content %}
-{% from theme("macros.html") import render_field, render_submit_field, navlink with context %}
+{% from "forum/macros.html" import render_field, render_submit_field, navlink with context %}
 
 <div class="col-md-3">
     <ul class="nav nav-pills nav-stacked">
-        {{ navlink('management.forums', _("Manage Forums")) }}
-        {{ navlink('management.add_forum', _("Add Forum")) }}
-        {{ navlink('management.add_category', _("Add Category")) }}
+        {{ navlink('management.forums', "Manage Forums") }}
+        {{ navlink('management.add_forum', "Add Forum") }}
+        {{ navlink('management.add_category', "Add Category") }}
     </ul>
 </div>
 
@@ -22,7 +22,7 @@
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="post">
-                        {{ form.hidden_tag() }}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> 
                         {{ render_field(form.title) }}
                         {{ render_field(form.description, rows=5, div_class="col-md-12") }}
 

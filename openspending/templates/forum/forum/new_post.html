@@ -1,14 +1,14 @@
-{% set page_title = _("New Post") %}
+{% set page_title = "New Post" %}
 {% set active_forum_nav=True %}
 
-{% extends theme("layout.html") %}
+{% extends "forum/layout.html" %}
 
 {% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='forumstatic/css/bootstrap-markdown.min.css') }}">
 {% endblock %}
 
 {% block forumcontent %}
-{% from theme("macros.html") import render_field, render_submit_field %}
+{% from "forum/macros.html" import render_field, render_submit_field %}
 
 <ul class="breadcrumb">
     <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
@@ -43,6 +43,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/marked.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-markdown.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='forumstatic/js/marked.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='forumstatic/js/bootstrap-markdown.js') }}"></script>
 {% endblock %}
