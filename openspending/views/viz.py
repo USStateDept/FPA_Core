@@ -52,15 +52,15 @@ def countries(format='html'):
 
     return render_template('countries/countries.jade')
 
-@blueprint.route('/sectors')
+@blueprint.route('/categories')
 #@blueprint.route('/datasets.<fmt:format>')
-def sectors(format='html'):
+def categories(format='html'):
     """ Get the datasets indicators list by category"""
     # tags = []
     # for tag in Tags.all_by_category().all():
     #     tags.append(tag.as_dict())
 
-    return render_template('sectors/sectors.jade')
+    return render_template('categories/categories.jade')
 
 @blueprint.route('/data')
 #@blueprint.route('/datasets.<fmt:format>')
