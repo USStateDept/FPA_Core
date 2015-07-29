@@ -8,7 +8,7 @@
     :copyright: (c) 2014 by the FlaskBB Team.
     :license: BSD, see LICENSE for more details.
 """
-import simplejson as json
+import json
 from datetime import datetime
 from wtforms.widgets.core import Select, HTMLString, html_params
 

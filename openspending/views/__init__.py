@@ -14,6 +14,7 @@ from openspending.views.viz import blueprint as viz
 from openspending.views.admin import blueprint as findadmin
 from openspending.views.user import blueprint as user
 from openspending.forum.forum.views import forum
+from openspending.forum.management.views import management
 from openspending.views.faq import blueprint as faq
 # from openspending.views.badge import blueprint as badge
 # from openspending.views.view import blueprint as view
@@ -44,6 +45,7 @@ def register_views(app):
     app.register_blueprint(findadmin)
     app.register_blueprint(user)
     app.register_blueprint(forum, url_prefix='/forum')
+    app.register_blueprint(forum, url_prefix='/admin/forum')
     app.register_blueprint(faq)
     # app.register_blueprint(badge)
     # app.register_blueprint(view)

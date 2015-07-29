@@ -13,23 +13,21 @@ import os
 from datetime import datetime
 
 from flask import (Blueprint, current_app, request, redirect, url_for, flash,
-                   jsonify, __version__ as flask_version)
+                   jsonify, __version__ as flask_version, render_template)
 from flask_login import current_user
-from flask_plugins import get_all_plugins, get_plugin, get_plugin_from_all
+#from flask_plugins import get_all_plugins, get_plugin, get_plugin_from_all
 from flask_babelex import gettext as _
 
-from openspeding.forum._compat import iteritems
-from openspeding.forum.forum.forms import UserSearchForm
-from openspeding.forum.utils.settings import flaskbb_config
-from openspeding.forum.utils.helpers import render_template
-from openspeding.forum.utils.decorators import admin_required, moderator_required
-from openspeding.auth.forum. import can_ban_user, can_edit_user
-from openspeding.core import db
-from openspeding.model.account import AnonymousUser as Guest, Account as User
-from openspeding.forum.forum.models import Post, Topic, Forum, Category, Report
-from openspeding.forum.management.models import Setting, SettingsGroup
-from openspeding.forum.management.forms import (AddUserForm, EditUserForm, AddGroupForm,
-                                      EditGroupForm, EditForumForm,
+from openspending.forum._compat import iteritems
+from openspending.forum.forum.forms import UserSearchForm
+from openspending.forum.utils.settings import flaskbb_config
+from openspending.forum.utils.decorators import admin_required, moderator_required
+from openspending.auth.forum import can_ban_user, can_edit_user
+from openspending.core import db
+from openspending.model.account import AnonymousAccount as Guest, Account as User
+from openspending.forum.forum.models import Post, Topic, Forum, Category, Report
+from openspending.forum.management.models import Setting, SettingsGroup
+from openspending.forum.management.forms import (EditForumForm,
                                       AddForumForm, CategoryForm)
 
 
@@ -43,10 +41,7 @@ def overview():
     user_count = User.query.count()
     topic_count = Topic.query.count()
     post_count = Post.query.count()
-    return render_template("management/overview.html",
-                           python_version=python_version,
-                           flask_version=flask_version,
-                           user_count=user_count,
+    return render_template("forum/management/overview.html",
                            topic_count=topic_count,
                            post_count=post_count)
 
@@ -88,7 +83,7 @@ def settings(slug=None):
             except (KeyError, ValueError):
                 pass
 
-    return render_template("management/settings.html", form=form,
+    return render_template("forum/management/settings.html", form=form,
                            all_groups=all_groups, active_group=active_group)
 
 
@@ -323,7 +318,7 @@ def reports():
         order_by(Report.id.asc()).\
         paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
 
-    return render_template("management/reports.html", reports=reports)
+    return render_template("forum/management/reports.html", reports=reports)
 
 
 @management.route("/reports/unread")
@@ -335,7 +330,7 @@ def unread_reports():
         order_by(Report.id.desc()).\
         paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
 
-    return render_template("management/unread_reports.html", reports=reports)
+    return render_template("forum/management/unread_reports.html", reports=reports)
 
 
 @management.route("/reports/<int:report_id>/markread", methods=["POST"])
@@ -400,7 +395,7 @@ def report_markread(report_id=None):
 @admin_required
 def forums():
     categories = Category.query.order_by(Category.position.asc()).all()
-    return render_template("management/forums.html", categories=categories)
+    return render_template("forum/management/forums.html", categories=categories)
 
 
 @management.route("/forums/<int:forum_id>/edit", methods=["GET", "POST"])
@@ -421,7 +416,7 @@ def edit_forum(forum_id):
         else:
             form.moderators.data = None
 
-    return render_template("management/forum_form.html", form=form,
+    return render_template("forum/management/forum_form.html", form=form,
                            title=_("Edit Forum"))
 
 
@@ -450,12 +445,11 @@ def add_forum(category_id=None):
         flash(_("Forum successfully added."), "success")
         return redirect(url_for("management.forums"))
     else:
-        form.groups.data = Group.query.order_by(Group.id.asc()).all()
         if category_id:
             category = Category.query.filter_by(id=category_id).first()
             form.category.data = category
 
-    return render_template("management/forum_form.html", form=form,
+    return render_template("forum/management/forum_form.html", form=form,
                            title=_("Add Forum"))
 
 
@@ -469,7 +463,7 @@ def add_category():
         flash(_("Category successfully added."), "success")
         return redirect(url_for("management.forums"))
 
-    return render_template("management/category_form.html", form=form,
+    return render_template("forum/management/category_form.html", form=form,
                            title=_("Add Category"))
 
 
@@ -485,7 +479,7 @@ def edit_category(category_id):
         flash(_("Category successfully updated."), "success")
         category.save()
 
-    return render_template("management/category_form.html", form=form,
+    return render_template("forum/management/category_form.html", form=form,
                            title=_("Edit Category"))
 
 

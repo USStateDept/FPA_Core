@@ -51,6 +51,9 @@ class LockdownUser():
     @property
     def admin(self):
         False
+    @property 
+    def id(self):
+        return 999999999
 
 
 
