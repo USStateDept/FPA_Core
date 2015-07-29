@@ -835,12 +835,6 @@
                 if (c.region && latestYear == c.year) {
                     //debugger;
                     data.push([c.region, c[indicatorId + "__amount_" + dataType]]);
-                    /* data.push({
-                        name: "Global Minimum",
-                        data: [
-                            [c[indicatorId + "__amount_" + dataType]]
-                        ]
-                    });*/
                 }
             });
 
@@ -855,21 +849,9 @@
             //debugger;
             seriesArray = [{
                 name: indicatorsMeta[0][0].label,
-                data: data,
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.1f}', // one decimal
-                    y: 10, // 10 pixels down from the top
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
+                data: data
             }];
-
+            
             var jsonBar = {
                 chart: {
                     type: 'column'
@@ -900,7 +882,10 @@
                     enabled: false
                 },
                 tooltip: {
-                    pointFormat: indicatorsMeta[0][0].label
+                    formatter: function () {
+                        var number = this.point.y
+                        return indicatorsMeta[0][0].label+'<br/>'+this.key+': <b>'+this.point.y+'</b>'
+                    }
                 },
                 series: seriesArray
             }
@@ -908,7 +893,6 @@
         }
 
         var json;
-
         switch (type) {
             case "line":
                 json = jsonLine;
