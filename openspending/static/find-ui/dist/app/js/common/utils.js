@@ -884,7 +884,7 @@
                 tooltip: {
                     formatter: function () {
                         var number = this.point.y
-                        return indicatorsMeta[0][0].label+'<br/>'+this.key+': <b>'+this.point.y+'</b>'
+                        return indicatorsMeta[0][0].label+'<br/>'+this.key+': <b>'+Math.floor(this.point.y)+'</b>'
                     }
                 },
                 series: seriesArray
