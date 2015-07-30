@@ -145,7 +145,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 .tabbable.tabs-left
                   ul.nav.nav-tabs
                     li.active
-                      a(href='#tab-category', data-toggle='tab') Sector
+                      a(href='#tab-category', data-toggle='tab') Category
                     li
                       a(href='#tab-source', data-toggle='tab') Collections        
                     li
@@ -261,9 +261,9 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   div.well.category.noun-tree-35339()
                   h4 Tree (coming soon)
               .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length!=1}")
-                div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;map&#34;)}')
                   div.well.category.noun-globe-76672()
-                  h4 Map (coming soon)
+                  h4 Map
 
           //-TAB 3
           //- #vizualize.tab-pane(role='tabpanel')

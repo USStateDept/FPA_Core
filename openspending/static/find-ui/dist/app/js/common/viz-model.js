@@ -184,7 +184,7 @@
 
             var allowMultivariate = ["scatter", "bubble", "radar", "tree"];
 
-            var allowSinglevariate = ["line", "bar"];
+            var allowSinglevariate = ["line", "bar","map"];
 
             var indicators = _.map(vizModel.activeIndicators(), function(indicator) {
                 return indicator.id;

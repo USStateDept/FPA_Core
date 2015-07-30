@@ -1055,6 +1055,65 @@
 
     }
 
+    var geoJSONHandler = function(response, type) {
+
+        function onEachFeature(feature, layer) {
+
+            if (feature.properties) {
+                // console.log(feature.properties);
+                var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
+                layer.bindPopup(name);
+            }
+        }
+
+        lastGeoJson = response;
+
+        //if (!window.visualization.geoJsonLayers[type]) {
+        //if layer doesnt exist then add it and symbolize as invisible 
+        geoJson[type] = response;
+
+        geoJsonLayers[type] = L.geoJson(response, {
+            style: {
+
+                weight: 0, //no border
+                opacity: 1,
+                color: 'gray',
+                //dashArray: '3',
+                fillOpacity: 1.0, //DO NOT DISLAY
+                fillColor: '#f7a2a2'
+            },
+            onEachFeature: onEachFeature
+        });
+
+        for (var _type in geoJsonLayers) {
+            if (type == _type) {
+                map.addLayer(geoJsonLayers[_type]);
+            }
+        }
+
+        /*} else {
+            //if layer exists bring it on top
+
+        }*/
+
+    }
+
+    var changeGroup = function(groupId) {
+        debugger;
+        if (groupId == "all") {
+            groupId = "sovereignt";
+        }
+
+        if (!geoJsonLayers[groupId]) {
+            window.loader.loadGeoJSON(groupId, geoJSONHandler);
+            debugger;
+        } else {
+            //debugger;
+            //move this layer on top
+            //TODO: Leroy
+        }
+
+    }
 
     var indicatorDataLoadHandler = function(args) {
 
@@ -1145,6 +1204,20 @@
         // indicatorsMeta.shift();
 
         //debugger;
+
+        if(chartType=="map")
+            {
+                $("#loading").hide();
+            map = L.map('viz-container').setView([0, 0], 3);
+
+            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                    maxZoom: 18,
+                    noWrap: true
+                }).addTo(map);
+            //window.utils.createMapViz();
+            //changeGroup("all");
+            }else{
         var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
 
         var highChartsJson = sortedData.highcharts;
@@ -1186,6 +1259,7 @@
 
 
         showTable(responseData);
+        }
     }
     var useNarrowExtremes = true;
 
