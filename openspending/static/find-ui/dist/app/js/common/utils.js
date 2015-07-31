@@ -660,7 +660,7 @@
 				if (latestYear === c.year) {
 					dataArray = [];
 					_.forEach(_cells, function(d) {
-						if (c.region === d.region) {
+						if (c.region === d.region && d.year <= latestYear) {
 							dataArray.push({x:d[indicator1 + "__amount_" + dataType], y:d[indicator2 + "__amount_" + dataType], year:d.year});
 						}
 					});
