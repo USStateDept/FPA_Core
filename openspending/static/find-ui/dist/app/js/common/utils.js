@@ -446,7 +446,7 @@
     }
 
     window.utils.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, yearsExtremesForData) {
-
+		//debugger;
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
 
@@ -497,9 +497,9 @@
 
         //debugger;
         var seriesArray = [];
-
-        window.utils.masterCells = window.utils.masterCells.concat(cells);
-
+		if (window.utils.masterCells.length == 0)
+			window.utils.masterCells = window.utils.masterCells.concat(cells);
+		//debugger;
         var _cells = window.utils.masterCells;
 
 
@@ -615,6 +615,7 @@
         // size on bubble would be the third indicator
         // user should be able to switch between the x, y and z
         var latestYear = yearsExtremesForData[1];
+		var firstYear = yearsExtremesForData[0];
 		
         if (type == "scatter") {
 
@@ -643,8 +644,10 @@
 						break;
 				}
 				dataArray = [];
+				//debugger;
 				_.forEach(statsCells, function(c) {
-					dataArray.push({x:c[indicator1 + "__amount_" + indicatorSuffix], y:c[indicator2 + "__amount_" + indicatorSuffix], year:c.year});
+					//if (c.geometry__time <= latestYear)
+					dataArray.push({x:c[indicator1 + "__amount_" + indicatorSuffix], y:c[indicator2 + "__amount_" + indicatorSuffix], year:c.geometry__time});
 				});
 				series.push({
 					name: globalType,
@@ -655,15 +658,18 @@
 					},
 				});
 			}
-			
+			//debugger;
             _.forEach(_cells, function(c) {
-				if (latestYear === c.year) {
+				//debugger;
+				if (latestYear == c.year) {
 					dataArray = [];
 					_.forEach(_cells, function(d) {
-						if (c.region === d.region) {
-							dataArray.push({x:d[indicator1 + "__amount_" + dataType], y:d[indicator2 + "__amount_" + dataType], year:d.year});
+						if (c.region == d.region && d.year >= firstYear && d.year <= latestYear) {
+							if (!!d[indicator1 + "__amount_" + dataType]  && !!d[indicator2 + "__amount_" + dataType])
+								dataArray.push({x:d[indicator1 + "__amount_" + dataType], y:d[indicator2 + "__amount_" + dataType], year:d.year});
 						}
 					});
+					//debugger;
 					series.push({
 						name: c.region,
 						data: dataArray,
@@ -673,7 +679,7 @@
 					});
 				}
             });
-
+			
             var jsonScatter = {
 
                 chart: {

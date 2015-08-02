@@ -765,7 +765,7 @@
             if (chartType == "line") {
                 setExtremes(yearsFilter[0], yearsFilter[1]);
             } else {
-                updateChartData(yearsFilter[1]);
+                updateChartData(yearsFilter);
             }
 
         }
@@ -783,7 +783,7 @@
 
         var isRange = false;
 
-        if (chartType == "line") {
+        if (chartType == "line" || chartType == "scatter") {
             isRange = true;
         }
 
@@ -825,7 +825,7 @@
             }
         }
 
-        if (chartType == "line") {
+        if (chartType == "line" || chartType == "scatter") {
             sliderOptions.values = [minYearFilter, maxYearFilter];
             sliderOptions.min = minYear;
             sliderOptions.max = maxYear;
@@ -1218,49 +1218,53 @@
             //window.utils.createMapViz();
             //changeGroup("all");
             }else{
-        var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
+				if (chartType == "scatter"){
+					yearsExtremesForData = window.utils.getHashParams().f.split("|");
+				}
+				
+				var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
 
-        var highChartsJson = sortedData.highcharts;
-        //regionalAverageData = sortedData.average;
+				var highChartsJson = sortedData.highcharts;
+				//regionalAverageData = sortedData.average;
 
-        //highChartsJson.title.text = "";
-        //highChartsJson.chart.type = chart;
-        // highChartsJson.yAxis.title.text = "";
-		//debugger;
-        highChartsJson.chart.events = {
-            load: function() {
-                //debugger;
-                var allowedSetExtremeCharts = ["line", "bar"];
-                var xAxis = this.series[0].xAxis;
-                if (chartType == "bar") {
-                    yearsFilter[0] = yearsFilter[1];
-                }
-
-
-
-
-                $("#loading").hide();
-
-                if (_.indexOf(allowedSetExtremeCharts, chartType) > -1) {
-                    xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
-                }
+				//highChartsJson.title.text = "";
+				//highChartsJson.chart.type = chart;
+				// highChartsJson.yAxis.title.text = "";
+				//debugger;
+				highChartsJson.chart.events = {
+					load: function() {
+						//debugger;
+						var allowedSetExtremeCharts = ["line", "bar"];
+						var xAxis = this.series[0].xAxis;
+						if (chartType == "bar") {
+							yearsFilter[0] = yearsFilter[1];
+						}
 
 
 
 
-            }
-        }
-        //debugger;
-        //highChartsJson.subtitle.text = type;
-        var chart = $('#viz-container').highcharts(highChartsJson);
+						$("#loading").hide();
+
+						if (_.indexOf(allowedSetExtremeCharts, chartType) > -1) {
+							xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
+						}
+
+
+
+
+					}
+				}
+				//debugger;
+				//highChartsJson.subtitle.text = type;
+				var chart = $('#viz-container').highcharts(highChartsJson);
 
 
 
 
 
-        showTable(responseData);
-        }
-    }
+				showTable(responseData);
+			}
+		}
     var useNarrowExtremes = true;
 
 
@@ -1280,23 +1284,23 @@
 
         var activeChart = $('#viz-container').highcharts();
         //first three series are the stats
+		//debugger;
         var json = window.utils.prepareHighchartsJson({
             cells: window.utils.masterCells
         }, {
             cells: []
-        }, indicatorsMeta, chartType, indicators, [year, year]);
-
+        }, indicatorsMeta, chartType, indicators, year);
 
 		if (chartType == "scatter") {
-            var seriesArray = json.highcharts.series;
-            _.forEach(seriesArray, function(s, i) {
+            var series = json.highcharts.series;
+			
+			//debugger;
+            _.forEach(series, function(s, i) {
                 var data = s.data;
-                if (i > 2) {
-                    activeChart.series[i].setData(data, true);
-                }
+				if (i > 2)
+					activeChart.series[i].setData(data, true);
             });
         }
-
 
         if (chartType == "bubble") {
             var seriesArray = json.highcharts.series;
