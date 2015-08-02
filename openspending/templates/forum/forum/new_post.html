@@ -11,21 +11,21 @@
 {% from "forum/macros.html" import render_field, render_submit_field %}
 
 <ul class="breadcrumb">
-    <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
+    <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
     <li><a href="{{ topic.forum.url }}">{{ topic.forum.title }}</a></li>
     <li><a href="{{ topic.url }}">{{ topic.title }} </a></li>
-    <li class="active">{% trans %}New Post{% endtrans %}</li>
+    <li class="active">New Post</li>
 </ul>
 
 <form class="form" role="form" method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     {{ form.hidden_tag() }}
-    <h3>{% trans %}New Post{% endtrans %}</h3>
+    <h3>New Post</h3>
 
     {% if preview %}
     <div class="form-group">
         <div class="col-sm-12">
-            <label>{% trans %}Preview{% endtrans %}</label>
+            <label>Preview</label>
             <div class="form-control preview-body">
                 {% autoescape false %}
                 {{ preview|markup }}

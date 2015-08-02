@@ -164,11 +164,17 @@ def get_forums(query_result, user):
     :param user: The user object is needed because a signed out user does not
                  have the ForumsRead relation joined.
     """
+    # forums = []
+    # print query_result
+    # for cat in query_result:
+    #     forums.append([cat, [(tempforum, None) for tempforum in cat.forums]])
+    # return forums
+
     it = itertools.groupby(query_result, operator.itemgetter(0))
 
     if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
         for key, value in it:
-            forums = key, [(item[1], item[2]) for item in value]
+            forums = key, [(item[0], item[1]) for item in value]
     else:
         for key, value in it:
             forums = key, [(item[1], None) for item in value]
@@ -293,13 +299,14 @@ def get_online_users(guest=False):  # pragma: no cover
 
     :param guest: If True, it will return the online guests
     """
-    current = int(time.time()) // 60
-    minutes = range_method(flaskbb_config['ONLINE_LAST_MINUTES'])
-    if guest:
-        return redis_store.sunion(['online-guests/%d' % (current - x)
-                                   for x in minutes])
-    return redis_store.sunion(['online-users/%d' % (current - x)
-                               for x in minutes])
+    return 0
+    # current = int(time.time()) // 60
+    # minutes = range_method(flaskbb_config['ONLINE_LAST_MINUTES'])
+    # if guest:
+    #     return redis_store.sunion(['online-guests/%d' % (current - x)
+    #                                for x in minutes])
+    # return redis_store.sunion(['online-users/%d' % (current - x)
+    #                            for x in minutes])
 
 
 def crop_title(title, length=None, suffix="..."):
@@ -368,10 +375,6 @@ def time_since(time):  # pragma: no cover
     delta = time - datetime.utcnow()
 
     locale = "en"
-    if current_user.is_authenticated() and \
-        not getattr(user, 'is_lockdownuser', False) \
-        and current_user.language is not None:
-        locale = current_user.language
 
     return format_timedelta(delta, add_direction=True, locale=locale)
 
@@ -382,7 +385,7 @@ def format_quote(username, content):
     :param username: The username of a user.
     :param content: The content of the quote
     """
-    profile_url = url_for('user.profile', username=username)
+    profile_url = url_for('user.dataloader', username=username)
     content = "\n> ".join(content.strip().split('\n'))
     quote = "**[{username}]({profile_url}) wrote:**\n> {content}\n".\
             format(username=username, profile_url=profile_url, content=content)

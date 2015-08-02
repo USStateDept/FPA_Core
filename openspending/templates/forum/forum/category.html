@@ -5,10 +5,10 @@
 {% block forumcontent %}
 
 <ol class="breadcrumb">
-    <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
+    <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
     <li class="active">{{ category.title }}</li>
 </ol>
 
-{% include theme("forum/forum/category_layout.html") %}
+{% include "forum/forum/category_layout.html" %}
 
 {% endblock %}

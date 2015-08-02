@@ -254,9 +254,9 @@ class Account(db.Model):
         """Checks if the user is already tracking this topic
         :param topic: The topic which should be checked.
         """
-
+        print topictracker
         return self.tracked_topics.filter(
-            topictracker.c.topic_id == topic.id).count() > 0
+            topictracker.c.forum_topic_id == topic.id).count() > 0
 
 
     #@cache.memoize(timeout=3600)

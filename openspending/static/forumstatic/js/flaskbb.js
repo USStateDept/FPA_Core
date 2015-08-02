@@ -65,17 +65,20 @@ var BulkActions = function() {
 };
 
 var send_data = function(endpoint_url, data) {
+    $.extend( data, {"csrf_token": csrftoken} );
+    console.log(data);
+    return;
     $.ajax({
         url: endpoint_url,
         method: "POST",
         data: JSON.stringify(data),
         dataType: "json",
-        contentType: "application/json",
-        beforeSend: function(xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        }
+        contentType: "application/json"
+        // beforeSend: function(xhr, settings) {
+        //     if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+        //         xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        //     }
+        // }
     })
     .done(function(response) {
         flash_message(response);

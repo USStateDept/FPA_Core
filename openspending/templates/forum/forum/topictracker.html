@@ -1,13 +1,13 @@
-{% set page_title = _("Topic Tracker") %}
+{% set page_title = "Topic Tracker" %}
 {% set active_forum_nav=True %}
 
-{% extends theme("layout.html") %}
-{% from theme('macros.html') import render_pagination %}
+{% extends "forum/layout.html" %}
+{% from 'forum/macros.html' import render_pagination %}
 
 {% block forumcontent %}
 <ul class="breadcrumb">
-    <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
-    <li class="active">{% trans %}Tracked Topics{% endtrans %}</li>
+    <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
+    <li class="active">Tracked Topics</li>
 </ul>
 
 <div class="pull-left" style="padding-bottom: 10px">
@@ -19,19 +19,19 @@
     <thead>
         <tr>
             <th colspan="5">
-                {% trans %}Topic Tracker{% endtrans %}
+                Topic Tracker
             </th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td colspan="2">{% trans %}Topic{% endtrans %}</td>
+            <td colspan="2">Topic</td>
 
-            <td>{% trans %}Posts{% endtrans %}</td>
+            <td>Posts</td>
 
-            <td>{% trans %}Views{% endtrans %}</td>
+            <td>Views</td>
 
-            <td>{% trans %}Last Post{% endtrans %}</td>
+            <td>Last Post</td>
         </tr>
 
         {% for topic, topicread in topics.items %}
@@ -49,7 +49,7 @@
                 <div>
                     <a href="{{ topic.url }}">{{ topic.title }}</a> <br />
                     <small>
-                        {% trans %}by{% endtrans %}
+                        by
                         {% if topic.user_id %}
                         <a href="{{ topic.user.url }}">{{ topic.user.username }}</a>
                         {% else %}
@@ -67,7 +67,7 @@
             <td>
                 <a href="{{ topic.last_post.url }}">{{ topic.last_post.date_created|time_since }}</a><br />
                 <small>
-                    {% trans %}by{% endtrans %}
+                    by
                     {% if topic.last_post.user_id %}
                     <a href="{{ topic.last_post.user.url }}">{{ topic.last_post.user.username }}</a>
                     {% else %}
@@ -79,7 +79,7 @@
         {% else %}
         <tr>
             <td colspan="5">
-                {% trans %}No topics.{% endtrans %}
+                No topics.
             </td>
         </tr>
         {% endfor %}

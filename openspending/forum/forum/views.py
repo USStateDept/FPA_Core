@@ -80,12 +80,12 @@ def view_forum(forum_id, slug=None):
 
     topics = Forum.get_topics(
         forum_id=forum_instance.id, user=current_user, page=page,
-        per_page=flaskbb_config["TOPICS_PER_PAGE"]
-    )
+        per_page=flaskbb_config["TOPICS_PER_PAGE"])
 
     return render_template(
         "forum/forum/forum.html", forum=forum_instance,
         topics=topics, forumsread=forumsread,
+        flaskbb_config=flaskbb_config
     )
 
 
@@ -124,7 +124,6 @@ def view_topic(topic_id, slug=None):
         if form.validate_on_submit():
             post = form.save(current_user, topic)
             return view_post(post.id)
-
     return render_template("forum/forum/topic.html", topic=topic, posts=posts,
                            last_seen=time_diff(), form=form)
 
@@ -571,7 +570,8 @@ def topictracker():
 def track_topic(topic_id, slug=None):
     topic = Topic.query.filter_by(id=topic_id).first_or_404()
     current_user.track_topic(topic)
-    current_user.save()
+    db.session.commit()
+    #current_user.save()
     return redirect(topic.url)
 
 
@@ -581,7 +581,8 @@ def track_topic(topic_id, slug=None):
 def untrack_topic(topic_id, slug=None):
     topic = Topic.query.filter_by(id=topic_id).first_or_404()
     current_user.untrack_topic(topic)
-    current_user.save()
+    db.session.commit()
+    #current_user.save()
     return redirect(topic.url)
 
 
