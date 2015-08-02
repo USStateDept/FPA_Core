@@ -4,26 +4,27 @@
 {% extends "forum/layout.html" %}
 
 {% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='forumstatic/css/bootstrap-markdown.min.css') }}">
 {% endblock %}
 
 {% block forumcontent %}
-{% from theme("macros.html") import render_field, render_submit_field %}
+{% from "forum/macros.html" import render_field, render_submit_field %}
 
 <ul class="breadcrumb">
-    <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
+    <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
     <li><a href="{{ forum.url }}">{{ forum.title }}</a></li>
-    <li class="active">{% trans %}New Topic{% endtrans %}</li>
+    <li class="active">New Topic</li>
 </ul>
 
 <form class="form" role="form" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     {{ form.hidden_tag() }}
-    <h3>{% trans %}New Topic{% endtrans %}</h3>
+    <h3>New Topic</h3>
 
     {% if preview %}
     <div class="form-group">
         <div class="col-sm-12">
-            <label>{% trans %}Preview{% endtrans %}</label>
+            <label>Preview</label>
             <div class="form-control preview-body">
                 {% autoescape false %}
                 {{ preview|markup }}
@@ -42,6 +43,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/marked.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-markdown.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='forumstatic/js/marked.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='forumstatic/js/bootstrap-markdown.js') }}"></script>
 {% endblock %}

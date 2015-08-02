@@ -18,6 +18,7 @@
 </ul>
 
 <form class="form" role="form" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     {{ form.hidden_tag() }}
     <h3>{% trans %}New Post{% endtrans %}</h3>
 
