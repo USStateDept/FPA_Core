@@ -35,6 +35,7 @@ forum = Blueprint("forum", __name__)
 @forum.route("/")
 def index():
     categories = Category.get_all(user=current_user)
+    print categories
 
     # Fetch a few stats about the forum
     user_count = User.query.count()

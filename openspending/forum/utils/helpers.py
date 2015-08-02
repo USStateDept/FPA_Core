@@ -124,18 +124,29 @@ def get_categories_and_forums(query_result, user):
     :param user: The user object is needed because a signed out user does not
                  have the ForumsRead relation joined.
     """
-    it = itertools.groupby(query_result, operator.itemgetter(0))
-
     forums = []
-
-    if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
-        for key, value in it:
-            forums.append((key, [(item[1], item[2]) for item in value]))
-    else:
-        for key, value in it:
-            forums.append((key, [(item[1], None) for item in value]))
-
+    for cat in query_result:
+        forums.append([cat, [(tempforum, None) for tempforum in cat.forums]])
     return forums
+
+    #this is more efficient, but was throwing index error
+    # catids = [x for x in query_result]
+    # #get the category ids
+
+    # it = itertools.groupby(query_result, operator.itemgetter(0))
+
+    # forums = []
+    # #this will get the forums read
+    # if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
+    #     for key, value in it:
+    #         print key, value
+    #         forums.append((key, [(item[0], item[1]) for item in value]))
+    # else:
+    #     for key, value in it:
+    #         print key,value
+    #         forums.append((key, [(item[0], None) for item in value]))
+    # print forums
+    # return forums
 
 
 def get_forums(query_result, user):
@@ -312,7 +323,11 @@ def render_markup(text):
 
     :param text: The text that should be rendered as markdown
     """
-    return markdown.render(text)
+    return text
+    if not text:
+        return ""
+    else:
+        return markdown.render(text)
 
 
 def is_online(user):

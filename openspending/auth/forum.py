@@ -8,7 +8,7 @@
     :copyright: (c) 2014 by the FlaskBB Team.
     :license: BSD, see LICENSE for more details.
 """
-
+from flask import abort
 from functools import wraps
 from flask.ext.login import current_user
 
@@ -47,14 +47,16 @@ def check_perm(user, perm, forum, post_user_id=None):
     :param post_user_id: If post_user_id is given, it will also perform an
                          check if the user is the owner of this topic or post.
     """
-    if can_moderate(user=user, forum=forum):
+    if is_moderator(user=current_user):
         return True
 
-    if post_user_id and user.is_authenticated():
-        #need to figure someting out here
-        return user.permissions[perm] and user.id == post_user_id
+    #need to check the permissions
+    return post_user_id and user.id and not getattr(user, is_lockdownuser, False)
+        # return True
+        # #need to figure someting out here
+        # return user.permissions[perm] and user.id == post_user_id
 
-    return not user.permissions['banned'] and user.permissions[perm]
+    # return not user.permissions['banned'] and user.permissions[perm]
 
 
 def is_moderator(user):
@@ -86,14 +88,15 @@ def can_moderate(user, forum=None, perm=None):
     """
 
     # if the user is a super_mod or admin, he can moderate all forums
-    return user.permissions['super_mod'] or user.permissions['admin']
+    return getattr(user, "moderator", False) or getattr(user, "admin", False)
+    #return user.permissions['super_mod'] or user.permissions['admin']
 
 
 def can_edit_post(user, post):
     """Check if the post can be edited by the user."""
     topic = post.topic
 
-    if can_moderate(user, topic.forum):
+    if is_moderator(user):
         return True
 
     if topic.locked or topic.forum.locked:

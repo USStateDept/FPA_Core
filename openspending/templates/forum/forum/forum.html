@@ -3,10 +3,10 @@
 
 {% extends "forum/layout.html" %}
 {% block forumcontent %}
-{% from 'macros.html' import render_pagination, topic_pages %}
+{% from 'forum/macros.html' import render_pagination, topic_pages %}
 
 <ol class="breadcrumb">
-    <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
+    <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
     <li><a href="{{ forum.category.url }}">{{ forum.category.title }}</a></li>
     <li class="active">{{ forum.title }}</li>
 </ol>
@@ -20,17 +20,17 @@
     <form class="inline-form" method="post" action="{{ url_for('forum.markread', forum_id=forum.id, slug=forum.slug) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <button class="btn btn-default">
-            <span class="fa fa-check"></span> {% trans %}Mark as Read{% endtrans %}
+            <span class="fa fa-check"></span> Mark as Read
         </button>
     </form>
 
     {% if forum.locked %}
     <span class="btn btn-primary">
-        <span class="fa fa-lock"></span> {% trans %}Locked{% endtrans %}
+        <span class="fa fa-lock"></span> Locked
     </span>
     {% else %}
     <a href="{{ url_for('forum.new_topic', forum_id=forum.id, slug=forum.slug) }}" class="btn btn-primary">
-        <span class="fa fa-pencil"></span> {% trans %}New Topic{% endtrans %}
+        <span class="fa fa-pencil"></span> New Topic
     </a>
     {% endif %}
 </div>
@@ -47,13 +47,13 @@
 
     <tbody>
         <tr>
-            <td colspan="2">{% trans %}Topic{% endtrans %}</td>
+            <td colspan="2">Topic</td>
 
-            <td>{% trans %}Posts{% endtrans %}</td>
+            <td>Posts</td>
 
-            <td>{% trans %}Views{% endtrans %}</td>
+            <td>Views</td>
 
-            <td>{% trans %}Last Post{% endtrans %}</td>
+            <td>Last Post</td>
         </tr>
 
         {% for topic, topicread in topics.items %}
@@ -83,7 +83,7 @@
                     {{ topic_pages(topic, flaskbb_config["POSTS_PER_PAGE"]) }}
                     <br />
                     <small>
-                        {% trans %}by{% endtrans %}
+                        by
                         {% if topic.user_id %}
                          <a href="{{ topic.user.url }}">{{ topic.user.username }}</a>
                         {% else %}
@@ -102,7 +102,7 @@
                 <a href="{{ topic.last_post.url }}">{{ topic.last_post.date_created|time_since }}</a><br />
 
                 <small>
-                    {% trans %}by{% endtrans %}
+                    by
                     {% if topic.last_post.user_id %}
                     <a href="{{ topic.last_post.user.url }}">{{ topic.last_post.user.username }}</a>
                     {% else %}
@@ -114,7 +114,7 @@
         {% else %}
         <tr>
             <td colspan="5">
-                {% trans %}No Topics.{% endtrans %}
+                No Topics.
             </td>
         </tr>
         {% endfor %}
@@ -124,7 +124,7 @@
 
 <div class="pull-left">
     <a class="btn btn-default" href="{{ url_for('forum.manage_forum', forum_id=forum.id, slug=forum.slug) }}">
-        <span class="fa fa-tasks"></span> {% trans %}Moderation Mode{% endtrans %}
+        <span class="fa fa-tasks"></span> Moderation Mode
     </a>
 </div>
 {% endblock %}

@@ -898,23 +898,22 @@ class Category(db.Model, CRUDMixin):
         :param user: The user object is needed to check if we also need their
                      forumsread object.
         """
-        # import Group model locally to avoid cicular imports
-        if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
-            # get list of user group idsnot 
-            # filter forums by user groups
-            # get all
-            forums = db.session.query(cls).\
-                outerjoin(ForumsRead,
-                          db.and_(ForumsRead.user_id == user.id)).\
-                add_entity(ForumsRead).\
-                order_by(Category.position, Category.id).\
-                all()
-        else:
-            # filter forums by guest groups
-            forums = db.session.query(cls).\
-                order_by(Category.position, Category.id).\
-                all()
-            print forums
+        forums = db.session.query(cls).\
+            order_by(Category.position, Category.id).\
+            all()
+        # # import Group model locally to avoid cicular imports
+        # if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
+        #     # get list of user group idsnot 
+        #     # filter forums by user groups
+        #     # get all
+        #     forums = db.session.query(cls).\
+        #         order_by(Category.position, Category.id).\
+        #         all()
+        # else:
+        #     # filter forums by guest groups
+        #     forums = db.session.query(cls).\
+        #         order_by(cls.position, cls.id).\
+        #         all()
 
         return get_categories_and_forums(forums, user)
 
