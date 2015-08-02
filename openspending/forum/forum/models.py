@@ -359,7 +359,7 @@ class Topic(db.Model, CRUDMixin):
                            read.
         """
         # User is not logged in - abort
-        if not user.is_authenticated():
+        if not user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
             return False
 
         topicsread = TopicsRead.query.\
@@ -655,7 +655,7 @@ class Forum(db.Model, CRUDMixin):
                            forumsread relation should be updated and
                            therefore is unread.
         """
-        if not user.is_authenticated() or topicsread is None:
+        if (not user.is_authenticated() and not getattr(user, 'is_lockdownuser', False)) or topicsread is None:
             return False
 
         read_cutoff = None
@@ -786,7 +786,7 @@ class Forum(db.Model, CRUDMixin):
         :param user: The user object is needed to check if we also need their
                      forumsread object.
         """
-        if user.is_authenticated():
+        if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
             forum, forumsread = Forum.query.\
                 filter(Forum.id == forum_id).\
                 options(db.joinedload("category")).\
@@ -812,7 +812,7 @@ class Forum(db.Model, CRUDMixin):
         :param page: The page whom should be loaded
         :param per_page: How many topics per page should be shown
         """
-        if user.is_authenticated():
+        if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
             topics = Topic.query.filter_by(forum_id=forum_id).\
                 outerjoin(TopicsRead,
                           db.and_(TopicsRead.topic_id == Topic.id,
@@ -899,11 +899,11 @@ class Category(db.Model, CRUDMixin):
                      forumsread object.
         """
         # import Group model locally to avoid cicular imports
-        if user.is_authenticated():
-            # get list of user group ids
+        if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
+            # get list of user group idsnot 
             # filter forums by user groups
             # get all
-            forums = cls.query.\
+            forums = db.session.query(cls).\
                 outerjoin(ForumsRead,
                           db.and_(ForumsRead.user_id == user.id)).\
                 add_entity(ForumsRead).\
@@ -911,10 +911,10 @@ class Category(db.Model, CRUDMixin):
                 all()
         else:
             # filter forums by guest groups
-
-            forums = cls.query.\
+            forums = db.session.query(cls).\
                 order_by(Category.position, Category.id).\
                 all()
+            print forums
 
         return get_categories_and_forums(forums, user)
 
@@ -932,7 +932,7 @@ class Category(db.Model, CRUDMixin):
         :param user: The user object is needed to check if we also need their
                      forumsread object.
         """
-        if user.is_authenticated():
+        if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
             # get list of user group ids
 
             forums = cls.query.\
