@@ -70,7 +70,9 @@ def create_app(**config):
     @app.before_request
     def require_basic_auth(*args, **kwargs):
         LOCKDOWN_FORCE = app.config['LOCKDOWN_FORCE']
-        if not current_user.is_authenticated() and request.path not in ["/lockdown", "/__ping__"] and LOCKDOWN_FORCE:
+        if not current_user.is_authenticated() \
+            and request.path not in ["/lockdown", "/__ping__"] \
+            and LOCKDOWN_FORCE:
             return redirect("/lockdown", code=302)
         from openspending.model.search import SearchForm
         g.search_form = SearchForm()
@@ -107,8 +109,13 @@ def create_web_app(**config):
 
         from openspending.model import Dataset
         from openspending.model.country import Country
+        from openspending.forum.forum.models import Category,Post,Topic,Forum
         whoosearch.whoosh_index(app,Dataset)
         whoosearch.whoosh_index(app, Country)
+        whoosearch.whoosh_index(app, Category)
+        whoosearch.whoosh_index(app, Post)
+        whoosearch.whoosh_index(app, Topic)
+        whoosearch.whoosh_index(app, Forum)
 
         from openspending.views.context import generate_csrf_token
         app.jinja_env.globals['csrf_token'] = generate_csrf_token 

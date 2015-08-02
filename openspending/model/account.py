@@ -29,7 +29,15 @@ account_dataset_table = Table(
 
 
 class AnonymousAccount(AnonymousUserMixin):
+    """
+    If I am an Anon User, I have not logged in to view
+    the site nor have I logged in to get the 
+    extended features
+    """
     admin = False
+
+    def is_anonymous(self):
+        return True
 
     def __repr__(self):
         return '<AnonymousAccount()>'
@@ -40,6 +48,13 @@ login_manager.anonymous_user = AnonymousAccount
 
 
 class LockdownUser():
+    """
+    If I am a LockdownUser, I have access to view the site,
+    but I am technically not authenticated
+    This is for dev only.  When it is production, the public
+    can see and this will be turned off.
+    """
+
     def is_authenticated(self):
         return True
     def is_active(self):
@@ -48,6 +63,9 @@ class LockdownUser():
         return False
     def get_id(self):
         return 999999999
+    @property 
+    def is_lockdownuser(self):
+        return True
     @property
     def admin(self):
         False
