@@ -18,7 +18,7 @@ from openspending.forum.utils.decorators import can_access_forum, can_access_top
 from openspending.forum.utils.helpers import slugify, get_categories_and_forums, \
     get_forums
 from openspending.forum.utils.database import CRUDMixin
-from openspending.forum.utils.settings import flaskbb_config
+from openspending.forum.utils.forum_settings import flaskbb_config
 
 moderators = db.Table(
     'forum_moderators',

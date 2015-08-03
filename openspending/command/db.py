@@ -75,6 +75,7 @@ def create_geometry(**args):
 def migrate():
     """ Run pending data migrations """
     url = current_app.config.get('SQLALCHEMY_DATABASE_URI')
+    log.info(current_app.config)
     repo = os.path.join(os.path.dirname(__file__), '..', 'findmigs')
 
     try:
@@ -83,11 +84,6 @@ def migrate():
         # Assume it's a new database, and try the migration again
         migrate_api.version_control(url, repo)
         migrate_api.upgrade(url, repo)
-
-    diff = migrate_api.compare_model_to_db(url, repo, db.metadata)
-    if diff:
-        print diff
-        raise CommandException("The database doesn't match the current model")
 
 
 

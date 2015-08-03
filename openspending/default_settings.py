@@ -9,8 +9,7 @@ ASSETS_DEBUG = True
 
 SITE_TITLE = 'OpenSpending'
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/openspending'
-SOLR_URL = 'http://localhost:8983/solr'
+#SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/openspending'
 
 BABEL_DEFAULT_LOCALE = 'en'
 

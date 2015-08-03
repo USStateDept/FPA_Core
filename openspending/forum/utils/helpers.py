@@ -23,7 +23,7 @@ from babel.dates import format_timedelta
 from flask_babelex import lazy_gettext as _
 from flask_login import current_user
 
-from openspending.forum.utils.settings import flaskbb_config
+from openspending.forum.utils.forum_settings import flaskbb_config
 from openspending.forum.utils.markup import markdown
 
 

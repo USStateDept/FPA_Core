@@ -37,7 +37,6 @@ def generate_csrf_token():
     if request.method == 'POST':
         return
     if 'csrf_token' not in session:
-        print "MAKKKKKKKKKKKKING IT"
         session['csrf_token'] = make_uuid()
     return session['csrf_token']
 

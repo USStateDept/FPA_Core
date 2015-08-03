@@ -17,7 +17,7 @@ from flask_login import login_required, current_user
 from flask_babelex import gettext as _
 
 from openspending.core import db
-from openspending.forum.utils.settings import flaskbb_config
+from openspending.forum.utils.forum_settings import flaskbb_config
 from openspending.forum.utils.helpers import (get_online_users, time_diff, format_quote,
                                    do_topic_action)
 from openspending.auth.forum import (can_post_reply, can_post_topic,

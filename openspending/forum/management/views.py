@@ -20,7 +20,7 @@ from flask_babelex import gettext as _
 
 from openspending.forum._compat import iteritems
 from openspending.forum.forum.forms import UserSearchForm
-from openspending.forum.utils.settings import flaskbb_config
+from openspending.forum.utils.forum_settings import flaskbb_config
 from openspending.auth.forum import admin_required, moderator_required
 from openspending.auth.forum import can_ban_user, can_edit_user
 from openspending.core import db
