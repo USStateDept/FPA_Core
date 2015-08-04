@@ -201,8 +201,10 @@ class Dataset(db.Model):
     def as_dict(self):
         the_years=[]
         load_status = "Need Source"
+        source_url=""
         if self.source:
             load_status = self.source.load_status
+            source_url = self.source.url
         dataset_dict=None
         if self.dataorg:
             dataset_dict=self.dataorg.label
@@ -220,7 +222,8 @@ class Dataset(db.Model):
             'source': self.source_id,
             'status': load_status,
             'years':the_years,
-            'stats':self.stats
+            'stats':self.stats,
+            'url':source_url
         }
 
 
