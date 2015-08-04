@@ -1,0 +1,14 @@
+{% set page_title = category.title %}
+{% set active_forum_nav=True %}
+
+{% extends "forum/layout.html" %}
+{% block forumcontent %}
+
+<ol class="breadcrumb">
+    <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
+    <li class="active">{{ category.title }}</li>
+</ol>
+
+{% include "forum/forum/category_layout.html" %}
+
+{% endblock %}

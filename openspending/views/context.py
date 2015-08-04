@@ -49,7 +49,8 @@ def template_context_processor():
         'url_for': url_for,
         'section_active': get_active_section(),
         'logged_in': auth.account.logged_in(),
-        'current_user': current_user
+        'current_user': current_user,
+        'csrf_token': generate_csrf_token
         }
     return data
 

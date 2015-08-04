@@ -1,0 +1,51 @@
+{%- from "forum/macros.html" import topnav with context -%}
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">FlaskBB</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+
+            </ul>
+
+        {% if current_user and current_user.is_authenticated() %}
+            <div class="btn-group navbar-btn navbar-right" style="padding-left: 15px; margin-right: -10px">
+                <a class="btn btn-primary" href="{{ url_for('user.dataloader', username=current_user.username) }}">
+                    <span class="fa fa-user"></span> {{ current_user.username }}
+                </a>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{ url_for('forum.topictracker') }}"><span class="fa fa-book"></span> Topic Tracker</a></li>
+                    <li class="divider"></li>
+
+               
+                    <li><a href="{{ url_for('account.logout') }}"><span class="fa fa-power-off"></span> Logout</a></li>
+                </ul>
+            </div>
+
+
+        {% else %}
+            <div class="btn-group navbar-btn navbar-right">
+                <a class="btn btn-primary" href="{{ url_for('account.login') }}">
+                    <span class="fa fa-user"></span> Login
+                </a>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+            </div>
+        {% endif %}
+        </div><!-- nav-collapse -->
+    </div><!-- container -->
+</nav> <!-- navbar navbar-inverse -->

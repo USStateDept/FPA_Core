@@ -9,16 +9,7 @@ html(lang='en')
 
       div.banner
         div.container
-          {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-          div.container
-            div
-              {% for category, message in messages %}
-              div.alert.alert-{{ category }} {{ message }}
-
-            {% endfor %}
-          {% endif %}
-          {% endwith %}
+          include messages.html
           {% block banner %}{% endblock %}
 
       .container-full.content-body

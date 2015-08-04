@@ -1,0 +1,46 @@
+{% extends "base.jade" %}
+
+{% block page_title %}FAQ{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+
+{% block optional_head %}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='forumstatic/css/font-awesome.min.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='forumstatic/css/pygments.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='forumstatic/css/flaskbb.css') }}">
+
+    {% block css %}
+    {% endblock %}
+
+    {# for various extra things #}
+    {% block head_extra %}
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+        {% block forumcontent %}
+        {% endblock %}
+    </div> <!-- /container -->
+
+{% endblock %}
+
+{% block footer_scripts %}
+        <script src="{{ url_for('static', filename='forumstatic/js/flaskbb.js') }}"></script>
+        {% block javascript %}
+
+        {% endblock %}
+
+        {% block scripts %}
+        {% endblock %}
+{% endblock %}
+
+
+

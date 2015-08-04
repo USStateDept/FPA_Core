@@ -67,3 +67,5 @@ LOCKDOWN_FORCE = False
 
 #UploadSet Flask-uploads management of files
 WHOOSH_BASE = os.path.realpath('.') + '/whoosh_index/'
+
+WTF_CSRF_ENABLED= False

@@ -9,6 +9,9 @@ set /p PGPASSWORD="Postgres password: "
 
 call "pyenv/Scripts/activate.bat"
 
+REM make sure we are using the latest db
+ostool db migrate
+
 nosetests 
 
 "C:\Program Files\PostgreSQL\9.3\bin\dropdb.exe" -U postgres -W openspending_testing

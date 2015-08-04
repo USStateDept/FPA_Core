@@ -38,9 +38,13 @@ nav.navbar.navbar-default.navbar-fixed-top
             {{ current_user.fullname }}
           ul.dropdown-menu.account-dropdown
             li
-              p
-                strong User Profile
               a(href="/user") User Profile
+            li.divider
+            li
+              p
+                strong Forum
+              a(href="{{ url_for('forum.index') }}") Main Forum            
+              a(href="{{ url_for('forum.topictracker') }}") Tracked Topics
             li.divider
             {% if current_user.admin %}
             li
