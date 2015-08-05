@@ -229,6 +229,9 @@ class Dataset(db.Model):
 
     def detailed_dict(self):
         the_years=[]
+        source_url=""
+        if self.source:
+            source_url = self.source.url
         dataorg_dict=None
         if self.dataorg:
             dataset_dict=self.dataorg.label
@@ -243,7 +246,8 @@ class Dataset(db.Model):
             'dataType': self.dataType,
             'dataorg': dataorg_dict,
             'created_at': self.created_at,
-            'years':the_years
+            'years':the_years,
+            'url':source_url
         }
 
 
