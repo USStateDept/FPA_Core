@@ -530,8 +530,9 @@
 		});
 		
 		var subtitleArray = _.map(subtitleObj, function(subtitleArray, i){
-			var source = subtitleObj[i].dataorg || 'source';
-			return subtitleArray = subtitleObj[i].label + ' (<a href="'+subtitleObj[i].url+'" style="color:#852224" target="_blank">'+source+'</a>)';
+			var source = subtitleObj[i].dataorg || '-';
+			//return subtitleArray = subtitleObj[i].label + ' (<a href="'+subtitleObj[i].url+'" style="color:#852224" target="_blank">'+source+'</a>)';
+			return subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">'+source+'</a>)';
 		});
 		//debugger;
 		var subtitle = "Sources: " + subtitleArray.join(", ");
