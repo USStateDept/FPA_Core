@@ -462,11 +462,6 @@
         // var seriesAverage = [];
         // var dataByYear = [];
 
-        var titleArray = _.map(indicatorsMeta, function(meta) {
-            return meta[0].label;
-        });
-
-
         var fromYear = 1990; //timeCell.from[0];
         var toYear = 2015; //timeCell.to[0];
 
@@ -519,9 +514,27 @@
                 //dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
             }
         });
-
-
-
+		
+		var titleArray = _.map(indicatorsMeta, function(meta) {
+            return meta[0].label;
+        });
+		
+		var title = titleArray.join(" and ");
+		
+		var subtitleObj = _.map(indicatorsMeta, function(meta) {
+			return meta = {
+				"label" : meta[0].label,
+				"url" : meta[0].url,
+				"dataorg" : meta[0].dataorg
+			};
+		});
+		
+		var subtitleArray = _.map(subtitleObj, function(subtitleArray, i){
+			var source = subtitleObj[i].dataorg || 'source';
+			return subtitleArray = subtitleObj[i].label + ' (<a href="'+subtitleObj[i].url+'" style="color:#852224" target="_blank">'+source+'</a>)';
+		});
+		//debugger;
+		var subtitle = "Sources: " + subtitleArray.join(", ");
 
         var counter = 1;
         var countriesArr = [];
@@ -565,12 +578,12 @@
             chart: chartObj,
             title: {
 
-                text: titleArray.join(" & "),
+                text: title,
                 x: -20
             },
             subtitle: {
 
-                text: titleArray.join(" & "),
+                text: subtitle,
                 x: -20
             },
             xAxis: {
@@ -620,7 +633,9 @@
         if (type == "scatter") {
 
             seriesArray = [];
-
+			
+			//debugger;
+			
             var indicator1 = indicators[0];
             var indicator2 = indicators[1];
 
@@ -688,9 +703,11 @@
                 },
 
                 title: {
-                    text: ''
+                    text: title
                 },
-
+				subtitle: {
+					text: subtitle
+				},
                 xAxis: {
                     title: {
                         enabled: true,
@@ -780,8 +797,12 @@
                 },
 
                 title: {
-                    text: ''
+                    text: title
                 },
+				
+				subtitle: {
+					text: subtitle
+				},
 
                 xAxis: {
                     //categories: categories
@@ -863,10 +884,10 @@
                     type: 'column'
                 },
                 title: {
-                    text: ''
+                    text: title
                 },
                 subtitle: {
-                    text: ''
+                    text: subtitle
                 },
                 xAxis: {
                     type: 'category',
