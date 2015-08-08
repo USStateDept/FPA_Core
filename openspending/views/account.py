@@ -44,7 +44,11 @@ def load_user_from_request(request):
 @blueprint.route('/login', methods=['GET'])
 def login():
     """ Render the login/registration page. """
-    values = {"csrf_token": generate_csrf_token()}
+    if request.form.get("csrf_token",None):
+        values = {"csrf_token": request.form.get('csrf_token')}
+    else:
+        values = {"csrf_token": generate_csrf_token()}
+
     return render_template('account/login.jade', form_fill=values)
 
 
