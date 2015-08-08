@@ -44,24 +44,24 @@ class AccountView(sqla.ModelView):
 
     #form_overrides = dict(name=PasswordField)
 
-    form_extra_fields = {
-        "password1": PasswordField('Password', validators=[DataRequired()]),
-        "password2": PasswordField('Password (Again)', validators=[DataRequired()])
-    }
+    # form_extra_fields = {
+    #     "password1": PasswordField('Password', validators=[]),
+    #     "password2": PasswordField('Password (Again)', validators=[])
+    # }
 
     form_excluded_columns = ('password', 'datasets',)
 
 
-    def validate_form(self, form):
-        if form.data['password1'] == None:
-            return False
-        if form.data['password1'] == "":
-            raise ValidationError('Passwords do not match')
-        if form.data['password1'] == form.data['password2']:
-            return True
-        else:
-            raise ValidationError('passwords do not match')
-        return False
+    # def validate_form(self, form):
+        # if form.data.get('password1',None) == "" and \
+        #             form.data.get('password2', None) == "":
+        #     return True
+        # if form.data.get('password1',None) != form.data.get('password2',None):
+        #     raise ValidationError('Passwords do not match')
+        # if form.data['password1'] == form.data.get('password2', None):
+        #     return True
+        # else:
+        #     raise ValidationError('Passwords do not match')
 
         #if db.session.query(User).filter_by(login=self.login.data).count() > 0:
         #    raise ValidationError('Duplicate username')
@@ -73,11 +73,11 @@ class AccountView(sqla.ModelView):
 
 
     # Model handlers
-    def on_model_change(self, form, model, is_created=False):
+    # def on_model_change(self, form, model, is_created=False):
     #def create_model(self, form):
-        if form.data['password1'] != None:
-            model.password = generate_password_hash(form.data['password1'])
-        return
+        # if form.data.get('password1', None) != None:
+        #     model.password = generate_password_hash(form.data['password1'])
+        # return
 
 
 class SourceFileView(sqla.ModelView):
