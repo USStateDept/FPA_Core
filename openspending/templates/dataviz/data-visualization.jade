@@ -39,10 +39,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row(style="padding:10px")
     .col-md-4
-      button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMin",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
-      button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMax",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
-      button.btn.btn-default.dropdown-toggle#global-avg(data-bind="click:chartBarToggleAvg",type='button', data-toggle='dropdown', aria-expanded='true') Average
-      span#data-proxy(data-min=0,data-max=0,data-avg=0)
+      span#bar-globals
+        button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMin",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
+        button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMax",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
+        button.btn.btn-default.dropdown-toggle#global-avg(data-bind="click:chartBarToggleAvg",type='button', data-toggle='dropdown', aria-expanded='true') Average
+        span#data-proxy(data-min=0,data-max=0,data-avg=0)
       
     .col-md-8
       div#filter-years

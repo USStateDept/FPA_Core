@@ -1165,9 +1165,14 @@
                
 				var highChartsJson = sortedData.highcharts;
                 //add the min,max and avg to the data-proxy span
-                $("#data-proxy").data("min",highChartsJson.series[0].data[0][1]);
-                $("#data-proxy").data("max",highChartsJson.series[0].data[1][1]);
-                $("#data-proxy").data("avg",highChartsJson.series[0].data[2][1]);
+                if ( chartType == "bar" ){
+                  $("#bar-globals").show();
+                  $("#data-proxy").data("min",highChartsJson.series[0].data[0][1]);
+                  $("#data-proxy").data("max",highChartsJson.series[0].data[1][1]);
+                  $("#data-proxy").data("avg",highChartsJson.series[0].data[2][1]);
+                } else {
+                    $("#bar-globals").hide();
+                }
 				
                 highChartsJson.chart.events = {
 					load: function() {
