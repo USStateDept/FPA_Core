@@ -32,16 +32,17 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       button.btn.btn-default.saveVZ(data-bind="click:saveVZ",title="Click to Save this Visualization")
     .col-md-2
       button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
-      button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All    
+      button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
     .col-md-2
       .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
   .row
     p
   .row(style="padding:10px")
     .col-md-4
-      //-button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('min')}",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
-      //-button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('max')}",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
-      //-button.btn.btn-default.dropdown-toggle(data-bind="click:function(){showStats('avg')}",type='button', data-toggle='dropdown', aria-expanded='true') Average
+      button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMin",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
+      button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMax",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
+      button.btn.btn-default.dropdown-toggle#global-avg(data-bind="click:chartBarToggleAvg",type='button', data-toggle='dropdown', aria-expanded='true') Average
+      span#data-proxy(data-min=0,data-max=0,data-avg=0)
       
     .col-md-8
       div#filter-years
@@ -262,6 +263,7 @@ script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exportin
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
 script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/charts-common.js') }}")
 
 //-slickgrid
 script(src="{{ static_path('find-ui/bower_components/slickgrid/lib/jquery.event.drag-2.2.js') }}")

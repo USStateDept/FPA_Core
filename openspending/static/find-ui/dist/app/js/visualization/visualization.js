@@ -20,7 +20,6 @@
         keyboard: false
     }); // initialized with defaults
 
-
     $('#modal').on('show.bs.modal', function(event) {
         var modal = $(this)
         modal.find('.modal-title').text(window.modalTitle);
@@ -66,11 +65,6 @@
                 map.addLayer(window.visualization.geoJsonLayers[_type]);
             }
         }
-
-        /*} else {
-            //if layer exists bring it on top
-
-        }*/
 
     }
 
@@ -127,29 +121,16 @@
 
     }
 
-
-
-
-
-
-
-    //KNOCKOUT MODEL
-
     var model = window.vizModel;
-
-
 
     var countriesListLoadHandler = function(response) {
 
         window.utils.bindCountries(response, model);
     }
 
-
-
     var indicatorListLoadHandler = function(response) {
 
         window.utils.bindIndicators(response, model);
-
 
         //enable knockout
         ko.applyBindings(model);
@@ -161,22 +142,10 @@
     window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
     window.loader.loadCountries("", countriesListLoadHandler);
 
-    // Under Five mortality rate
-
-    // GDP, per capita
-
-    // Poverty headcount ratio at $1.25 a day (PPP)
-
-    // Literacy rate
-
-    // Control of corruption
-
     var indicatorDataLoadHandler = function(response) {
 
-
-
         var highChartsJson = window.prepareHighchartsJson(response, model.activeChart(), model.activeIndicators(), model.activeGroup(), model.activeRegion());
-
+console.log("here");
         model.activeData(highChartsJson);
 
         var highChartsJson = model.activeData();
@@ -187,16 +156,7 @@
         $('#viz-container').highcharts(model.activeData());
         $("#loading").hide();
 
-
-        // $('#viz-container').highcharts(highChartsJson, model.activeIndicator(), model.activeChart());
-
     }
-
-
-
-
-
-    //startUI(); //this should be the last function in this function
 
 
 }())

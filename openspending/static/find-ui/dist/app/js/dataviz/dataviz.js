@@ -111,15 +111,101 @@
                 //failure message here?               
             }
         },
-
-        showRegionalAverage: function() {
-
-
-
-
+        chartBarToggleMin: function(){
+            var key = "min";
+            var labelKey = "Global Minimum";
+            var arrayBefore = [];
+            
+            var action = this.barUpdateCategories(key,labelKey,arrayBefore);
+            this.barUpdateData(key,action,arrayBefore);
         },
 
+        chartBarToggleMax: function(){
+            var key = "max";
+            var labelKey = "Global Maximum";
+            var arrayBefore = ['Global Minimum'];
+            
+            var action = this.barUpdateCategories(key,labelKey,arrayBefore);
+            this.barUpdateData(key,action,arrayBefore);
+        },
 
+        chartBarToggleAvg: function(){
+            var key = "avg"
+            var labelKey = "Global Average";
+            var arrayBefore = ['Global Minimum','Global Maximum'];
+            
+             var action = this.barUpdateCategories(key,labelKey, arrayBefore);
+            this.barUpdateData(key,action,arrayBefore);
+        },
+        
+        barFindIndex: function(key,searchArray){
+            var useIndex = 0;
+            
+            var chart = $('#viz-container').highcharts();
+            
+            var categories = chart.xAxis[0].names;
+
+            if ( key == 'min' ){
+                useIndex = 0;
+            } else if ( key == 'max' ) {
+                if ( $.inArray("Global Minimum",categories) > -1 ){
+                    useIndex = 1;
+                }
+            } else if ( key == 'avg' ) {
+                if ( $.inArray("Global Minimum",categories) > -1 ) {
+                  useIndex++;
+                }
+                if ( $.inArray("Global Maximum",categories) > -1 ) {
+                  useIndex++;
+                }
+            }
+
+            return useIndex;
+        },
+
+        barUpdateData: function(key,action,searchArray){
+            var no = this.barFindIndex(key,searchArray);
+            var chart = $('#viz-container').highcharts();
+            var newY = $("#data-proxy").data(key);
+            var data = [];
+
+            for ( i=0; i < chart.series[0].data.length; i++ ){
+                data.push(chart.series[0].data[i].y);
+            }
+            
+            if ( action == "add" ) {
+                data.splice(no,0,newY);
+            } else if ( action == "remove" ) {
+                data.splice(no,1);
+            }
+
+           chart.series[0].setData(data);
+        },
+        
+         barUpdateCategories: function(key,labelKey,searchArray){
+            var foundIndex = this.barFindIndex(key,searchArray);
+            var chart = $('#viz-container').highcharts();
+            var categories = chart.xAxis[0].names;
+            var action = "none";
+            //check if key is in category label
+            
+            if ( $.inArray(labelKey,chart.xAxis[0].names) > -1) {
+              //present, remove it
+                action = "remove";
+                categories.splice(foundIndex,1);
+            } else {
+              //absent, add it back
+              action = "add";
+              categories.splice(foundIndex,0,labelKey);
+            }
+
+            chart.xAxis[0].setCategories(categories,false);
+            return action;
+        },
+        
+        showRegionalAverage: function() {
+
+        },
 
         showStats: function(type) {
 
@@ -665,89 +751,7 @@
             debugger;
             model.countryGroup();
             debugger;
-            // var _groupId = "all";
-            // var _countries = [];
-            // var _groupBy;
-            // var _region = "";
-            // var cutBy = "sovereignt";
-            // var groupByRegion = model.groupByRegion();
-
-            // _countries = _.map(model.activeCountries(), function(country) {
-            //     return country.geounit;
-            // })
-
-            // if (groupByRegion) { //if region
-
-            //     _groupId = model.activeGroup().id;
-            //     _region = model.activeRegion();
-            //     cutBy = _groupId;
-
-            // } else { // if country
-
-            //     if (!_countries.length) {
-            //         _groupId = model.activeGroup().id;
-            //         _region = model.activeRegion();
-            //         _countries = [];
-            //     }
-
-
-            // }
-            // cutBy;
-            // //debugger;
-            // var deff = window.loader.loadIndicatorData(indicators, _groupId, _region, yearsExtremes, _countries, groupByRegion);
-
-
-
-            // $.when(deff[0], deff[1]).done(function(responseData, responseStats) {
-            //     //add to existing chart
-            //     /*if (cutBy == "sovereignt") {
-            //         var cells = responseData[0].cells;
-            //     } else {
-            //         var cells = responseStats[0].cells;
-            //     }*/
-
-            //     var cells = responseData[0].cells;
-            //     //debugger;
-            //     //debugger;
-
-            //     var dataByYear = {};
-            //     var series = {};
-            //     var seriesArray = [];
-            //     //
-            //     //by country
-            //     _.forEach(cells, function(c) {
-            //         dataByYear[c["geometry__time"].toString()] = [];
-            //         series[c["geometry__country_level0." + cutBy]] = []
-            //     });
-
-            //     _.forEach(cells, function(c) {
-            //         //if ((c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear)) {
-            //         series[c["geometry__country_level0." + cutBy]].push([c["geometry__time"], c[indicators[0] + "__amount_sum"]]);
-            //         dataByYear[c["geometry__time"]].push(c[indicators[0] + "__amount_sum"]);
-            //         //}
-            //     });
-
-
-            //     var chart = $('#viz-container').highcharts();
-
-            //     for (var countryName in series) {
-
-            //         chart.addSeries({
-            //             name: countryName,
-            //             data: series[countryName],
-            //             visible: true
-            //         }, false /*redraw*/ );
-
-
-
-            //     }
-
-            //     chart.redraw();
-
-
-
-
-            // });
+            
 
         }
     }
@@ -851,12 +855,6 @@
         _.forEach(cells, function(cell, i) {
             cell.id = i
         });
-        //debugger;
-        //population_growth__amount_min
-        //population_growth__amount_max
-        //population_growth__amount_sum
-        //population_growth__amount_avg
-        //geometry_time
 
         function DummyLinkFormatter(row, cell, value, columnDef, dataContext) {
             //return '<a href="#">' + value + '</a>';
@@ -998,60 +996,7 @@
             dataView.sort(comparer, args.sortAsc);
         });
         
-        /*$("#data-table").slickgrid({
-            columns: columns,
-            data: dataWide,
-            slickGridOptions: {
-                //enableCellNavigation: true,
-                //enableColumnReorder: true,
-                forceFitColumns: false,
-                autoExpandColumns: true,
-                //resizeable: true,
-                //width: 100,
-                rowHeight: 35
-            },
-            // handleCreate takes some extra options:
-            sortCol: undefined,
-            sortDir: true,
-            handleCreate: function() {
-                var o = this.wrapperOptions;
-                // configure grid with client-side data view
-                var dataView = new Slick.Data.DataView();
-                var grid = new Slick.Grid(this.element, dataView,
-                    o.columns, o.slickGridOptions);
-                // sorting
-                var sortCol = o.sortCol;
-                var sortDir = o.sortDir;
-
-                function comparer(a, b) {
-                    var x = a[sortCol],
-                        y = b[sortCol];
-                    return (x == y ? 0 : (x > y ? 1 : -1));
-                }
-                grid.onSort.subscribe(function(e, args) {
-                    sortDir = args.sortAsc;
-                    sortCol = args.sortCol.field;
-                    dataView.sort(comparer, sortDir);
-                    grid.invalidateAllRows();
-                    grid.render();
-                });
-                // set the initial sorting to be shown in the header
-                if (sortCol) {
-                    grid.setSortColumn(sortCol, sortDir);
-                }
-                // initialize the model after all the events have been hooked up
-                dataView.beginUpdate();
-                dataView.setItems(o.data);
-                dataView.endUpdate();
-
-                grid.resizeCanvas(); // XXX Why is this needed? A possible bug?
-                // If this is missing, the grid will have
-                // a horizontal scrollbar, and the vertical
-                // scrollbar cannot be moved. A column reorder
-                // action fixes the situation.
-
-            }
-        });*/
+        
 
     }
 
@@ -1060,7 +1005,6 @@
         function onEachFeature(feature, layer) {
 
             if (feature.properties) {
-                // console.log(feature.properties);
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
                 layer.bindPopup(name);
             }
@@ -1117,6 +1061,7 @@
 
     var indicatorDataLoadHandler = function(args) {
 
+    //this might be the basic data loader
 
         var responseDeferred = args;
 
@@ -1134,6 +1079,7 @@
         _.forEach(indicatorsData, function(response) {
 
             var data = response[0];
+            
             var levels = data.levels;
             var cutBy = "name";
             //debugger;
@@ -1199,14 +1145,7 @@
 
         var responseStats = statsData[0];
 
-        // var indicatorsMeta = [].splice.call(args, 0);
-        // indicatorsMeta.shift(); //remove first two
-        // indicatorsMeta.shift();
-
-        //debugger;
-
-        if(chartType=="map")
-            {
+        if(chartType=="map") {
                 $("#loading").hide();
             map = L.map('viz-container').setView([0, 0], 3);
 
@@ -1217,31 +1156,27 @@
                 }).addTo(map);
             //window.utils.createMapViz();
             //changeGroup("all");
-            }else{
+        } else {
 				if (chartType == "scatter"){
 					yearsExtremesForData = window.utils.getHashParams().f.split("|");
 				}
-				
+
 				var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
-
+               
 				var highChartsJson = sortedData.highcharts;
-				//regionalAverageData = sortedData.average;
-
-				//highChartsJson.title.text = "";
-				//highChartsJson.chart.type = chart;
-				// highChartsJson.yAxis.title.text = "";
-				//debugger;
-				highChartsJson.chart.events = {
+                //add the min,max and avg to the data-proxy span
+                $("#data-proxy").data("min",highChartsJson.series[0].data[0][1]);
+                $("#data-proxy").data("max",highChartsJson.series[0].data[1][1]);
+                $("#data-proxy").data("avg",highChartsJson.series[0].data[2][1]);
+				
+                highChartsJson.chart.events = {
 					load: function() {
 						//debugger;
-						var allowedSetExtremeCharts = ["line", "bar"];
+						var allowedSetExtremeCharts = ["line"];
 						var xAxis = this.series[0].xAxis;
 						if (chartType == "bar") {
 							yearsFilter[0] = yearsFilter[1];
 						}
-
-
-
 
 						$("#loading").hide();
 
@@ -1249,34 +1184,23 @@
 							xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
 						}
 
-
-
-
 					}
 				}
 				//debugger;
 				//highChartsJson.subtitle.text = type;
 				var chart = $('#viz-container').highcharts(highChartsJson);
-
-
-
-
-
+                
 				showTable(responseData);
 			}
 		}
     var useNarrowExtremes = true;
 
-
-
     var setExtremes = function(startYear, endYear) {
-        //$("#loading").show();
 
         var chart = $('#viz-container').highcharts();
         var xAxis = chart.series[0].xAxis;
 
         xAxis.setExtremes(startYear, endYear);
-
 
     }
 
@@ -1337,7 +1261,7 @@
             });
             //debugger;
             activeChart.series[0].setData(currentData, true);
-
+            
         }
 
 
@@ -1349,14 +1273,6 @@
 
 
     var indicatorListLoadHandler = function(response) {
-
-        //calculate the year extremes
-        /*var years = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
-        debugger;
-        //TODO: remove this once the years are present
-        for (var indicatorId in response.data.indicators.data) {
-            response.data.indicators.data[indicatorId].years = years;
-        }*/
 
         for (var indicatorId in response.data.indicators.data) {
             var years = response.data.indicators.data[indicatorId].years;
@@ -1384,8 +1300,6 @@
         if (yearsExtremes[0] < 1990) {
             yearsExtremes[0] = 1990;
         }
-
-        //get year extremes for the indicators selected
 
         _.forEach(indicators, function(indicatorId) {
             var years = response.data.indicators.data[indicatorId].years;

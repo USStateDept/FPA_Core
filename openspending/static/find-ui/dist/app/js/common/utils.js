@@ -65,9 +65,8 @@
     window.utils.updateHash = function(hashObj) {
 
         var result = decodeURIComponent($.param(hashObj));
-        window.location.hash = result; //console.log("fdfsd");
+        window.location.hash = result; 
     }
-
 
     window.utils.bindIndicators = function(response, model) {
         //debugger;
@@ -497,13 +496,8 @@
 		//debugger;
         var _cells = window.utils.masterCells;
 
-
-        //debugger;
-        //debugger;
-
         _.forEach(_cells, function(c) {
             if (c.region) {
-                //dataByYear[c.year.toString()] = [];
                 series[c.region] = [];
             }
         });
@@ -511,7 +505,6 @@
         _.forEach(_cells, function(c) {
             if (c.region) {
                 series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
-                //dataByYear[c.year].push(c[indicatorId + "__amount" + dataType]);
             }
         });
 		
@@ -919,7 +912,7 @@
             }
 
         }
-
+        
         var json;
         switch (type) {
             case "line":
