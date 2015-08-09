@@ -8,6 +8,11 @@
 
     // Control of Corruption
     // http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes=control_of_corruption&drilldown=geometry__time|geometry__country_level0@name&format=csv
+
+    //var geoJsonLayers = {};
+    window.loader.geoJson = {};
+    window.loader.geoJsonLayers = {};
+
     window.loader.loadIndicatorList = function(url, handlerFunc) {
 
         //url = "data/indicators2.json";
@@ -224,6 +229,72 @@
             },
             success: handlerFunc
         });
+    }
+
+    window.loader.changeGroup = function(groupId) {
+
+        if (groupId == "all") {
+            groupId = "sovereignt";
+        }
+
+        if (!window.loader.geoJsonLayers[groupId]) {
+            window.loader.loadGeoJSON(groupId, geoJSONHandler);
+        } else {
+            //debugger;
+            //move this layer on top
+            //TODO: Leroy
+        }
+
+    }
+
+    var geoJSONHandler = function(response, type) {
+
+        function onEachFeature(feature, layer) {
+
+            if (feature.properties) {
+                // console.log(feature.properties);
+                var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
+                layer.bindPopup(name);
+            }
+        }
+
+        window.loader.lastGeoJson = response;
+
+        //if (!window.visualization.geoJsonLayers[type]) {
+        //if layer doesnt exist then add it and symbolize as invisible 
+        window.loader.geoJson[type] = response;
+
+        window.loader.geoJsonLayers[type] = L.geoJson(response, {
+            style: {
+
+                weight: 0, //no border
+                opacity: 1,
+                color: 'gray',
+                //dashArray: '3',
+                fillOpacity: 0.0, //DO NOT DISLAY
+                fillColor: '#cccccc'
+            },
+            onEachFeature: onEachFeature
+        });
+
+        for (var _type in window.loader.geoJsonLayers) {
+            if (type == _type) {
+                map.addLayer(window.loader.geoJsonLayers[_type]);
+            }
+        }
+
+        /*} else {
+            //if layer exists bring it on top
+
+        }*/
+        //console.log(window.loader.lastGeoJson);
+
+        var url = window.location.href;
+        countryIndex=url.indexOf("r=")+2;
+        var country=url.substring(countryIndex);
+        //console.log(country);
+        var region=null;
+        window.utils.highlightOnMapViz(country,region,window.loader.lastGeoJson);
     }
 
     window.loader.loadGeoJSON = function(type, handlerFunc) {

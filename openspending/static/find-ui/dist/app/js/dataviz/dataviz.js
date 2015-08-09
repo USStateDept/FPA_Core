@@ -1155,7 +1155,7 @@
                     noWrap: true
                 }).addTo(map);
             //window.utils.createMapViz();
-            //changeGroup("all");
+            window.loader.changeGroup("all");
         } else {
 				if (chartType == "scatter"){
 					yearsExtremesForData = window.utils.getHashParams().f.split("|");

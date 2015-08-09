@@ -314,8 +314,63 @@
         debugger;
     },
 
-    window.utils.highlightOnMap = function(model, geounit) {
+    window.utils.highlightOnMapViz = function(country,region,gjson){
         //debugger;
+        //var json=JSON.parse(gjson);
+        //debugger;
+        var geojson = gjson['features'];
+        var featuresAdded = [];
+        //console.log(geojson[0].properties.sovereignt);
+        var level = "sovereignt";
+
+        window.map.removeLayer(window.loader.geoJsonLayers[level]);
+        
+        var style = function(feature) {
+
+            //if ( _.indexOf(country, feature.properties[level].toLowerCase()) > -1  ) {
+            if ( country==feature.properties[level].toLowerCase()   ) {
+                //debugger;
+                var polygon = L.multiPolygon(feature.geometry.coordinates);
+                
+                featuresAdded.push(polygon);
+                return {
+                    weight: 2,
+                    opacity: 1,
+                    color: '#FFFFFF',
+                    //dashArray: '3',
+                    fillOpacity: 0.5,
+                    fillColor: '#00FF00'
+                };
+            } else {
+                return {
+                    weight: 0,
+                    opacity: 0,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.0,
+                    fillColor: '#666666'
+                };
+            }
+        }
+
+        var onEachFeature = function(feature, layer) {
+
+            // does this feature have a property named popupContent?
+            if (feature.properties) {
+                var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
+                layer.bindPopup(name);
+            }
+        }
+        window.loader.geoJsonLayers[level] = L.geoJson(window.loader.geoJson[level], {
+            onEachFeature: onEachFeature,
+            style: style
+        });
+        
+        map.addLayer(window.loader.geoJsonLayers[level]);
+    },
+
+    window.utils.highlightOnMap = function(model, geounit) {
+        
         var featuresAdded = [];
         //if all then select all countries in countriesModel, else activeCountries
         var isCountry = geounit.iso_a2;
@@ -354,7 +409,7 @@
 
 
         window.map.removeLayer(window.visualization.geoJsonLayers[level]);
-
+        //debugger;
         var style = function(feature) {
 
             if ((drillDown && (_.indexOf(drillDownLabels, feature.properties[level]) > -1)) || (feature.properties[level] == geounit.label) || _.indexOf(listOfLabels, feature.properties[level]) > -1) {
@@ -394,7 +449,7 @@
             onEachFeature: onEachFeature,
             style: style
         });
-        //debugger;
+        debugger;
         map.addLayer(window.visualization.geoJsonLayers[level]);
 
         /*var countries = model.countriesModel();

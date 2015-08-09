@@ -461,7 +461,7 @@
 
 
             var groupId = arguments[0].id;
-
+            
             window.visualization.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);
