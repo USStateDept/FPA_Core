@@ -17,12 +17,6 @@
 
 {% if current_user|post_topic(forum) %}
 <div class="pull-right">
-    <form class="inline-form" method="post" action="{{ url_for('forum.markread', forum_id=forum.id, slug=forum.slug) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button class="btn btn-default">
-            <span class="fa fa-check"></span> Mark as Read
-        </button>
-    </form>
 
     {% if forum.locked %}
     <span class="btn btn-primary">

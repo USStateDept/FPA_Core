@@ -31,6 +31,14 @@ def moderator_required(f):
             return f(*args, **kwargs)
     return decorated
 
+def authenticated_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not is_authenticated(current_user):
+            abort(403)
+        else:
+            return f(*args, **kwargs)
+    return decorated
 
 def check_perm(user, perm, forum, post_user_id=None):
     """Checks if the `user` has a specified `perm` in the `forum`
@@ -105,36 +113,49 @@ def can_edit_post(user, post):
     if topic.locked or topic.forum.locked:
         return False
 
-    return check_perm(user=user, perm='editpost', forum=post.topic.forum,
-                      post_user_id=post.user_id)
+    return is_authenticated(user) and post.user_id==user.id
+
+    # return check_perm(user=user, perm='editpost', forum=post.topic.forum,
+    #                   post_user_id=post.user_id)
 
 
 def can_delete_post(user, post):
-    """Check if the post can be deleted by the user."""
-    return check_perm(user=user, perm='deletepost', forum=post.topic.forum,
-                      post_user_id=post.user_id)
+    """Moderators and owners of the post can delete them"""
+    if can_moderate(user, topic.forum):
+        return True
+    if topic.locked or topic.forum.locked:
+        return False
+    return is_authenticated(user) and post.user_id==user.id
+    # return check_perm(user=user, perm='deletepost', forum=post.topic.forum,
+    #                   post_user_id=post.user_id)
 
 
 def can_delete_topic(user, topic):
-    """Check if the topic can be deleted by the user."""
-    return check_perm(user=user, perm='deletetopic', forum=topic.forum,
-                      post_user_id=topic.user_id)
+    """Only moderators can delete topics"""
+    if can_moderate(user, topic.forum):
+        return True
+
+    # return check_perm(user=user, perm='deletetopic', forum=topic.forum,
+    #                   post_user_id=topic.user_id)
 
 
 def can_post_reply(user, topic):
-    """Check if the user is allowed to post in the forum."""
+    """If user is authenticated and topic is not locked"""
     if can_moderate(user, topic.forum):
         return True
 
     if topic.locked or topic.forum.locked:
         return False
 
-    return check_perm(user=user, perm='postreply', forum=topic.forum)
+    return is_authenticated(user) and not topic.locked
+
+    #return check_perm(user=user, perm='postreply', forum=topic.forum)
 
 
 def can_post_topic(user, forum):
     """Checks if the user is allowed to create a new topic in the forum."""
-    return check_perm(user=user, perm='posttopic', forum=forum)
+    return is_authenticated(user) and not forum.locked
+    # return check_perm(user=user, perm='posttopic', forum=forum)
 
 
 # Moderator permission checks

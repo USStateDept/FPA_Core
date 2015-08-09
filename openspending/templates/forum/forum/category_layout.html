@@ -55,14 +55,6 @@
                     {% autoescape false %}
                     {{ forum.description|markup }}
                     {% endautoescape %}
-                    {% if forum.show_moderators %}
-                    <div class="forum-moderators">
-                        Moderators:
-                        {% for moderator in forum.moderators %}
-                        {% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
             </td>
 
