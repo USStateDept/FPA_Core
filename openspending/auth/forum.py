@@ -51,7 +51,7 @@ def check_perm(user, perm, forum, post_user_id=None):
         return True
 
     #need to check the permissions
-    return post_user_id and user.id and not getattr(user, "is_lockdownuser", False)
+    return post_user_id == user.id and not getattr(user, "is_lockdownuser", False)
         # return True
         # #need to figure someting out here
         # return user.permissions[perm] and user.id == post_user_id

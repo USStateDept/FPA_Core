@@ -1,14 +1,15 @@
-{% set page_title = _("Report Post") %}
+{% set page_title = "Report Post" %}
 
-{% extends theme("layout.html") %}
+{% extends "forum/layout.html" %}
 
 {% block navigation %}
 {% endblock %}
 
 {% block forumcontent %}
-{% from theme("macros.html") import render_field %}
+{% from "forum/macros.html" import render_field %}
 
 <form class="form" role="form" method="post">
+	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     {{ form.hidden_tag() }}
     <h3>{% trans %}Report Post{% endtrans %}</h3>
 

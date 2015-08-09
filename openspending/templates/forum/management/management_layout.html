@@ -10,7 +10,6 @@
     {{ navlink('management.unread_reports', 'Reports', active=active_management_report_nav) }}
 
     {% if current_user.admin %}
-        {{ navlink('management.settings', 'Settings') }}
         {{ navlink('management.forums', 'Forums', active=active_management_forum_nav) }}
     {% endif %}
     </ul>

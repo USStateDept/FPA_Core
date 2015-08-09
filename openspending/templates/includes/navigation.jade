@@ -51,6 +51,7 @@ nav.navbar.navbar-default.navbar-fixed-top
               p
                 strong Admin Only
               a(href="/admin") Admin Section
+              a(href="{{ url_for('management.overview') }}") Forum Management
               a(href="{{ url_for('findadmin.dataloader') }}") Data Loader
             {% endif %}
             li.divider

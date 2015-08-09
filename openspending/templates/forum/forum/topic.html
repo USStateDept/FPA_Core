@@ -89,9 +89,6 @@
         <tr>
             <td>
                 <span class="pull-left">
-                    {% if current_user|is_authenticated and post.user_id and post.user_id != current_user.id %}
-                    <a href="{{ url_for('message.new_conversation', to_user=post.user.username) }}">PM</a>
-                    {% endif %}
                     {% if user.website %}
                     {% if current_user|is_authenticated %}| {% endif %}<a href="{{ user.website }}">Website</a>
                     {% endif %}
