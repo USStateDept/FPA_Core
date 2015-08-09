@@ -63,6 +63,8 @@ class SourceFile(db.Model):
     def __unicode__(self):
         return "<SourceFile(%r, %r)>" % (self.id, sourcefiles.url(self.rawfile),)
 
+    def get_url(self):
+        return sourcefiles.url(self.rawfile)
 
     def get_path(self):
         return sourcefiles.path(self.rawfile).replace("\\", "/")

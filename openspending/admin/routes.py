@@ -358,15 +358,18 @@ class SourcesView(sqla.ModelView):
 
 
 class QAListView(sqla.ModelView):
+    column_searchable_list = ('name',)
     # columns list Data source link to admin page, has data, source_url, run log with cleaned and source, date injested
     def is_accessible(self):
         return require.account.is_admin()
-    column_formatters = dict(dataset_admin_url=macro('render_qalist'))
+    column_formatters = dict(name=macro('render_qalist'),
+                            source_url=macro('render_sourceurl'))
     #column_formatters = dict(dataset_admin_url=macro('render_price'))
-    column_list= ('dataset_admin_url',)
+    column_list= ('name', 'source_url', )
     list_template = 'adminsection/qalist.html'
 
 class IndexView(AdminIndexView):
+
     def is_accessible(self):
         return require.account.is_admin()
 

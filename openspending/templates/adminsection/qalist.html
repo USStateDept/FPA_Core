@@ -11,7 +11,18 @@
 
 
 {% macro render_qalist(model, column) %}
-    <a target='_blank' href='{{ url_for("dataset.edit_view", id=model.dataset.id) }}'>{{ model.dataset.name }}</a>
+    <a target='_blank' href='{{ url_for("dataset.edit_view", id=model.dataset.id) }}'>{{ model.dataset.label }}</a>
+
+{% endmacro %}
+
+{% macro render_sourceurl(model, column) %}
+    {% if model.rawfile %}
+        <a target="_blank" href="{{ model.rawfile.get_url() }}">Uploaded File</a>
+    {% elif model.url %}
+        <a target="_blank" href="{{ model.url }}">External Source</a>
+    {% else %}
+        <p>No data</p>
+    {% endif %}
 
 {% endmacro %}
 
