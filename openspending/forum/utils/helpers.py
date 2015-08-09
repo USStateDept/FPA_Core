@@ -60,7 +60,7 @@ def do_topic_action(topics, user, action, reverse):
                     For example, to unlock a topic, ``reverse`` should be
                     set to ``True``.
     """
-    from openspending.forum.utils.permissions import can_moderate, can_delete_topic
+    from openspending.auth.forum import can_moderate, can_delete_topic
     from openspending.model.account import Account as User
     from openspending.forum.forum.models import Post
 

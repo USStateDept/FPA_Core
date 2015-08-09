@@ -1,12 +1,12 @@
     {% set page_title = forum.title %}
     {% set active_forum_nav=True %}
 
-    {% extends theme("forum/layout.html") %}
+    {% extends "forum/layout.html" %}
     {% block forumcontent %}
-    {% from 'macros.html' import render_pagination, topic_pages %}
+    {% from 'forum/macros.html' import render_pagination, topic_pages %}
 
     <ol class="breadcrumb">
-        <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
+        <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
         <li><a href="{{ forum.category.url }}">{{ forum.category.title }}</a></li>
         <li class="active">{{ forum.title }}</li>
     </ol>
@@ -29,13 +29,13 @@
 
         <tbody>
             <tr>
-                <td colspan="2">{% trans %}Topic{% endtrans %}</td>
+                <td colspan="2">Topic</td>
 
-                <td>{% trans %}Posts{% endtrans %}</td>
+                <td>Posts</td>
 
-                <td>{% trans %}Views{% endtrans %}</td>
+                <td>Views</td>
 
-                <td>{% trans %}Last Post{% endtrans %}</td>
+                <td>Last Post</td>
 
                 <td><input type="checkbox" name="rowtoggle" class="action-checkall" title="Select All"/></td>
             </tr>
@@ -67,7 +67,7 @@
                         {{ topic_pages(topic, flaskbb_config["POSTS_PER_PAGE"]) }}
                         <br />
                         <small>
-                            {% trans %}by{% endtrans %}
+                            by
                             {% if topic.user_id %}
                              <a href="{{ topic.user.url }}">{{ topic.user.username }}</a>
                             {% else %}
@@ -86,7 +86,7 @@
                     <a href="{{ topic.last_post.url }}">{{ topic.last_post.date_created|time_since }}</a><br />
 
                     <small>
-                        {% trans %}by{% endtrans %}
+                        by
                         {% if topic.last_post.user_id %}
                         <a href="{{ topic.last_post.user.url }}">{{ topic.last_post.user.username }}</a>
                         {% else %}
@@ -99,7 +99,7 @@
             {% else %}
             <tr>
                 <td colspan="6">
-                    {% trans %}No Topics.{% endtrans %}
+                    No Topics.
                 </td>
             </tr>
             {% endfor %}
@@ -111,7 +111,7 @@
         <div class="col-md-2">
             <div class="pull-left">
                 <a class="btn btn-default" href="{{ forum.url }}">
-                    <span class="fa fa-arrow-left"></span> {% trans %}Back{% endtrans %}
+                    <span class="fa fa-arrow-left"></span> Back
                 </a>
             </div>
         </div>
@@ -121,37 +121,37 @@
                 <div class="form-group">
                 <div class="btn-group" role="group">
                     <button name="lock" class="btn btn-warning">
-                        <span class="fa fa-lock"></span> {% trans %}Lock{% endtrans %}
+                        <span class="fa fa-lock"></span> Lock
                     </button>
                     <button name="unlock" class="btn btn-warning">
-                        <span class="fa fa-unlock"></span> {% trans %}Unlock{% endtrans %}
+                        <span class="fa fa-unlock"></span> Unlock
                     </button>
                 </div>
                 <div class="btn-group" role="group">
                     <button name="highlight" class="btn btn-success">
-                        <span class="fa fa-star"></span> {% trans %}Highlight{% endtrans %}
+                        <span class="fa fa-star"></span> Highlight
                     </button>
                     <button name="trivialize" class="btn btn-success">
-                        <span class="fa fa-star-o"></span> {% trans %}Trivialize{% endtrans %}
+                        <span class="fa fa-star-o"></span> Trivialize
                     </button>
                 </div>
 
                 <button name="delete" class="btn btn-danger">
-                    <span class="fa fa-trash-o"></span> {% trans %}Delete{% endtrans %}
+                    <span class="fa fa-trash-o"></span> Delete
                 </button>
                 </div>
 
                 <div class="form-group row">
                     <div class="col-sm-5">
                         <select class="form-control" id="forum" name="forum">
-                            <option selected value="">{% trans %}Move to...{% endtrans %}</option>
+                            <option selected value="">Move to...</option>
                             {% for forum in available_forums %}
                                 <option value={{forum.id}}>{{ forum.title }}</option>
                             {% endfor %}
                         </select>
                     </div> <!-- end div_class -->
                     <button name="move" class="btn btn-info">
-                        <span class="fa fa-plane"></span> {% trans %}Move{% endtrans %}
+                        <span class="fa fa-plane"></span> Move
                     </button>
                 </div> <!-- end form-group -->
             </div>

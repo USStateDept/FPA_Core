@@ -1,14 +1,14 @@
-{% set page_title = _("Reports") %}
+{% set page_title = "Reports" %}
 {% set active_management_report_nav=True %}
 
-{% extends theme("management/management_layout.html") %}
+{% extends "forum/management/management_layout.html" %}
 {% block management_content %}
-{% from theme('macros.html') import render_pagination, navlink with context %}
+{% from 'forum/macros.html' import render_pagination, navlink with context %}
 
 <div class="col-md-3">
     <ul class="nav nav-pills nav-stacked">
-        {{ navlink('management.unread_reports', _("Show unread reports")) }}
-        {{ navlink('management.reports', _("Show all reports")) }}
+        {{ navlink('management.unread_reports', "Show unread reports") }}
+        {{ navlink('management.reports', "Show all reports") }}
     </ul>
 </div>
 
@@ -17,7 +17,7 @@
         <div class="col-md-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <span class="fa fa-flag"></span> {% trans %}All Reports{% endtrans %}
+                    <span class="fa fa-flag"></span> All Reports
                 </div>
                 <div class="panel-body management-body"></div>
 
@@ -25,11 +25,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{% trans %}Poster{% endtrans %}</th>
-                            <th>{% trans %}Topic{% endtrans %}</th>
-                            <th>{% trans %}Reporter{% endtrans %}</th>
-                            <th>{% trans %}Reason{% endtrans %}</th>
-                            <th>{% trans %}Reported{% endtrans %}</th>
+                            <th>Poster</th>
+                            <th>Topic</th>
+                            <th>Reporter</th>
+                            <th>Reason</th>
+                            <th>Reported</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +44,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="6">{% trans %}No reports.{% endtrans %}</td>
+                            <td colspan="6">No reports.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

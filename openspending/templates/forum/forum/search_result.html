@@ -1,16 +1,16 @@
-{% set page_title = _("Search") %}
+{% set page_title = "Search" %}
 
-{% extends theme("layout.html") %}
+{% extends "forum/layout.html" %}
 {% block forumcontent %}
-    {% from theme('macros.html') import render_pagination, group_field, topic_pages %}
+    {% from 'forum/macros.html' import render_pagination, group_field, topic_pages %}
 
     <ul class="breadcrumb">
-        <li><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
-        <li class="active">{% trans %}Search{% endtrans %}</li>
+        <li><a href="{{ url_for('forum.index') }}">Forum</a></li>
+        <li class="active">Search</li>
     </ul>
 
     {% if result['post'] %}
-        <h3>{% trans %}Posts{% endtrans %}</h3>
+        <h3>Posts</h3>
 
         <table class="table table-bordered">
             <tbody>
@@ -29,25 +29,20 @@
                                     <a href="{{ post.user.url }}">
                                         <span style="font-weight:bold">{{ post.user.username }}</span> <!-- TODO: Implement userstyles -->
                                     </a>
-                                    {%- if post.user|is_online %}
-                                        <span class="label label-success">Online</span>
-                                    {%- else %}
-                                        <span class="label label-default">Offline</span>
-                                    {%- endif %}
                                     <div class="profile primary-group">
                                         {{ post.user.primary_group.name }}
                                     </div>
                                 </td>
 
                                 <td class="pull-right">
-                                    {% trans %}Posts{% endtrans %}: {{ post.user.post_count }}<br />
-                                    {% trans %}Registered since{% endtrans %}: {{ post.user.date_joined|format_date('%b %d %Y') }}<br />
+                                    Posts: {{ post.user.post_count }}<br />
+                                    Registered since: {{ post.user.date_joined|format_date('%b %d %Y') }}<br />
                                 </td>
                             {% else %}
                                 <td>
                                     <strong>{{ post.username }}</strong>
                                     <br />
-                                    {% trans %}Guest{% endtrans %}
+                                    Guest
                                 </td>
                             {% endif %}
                         </tr>
@@ -66,7 +61,7 @@
             </tr>
             {% else %}
             <tr>
-                <td>{% trans %}No posts found matching your search criteria.{% endtrans %}</td>
+                <td>No posts found matching your search criteria.</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -74,16 +69,16 @@
     {% endif %}
 
     {% if result['user'] %}
-        <h3>{% trans %}Users{% endtrans %}</h3>
+        <h3>Users</h3>
 
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>#</th>
-                <th>{% trans %}Username{% endtrans %}</th>
-                <th>{% trans %}Posts{% endtrans %}</th>
-                <th>{% trans %}Date registered{% endtrans %}</th>
-                <th>{% trans %}Group{% endtrans %}</th>
+                <th>Username</th>
+                <th>Posts</th>
+                <th>Date registered</th>
+                <th>Group</th>
             </tr>
             </thead>
             <tbody>
@@ -93,11 +88,10 @@
                     <td><a href="{{ user.url }}">{{ user.username }}</a></td>
                     <td>{{ user.post_count }}</td>
                     <td>{{ user.date_joined|format_date('%b %d %Y') }}</td>
-                    <td>{{ user.primary_group.name }}</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5">{% trans %}No users found matching your search criteria.{% endtrans %}</td>
+                    <td colspan="5">No users found matching your search criteria.</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -105,18 +99,18 @@
     {% endif %}
 
     {% if result['topic'] %}
-        <h3>{% trans %}Topics{% endtrans %}</h3>
+        <h3>Topics</h3>
 
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th colspan="2">{% trans %}Topic{% endtrans %}</th>
+                <th colspan="2">Topic</th>
 
-                <th>{% trans %}Posts{% endtrans %}</th>
+                <th>Posts</th>
 
-                <th>{% trans %}Views{% endtrans %}</th>
+                <th>Views</th>
 
-                <th>{% trans %}Last Post{% endtrans %}</th>
+                <th>Last Post</th>
             </tr>
             </thead>
 
@@ -139,7 +133,7 @@
                             <br />
 
                             <small>
-                            {% trans %}by{% endtrans %}
+                            by
                             {% if topic.user_id %}
                                 <a href="{{ topic.user.url }}">{{ topic.user.username }}</a>
                             {% else %}
@@ -158,7 +152,7 @@
                         <a href="{{ topic.last_post.url }}">{{ topic.last_post.date_created|time_since }}</a><br />
 
                         <small>
-                        {% trans %}by{% endtrans %}
+                        by
                         {% if topic.last_post.user_id %}
                             <a href="{{ topic.last_post.user.url }}">{{ topic.last_post.user.username }}</a>
                         {% else %}
@@ -169,7 +163,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5">{% trans %}No topics found matching your search criteria.{% endtrans %}</td>
+                    <td colspan="5">No topics found matching your search criteria.</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -177,15 +171,15 @@
     {% endif %}
 
     {% if result['forum'] %}
-        <h3>{% trans %}Forums{% endtrans %}</h3>
+        <h3>Forums</h3>
 
         <table class="table table-bordered">
             <thead class="categoryhead">
             <tr>
-                <th colspan="2"><strong>{% trans %}Forum{% endtrans %}</strong></th>
-                <th width="85" align="center" style="white-space: nowrap"><strong>{% trans %}Topics{% endtrans %}</strong></th>
-                <th width="85" align="center" style="white-space: nowrap"><strong>{% trans %}Posts{% endtrans %}</strong></th>
-                <th width="200" align="center" style="white-space: nowrap"><strong>{% trans %}Last Post{% endtrans %}</strong></th>
+                <th colspan="2"><strong>Forum</strong></th>
+                <th width="85" align="center" style="white-space: nowrap"><strong>Topics</strong></th>
+                <th width="85" align="center" style="white-space: nowrap"><strong>Posts</strong></th>
+                <th width="200" align="center" style="white-space: nowrap"><strong>Last Post</strong></th>
             </tr>
             </thead>
             <tbody class="forumbody">
@@ -228,14 +222,6 @@
                         {% autoescape false %}
                         {{ forum.description|markup }}
                         {% endautoescape %}
-                        {% if forum.show_moderators %}
-                            <div class="forum-moderators">
-                                {% trans %}Moderators{% endtrans %}:
-                                {% for moderator in forum.moderators %}
-                                    <a href="{{ url_for('user.profile', username=moderator.username) }}">{{ moderator.username }}</a>{% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
                     </div>
                 </td>
 
@@ -250,7 +236,7 @@
                         <br />
                         {{ forum.last_post.date_created|time_since }}<br />
 
-                        {% trans %}by{% endtrans %}
+                        by
                         {% if forum.last_post.user_id %}
                             <a href="{{ url_for('user.profile', username=forum.last_post.user.username) }}">{{ forum.last_post.user.username }}</a>
                         {% else %}
@@ -258,7 +244,7 @@
                         {% endif %}
 
                     {% else %}
-                        {% trans %}No posts.{% endtrans %}
+                        No posts.
                     {% endif %}
                     {% endif %}
                 </td>
@@ -266,7 +252,7 @@
             {% else %}
             <tr>
                 <td colspan="5">
-                    {% trans %}No forums found matching your search criteria.{% endtrans %}
+                    No forums found matching your search criteria.
                 </td>
             </tr>
             {% endfor %}

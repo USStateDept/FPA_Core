@@ -46,45 +46,45 @@ def overview():
                            post_count=post_count)
 
 
-@management.route("/settings", methods=["GET", "POST"])
-@management.route("/settings/<path:slug>", methods=["GET", "POST"])
-@admin_required
-def settings(slug=None):
-    slug = slug if slug else "general"
+# @management.route("/settings", methods=["GET", "POST"])
+# @management.route("/settings/<path:slug>", methods=["GET", "POST"])
+# @admin_required
+# def settings(slug=None):
+#     slug = slug if slug else "general"
 
-    # get the currently active group
-    active_group = SettingsGroup.query.filter_by(key=slug).first_or_404()
-    # get all groups - used to build the navigation
-    all_groups = SettingsGroup.query.all()
+#     # get the currently active group
+#     active_group = SettingsGroup.query.filter_by(key=slug).first_or_404()
+#     # get all groups - used to build the navigation
+#     all_groups = SettingsGroup.query.all()
 
-    SettingsForm = Setting.get_form(active_group)
+#     SettingsForm = Setting.get_form(active_group)
 
-    old_settings = Setting.get_settings(active_group)
-    new_settings = {}
+#     old_settings = Setting.get_settings(active_group)
+#     new_settings = {}
 
-    form = SettingsForm()
+#     form = SettingsForm()
 
-    if form.validate_on_submit():
-        for key, values in iteritems(old_settings):
-            try:
-                # check if the value has changed
-                if values['value'] == form[key].data:
-                    continue
-                else:
-                    new_settings[key] = form[key].data
-            except KeyError:
-                pass
-        Setting.update(settings=new_settings, app=current_app)
-        flash(_("Settings saved."), "success")
-    else:
-        for key, values in iteritems(old_settings):
-            try:
-                form[key].data = values['value']
-            except (KeyError, ValueError):
-                pass
+#     if form.validate_on_submit():
+#         for key, values in iteritems(old_settings):
+#             try:
+#                 # check if the value has changed
+#                 if values['value'] == form[key].data:
+#                     continue
+#                 else:
+#                     new_settings[key] = form[key].data
+#             except KeyError:
+#                 pass
+#         Setting.update(settings=new_settings, app=current_app)
+#         flash(_("Settings saved."), "success")
+#     else:
+#         for key, values in iteritems(old_settings):
+#             try:
+#                 form[key].data = values['value']
+#             except (KeyError, ValueError):
+#                 pass
 
-    return render_template("forum/management/settings.html", form=form,
-                           all_groups=all_groups, active_group=active_group)
+#     return render_template("forum/management/settings.html", form=form,
+#                            all_groups=all_groups, active_group=active_group)
 
 
 # # Users

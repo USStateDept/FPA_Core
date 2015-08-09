@@ -343,6 +343,7 @@ def manage_forum(forum_id, slug=None):
     return render_template(
         "forum/forum/edit_forum.html", forum=forum_instance, topics=topics,
         available_forums=available_forums, forumsread=forumsread,
+        flaskbb_config=flaskbb_config
     )
 
 
