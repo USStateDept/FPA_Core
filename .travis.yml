@@ -51,7 +51,8 @@ before_script:
   - psql -d openspending_testing -U postgres -c "create extension postgis"
   - pg_restore -d openspending_testing -U postgres < ./openspending/tests/fixtures/testing_database.backup
   #make sure there is the latest db schema
-  - ostool db migrate
+  #migrate script didn't work with absolute location
+  #- ostool db migrate
   - nosetests --version
 script:
   - nosetests --with-coverage --cover-package=openspending
