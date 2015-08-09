@@ -15,6 +15,7 @@ from flask_admin.model.form import InlineFormAdmin
 from flask_admin.contrib.sqla.form import InlineModelConverter
 from flask_admin.contrib.sqla.fields import InlineModelFormList
 from flask_admin.form import RenderTemplateWidget
+from flask_admin.model.template import macro
 #from flask.ext.superadmin.model.backends.sqlalchemy.orm import AdminModelConverter as _AdminModelConverter
 #from flask.ext import superadmin
 #from wtforms.ext.sqlalchemy.orm import converts
@@ -36,8 +37,6 @@ from slugify import slugify
 #import copy
 
 #see http://flask-admin.readthedocs.org/en/latest/api/mod_model/
-
-
 
 
 class AccountView(sqla.ModelView):
@@ -357,6 +356,16 @@ class SourcesView(sqla.ModelView):
     def is_accessible(self):
         return require.account.is_admin()
 
+
+class QAListView(sqla.ModelView):
+    # columns list Data source link to admin page, has data, source_url, run log with cleaned and source, date injested
+    def is_accessible(self):
+        return require.account.is_admin()
+    column_formatters = dict(dataset_admin_url=macro('render_qalist'))
+    #column_formatters = dict(dataset_admin_url=macro('render_price'))
+    column_list= ('dataset_admin_url',)
+    list_template = 'adminsection/qalist.html'
+
 class IndexView(AdminIndexView):
     def is_accessible(self):
         return require.account.is_admin()
@@ -412,6 +421,8 @@ def register_admin(app, db):
     flaskadmin.add_view(TagsView(Tags, db.session, endpoint='tagsadmin', category='SysAdmin'))
 
     flaskadmin.add_view(SourcesView(Dataset, db.session, endpoint='sourcesadmin', category='Indicators', name="Sources"))
+
+    flaskadmin.add_view(QAListView(Source, db.session, category='DataLoading', endpoint="qaview", name="QA Links"))
 
     #flaskadmin.add_view(DTView(Dataset, db.session, endpoint='dtadmin', category='Indicators', name="DT"))
     
