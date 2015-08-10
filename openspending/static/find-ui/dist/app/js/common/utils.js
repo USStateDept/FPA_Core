@@ -306,12 +306,18 @@
         model.activeGroup(countryGroupings[0]);
     }
 
-    window.utils.removeOnMap = function(model, geounits) {
-        debugger;
+    window.utils.removeOnMap = function(model, geounits) { //clear a single country
+        // debugger;
+        // console.log("removeOnMap has been called!");
+        // var level = "sovereignt";        
+        // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     },
 
-    window.utils.clearOnMap = function(model) {
-        debugger;
+    window.utils.clearOnMap = function(model) { // clear all of map
+        // debugger;
+
+        // var level = "sovereignt";        
+        // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     },
 
     window.utils.highlightOnMapViz = function(country,region,gjson){

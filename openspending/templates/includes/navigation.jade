@@ -26,9 +26,9 @@ nav.navbar.navbar-default.navbar-fixed-top
           a(href="{{ url_for('viz.countries') }}") COUNTRIES
         li
           a(href="{{ url_for('viz.visualization') }}") BUILD A VISUALIZATION
-        li
-          a(href="/api") API
-        li
+        //- li
+        //-   a(href="/api") API
+        //- li
           a(href="/forum") FORUM
       ul.nav.navbar-nav.navbar-right
         {% if logged_in and current_user.get_id() != 999999999 %}
