@@ -308,7 +308,8 @@
 
     window.utils.removeOnMap = function(model, geounits) { //clear a single country
         // debugger;
-        // console.log("removeOnMap has been called!");
+        console.log("removeOnMap has been called!");
+        console.log("Geounits is: " + JSON.stringify(geounits));
         // var level = "sovereignt";        
         // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     },
@@ -391,6 +392,7 @@
 
         //first remove the layer
         var activeCountries = model.activeCountries();
+        console.log("Active countries is: " + JSON.stringify(activeCountries));
         var listOfLabels = _.map(activeCountries, function(_a) {
             return _a.label;
         });
@@ -455,7 +457,7 @@
             onEachFeature: onEachFeature,
             style: style
         });
-        debugger;
+        // debugger;
         map.addLayer(window.visualization.geoJsonLayers[level]);
 
         /*var countries = model.countriesModel();
