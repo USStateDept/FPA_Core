@@ -52,6 +52,12 @@ def contact():
     #return render_template('home/index.jade', datasets=datasets)
     return render_template('contact/contact.jade')
 
+@blueprint.route('/legal')
+def legal():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('legal/legal.jade')
+
 @blueprint.route('/privacy')
 def privacy():
     #datasets = Dataset.all_by_account(current_user)
