@@ -316,8 +316,8 @@
     window.utils.clearOnMap = function(model) { // clear all of map
         // debugger;
 
-        // var level = "sovereignt";        
-        // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
+        var level = "sovereignt";        
+        window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     },
 
     window.utils.highlightOnMapViz = function(country,region,gjson){
