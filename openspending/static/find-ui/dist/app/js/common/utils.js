@@ -322,21 +322,19 @@
     },
 
     window.utils.highlightOnMapViz = function(country,region,gjson){
-        //debugger;
-        //var json=JSON.parse(gjson);
-        //debugger;
+        
         var geojson = gjson['features'];
         var featuresAdded = [];
-        //console.log(geojson[0].properties.sovereignt);
+       
         var level = "sovereignt";
 
-        window.map.removeLayer(window.loader.geoJsonLayers[level]);
+        
         
         var style = function(feature) {
 
-            //if ( _.indexOf(country, feature.properties[level].toLowerCase()) > -1  ) {
+            
             if ( country==feature.properties[level].toLowerCase()   ) {
-                //debugger;
+                
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 
                 featuresAdded.push(polygon);

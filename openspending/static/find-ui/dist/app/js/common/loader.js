@@ -283,18 +283,27 @@
             }
         }
 
-        /*} else {
-            //if layer exists bring it on top
-
-        }*/
-        //console.log(window.loader.lastGeoJson);
-
+        
         var url = window.location.href;
-        countryIndex=url.indexOf("r=")+2;
-        var country=url.substring(countryIndex);
+
+        countryIndex = url.indexOf("r=") + 2;
+
+        var country = url.substring(countryIndex);
         //console.log(country);
-        var region=null;
-        window.utils.highlightOnMapViz(country,region,window.loader.lastGeoJson);
+        var region = null;
+        if(country.indexOf('|')>-1){
+
+            countries = country.split('|');
+
+            for(var i = 0;i<countries.length; i++)
+            {
+                var currentCountry = countries[i];
+                window.utils.highlightOnMapViz(currentCountry,region,window.loader.lastGeoJson);
+            }
+        }
+        else{
+            window.utils.highlightOnMapViz(country,region,window.loader.lastGeoJson);
+        }
     }
 
     window.loader.loadGeoJSON = function(type, handlerFunc) {
