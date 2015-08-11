@@ -234,7 +234,7 @@ class Dataset(db.Model):
             source_url = self.source.url
         dataorg_dict=None
         if self.dataorg:
-            dataset_dict=self.dataorg.label
+            dataorg_dict=self.dataorg.label
         if self.years:
             the_years=self.years.split(",")
             the_years=map(int,the_years)
