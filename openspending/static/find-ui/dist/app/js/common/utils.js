@@ -1,3 +1,4 @@
+var act;
 (function() {
     window.utils = {};
 
@@ -308,8 +309,17 @@
 
     window.utils.removeOnMap = function(model, geounits) { //clear a single country
         // debugger;
-        console.log("removeOnMap has been called!");
-        console.log("Geounits is: " + JSON.stringify(geounits));
+        // console.log("removeOnMap has been called!");
+        // console.log("Geounits is: " + JSON.stringify(geounits));
+        // console.log("Act (from removeOnMap) is: " + JSON.stringify(act));
+        // rc(act);
+        window.map.removeLayer(window.visualization.geoJsonLayers[level]);
+        $.each(vizModel.activeCountries(), function(idx, country) {
+            // console.log(country);
+            // alert(JSON.stringify(country));
+            window.utils.highlightOnMap(vizModel, country);
+        });
+        // window.utils.highlightOnMap(vizModel, act);
         // var level = "sovereignt";        
         // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     },
@@ -375,6 +385,7 @@
     },
 
     window.utils.highlightOnMap = function(model, geounit) {
+        // console.log("Geounit from highlightOnMap is: " + JSON.stringify(geounit));
         
         var featuresAdded = [];
         //if all then select all countries in countriesModel, else activeCountries
@@ -390,7 +401,9 @@
 
         //first remove the layer
         var activeCountries = model.activeCountries();
-        console.log("Active countries is: " + JSON.stringify(activeCountries));
+        act=activeCountries;
+        // console.log("Active countries is: " + JSON.stringify(activeCountries));
+        // console.log("Act is: " + JSON.stringify(act));
         var listOfLabels = _.map(activeCountries, function(_a) {
             return _a.label;
         });

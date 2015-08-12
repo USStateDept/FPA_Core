@@ -1,8 +1,59 @@
+function rc(){
+
+    var selectedCountry = arguments[0];
+    var activeCountries = vizModel.activeCountries();
+    var selectedIndex = _.indexOf(activeCountries, selectedCountry);
+
+    vizModel.activeCountries.splice(selectedIndex, 1);
+
+    var countryLabel = selectedCountry.label;
+    var countryId = selectedCountry.id;
+
+    //vizModel.activeCountries.removeAll();
+
+    var countryGroupings = _.clone(vizModel.countryGroupings(), true);
+    vizModel.countryGroupings.removeAll();
+
+    var activeGroupId = vizModel.activeGroup().id;
+    // debugger;
+    _.forEach(countryGroupings, function(countryGroup, i) {
+        if (countryGroup.id == countryId) {
+            countryGroup.selected = false;
+        }
+        _.forEach(countryGroup.regions, function(region) {
+            if (region.id == countryId && region.label == countryLabel) {
+                region.selected = false;
+            }
+            _.forEach(region.countries, function(country) { //for each Country
+                if (country.id == countryId) {
+                    country.selected = false;
+                }
+            });
+
+        });
+    });
+
+    _.forEach(countryGroupings, function(countryGroup, i) {
+        if (activeGroupId == countryGroup.id) {
+            vizModel.activeGroup(countryGroup);
+        }
+        vizModel.countryGroupings.push(countryGroup);
+    });
+
+    window.utils.removeOnMap(vizModel, selectedCountry);
+
+
+    // _.each(activeCountries, function(country){
+    //  if (geounit)
+    // });
+    // vizModel.activeCountries.push(selectedCountry);
+
+}
+
 (function() {
 
 
     window.vizModel = {
-
 
         selectView: function(type) {
 
@@ -323,8 +374,8 @@
                 }
             });
 
-
-
+            // console.log("vizModel is: " + JSON.stringify(vizModel));
+            // console.log("selectedCountry is: " + JSON.stringify(selectedCountry));
             window.utils.highlightOnMap(vizModel, selectedCountry);
 
         },
