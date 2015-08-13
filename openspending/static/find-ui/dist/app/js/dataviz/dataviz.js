@@ -1042,7 +1042,7 @@
 
     }
 
-    var changeGroup = function(groupId) {
+    /*var changeGroup = function(groupId) {
         debugger;
         if (groupId == "all") {
             groupId = "sovereignt";
@@ -1057,7 +1057,7 @@
             //TODO: Leroy
         }
 
-    }
+    }*/
 
     var indicatorDataLoadHandler = function(args) {
 
@@ -1142,7 +1142,7 @@
         var responseData = {
             cells: mergedCells
         }
-
+        
         var responseStats = statsData[0];
 
         if(chartType=="map") {
@@ -1154,7 +1154,8 @@
                     maxZoom: 18,
                     noWrap: true
                 }).addTo(map);
-            //window.utils.createMapViz();
+            
+            window.loader.data = responseData;
             window.loader.changeGroup("all");
         } else {
 				if (chartType == "scatter"){
@@ -1198,6 +1199,7 @@
 				showTable(responseData);
 			}
 		}
+
     var useNarrowExtremes = true;
 
     var setExtremes = function(startYear, endYear) {
