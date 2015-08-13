@@ -69,7 +69,7 @@
                 },
                 success: function(response) {
 					//test data for dev
-					response = {"totaldatasets": 2, "totalcountries": 0, "data": {"indicators": {"gdp_growth": "GDP Growth", "gdp_total": "GDP, total"}, "countries": {}}};
+					//response = {"totaldatasets": 2, "totalcountries": 0, "data": {"indicators": {"gdp_growth": "GDP Growth", "gdp_total": "GDP, total"}, "countries": {}}};
 					searchHandler(response, value);
                 }
             });
