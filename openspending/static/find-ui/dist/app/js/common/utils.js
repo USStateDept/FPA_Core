@@ -346,10 +346,12 @@ var act;
         var level = "sovereignt";
 
         
-        
+        debugger;
+        //console.log(window.loader.indicator);
+       
         var style = function(feature) {
 
-            
+             //console.log("*********feature" + feature);
             if ( country==feature.properties[level].toLowerCase()   ) {
                 
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
@@ -361,7 +363,8 @@ var act;
                     color: '#FFFFFF',
                     //dashArray: '3',
                     fillOpacity: 0.5,
-                    fillColor: '#00FF00'
+                    fillColor: window.utils.getColor(feature.properties[window.loader.indicator])
+                    //fillColor: '#00FF00'////fillColor: '#00FF00'
                 };
             } else {
                 return {
@@ -380,7 +383,7 @@ var act;
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
-                layer.bindPopup(name);
+                layer.bindPopup(name + "</br>" + feature.properties[window.loader.indicator]);
             }
         }
         window.loader.geoJsonLayers[level] = L.geoJson(window.loader.geoJson[level], {
@@ -389,7 +392,61 @@ var act;
         });
         
         map.addLayer(window.loader.geoJsonLayers[level]);
+        debugger;
+        //window.utils.addLegend();
     },
+
+  /*  window.utils.getColor=function(d) {
+    return d > 1000 ? '#800026' :
+           d > 500  ? '#BD0026' :
+           d > 200  ? '#E31A1C' :
+           d > 100  ? '#FC4E2A' :
+           d > 50   ? '#FD8D3C' :
+           d > 20   ? '#FEB24C' :
+           d > 10   ? '#FED976' :
+                      '#FFEDA0';
+},*/
+
+window.utils.getColor=function(d) {
+    console.log(d);
+    debugger;
+    d=d+5000;
+    return d > 50000 ? '#800026' :
+           d > 40000  ? '#BD0026' :
+           d > 30000  ? '#E31A1C' :
+           d > 20000  ? '#FC4E2A' :
+           d > 10000   ? '#FD8D3C' :
+           d > 5000   ? '#FEB24C' :
+           d > 1000   ? '#FED976' :
+                      '#FFEDA0';
+},
+
+window.utils.addLegend=function(){
+var legend = L.control({position: 'bottomleft'});
+
+        legend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0,1000, 5000, 10000, 20000, 30000, 40000, 50000],
+                labels = [],
+                from, to;
+
+            for (var i = 0; i < grades.length; i++) {
+                from = grades[i];
+                to = grades[i + 1];
+
+                labels.push(
+                    '<i style="background:' + window.utils.getColor(from + 1) + '"></i> ' +
+                    from + (to ? '&ndash;' + to : '+'));
+            }
+
+            div.innerHTML = labels.join('<br>');
+            return div;
+        };
+
+        legend.addTo(map);
+
+},
 
     window.utils.highlightOnMap = function(model, geounit) {
         // console.log("Geounit from highlightOnMap is: " + JSON.stringify(geounit));
