@@ -1,4 +1,11 @@
 var act;
+
+// test code for #228
+// function onMapClick(e) {
+//     alert("You clicked the map at " + e.latlng);
+// }
+// $("#map").on('click', onMapClick);
+
 (function() {
     window.utils = {};
 

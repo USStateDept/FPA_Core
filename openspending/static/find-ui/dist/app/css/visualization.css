@@ -33,7 +33,7 @@
 }
 .app .icon-category-80:after,
 .app .icon-category-humanitarian-assistance:after {
-  content: '\e605';
+  content: url("../images/noun_big_worldinhands.png") center center no-repeat;
 }
 .app [class^="icon-"],
 .app [class*=" icon-"] {
