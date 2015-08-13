@@ -41,8 +41,7 @@
               .col-md-12
 
                   .main-search-results(data-bind="foreach:searchResults,visible:searchResults().length>0 && searchValue().length>=2")
-                    span(data-bind="html:label,click:$root.selectIndicator")
-    
+                    span(data-bind="html:label,click:$root.selectIndicator,style:{background: $index() == 0 ? '#ffff99' : ''}")
       .col-md-2
 
 

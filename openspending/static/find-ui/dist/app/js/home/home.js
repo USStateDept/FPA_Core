@@ -22,13 +22,17 @@
                 window.location.href = "data-visualization#f=1990|2014&i=" + obj.id + "&c=line&r=dos_region:all";
 
             }
-            // alert("selected indicator")
+            //alert(obj.id)
         }
     }
 
     ko.applyBindings(model);
 
-    var searchKeyUpHandler = function() {
+    var searchKeyUpHandler = function(e) {
+		
+		if (e.keyCode == 13) {
+			$(".main-search-results span").first().click();
+		} else {
 
             var value = $(".main-search")[0].value;
 
@@ -64,11 +68,13 @@
                     q: value
                 },
                 success: function(response) {
-                    searchHandler(response, value)
+					//test data for dev
+					response = {"totaldatasets": 2, "totalcountries": 0, "data": {"indicators": {"gdp_growth": "GDP Growth", "gdp_total": "GDP, total"}, "countries": {}}};
+					searchHandler(response, value);
                 }
             });
-
-        }
+		}
+    }
         //search event
     $(".main-search").keyup(searchKeyUpHandler);
 
@@ -84,8 +90,8 @@
 
 
     var searchHandler = function(response, value) {
-
-        //current search type
+		
+		//current search type
         var searchType = model.searchType();
 
         model.searchResults.removeAll();
