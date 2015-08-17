@@ -146,7 +146,7 @@ def update(name):
         require.dataset.update(dataset)
         schema = dataset_schema(ValidationState(dataset))
         data = schema.deserialize(api_form_data())
-        print data
+
         dataset.update(data)
         db.session.commit()
         #clear_index_cache()
@@ -356,12 +356,14 @@ def update_model_createnew(datasetname):
 
         sourcefile = SourceFile(rawfile = upload_source_path)
         db.session.add(sourcefile)
+        oroperations = None
 
         if basesource:
             if basesource.rawfile:
                 basesource.rawfile.delete()
             basesource.rawfile = sourcefile
             source = basesource
+            oroperations = source.getORInstructions()
             source.reload_openrefine()
         else:
             source = Source(dataset=dataset, name=data['name'], url=None, rawfile=sourcefile)
@@ -373,6 +375,7 @@ def update_model_createnew(datasetname):
             source = basesource
             source.name = data['name']
             source.url = data['url']
+            oroperations = source.getORInstructions()
             source.reload_openrefine()
             #maybe reload the OpenRefine?
             #trigger reload
@@ -381,6 +384,7 @@ def update_model_createnew(datasetname):
             db.session.add(source)
     else:
         source = basesource
+        oroperations = source.getORInstructions()
         source.reload_openrefine()
 
 
@@ -392,11 +396,11 @@ def update_model_createnew(datasetname):
             dbsave[p] = p 
         dataset.prefuncs = dbsave
 
-    #dataset.managers.append(current_user)
-    
-    
     db.session.commit()
 
+    # if oroperations:
+    #     source.applyORInstructions({'data':oroperations})
+    
     return jsonify(source)
 
 

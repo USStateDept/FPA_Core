@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 import json
 import io
@@ -17,6 +18,8 @@ from flask import current_app
 #from settings import OPENREFINE_PUBLIC
 
 from openspending.preprocessors.ORhelper import RefineProj
+log = logging.getLogger(__name__)
+
 
 
 class Source(db.Model):
@@ -66,7 +69,7 @@ class Source(db.Model):
             refineproj = self.get_or_create_ORProject()
             refineproj.refineproj.delete()
         except Exception, e:
-            print "tried to delete OR but failed.  Probably doesn't exist"
+            log.info("Could not find source for %s"%self.name)
         self.ORid = None
         self.ORid = self.get_or_create_ORProject().refineproj.project_id
 
@@ -96,7 +99,7 @@ class Source(db.Model):
     def applyORInstructions(self, ORoperations):
         refineproj = self.get_or_create_ORProject()
         if 'data' not in ORoperations.keys():
-            print "got OR instrutions without data"
+            log.warn("Reqeusted OR without data")
             return False
         #check this ia valid or operations with the operations attr
         myoperations = []
@@ -141,10 +144,9 @@ class Source(db.Model):
     def _load_model(self):
         print "building the model"
         if not self.dataset:
-            print "not dataset attached"
+            log.warn("No Dataset available for %s"%self.name)
             return
         if len(self.dataset.mapping.get('mapping', {}).keys()) > 0:
-            print "building the model", self.name
             self.model_cache = Model(self)
 
     def delete(self):
@@ -152,14 +154,14 @@ class Source(db.Model):
             refineproj = self.get_or_create_ORProject()
             refineproj.refineproj.delete()
         except Exception, e:
-            print "doesn't have ORid", e
+            log.warn("No OR for Source %s"%self.name)
 
         #delete the source data from the tables
         try:
             if self.model:
                 self.model.drop()
         except Exception, e:
-            print "doesn't have model", e
+            log.info("Source has no model to drop %s"%self.name)
 
         db.session.delete(self)
         db.session.commit()
