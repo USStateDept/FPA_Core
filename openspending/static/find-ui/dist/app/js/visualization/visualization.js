@@ -145,7 +145,7 @@
     var indicatorDataLoadHandler = function(response) {
 
         var highChartsJson = window.prepareHighchartsJson(response, model.activeChart(), model.activeIndicators(), model.activeGroup(), model.activeRegion());
-console.log("here");
+        console.log("here");
         model.activeData(highChartsJson);
 
         var highChartsJson = model.activeData();

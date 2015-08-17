@@ -73,7 +73,7 @@ var act;
     window.utils.updateHash = function(hashObj) {
 
         var result = decodeURIComponent($.param(hashObj));
-        window.location.hash = result; 
+        window.location.hash = result;
     }
 
     window.utils.bindIndicators = function(response, model) {
@@ -218,7 +218,7 @@ var act;
         model.sourcesModel(sourcesModel);
         model.indicatorsModel(indicatorsModel);
         model.indicatorsModelMaster(_.clone(indicatorsModel, true));
-    }
+    };
 
     window.utils.bindCountries = function(response, model) {
 
@@ -312,7 +312,7 @@ var act;
         model.countriesModelMaster(_.clone(response.data, true));
 
         model.activeGroup(countryGroupings[0]);
-    }
+    };
 
     window.utils.removeOnMap = function(model, geounits) { //clear a single country
         // debugger;
@@ -329,33 +329,33 @@ var act;
         // window.utils.highlightOnMap(vizModel, act);
         // var level = "sovereignt";        
         // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
-    },
+    };
 
     window.utils.clearOnMap = function(model) { // clear all of map
         // debugger;
 
-        var level = "sovereignt";        
+        var level = "sovereignt";
         window.map.removeLayer(window.visualization.geoJsonLayers[level]);
-    },
+    };
 
-    window.utils.highlightOnMapViz = function(country,region,gjson){
-        
+    window.utils.highlightOnMapViz = function(country, region, gjson) {
+
         var geojson = gjson['features'];
+
         var featuresAdded = [];
-       
+
         var level = "sovereignt";
 
-        
-        debugger;
+        //debugger;
         //console.log(window.loader.indicator);
-       
+
         var style = function(feature) {
 
-             //console.log("*********feature" + feature);
-            if ( country==feature.properties[level].toLowerCase()   ) {
-                
+            //console.log("*********feature" + feature);
+            if (country == feature.properties[level].toLowerCase()) {
+
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
-                
+                //debugger;
                 featuresAdded.push(polygon);
                 return {
                     weight: 2,
@@ -390,13 +390,13 @@ var act;
             onEachFeature: onEachFeature,
             style: style
         });
-        
+
         map.addLayer(window.loader.geoJsonLayers[level]);
         debugger;
         //window.utils.addLegend();
-    },
+    };
 
-  /*  window.utils.getColor=function(d) {
+    /*  window.utils.getColor=function(d) {
     return d > 1000 ? '#800026' :
            d > 500  ? '#BD0026' :
            d > 200  ? '#E31A1C' :
@@ -407,27 +407,29 @@ var act;
                       '#FFEDA0';
 },*/
 
-window.utils.getColor=function(d) {
-    console.log(d);
-    debugger;
-    d=d+5000;
-    return d > 50000 ? '#800026' :
-           d > 40000  ? '#BD0026' :
-           d > 30000  ? '#E31A1C' :
-           d > 20000  ? '#FC4E2A' :
-           d > 10000   ? '#FD8D3C' :
-           d > 5000   ? '#FEB24C' :
-           d > 1000   ? '#FED976' :
-                      '#FFEDA0';
-},
+    window.utils.getColor = function(d) {
+        console.log(d);
+        debugger;
+        d = d + 5000;
+        return d > 50000 ? '#800026' :
+            d > 40000 ? '#BD0026' :
+            d > 30000 ? '#E31A1C' :
+            d > 20000 ? '#FC4E2A' :
+            d > 10000 ? '#FD8D3C' :
+            d > 5000 ? '#FEB24C' :
+            d > 1000 ? '#FED976' :
+            '#FFEDA0';
+    };
 
-window.utils.addLegend=function(){
-var legend = L.control({position: 'bottomleft'});
+    window.utils.addLegend = function() {
+        var legend = L.control({
+            position: 'bottomleft'
+        });
 
-        legend.onAdd = function (map) {
-
+        legend.onAdd = function(map) {
+            debugger;
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0,1000, 5000, 10000, 20000, 30000, 40000, 50000],
+                grades = [0, 1000, 5000, 10000, 20000, 30000, 40000, 50000],
                 labels = [],
                 from, to;
 
@@ -446,11 +448,11 @@ var legend = L.control({position: 'bottomleft'});
 
         legend.addTo(map);
 
-},
+    };
 
     window.utils.highlightOnMap = function(model, geounit) {
         // console.log("Geounit from highlightOnMap is: " + JSON.stringify(geounit));
-        
+
         var featuresAdded = [];
         //if all then select all countries in countriesModel, else activeCountries
         var isCountry = geounit.iso_a2;
@@ -465,7 +467,7 @@ var legend = L.control({position: 'bottomleft'});
 
         //first remove the layer
         var activeCountries = model.activeCountries();
-        act=activeCountries;
+        act = activeCountries;
         // console.log("Active countries is: " + JSON.stringify(activeCountries));
         // console.log("Act is: " + JSON.stringify(act));
         var listOfLabels = _.map(activeCountries, function(_a) {
@@ -583,7 +585,7 @@ var legend = L.control({position: 'bottomleft'});
     }
 
     window.utils.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, yearsExtremesForData) {
-		//debugger;
+        //debugger;
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
 
@@ -629,9 +631,9 @@ var legend = L.control({position: 'bottomleft'});
 
         //debugger;
         var seriesArray = [];
-		if (window.utils.masterCells.length == 0)
-			window.utils.masterCells = window.utils.masterCells.concat(cells);
-		//debugger;
+        if (window.utils.masterCells.length == 0)
+            window.utils.masterCells = window.utils.masterCells.concat(cells);
+        //debugger;
         var _cells = window.utils.masterCells;
 
         _.forEach(_cells, function(c) {
@@ -645,39 +647,40 @@ var legend = L.control({position: 'bottomleft'});
                 series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
             }
         });
-		
-		var titleArray = _.map(indicatorsMeta, function(meta) {
+
+        var titleArray = _.map(indicatorsMeta, function(meta) {
             return meta[0].label;
         });
-		
-		var title = titleArray.join(" and ");
-		
-		var subtitleObj = _.map(indicatorsMeta, function(meta) {
-			return meta = {
-				"label" : meta[0].label,
-				"url" : meta[0].url,
-				"dataorg" : meta[0].dataorg
-			};
-		});
-		
-		var subtitleArray = _.map(subtitleObj, function(subtitleArray, i){
-			var source = subtitleObj[i].dataorg || '-';
-			//return subtitleArray = subtitleObj[i].label + ' (<a href="'+subtitleObj[i].url+'" style="color:#852224" target="_blank">'+source+'</a>)';
-			return subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">'+source+'</a>)';
-		});
-		//debugger;
-		var subtitle = "Sources: " + subtitleArray.join(", ");
+
+        var title = titleArray.join(" and ");
+
+        var subtitleObj = _.map(indicatorsMeta, function(meta) {
+            return meta = {
+                "label": meta[0].label,
+                "url": meta[0].url,
+                "dataorg": meta[0].dataorg
+            };
+        });
+
+        var subtitleArray = _.map(subtitleObj, function(subtitleArray, i) {
+            var source = subtitleObj[i].dataorg || '-';
+            //return subtitleArray = subtitleObj[i].label + ' (<a href="'+subtitleObj[i].url+'" style="color:#852224" target="_blank">'+source+'</a>)';
+            return subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">' + source + '</a>)';
+        });
+        //debugger;
+        var subtitle = "Sources: " + subtitleArray.join(", ");
 
         var counter = 1;
         var countriesArr = [];
-		Object.size = function(obj) {
-			var size = 0, key;
-			for (key in obj) {
-				if (obj.hasOwnProperty(key)) size++;
-			}
-			return size;
-		};
-		var size = Object.size(series);
+        Object.size = function(obj) {
+            var size = 0,
+                key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        };
+        var size = Object.size(series);
         for (var countryName in series) {
             var visible = false;
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
@@ -685,7 +688,7 @@ var legend = L.control({position: 'bottomleft'});
             //  }
             //window.averageSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
-			//debugger;
+            //debugger;
             seriesArray.push({
                 name: countryName,
                 data: series[countryName],
@@ -769,74 +772,82 @@ var legend = L.control({position: 'bottomleft'});
         // size on bubble would be the third indicator
         // user should be able to switch between the x, y and z
         var latestYear = yearsExtremesForData[1];
-		var firstYear = yearsExtremesForData[0];
-		
+        var firstYear = yearsExtremesForData[0];
+
         if (type == "scatter") {
 
             seriesArray = [];
-			
-			//debugger;
-			
+
+            //debugger;
+
             var indicator1 = indicators[0];
             var indicator2 = indicators[1];
 
-			series = [];
-			var globalType;
-			var indicatorSuffix;
-			
-			for (i=0; i < 3; i ++){
-				switch(i) {
-					case 0:
-						globalType = "Global Minimum";
-						indicatorSuffix = "min";
-						break;
-					case 1:
-						globalType = "Global Maximum";
-						indicatorSuffix = "max";
-						break;
-					case 2:
-						globalType = "Global Average";
-						indicatorSuffix = "avg";
-						break;
-				}
-				dataArray = [];
-				//debugger;
-				_.forEach(statsCells, function(c) {
-					//if (c.geometry__time <= latestYear)
-					dataArray.push({x:c[indicator1 + "__amount_" + indicatorSuffix], y:c[indicator2 + "__amount_" + indicatorSuffix], year:c.geometry__time});
-				});
-				var visible = size == 3 ? true : false;
-				series.push({
-					name: globalType,
-					data: dataArray,
-					visible: visible,
-					tooltip: {
-						pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}' 
-					},
-				});
-			}
-			//debugger;
+            series = [];
+            var globalType;
+            var indicatorSuffix;
+
+            for (i = 0; i < 3; i++) {
+                switch (i) {
+                    case 0:
+                        globalType = "Global Minimum";
+                        indicatorSuffix = "min";
+                        break;
+                    case 1:
+                        globalType = "Global Maximum";
+                        indicatorSuffix = "max";
+                        break;
+                    case 2:
+                        globalType = "Global Average";
+                        indicatorSuffix = "avg";
+                        break;
+                }
+                dataArray = [];
+                //debugger;
+                _.forEach(statsCells, function(c) {
+                    //if (c.geometry__time <= latestYear)
+                    dataArray.push({
+                        x: c[indicator1 + "__amount_" + indicatorSuffix],
+                        y: c[indicator2 + "__amount_" + indicatorSuffix],
+                        year: c.geometry__time
+                    });
+                });
+                var visible = size == 3 ? true : false;
+                series.push({
+                    name: globalType,
+                    data: dataArray,
+                    visible: visible,
+                    tooltip: {
+                        pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}'
+                    },
+                });
+            }
+            //debugger;
             _.forEach(_cells, function(c) {
-				//debugger;
-				if (latestYear == c.year) {
-					dataArray = [];
-					_.forEach(_cells, function(d) {
-						if (c.region == d.region && d.year >= firstYear && d.year <= latestYear) {
-							if (!!d[indicator1 + "__amount_" + dataType]  && !!d[indicator2 + "__amount_" + dataType])
-								dataArray.push({x:d[indicator1 + "__amount_" + dataType], y:d[indicator2 + "__amount_" + dataType], year:d.year});
-						}
-					});
-					//debugger;
-					series.push({
-						name: c.region,
-						data: dataArray,
-						tooltip: {
-							pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}' 
-						},
-					});
-				}
+                //debugger;
+                if (latestYear == c.year) {
+                    dataArray = [];
+                    _.forEach(_cells, function(d) {
+                        if (c.region == d.region && d.year >= firstYear && d.year <= latestYear) {
+                            if (!!d[indicator1 + "__amount_" + dataType] && !!d[indicator2 + "__amount_" + dataType])
+                                dataArray.push({
+                                    x: d[indicator1 + "__amount_" + dataType],
+                                    y: d[indicator2 + "__amount_" + dataType],
+                                    year: d.year
+                                });
+                        }
+                    });
+                    //debugger;
+                    series.push({
+                        name: c.region,
+                        data: dataArray,
+                        tooltip: {
+                            pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}'
+                        },
+                    });
+                }
             });
-			
+
             var jsonScatter = {
 
                 chart: {
@@ -847,9 +858,9 @@ var legend = L.control({position: 'bottomleft'});
                 title: {
                     text: title
                 },
-				subtitle: {
-					text: subtitle
-				},
+                subtitle: {
+                    text: subtitle
+                },
                 xAxis: {
                     title: {
                         enabled: true,
@@ -867,8 +878,8 @@ var legend = L.control({position: 'bottomleft'});
                 series: series
             }
         }
-		
-		if (type == "bubble") {
+
+        if (type == "bubble") {
 
             seriesArray = [];
 
@@ -941,10 +952,10 @@ var legend = L.control({position: 'bottomleft'});
                 title: {
                     text: title
                 },
-				
-				subtitle: {
-					text: subtitle
-				},
+
+                subtitle: {
+                    text: subtitle
+                },
 
                 xAxis: {
                     //categories: categories
@@ -970,7 +981,7 @@ var legend = L.control({position: 'bottomleft'});
                 series: seriesArray
             }
         }
-		
+
         if (type == "bar") {
             //debugger;
 
@@ -1020,7 +1031,7 @@ var legend = L.control({position: 'bottomleft'});
                 name: indicatorsMeta[0][0].label,
                 data: data
             }];
-            
+
             var jsonBar = {
                 chart: {
                     type: 'column'
@@ -1051,16 +1062,16 @@ var legend = L.control({position: 'bottomleft'});
                     enabled: false
                 },
                 tooltip: {
-                    formatter: function () {
+                    formatter: function() {
                         var number = this.point.y
-                        return indicatorsMeta[0][0].label+'<br/>'+this.key+': <b>'+Math.floor(this.point.y)+'</b>'
+                        return indicatorsMeta[0][0].label + '<br/>' + this.key + ': <b>' + Math.floor(this.point.y) + '</b>'
                     }
                 },
                 series: seriesArray
             }
 
         }
-        
+
         var json;
         switch (type) {
             case "line":
@@ -1072,7 +1083,7 @@ var legend = L.control({position: 'bottomleft'});
             case "bubble":
                 json = jsonBubble;
                 break;
-			case "scatter":
+            case "scatter":
                 json = jsonScatter;
                 break;
         }
