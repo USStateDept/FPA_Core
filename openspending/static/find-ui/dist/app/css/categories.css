@@ -1,5 +1,5 @@
 .app .icon-category-70:after {
-  content: '\e608';
+  content: url("../images/filecabinet.png") center center no-repeat;
 }
 .app .icon-category-10:after,
 .app .icon-category-peace-and-security:after {
@@ -32,7 +32,7 @@
 }
 .app .icon-category-80:after,
 .app .icon-category-humanitarian-assistance:after {
-  content: '\e605';
+  content: '\e608';
 }
 .app [class^="icon-"],
 .app [class*=" icon-"] {
