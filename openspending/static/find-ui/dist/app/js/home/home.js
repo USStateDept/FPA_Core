@@ -29,50 +29,10 @@
     ko.applyBindings(model);
 
     var searchKeyUpHandler = function(e) {
-		
 		if (e.keyCode == 13) {
 			$(".main-search-results span").first().click();
 		} else {
-
-            var value = $(".main-search")[0].value;
-
-            var url = "/api/3/search/countries";
-
-            switch (model.searchType()) {
-
-                case "countries":
-                    url = "/api/3/search/countries";
-                    break;
-
-                case "indicators":
-                    url = "/api/3/search/indicators";
-                    break;
-
-                default:
-                    url = "/api/3/search";
-                    break;
-            }
-
-            model.searchValue(value);
-            if (value.length < 2) {
-                model.searchResults.removeAll();
-                return;
-            }
-
-            $.ajax({
-                url: url,
-                jsonp: "callback",
-                dataType: "jsonp",
-                //dataType: "json",
-                data: {
-                    q: value
-                },
-                success: function(response) {
-					//test data for dev
-					//response = {"totaldatasets": 2, "totalcountries": 0, "data": {"indicators": {"gdp_growth": "GDP Growth", "gdp_total": "GDP, total"}, "countries": {}}};
-					searchHandler(response, value);
-                }
-            });
+			searchAjax();
 		}
     }
         //search event
@@ -84,10 +44,52 @@
 
         model.searchResults.removeAll();
         model.searchType(value);
-        searchKeyUpHandler();
+        searchAjax();
 
     });
+	
+	var searchAjax = function(){
+		
+		var value = $(".main-search")[0].value;
 
+		var url = "/api/3/search/countries";
+
+		switch (model.searchType()) {
+
+			case "countries":
+				url = "/api/3/search/countries";
+				break;
+
+			case "indicators":
+				url = "/api/3/search/indicators";
+				break;
+
+			default:
+				url = "/api/3/search";
+				break;
+		}
+
+		model.searchValue(value);
+		if (value.length < 2) {
+			model.searchResults.removeAll();
+			return;
+		}
+
+		$.ajax({
+			url: url,
+			jsonp: "callback",
+			dataType: "jsonp",
+			//dataType: "json",
+			data: {
+				q: value
+			},
+			success: function(response) {
+				//test data for dev
+				//response = {"totaldatasets": 2, "totalcountries": 0, "data": {"indicators": {"gdp_growth": "GDP Growth", "gdp_total": "GDP, total"}, "countries": {}}};
+				searchHandler(response, value);
+			}
+		});
+	}
 
     var searchHandler = function(response, value) {
 		
