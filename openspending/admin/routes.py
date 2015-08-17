@@ -9,18 +9,20 @@ from wtforms.fields import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import DataRequired, ValidationError
 from flask import flash, current_app
 import flask_admin as admin
-from flask_admin import form, AdminIndexView,expose
+from flask_admin import form, AdminIndexView,expose, BaseView
 
 from flask_admin.model.form import InlineFormAdmin
 from flask_admin.contrib.sqla.form import InlineModelConverter
 from flask_admin.contrib.sqla.fields import InlineModelFormList
 from flask_admin.form import RenderTemplateWidget
+from flask_admin.model.template import macro
 #from flask.ext.superadmin.model.backends.sqlalchemy.orm import AdminModelConverter as _AdminModelConverter
 #from flask.ext import superadmin
 #from wtforms.ext.sqlalchemy.orm import converts
 
 from openspending.model import Account
 from openspending.auth import require
+from openspending.admin.helpers import LoadReport
 from werkzeug.security import generate_password_hash
 
 from jinja2 import Markup
@@ -36,8 +38,6 @@ from slugify import slugify
 #import copy
 
 #see http://flask-admin.readthedocs.org/en/latest/api/mod_model/
-
-
 
 
 class AccountView(sqla.ModelView):
@@ -357,7 +357,29 @@ class SourcesView(sqla.ModelView):
     def is_accessible(self):
         return require.account.is_admin()
 
+
+class QAListView(sqla.ModelView):
+    column_searchable_list = ('name',)
+    # columns list Data source link to admin page, has data, source_url, run log with cleaned and source, date injested
+    def is_accessible(self):
+        return require.account.is_admin()
+    can_delete = False
+    can_create = False
+    can_edit= False
+
+    column_formatters = dict(name=macro('render_qalist'),
+                            source_url=macro('render_sourceurl'),
+                            report_url = macro('render_report'),
+                            number_errors=macro('num_log_records'))
+    #column_formatters = dict(dataset_admin_url=macro('render_price'))
+    column_list= ('name', 'source_url', 'report_url', 'number_errors',)
+    list_template = 'adminsection/qalist.html'
+
+
+
+
 class IndexView(AdminIndexView):
+
     def is_accessible(self):
         return require.account.is_admin()
 
@@ -367,7 +389,10 @@ class IndexView(AdminIndexView):
         
 def register_admin(app, db):
 
-    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview, Feedback, Tags
+    from openspending.model import Source, Dataset, \
+                                    DataOrg, MetadataOrg, Account, \
+                                    Run, SourceFile, LogRecord, Dataview, \
+                                    Feedback, Tags
         
     # flaskadmin = admin.Admin(app,
     #                     name="FIND Admin", 
@@ -412,6 +437,8 @@ def register_admin(app, db):
     flaskadmin.add_view(TagsView(Tags, db.session, endpoint='tagsadmin', category='SysAdmin'))
 
     flaskadmin.add_view(SourcesView(Dataset, db.session, endpoint='sourcesadmin', category='Indicators', name="Sources"))
+
+    flaskadmin.add_view(QAListView(Source, db.session, category='DataLoading', endpoint="qaview", name="QA Links"))
 
     #flaskadmin.add_view(DTView(Dataset, db.session, endpoint='dtadmin', category='Indicators', name="DT"))
     
