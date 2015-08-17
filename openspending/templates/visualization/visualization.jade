@@ -89,7 +89,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
             .row
-              p
+              h5.col-md-12.strong Global Min/Max/Avg is the default if no countries are selected
             .row
               .col-md-12
                 input.btn-block#filterCountries(data-bind="value:filterCountry,valueUpdate:'keyup',event:{keyup:filterCountries},visible:!groupByRegion()" placeHolder="Find a Country")

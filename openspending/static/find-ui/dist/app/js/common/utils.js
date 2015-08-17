@@ -670,6 +670,14 @@ var legend = L.control({position: 'bottomleft'});
 
         var counter = 1;
         var countriesArr = [];
+		Object.size = function(obj) {
+			var size = 0, key;
+			for (key in obj) {
+				if (obj.hasOwnProperty(key)) size++;
+			}
+			return size;
+		};
+		var size = Object.size(series);
         for (var countryName in series) {
             var visible = false;
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
@@ -677,10 +685,11 @@ var legend = L.control({position: 'bottomleft'});
             //  }
             //window.averageSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
+			//debugger;
             seriesArray.push({
                 name: countryName,
                 data: series[countryName],
-                visible: counter > 3 ? true : false,
+                visible: counter > 3 || size == 3 ? true : false,
                 zIndex: counter++
             });
 
@@ -796,10 +805,11 @@ var legend = L.control({position: 'bottomleft'});
 					//if (c.geometry__time <= latestYear)
 					dataArray.push({x:c[indicator1 + "__amount_" + indicatorSuffix], y:c[indicator2 + "__amount_" + indicatorSuffix], year:c.geometry__time});
 				});
+				var visible = size == 3 ? true : false;
 				series.push({
 					name: globalType,
 					data: dataArray,
-					visible: false,
+					visible: visible,
 					tooltip: {
 						pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}' 
 					},
@@ -915,7 +925,7 @@ var legend = L.control({position: 'bottomleft'});
                 seriesArray.push({
                     name: countryName,
                     data: [series[countryName].data],
-                    visible: counter > 3 ? true : false,
+                    visible: counter > 3 || size == 3 ? true : false,
                     zIndex: counter++
                 });
             }
