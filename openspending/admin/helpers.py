@@ -78,23 +78,23 @@ class LoadReport(object):
         
         url = "/api/slicer/cube/geometry/cubes_aggregate?cubes=" + self.dataset.name + "&drilldown=geometry__time|geometry__country_level0@name&format=csv"
 
-        # Fill in your details here to be posted to the login form.
-        LOCKDOWN_FORCE = current_app.config.get("LOCKDOWNUSER", False)
-        LOCKDOWNUSER = current_app.config.get("LOCKDOWNUSER")
-        LOCKDOWNPASSWORD = current_app.config.get("LOCKDOWNUSER")
-        if LOCKDOWN_FORCE:
-            payload = {
-                'username': LOCKDOWNUSER,
-                'password': LOCKDOWNPASSWORD
-            }
+        with client:
+            # Fill in your details here to be posted to the login form.
+            LOCKDOWN_FORCE = current_app.config.get("LOCKDOWN_FORCE", False)
+            LOCKDOWNUSER = current_app.config.get("LOCKDOWNUSER")
+            LOCKDOWNPASSWORD = current_app.config.get("LOCKDOWNPASSWORD")
+            if LOCKDOWN_FORCE:
+                payload = {
+                    'username': LOCKDOWNUSER,
+                    'password': LOCKDOWNPASSWORD
+                }
 
-            client.post(url_for('home.lockdown'), data=payload)
+                client.post(url_for('home.lockdown'), data=payload, follow_redirects=True)
 
-        print client
-        try:
-            postloadvalue = client.get(url).data
-        except Exception, e:
-            log.warn("Could Not find post load content for " + dataset.name)
+            try:
+                postloadvalue = client.get(url, follow_redirects=True).data
+            except Exception, e:
+                log.warn("Could Not find post load content for " + dataset.name)
 
         try:
             self.zf.writestr("postloadvalue.csv", postloadvalue)
