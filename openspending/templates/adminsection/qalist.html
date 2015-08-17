@@ -15,6 +15,21 @@
 
 {% endmacro %}
 
+{% macro render_report(model, column) %}
+    <a target='_blank' href='{{ url_for("findadmin.report", id=model.dataset.id) }}'>QA Report</a>
+
+{% endmacro %}
+
+{% macro num_log_records(model, column) %}
+    {% if model.dataset.source.runs.first() %}
+        {{ model.dataset.source.runs.first().records.count() }}
+    {% else %}
+        Error
+    {% endif %}
+
+{% endmacro %}
+
+
 {% macro render_sourceurl(model, column) %}
     {% if model.rawfile %}
         <a target="_blank" href="{{ model.rawfile.get_url() }}">Uploaded File</a>

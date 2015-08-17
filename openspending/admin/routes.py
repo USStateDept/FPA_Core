@@ -9,7 +9,7 @@ from wtforms.fields import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import DataRequired, ValidationError
 from flask import flash, current_app
 import flask_admin as admin
-from flask_admin import form, AdminIndexView,expose
+from flask_admin import form, AdminIndexView,expose, BaseView
 
 from flask_admin.model.form import InlineFormAdmin
 from flask_admin.contrib.sqla.form import InlineModelConverter
@@ -22,6 +22,7 @@ from flask_admin.model.template import macro
 
 from openspending.model import Account
 from openspending.auth import require
+from openspending.admin.helpers import LoadReport
 from werkzeug.security import generate_password_hash
 
 from jinja2 import Markup
@@ -362,11 +363,20 @@ class QAListView(sqla.ModelView):
     # columns list Data source link to admin page, has data, source_url, run log with cleaned and source, date injested
     def is_accessible(self):
         return require.account.is_admin()
+    can_delete = False
+    can_create = False
+    can_edit= False
+
     column_formatters = dict(name=macro('render_qalist'),
-                            source_url=macro('render_sourceurl'))
+                            source_url=macro('render_sourceurl'),
+                            report_url = macro('render_report'),
+                            number_errors=macro('num_log_records'))
     #column_formatters = dict(dataset_admin_url=macro('render_price'))
-    column_list= ('name', 'source_url', )
+    column_list= ('name', 'source_url', 'report_url', 'number_errors',)
     list_template = 'adminsection/qalist.html'
+
+
+
 
 class IndexView(AdminIndexView):
 
@@ -379,7 +389,10 @@ class IndexView(AdminIndexView):
         
 def register_admin(app, db):
 
-    from openspending.model import Source, Dataset, DataOrg, MetadataOrg, Account, Run, SourceFile, LogRecord, Dataview, Feedback, Tags
+    from openspending.model import Source, Dataset, \
+                                    DataOrg, MetadataOrg, Account, \
+                                    Run, SourceFile, LogRecord, Dataview, \
+                                    Feedback, Tags
         
     # flaskadmin = admin.Admin(app,
     #                     name="FIND Admin", 

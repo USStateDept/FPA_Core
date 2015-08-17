@@ -1,9 +1,15 @@
+import logging
 import tempfile
 import zipfile
 import io
+import os
 import requests
+import csv
 
-from flask import current_app
+from flask import current_app, url_for
+
+log = logging.getLogger(__name__)
+
 
 OUTPUT_TEXT = """
     %(label)s
@@ -12,6 +18,8 @@ OUTPUT_TEXT = """
 
 """
 
+
+#from openspending.admin.helpers import LoadReport;from openspending.model import Dataset;a=Dataset.all()[6];lr =LoadReport(a);lr.get_output()
 
 class LoadReport(object):
     def __init__(self, dataset=None):
@@ -25,22 +33,28 @@ class LoadReport(object):
 
         self._buildzf()
         self._write_basefile()
-        self._write_preloaddata()
+        #self._write_preloaddata()
+        self._write_logs()
+        self._write_loaded_data()
 
     def _buildzf(self):
         self.namedfile = tempfile.NamedTemporaryFile(mode='wb', delete=False)
-        self.zf = zipfile.ZipFile(f, "w")
+        self.zf = zipfile.ZipFile(self.namedfile, "w")
 
     def _write_basefile(self):
-        zf.writestr("datainfo.csv", OUTPUT_TEXT%dict(label=self.dataset.label))
+        self.zf.writestr("metadata.csv", OUTPUT_TEXT%dict(label=self.dataset.label))
 
     def _write_logs(self):
+
+        if not self.dataset.source.runs.first():
+            self.zf.writestr("errorlog.csv", "This dataset has not been loaded yet.")
+            return 
 
         datalogs = self.dataset.source.runs.first().records_as_json()
 
 
         if not len(datalogs):
-            zf.writestr("loadinglog.csv", "All is well")
+            self.zf.writestr("errorlog.csv", "No Errors to report")
             return
 
         
@@ -52,7 +66,7 @@ class LoadReport(object):
 
         for row in datalogs:
             dw.writerow(row)
-        self.zf.writestr("loadinglog.csv", outputfile.getvalue())
+        self.zf.writestr("errorlog.csv", outputfile.getvalue())
 
     def _write_preloaddata(self):
         preloadvalue = self.dataset.source.getORFile().getvalue()
@@ -60,8 +74,9 @@ class LoadReport(object):
 
 
     def _write_loaded_data(self):
-        current_app.test_client()
+        client = current_app.test_client()
         
+        url = "/api/slicer/cube/geometry/cubes_aggregate?cubes=" + self.dataset.name + "&drilldown=geometry__time|geometry__country_level0@name&format=csv"
 
         # Fill in your details here to be posted to the login form.
         LOCKDOWN_FORCE = current_app.config.get("LOCKDOWNUSER", False)
@@ -73,59 +88,35 @@ class LoadReport(object):
                 'password': LOCKDOWNPASSWORD
             }
 
-            # Use 'with' to ensure the session context is closed after use.
-            with requests.Session() as s:
-                try:
-                    p = s.post('http://localhost:5000/lockdown', data=payload)
+            client.post(url_for('home.lockdown'), data=payload)
 
-                    # An authorised request.
-                    postloadvalue = s.get(url).content
-                except Exception, e:
-                    log.warn("could not get authorized postload value " + str(e))
-        else:
-
-            try:
-                postloadvalue = requests.get(url).content
-            except Exception, e:
-                log.warn("Could Not find post load content for " + dataset.name)
+        print client
+        try:
+            postloadvalue = client.get(url).data
+        except Exception, e:
+            log.warn("Could Not find post load content for " + dataset.name)
 
         try:
-            zf.writestr(dataset.name + "/postloadvalue.csv", postloadvalue)
+            self.zf.writestr("postloadvalue.csv", postloadvalue)
         except Exception, e:
+            print e
             log.warn("could not write postload value")
 
+    def get_output(self):
+        #return the zip value as a string
+        self.zf.close()
+        self.namedfile.close()
+        returnstring = ""
+        with open(self.namedfile.name, 'rb') as f:
+            returnstring = f.read()
+        self.cleanup()
+        return returnstring
 
-
-
-
-
-
-
-def output_logs(dataset=None):
-    """
-        zipfile
-         |
-          - dataset info
-          - log records 
-          - output
-    """
-
-    if not dataset:
-        return "No dataset"
-
-    f = tempfile.NamedTemporaryFile(mode='wb', delete=False)
-
-
-
-    zf = zipfile.ZipFile(f, "w")
-
-
-
-
-
-    #write openrefine output
-
-
-    url = "http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=" + dataset.name + "&drilldown=geometry__time|geometry__country_level0@name&format=csv"
+    def cleanup(self):
+        try:
+            os.remove(self.namedfile.name)
+        except:
+            log.info("cannot remove temporary file")
+        #shutils.rm(self.namedfile.path
 
 
