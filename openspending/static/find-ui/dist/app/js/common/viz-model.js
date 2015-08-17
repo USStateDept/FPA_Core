@@ -751,7 +751,7 @@ function rc(){
             "regions": []
         }, {
             "id": "wb_inc_lvl",
-            "label": "World Bank",
+            "label": "Income Groups",
             "regions": []
         }]),
 
