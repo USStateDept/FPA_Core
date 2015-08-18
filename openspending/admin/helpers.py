@@ -8,6 +8,7 @@ import csv
 
 from flask import current_app, url_for
 
+from openspending.model import Dataset
 from openspending.core import db
 
 log = logging.getLogger(__name__)
@@ -193,4 +194,34 @@ class LoadReport(object):
             log.info("cannot remove temporary file")
         #shutils.rm(self.namedfile.path
 
+
+#from openspending.admin.helpers import check_countries;z=check_countries()
+def check_countries():
+    """
+    Check all countries for all datasets to get a complete list of countries 
+    not loaded.
+
+    Output is an array of dicts 
+    """
+    datasets = db.session.query(Dataset).all()
+    outputfile = io.StringIO()
+    outputfile.write(u"Name,Label,DatasetCount\n")
+    resultset = {}
+    for dataset in datasets:
+        try:
+            missingcountries = db.engine.execute("SELECT name, label \
+                                                FROM %s__country_level0 \
+                                                WHERE countryid = 0"%dataset.name).fetchall()
+        except:
+            log.info("Skipped %s"%dataset.name)
+            missingcountries = []
+        for row in missingcountries:
+            if row[0] in resultset.keys():
+                resultset[row[0]][2] +=1
+            else:
+                resultset[row[0]] = [row[0], row[1], 1]
+    for key, res in resultset.iteritems():
+        temprow = [str(x) for x in res]
+        outputfile.write(",".join(temprow) + u"\n")
+    return outputfile.getvalue()
 
