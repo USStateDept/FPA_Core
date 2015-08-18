@@ -263,8 +263,11 @@ def trigger_reset():
     """
     Allow user to trigger a reset of the password in case they forget it
     """
+    if request.form.get("csrf_token",None):
+        values = {"csrf_token": request.form.get('csrf_token')}
+    else:
+        values = {"csrf_token": generate_csrf_token()}
 
-    values = {"csrf_token": generate_csrf_token()}
 
     # If it's a simple GET method we return the form
     if request.method == 'GET':
