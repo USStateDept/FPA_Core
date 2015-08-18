@@ -22,7 +22,7 @@ from openspending.forum.utils.helpers import (get_online_users, time_diff, forma
                                    do_topic_action)
 from openspending.auth.forum import (can_post_reply, can_post_topic,
                                        can_delete_topic, can_delete_post,
-                                       can_edit_post, can_moderate)
+                                       can_edit_post, can_moderate, authenticated_required)
 from openspending.forum.forum.models import (Category, Forum, Topic, Post, ForumsRead,
                                   TopicsRead)
 from openspending.forum.forum.forms import (QuickreplyForm, ReplyForm, NewTopicForm,
@@ -33,9 +33,9 @@ forum = Blueprint("forum", __name__)
 
 
 @forum.route("/")
+@authenticated_required
 def index():
     categories = Category.get_all(user=current_user)
-    print categories
 
     # Fetch a few stats about the forum
     user_count = User.query.count()
@@ -59,6 +59,7 @@ def index():
 
 @forum.route("/category/<int:category_id>")
 @forum.route("/category/<int:category_id>-<slug>")
+@authenticated_required
 def view_category(category_id, slug=None):
     category, forums = Category.\
         get_forums(category_id=category_id, user=current_user)

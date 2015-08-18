@@ -36,6 +36,15 @@ class TestDatasetController(ControllerTestCase):
         response = self.client.get(url_for('home.index'))
         assert '200' in response.status 
 
+    def test_home_about(self):
+        response = self.client.get(url_for('home.about'))
+        assert '200' in response.status 
+
+    def test_home_about(self):
+        response = self.client.get(url_for('home.accessibility'))
+        assert '200' in response.status 
+
+
     def test_home_heartbeat(self):
         response = self.client.get(url_for('home.ping'))
         assert '200' in response.status

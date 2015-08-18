@@ -68,7 +68,7 @@ def check_perm(user, perm, forum, post_user_id=None):
 
 
 def is_authenticated(user):
-    return current_user.is_authenticated and not getattr(current_user, "is_lockdownuser", False)
+    return current_user.is_authenticated and getattr(current_user, 'verified', False) and not getattr(current_user, "is_lockdownuser", False)
 
 def is_moderator(user):
     """Returns ``True`` if the user is in a moderator or super moderator group.

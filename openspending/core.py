@@ -76,7 +76,7 @@ def create_app(**config):
             return redirect("/lockdown", code=302)
         from openspending.model.search import SearchForm
         g.search_form = SearchForm()
-        if request.method == "POST" and request.path not in ["/lockdown"]:
+        if request.method == "POST" and request.path not in ["/lockdown"] and not app.config.get("CSRF_DISABLE", None):
             token = session.get('csrf_token', None)
             resquesttoken = request.form.get('csrf_token', None)
             if request.json and not resquesttoken:
