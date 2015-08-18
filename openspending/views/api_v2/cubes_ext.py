@@ -144,6 +144,20 @@ def aggregate_cubes(star_name):
     else:
         g.prettyprint = current_app.slicer.prettyprint
 
+    if "cluster" in request.args and output_format == "json":
+        clusteragg = request.args.get('clusteragg', 'avg')
+        if len(cubes) > 1 or len(cubes) < 1:
+            log.warn("cluster must have one and only one cube.  This call had %s"%str(cubes))
+        if clusteragg in ['avg', 'min', 'max', 'sum']:
+            clusterfield = "%s__amount_%s"%(cubes[0], clusteragg,) 
+        numclusters = request.args.get('numclusters',5)
+        resultdict= result.to_dict()
+        tempcells = list(result._cells)
+        resultdict['cells'] = tempcells
+        tempresult = get_cubes_breaks(tempcells, clusterfield, method=request.args.get('cluster'), k=numclusters)
+        resultdict.set('cluster', tempresult) 
+        return jsonify(resultdict)
+
     if output_format == "json":
         return jsonify(result)
 
