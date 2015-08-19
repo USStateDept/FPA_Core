@@ -71,7 +71,7 @@
 
 
 
-        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=5&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
         urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
         urlPrefix = urlPrefix.replace(/{yearTo}/g, yearsExtremes[1]);
@@ -233,7 +233,7 @@
         });
     }
 
-    window.loader.changeGroup = function(groupId) {
+    /*window.loader.changeGroup = function(groupId) {
         console.log(window.loader.data);
 
         if (groupId == "all") {
@@ -248,14 +248,13 @@
             //TODO: Leroy
         }
 
-    }
+    }*/
 
     // add indicator data to geojson to render thematically
 
-    var addDataToGeoJson = function(lastGeoJson) {
 
-        var data = window.loader.data;
-        var gjson = lastGeoJson;
+    /*
+    var geoJSONHandler = function(response, type) {
 
         var hashParams = window.utils.getHashParams();
         var yearsFilter = hashParams.f.split("|");
@@ -263,60 +262,6 @@
         var onlyIndicator = indicators[0];
         var regions = hashParams.r.split("|");
         var maxYear = 2013; //yearsFilter[1];
-
-        var dataByRegion = {};
-        _.map(regions, function(_r) {
-            dataByRegion[_r] = 0;
-        })
-
-        _.map(data.cells, function(_c) {
-            if (_c.year == parseInt(maxYear)) {
-                dataByRegion[_c.region] = _c[onlyIndicator + "__amount_avg"];
-            }
-        });
-
-
-        //console.log("data");
-        //console.log(data);
-        //console.log(gjson);
-
-        //what is - 3?
-
-        //Select the value based on year
-        // var currentYear = yearsExtremes
-
-
-
-        // var fifteen = data.cells[data.cells.length - 3];
-        // var region = fifteen.region;
-        // var regionCapitalized = fifteen.region.charAt(0).toUpperCase() + fifteen.region.substring(1);
-        // var indicator = JSON.stringify(data.cells[data.cells.length - 1]);
-        // indicator = indicator.substring(2, indicator.indexOf(':') - 1);
-        // var indicatorVal = fifteen[indicator];
-
-        // var countries = gjson.features;
-
-        //countries=countries.toLowerCase();
-        //gjson.features[0].properties["economic_gender_gap__amount_avg"]=null
-        //debugger;
-        for (var i = 0; i < gjson.features.length; i++) {
-            var _r = gjson.features[i].properties.sovereignt.toLowerCase();
-            if (_.indexOf(regions, _r) > -1) {
-                gjson.features[i].properties[onlyIndicator] = dataByRegion[_r];
-            }
-            /*if (gjson.features[i].properties.sovereignt == regionCapitalized) {
-                gjson.features[i].properties[indicator] = indicatorVal;
-            }*/
-        }
-
-        window.loader.lastGeoJson = gjson;
-        window.loader.indicator = onlyIndicator; //indicator;
-        console.log(window.loader.lastGeoJson);
-        // debugger;
-    }
-
-    var geoJSONHandler = function(response, type) {
-
 
         function onEachFeature(feature, layer) {
 
@@ -337,7 +282,6 @@
 
         window.loader.geoJsonLayers[type] = L.geoJson(response, {
             style: {
-
                 weight: 0, //no border
                 opacity: 1,
                 color: 'gray',
@@ -354,28 +298,17 @@
             }
         }
 
+        //HIGHLIGHT EACH REGION
+        var featuresAdded = [];
+        _.forEach(regions, function(_r) {
+            window.utils.highlightOnMapViz(_r, onlyIndicator, window.loader.lastGeoJson, featuresAdded);
+        });
 
-        var url = window.location.href;
+        window.utils.zoomToFeatures(featuresAdded);
 
-        countryIndex = url.indexOf("r=") + 2;
+    }*/
 
-        var country = url.substring(countryIndex);
-        //console.log(country);
-        var region = null;
-        if (country.indexOf('|') > -1) {
-
-            countries = country.split('|');
-
-            for (var i = 0; i < countries.length; i++) {
-                var currentCountry = countries[i];
-                window.utils.highlightOnMapViz(currentCountry, region, window.loader.lastGeoJson);
-            }
-        } else {
-            window.utils.highlightOnMapViz(country, region, window.loader.lastGeoJson);
-        }
-    }
-
-    window.loader.loadGeoJSON = function(type, handlerFunc) {
+    window.loader.loadGeoJSON = function(type, handlerFunc, cluster) {
 
         url = "/static/json/" + type + "_None.geojson";
         $.ajax({
@@ -386,7 +319,7 @@
 
             },
             success: function(response) {
-                handlerFunc(response, type)
+                handlerFunc(response, type, cluster)
             }
         });
 

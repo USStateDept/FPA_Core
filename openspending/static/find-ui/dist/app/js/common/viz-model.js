@@ -1,4 +1,4 @@
-function rc(){
+function rc() {
 
     var selectedCountry = arguments[0];
     var activeCountries = vizModel.activeCountries();
@@ -235,7 +235,7 @@ function rc(){
 
             var allowMultivariate = ["scatter", "bubble", "radar", "tree"];
 
-            var allowSinglevariate = ["line", "bar","map"];
+            var allowSinglevariate = ["line", "bar", "map"];
 
             var indicators = _.map(vizModel.activeIndicators(), function(indicator) {
                 return indicator.id;
@@ -512,7 +512,7 @@ function rc(){
 
 
             var groupId = arguments[0].id;
-            
+
             window.visualization.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);

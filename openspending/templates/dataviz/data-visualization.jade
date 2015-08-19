@@ -31,15 +31,16 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       button.btn.btn-default.share(data-bind="click:shareUrl")
       button.btn.btn-default.saveVZ(data-bind="click:saveVZ",title="Click to Save this Visualization")
     .col-md-2
-      button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
-      button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
+      span(data-bind="visible:activeChart()!='map'")
+        button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+        button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
     .col-md-2
       .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
   .row
     p
   .row(style="padding:10px")
     .col-md-4
-      span#bar-globals
+      span#bar-globals(data-bind="visible:activeChart()!='map'")
         button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMin",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
         button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMax",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
         button.btn.btn-default.dropdown-toggle#global-avg(data-bind="click:chartBarToggleAvg",type='button', data-toggle='dropdown', aria-expanded='true') Average
@@ -256,6 +257,7 @@ script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}
 script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash-math/lodash.math.js') }}")
 script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")

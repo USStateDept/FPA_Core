@@ -338,32 +338,45 @@ var act;
         window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     };
 
-    window.utils.highlightOnMapViz = function(country, region, gjson) {
+    window.utils.zoomToFeatures = function(features) {
+        var group = new L.featureGroup(features);
+        var bounds = group.getBounds();
+
+        //debugger;
+        var southWestLng = bounds._southWest.lng;
+        var northEastLng = bounds._northEast.lng;
+
+        bounds._southWest.lng = bounds._southWest.lat;
+        bounds._southWest.lat = southWestLng;
+        bounds._northEast.lng = bounds._northEast.lat;
+        bounds._northEast.lat = northEastLng;
+
+
+        map.fitBounds(bounds);
+        // debugger;
+    };
+
+    window.utils.highlightOnMapViz = function(region, cluster, indicator, gjson, featuresAdded) {
 
         var geojson = gjson['features'];
 
-        var featuresAdded = [];
-
-        var level = "sovereignt";
-
-        //debugger;
-        //console.log(window.loader.indicator);
-
         var style = function(feature) {
 
+            var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
             //console.log("*********feature" + feature);
-            if (country == feature.properties[level].toLowerCase()) {
+            if (region == name.toLowerCase()) {
 
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
                 featuresAdded.push(polygon);
+
                 return {
                     weight: 2,
                     opacity: 1,
                     color: '#FFFFFF',
                     //dashArray: '3',
                     fillOpacity: 0.5,
-                    fillColor: window.utils.getColor(feature.properties[window.loader.indicator])
+                    fillColor: window.utils.getColor(feature.properties[indicator], cluster)
                     //fillColor: '#00FF00'////fillColor: '#00FF00'
                 };
             } else {
@@ -383,66 +396,77 @@ var act;
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
-                layer.bindPopup(name + "</br>" + feature.properties[window.loader.indicator]);
+                layer.bindPopup(name + "</br>" + feature.properties[indicator]);
             }
         }
+
+        var level = "sovereignt";
+        /* var isCountry = geounit.iso_a2;
+        var drillDown = false;
+        debugger;*/
+        /* if (isCountry) {
+            level = "sovereignt";
+        } else {
+            level = geounit.geounit.split(":")[0];
+            drillDown = _.indexOf(geounit.geounit.split(":"), "all") > -1;
+        }*/
+
         window.loader.geoJsonLayers[level] = L.geoJson(window.loader.geoJson[level], {
             onEachFeature: onEachFeature,
             style: style
         });
 
         map.addLayer(window.loader.geoJsonLayers[level]);
-        debugger;
+
+
         //window.utils.addLegend();
     };
 
-    /*  window.utils.getColor=function(d) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
-                      '#FFEDA0';
-},*/
 
-    window.utils.getColor = function(d) {
-        console.log(d);
-        debugger;
-        d = d + 5000;
-        return d > 50000 ? '#800026' :
-            d > 40000 ? '#BD0026' :
-            d > 30000 ? '#E31A1C' :
-            d > 20000 ? '#FC4E2A' :
-            d > 10000 ? '#FD8D3C' :
-            d > 5000 ? '#FEB24C' :
-            d > 1000 ? '#FED976' :
-            '#FFEDA0';
+
+    window.utils.getColor = function(d, cluster) {
+
+
+        var breaks = cluster.data;
+        var color = '#CCCCCC'; //default
+        var colorRamp = ['#800026', '#BD0026', '#E31A1C', '#FC4E2A', '#FD8D3C', '#FEB24C', '#FED976', '#FFEDA0'];
+        _.forEach(breaks, function(_b, i) {
+            if (d >= _b) {
+                color = colorRamp[i];
+            }
+        })
+
+        // debugger;
+        return color;
     };
 
-    window.utils.addLegend = function() {
+    window.utils.addLegend = function(cluster) {
+
         var legend = L.control({
-            position: 'bottomleft'
+            position: 'topright'
         });
 
+        var breaks = cluster.data;
+        var labels = cluster.labels;
+        var legendLabels = [];
+        // debugger;
         legend.onAdd = function(map) {
-            debugger;
+            //debugger;
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 1000, 5000, 10000, 20000, 30000, 40000, 50000],
-                labels = [],
-                from, to;
+                grades = breaks;
 
-            for (var i = 0; i < grades.length; i++) {
-                from = grades[i];
-                to = grades[i + 1];
+            _.forEach(breaks, function(_b, i) {
+                //debugger;
+                var from = _.round(_b, 2);
+                var to = _.round(grades[i + 1], 2);
 
-                labels.push(
-                    '<i style="background:' + window.utils.getColor(from + 1) + '"></i> ' +
-                    from + (to ? '&ndash;' + to : '+'));
-            }
+                legendLabels.push(
+                    '<i style="background:' + window.utils.getColor(from + 1, cluster) + '"></i> ' +
+                    from + (to ? ' &ndash; ' + to : '+'));
 
-            div.innerHTML = labels.join('<br>');
+            });
+
+            div.innerHTML = legendLabels.join('<br>');
             return div;
         };
 
@@ -488,7 +512,6 @@ var act;
                 var drillDownLabels = _.map(geounit.regions, function(_a) {
                     return _a.label;
                 });
-
             }
         }
 
