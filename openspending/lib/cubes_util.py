@@ -36,15 +36,16 @@ def get_cubes_breaks(vals, field, method='jenks', k=5):
     arrayvals = arrayvals[arrayvals != np.array(None)]
     if len(arrayvals) == 0:
         return {"labels":[],"data":[]}
+    k = int(k)
     if len(arrayvals) < k:
         k= len(arrayvals)
     classreturn = []
     if method=='equal':
-        classreturn = mapclassify.Equal_Interval(arrayvals, k).bins
+        classreturn = mapclassify.Equal_Interval(arrayvals, k=k).bins
     elif method == 'quantil':
-        classreturn = mapclassify.Quantiles(arrayvals, k).bins
+        classreturn = mapclassify.Quantiles(arrayvals, k=k).bins
     else:
-        classreturn = mapclassify.Fisher_Jenks(arrayvals, k).bins
+        classreturn = mapclassify.Fisher_Jenks(arrayvals, k=k).bins
 
     returnset = {}
     returnset['data'] = [x for x in classreturn]
