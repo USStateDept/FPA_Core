@@ -12,6 +12,7 @@
     <form class="form-horizontal" role="form" method="post">
         <h2>Search</h2>
         <hr>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         {{ form.hidden_tag() }}
         {{ horizontal_field(form.search_types)}}
         {{ horizontal_field(form.search_query)}}

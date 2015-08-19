@@ -47,3 +47,6 @@ openpyxl==2.2.2
 jsmin==2.1.1
 Pygments==2.0.2
 Flask-DebugToolbar==0.10.0
+deps/numpy-1.9.2+mkl-cp27-none-win_amd64.whl
+deps/scipy-0.16.0-cp27-none-win_amd64.whl
+deps/PySAL-1.10.0-py2-none-any.whl

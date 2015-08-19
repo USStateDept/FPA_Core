@@ -43,7 +43,8 @@ nav.navbar.navbar-default.navbar-fixed-top
             li
               p
                 strong Forum
-              a(href="{{ url_for('forum.index') }}") Main Forum            
+              a(href="{{ url_for('forum.index') }}") Forum   
+              a(href="{{ url_for('forum.search') }}") Forum Search       
               a(href="{{ url_for('forum.topictracker') }}") Tracked Topics
             li.divider
             {% if current_user.admin %}

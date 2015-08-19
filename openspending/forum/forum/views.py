@@ -26,7 +26,7 @@ from openspending.auth.forum import (can_post_reply, can_post_topic,
 from openspending.forum.forum.models import (Category, Forum, Topic, Post, ForumsRead,
                                   TopicsRead)
 from openspending.forum.forum.forms import (QuickreplyForm, ReplyForm, NewTopicForm,
-                                 ReportForm, UserSearchForm, SearchPageForm)
+                                 ReportForm, SearchPageForm)
 from openspending.model.account import Account as User
 
 forum = Blueprint("forum", __name__)
@@ -532,22 +532,22 @@ def who_is_online():
                            online_users=online_users)
 
 
-@forum.route("/memberlist", methods=['GET', 'POST'])
-def memberlist():
-    page = request.args.get('page', 1, type=int)
+# @forum.route("/memberlist", methods=['GET', 'POST'])
+# def memberlist():
+#     page = request.args.get('page', 1, type=int)
 
-    search_form = UserSearchForm()
+#     search_form = UserSearchForm()
 
-    if search_form.validate():
-        users = search_form.get_results().\
-            paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
-        return render_template("forum/forum/memberlist.html", users=users,
-                               search_form=search_form)
-    else:
-        users = User.query.\
-            paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
-        return render_template("forum/forum/memberlist.html", users=users,
-                               search_form=search_form)
+#     if search_form.validate():
+#         users = search_form.get_results().\
+#             paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
+#         return render_template("forum/forum/memberlist.html", users=users,
+#                                search_form=search_form)
+#     else:
+#         users = User.query.\
+#             paginate(page, flaskbb_config['USERS_PER_PAGE'], False)
+#         return render_template("forum/forum/memberlist.html", users=users,
+#                                search_form=search_form)
 
 
 @forum.route("/topictracker")
@@ -593,7 +593,7 @@ def search():
 
     if form.validate_on_submit():
         result = form.get_results()
-        return render_template('forum/search_result.html', form=form,
+        return render_template('forum/forum/search_result.html', form=form,
                                result=result)
 
     return render_template('forum/forum/search_form.html', form=form)

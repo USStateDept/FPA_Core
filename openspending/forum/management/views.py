@@ -19,7 +19,6 @@ from flask_login import current_user
 from flask_babelex import gettext as _
 
 from openspending.forum._compat import iteritems
-from openspending.forum.forum.forms import UserSearchForm
 from openspending.forum.utils.forum_settings import flaskbb_config
 from openspending.auth.forum import admin_required, moderator_required
 from openspending.auth.forum import can_ban_user, can_edit_user
