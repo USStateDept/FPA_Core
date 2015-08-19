@@ -681,6 +681,7 @@ var act;
             return size;
         };
         var size = Object.size(series);
+        
         for (var countryName in series) {
             var visible = false;
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
@@ -689,10 +690,31 @@ var act;
             //window.averageSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
             //debugger;
+            console.log("series[countryName] is: " + series[countryName]);
+            // function inBounds(a){
+            //     var inStatus=true;
+            //     $.each(a, function(k,v){
+            //         console.log("Index is: " + v[1]);
+            //         if (v[1]<1 && v[1]!=null){
+            //             inStatus= false;
+            //             // console.log("The value of v triggering the change is: " + v);
+            //             alert("The value of v triggering the change is: " + v);
+            //         }
+            //     });
+            //     console.log("inStatus is: " + inStatus);
+            //     return inStatus;
+            // }
+            // seriesArray.push({
+            //     name: countryName,
+            //     data: series[countryName],
+            //     visible: inBounds(series[countryName]) && (counter > 3 || size == 3) ? true : false,
+            //     zIndex: counter++
+            // });
+
             seriesArray.push({
                 name: countryName,
                 data: series[countryName],
-                visible: counter > 3 || size == 3 ? true : false,
+                visible: (counter > 3 || size == 3) ? true : false,
                 zIndex: counter++
             });
 
@@ -744,6 +766,7 @@ var act;
                 title: {
                     text: ''
                 },
+                min: 0,
                 plotLines: [{
                     value: 0,
                     width: 0.25,
