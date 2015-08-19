@@ -41,7 +41,7 @@ install:
   #- sudo google-refine-2.1/refine
 
 
-  - pip install -r requirements.txt -e .
+  - pip install -r linuxreqs.txt -e .
   - pip install psycopg2 coveralls
   #https://code.google.com/p/google-refine/downloads/detail?name=google-refine-2.1-r2136.tar.gz&can=1&q=
 

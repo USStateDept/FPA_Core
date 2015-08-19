@@ -2,6 +2,9 @@
 from flask import request, g, current_app
 from functools import wraps
 
+import numpy as np
+from pysal.esda import mapclassify
+
 from cubes.workspace import Workspace
 from cubes.auth import NotAuthorized
 from cubes.errors import *
@@ -16,6 +19,43 @@ from cubes.model import Cube, Dimension
 from contextlib import contextmanager
 
 DEFAULT_TIMECUT = "geometry__time:1990-2015"
+
+
+
+def get_cubes_breaks(vals, field, method='jenks', k=5):
+    """
+    input
+        vals - dict vals with float
+        field - field to grab values
+        method - method should be jenks, quantil, equal
+        k - number of classes
+    output
+        the bounds of each of the classes with labels
+    """
+    arrayvals = np.array([x[field] for x in vals])
+    arrayvals = arrayvals[arrayvals != np.array(None)]
+    if len(arrayvals) == 0:
+        return {"labels":[],"data":[]}
+    if len(arrayvals) < k:
+        k= len(arrayvals)
+    classreturn = []
+    if method=='equal':
+        classreturn = mapclassify.Equal_Interval(arrayvals, k).bins
+    elif method == 'quantil':
+        classreturn = mapclassify.Quantiles(arrayvals, k).bins
+    else:
+        classreturn = mapclassify.Fisher_Jenks(arrayvals, k).bins
+
+    returnset = {}
+    returnset['data'] = [x for x in classreturn]
+    np.insert(classreturn, 0, arrayvals.min())
+    returnset['labels'] = []
+    for ind in range(len(classreturn)):
+        if ind == len(classreturn) -1:
+            break
+        returnset['labels'].append("%s - %s"%(classreturn[ind],classreturn[ind+1]))
+    return returnset
+  
 
 
 def prepare_cell_cubes_ext(argname="cut", target="cell", restrict=False):
