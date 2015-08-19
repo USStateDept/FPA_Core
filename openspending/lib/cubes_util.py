@@ -46,13 +46,13 @@ def get_cubes_breaks(vals, field, method='jenks', k=5):
         classreturn = mapclassify.Quantiles(arrayvals, k=k).bins
     else:
         classreturn = mapclassify.Fisher_Jenks(arrayvals, k=k).bins
-
     returnset = {}
+    classreturn= np.insert(classreturn, 0, arrayvals.min())
     returnset['data'] = [x for x in classreturn]
-    np.insert(classreturn, 0, arrayvals.min())
     returnset['labels'] = []
     for ind in range(len(classreturn)):
         if ind == len(classreturn) -1:
+            #returnset['labels'].append("%s - %s"%(classreturn[ind],classreturn[ind+1]))
             break
         returnset['labels'].append("%s - %s"%(classreturn[ind],classreturn[ind+1]))
     return returnset
