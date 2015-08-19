@@ -47,20 +47,24 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 {% block footer_scripts %}
 link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 
-script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
-//-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
-script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
-script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
-//-script(src='//code.highcharts.com/highcharts.js')
-//-script(src='//code.highcharts.com/modules/exporting.js')
-script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
-script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
-//-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
+{% assets "interactive_common_js" %}
+script(type='text/javascript', src='{{ASSET_URL }}')
+{% endassets %}
+
+//- script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+//- //-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
+//- script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
+//- script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+//- script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
+//- //-script(src='//code.highcharts.com/highcharts.js')
+//- //-script(src='//code.highcharts.com/modules/exporting.js')
+//- script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+//- script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
+//- //-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
+//- script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
+//- script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
+//- script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
+//- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 
 {% endblock %}
 

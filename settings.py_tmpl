@@ -3,6 +3,10 @@ import os
 SECRET_KEY = 'foo'
 DEBUG = True
 
+#uncomment this line to use compiled javascript
+#ASSETS_DEBUG = False
+ASSETS_DEBUG = True
+
 SITE_TITLE = 'FIND'
 
 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:!!!insert password!!!!@localhost/find_march24'
@@ -14,9 +18,6 @@ MAIL_PORT = 25
 # MAIL_USERNAME = None
 # MAIL_PASSWORD = None
 MAIL_DEFAULT_SENDER = 'noreply@find.state.gov'
-
-#CACHE = True
-#CACHE_TYPE = 'simple'
 
 
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
@@ -32,8 +33,7 @@ CACHE_DEFAULT_TIMEOUT = 3600
 CACHE_DIR = os.path.realpath('.') + '/filecache/'
 CACHE_THRESHOLD = 100
 
-#uncomment this line to use compiled javascript
-#ASSETS_DEBUG = False
+
 
 
 
@@ -67,5 +67,7 @@ LOCKDOWN_FORCE = False
 
 #UploadSet Flask-uploads management of files
 WHOOSH_BASE = os.path.realpath('.') + '/whoosh_index/'
+
+CSRF_ENABLED = True
 
 WTF_CSRF_ENABLED= False

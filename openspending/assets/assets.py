@@ -5,29 +5,90 @@
 def register_assets(assets_class):
 
     from flask.ext.assets import Bundle
+ 
 
-# script(src="{{ 
-# script(src="{{ 
-# script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')
-# script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js')
-# script(src="{{ static_path('find-ui/dist/app/js/common.js') }}")
-# script(src="{{ static_path('find-ui/dist/app/js/home/home.js') }}")
+    if "slickgrid" not in assets_class:
+        tempjs = Bundle('find-ui/bower_components/slickgrid/lib/jquery.event.drag-2.2.js',
+                        'find-ui/bower_components/slickgrid/slick.core.js',
+                        'find-ui/bower_components/slickgrid/slick.grid.js',
+                        'find-ui/bower_components/slickgrid/slick.dataview.js',
+                        'find-ui/bower_components/slickgrid/plugins/slick.checkboxselectcolumn.js',
+                        'find-ui/bower_components/slickgrid/plugins/slick.rowselectionmodel.js',
+                        'find-ui/bower_components/slickgrid-bootstrap/bootstrap/bootstrap-slickgrid.js',
+                        filters='jsmin',
+                        output='slickgrid.js')
+        assets_class.register('slickgrid',tempjs)  
 
-
-    if "common" not in assets_class:
-        tempjs = Bundle('find-ui/bower_components/letteringjs/jquery.lettering.js',
-                        'find-ui/bower_components/knockout/dist/knockout.js',
+    if "interactive_common_js" not in assets_class:
+        tempjs = Bundle('find-ui/bower_components/jquery-ui/jquery-ui.js',
+                        'find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js',
+                        'find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js',
                         'find-ui/bower_components/lodash/lodash.min.js',
-                        'find-ui/dist/app/js/common.js',
-                        filters='jsmin',
-                        output='compiled.js')
-        assets_class.register('common',tempjs)
+                        'find-ui/bower_components/leaflet/dist/leaflet.js',
+                        'find-ui/bower_components/knockout/dist/knockout.js',
+                        'find-ui/bower_components/highcharts/highcharts.js',
+                        'find-ui/bower_components/highcharts/highcharts-more.js',
+                        'find-ui/bower_components/highcharts/modules/exporting.js',
+                        'find-ui/dist/app/js/common/config.js',
+                        'find-ui/dist/app/js/common/loader.js',
+                        'find-ui/dist/app/js/common/utils.js',
+                        'find-ui/dist/app/js/common/viz-model.js',
+                        'find-ui/dist/app/js/visualization/visualization.js',
+                        filters=None,
+                        output='interactive_common_js.js')
+        assets_class.register('interactive_common_js',tempjs)       
 
 
-    if "home" not in assets_class:
-        tempjs = Bundle('find-ui/bower_components/letteringjs/jquery.lettering.js',
-                        'find-ui/bower_components/textillate/jquery.textillate.js',
-                        'find-ui/dist/app/js/common.js',
-                        filters='jsmin',
-                        output='home.js')
-        assets_class.register('home',tempjs)
+
+
+
+
+
+
+# categories/categories.jade
+# link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
+
+
+
+
+# data/data.jade
+# link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
+
+# script(src="{{ static_path('find-ui/dist/app/js/data/data.js') }}")
+
+
+
+# dataviz/data-visualization.jade
+
+
+# script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
+
+
+
+# visualization/visualization.jade
+
+
+
+
+
+
+
+
+
+
+
+
+
+# findadmin/index.html
+# <script type="text/javascript" src="/static/dataloader/build/vendor/angular/angular.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/vendor/angular-ui-router/release/angular-ui-router.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/vendor/angular-cookies/angular-cookies.min.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/vendor/jquery/dist/jquery.min.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/vendor/angular-chosen-localytics/chosen.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/vendor/underscore/underscore-min.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/src/app/app.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/src/app/modeler/modeler.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/templates-common.js"></script>
+# <script type="text/javascript" src="/static/dataloader/build/templates-app.js"></script>

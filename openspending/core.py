@@ -16,7 +16,6 @@ from flask import request
 #from cubes.extensions import extensions
 #from google.refine import refineo
 
-from openspending import default_settings
 #from settings import OPENREFINE_SERVER 
 #from settings import LOCKDOWN_FORCE
 from openspending.lib.routing import NamespaceRouteRule
@@ -51,7 +50,6 @@ def create_app(**config):
     app.url_map.converters['fmt'] = FormatConverter
     app.url_map.converters['nodot'] = NoDotConverter
 
-    app.config.from_object(default_settings)
     app.config.from_envvar('OPENSPENDING_SETTINGS', silent=True)
     app.config.update(config)
 
