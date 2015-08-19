@@ -691,19 +691,19 @@ var act;
             // if (defaultCountries.indexOf(countryName) > -1) {
             //debugger;
             console.log("series[countryName] is: " + series[countryName]);
-            // function inBounds(a){
-            //     var inStatus=true;
-            //     $.each(a, function(k,v){
-            //         console.log("Index is: " + v[1]);
-            //         if (v[1]<1 && v[1]!=null){
-            //             inStatus= false;
-            //             // console.log("The value of v triggering the change is: " + v);
-            //             alert("The value of v triggering the change is: " + v);
-            //         }
-            //     });
-            //     console.log("inStatus is: " + inStatus);
-            //     return inStatus;
-            // }
+            function inBounds(a){
+                var inStatus=true;
+                $.each(a, function(k,v){
+                    console.log("Index is: " + v[1]);
+                    if (v[1]<1 && v[1]!=null){
+                        inStatus= false;
+                        // console.log("The value of v triggering the change is: " + v);
+                        alert("The value of v triggering the change is: " + v);
+                    }
+                });
+                console.log("inStatus is: " + inStatus);
+                return inStatus;
+            }
             // seriesArray.push({
             //     name: countryName,
             //     data: series[countryName],
@@ -740,6 +740,8 @@ var act;
             chartObj["type"] = "line";
         }
 
+        var ymin=inBounds(series[countryName]); //if there are neg values, return false; otherwise return true
+
         var jsonLine = {
             chart: chartObj,
             title: {
@@ -766,7 +768,7 @@ var act;
                 title: {
                     text: ''
                 },
-                min: 0,
+                min: ymin ? 0 : null,
                 plotLines: [{
                     value: 0,
                     width: 0.25,
