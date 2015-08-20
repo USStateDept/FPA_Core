@@ -15,6 +15,7 @@
     //var groupByRegion = false;
     var modalTitle = "";
     var modalMessage = "";
+    var geometryType = "sovereignt";
 
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
@@ -22,6 +23,8 @@
     //var region = hashParams.r;
     var chartType = hashParams.c;
     var regions = hashParams.r.split("|");
+
+    var cluster = {};
     //groupByRegion = parseInt(hashParams.grp);
 
     var statsData, statsDataSeries;
@@ -818,9 +821,17 @@
 
                 //update hash
                 var currentHash = window.utils.getHashParams();
+
                 currentHash.f = startYear + "|" + endYear;
 
                 window.utils.updateHash(currentHash);
+
+                if (chartType == "map") {
+
+                    addDataToGeoJson(window.loader.lastGeoJson, geometryType);
+
+                    addChoroplethLayer(window.loader.lastGeoJson, geometryType, cluster, indicators[0]);
+                }
                 //redrawChart(startYear, endYear);
             },
             slide: function(event, ui) {
@@ -1002,7 +1013,7 @@
 
     }
 
-    var addDataToGeoJson = function(lastGeoJson) {
+    var addDataToGeoJson = function(lastGeoJson, type) {
 
         var data = window.loader.data;
         var gjson = lastGeoJson;
@@ -1012,25 +1023,44 @@
         var indicators = hashParams.i.split("|");
         var onlyIndicator = indicators[0];
         var regions = hashParams.r.split("|");
-        var maxYear = 2013; //yearsFilter[1];
-
+        var maxYear = yearsFilter[1]; //2013
+        //debugger;
         var dataByRegion = {};
         _.map(regions, function(_r) {
             dataByRegion[_r] = 0;
-        })
+        });
+
+        var usePrefix = false;
+
+        if (regions[0].indexOf(":") > -1) {
+            usePrefix = true
+        }
 
         _.map(data.cells, function(_c) {
             if (_c.year == parseInt(maxYear)) {
-                dataByRegion[_c.region] = _c[onlyIndicator + "__amount_avg"];
+                if (usePrefix) { //if not countries
+                    dataByRegion[type + ":" + _c.region] = _c[onlyIndicator + "__amount_avg"];
+                } else {
+                    dataByRegion[_c.region] = _c[onlyIndicator + "__amount_avg"];
+                }
+                //debugger;
             }
         });
 
         _.forEach(gjson.features, function(_f) {
             var name = _f.properties.sovereignt || _f.properties.usaid_reg || _f.properties.continent || _f.properties.dod_cmd || _f.properties.dos_region || _f.properties.wb_inc_lvl;
-            var _r = name.toLowerCase();
-            if (_.indexOf(regions, _r) > -1) {
-                _f.properties[onlyIndicator] = dataByRegion[_r];
+            if (name) {
+
+                var _r = name.toLowerCase();
+                if (usePrefix) { //if not countries
+                    _r = type + ":" + name;
+                }
+                //debugger;
+                if (_.indexOf(regions, _r) > -1) {
+                    _f.properties[onlyIndicator] = dataByRegion[_r];
+                }
             }
+
         });
 
         window.loader.lastGeoJson = gjson;
@@ -1039,16 +1069,11 @@
         // debugger;
     }
 
-    var geoJSONHandler = function(response, type, cluster) {
-
-        //debugger;
+    var addChoroplethLayer = function(lastGeoJson, type, cluster, onlyIndicator) {
         var hashParams = window.utils.getHashParams();
         var yearsFilter = hashParams.f.split("|");
-        var indicators = hashParams.i.split("|");
-        var onlyIndicator = indicators[0];
-        var regions = hashParams.r.split("|");
-
         var maxYear = yearsFilter[1];
+        var regions = hashParams.r.split("|");
 
         function onEachFeature(feature, layer) {
 
@@ -1059,15 +1084,9 @@
             }
         }
 
-        window.loader.lastGeoJson = response;
-
-        addDataToGeoJson(window.loader.lastGeoJson);
-
-        //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
-        window.loader.geoJson[type] = response;
-
-        window.loader.geoJsonLayers[type] = L.geoJson(response, {
+        window.loader.geoJson[type] = lastGeoJson;
+        //debugger;
+        window.loader.geoJsonLayers[type] = L.geoJson(lastGeoJson, {
             style: {
                 weight: 0, //no border
                 opacity: 1,
@@ -1080,19 +1099,54 @@
         });
 
         for (var _type in window.loader.geoJsonLayers) {
+            if (window.loader.geoJsonLayers[_type]) {
+                // debugger;
+                // map.removeLayer(window.loader.geoJsonLayers[_type]);
+            }
             if (type == _type) {
+                //debugger;
                 map.addLayer(window.loader.geoJsonLayers[_type]);
             }
         }
-
+        // debugger;
         //HIGHLIGHT EACH REGION
         var featuresAdded = [];
         _.forEach(regions, function(_r) {
-            window.utils.highlightOnMapViz(_r, cluster, onlyIndicator, window.loader.lastGeoJson, featuresAdded);
+            //debugger;
+            window.utils.highlightOnMapViz(_r, type, cluster, onlyIndicator, window.loader.lastGeoJson, featuresAdded);
         });
+        // debugger;
+        //window.utils.zoomToFeatures(featuresAdded);
 
-        window.utils.zoomToFeatures(featuresAdded);
+
+
+    }
+
+    var geoJSONHandler = function(response, type, cluster) {
+
+        // debugger;
+        var hashParams = window.utils.getHashParams();
+        var yearsFilter = hashParams.f.split("|");
+        var maxYear = yearsFilter[1];
+        var regions = hashParams.r.split("|");
+        var indicators = hashParams.i.split("|");
+        var onlyIndicator = indicators[0];
+
+
+
+
+
+
+        window.loader.lastGeoJson = response;
+
+        addDataToGeoJson(window.loader.lastGeoJson, type);
+
+        addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator);
+
         window.utils.addLegend(cluster);
+
+        //if (!window.visualization.geoJsonLayers[type]) {
+        //if layer doesnt exist then add it and symbolize as invisible 
 
         return;
 
@@ -1137,15 +1191,19 @@
 
     }
 
-    var addChoroplethLayer = function(cluster, cells) {
+    var getGeoJsonForMap = function(cluster, cells, type) {
         /* var groupId = "sovereignt";
         debugger;*/
-        var groupId = model.activeGroup().id;
-        if (groupId == "all") {
-            groupId = "sovereignt";
+
+
+        if (type == "name") {
+            type = "sovereignt";
         }
-        if (!window.loader.geoJsonLayers[groupId]) {
-            window.loader.loadGeoJSON(groupId, geoJSONHandler, cluster);
+
+        geometryType = type;
+
+        if (!window.loader.geoJsonLayers[type]) {
+            window.loader.loadGeoJSON(type, geoJSONHandler, cluster);
         } else {
 
         }
@@ -1199,14 +1257,18 @@
 
         var mergedCells = [];
 
+        var type = "sovereignt"; // for map visualization, getGeoJsonForMap needs this
+
         _.forEach(indicatorsData, function(response) {
 
             var data = response[0];
             var cutBy = data.cutBy;
+            type = cutBy;
 
             _.forEach(data.cells, function(cell) {
 
                 cell.region = cell["geometry__country_level0." + cutBy];
+
                 cell.year = cell.geometry__time;
 
                 delete cell.geometry__time;
@@ -1252,8 +1314,8 @@
             }).addTo(map);
 
             window.loader.data = responseData;
-            //debugger;
-            addChoroplethLayer(indicatorsData[0][0].cluster, responseData);
+            cluster = indicatorsData[0][0].cluster
+            getGeoJsonForMap(cluster, responseData, type);
             //window.loader.changeGroup("all");
         } else {
             if (chartType == "scatter") {

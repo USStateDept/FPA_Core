@@ -339,6 +339,7 @@ var act;
     };
 
     window.utils.zoomToFeatures = function(features) {
+
         var group = new L.featureGroup(features);
         var bounds = group.getBounds();
 
@@ -356,20 +357,37 @@ var act;
         // debugger;
     };
 
-    window.utils.highlightOnMapViz = function(region, cluster, indicator, gjson, featuresAdded) {
+    window.utils.highlightOnMapViz = function(region, type, cluster, indicator, gjson, featuresAdded) {
 
         var geojson = gjson['features'];
 
         var style = function(feature) {
-
+            // debugger;
             var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
             //console.log("*********feature" + feature);
-            if (region == name.toLowerCase()) {
+            if (!name) {
+                return {
+                    weight: 0,
+                    opacity: 0,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.0,
+                    fillColor: '#666666'
+                };
+            }
+
+            if (region.indexOf(":") > -1) {
+                name = type + ":" + name;
+            } else { //if country
+                name = name.toLowerCase();
+            }
+
+            if (region == name) {
 
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
                 featuresAdded.push(polygon);
-
+                //debugger;
                 return {
                     weight: 2,
                     opacity: 1,
@@ -400,7 +418,7 @@ var act;
             }
         }
 
-        var level = "sovereignt";
+        //var level = "sovereignt";
         /* var isCountry = geounit.iso_a2;
         var drillDown = false;
         debugger;*/
@@ -411,12 +429,12 @@ var act;
             drillDown = _.indexOf(geounit.geounit.split(":"), "all") > -1;
         }*/
 
-        window.loader.geoJsonLayers[level] = L.geoJson(window.loader.geoJson[level], {
+        window.loader.geoJsonLayers[type] = L.geoJson(window.loader.geoJson[type], {
             onEachFeature: onEachFeature,
             style: style
         });
 
-        map.addLayer(window.loader.geoJsonLayers[level]);
+        map.addLayer(window.loader.geoJsonLayers[type]);
 
 
         //window.utils.addLegend();
@@ -436,7 +454,7 @@ var act;
             }
         })
 
-        // debugger;
+        //  debugger;
         return color;
     };
 
@@ -465,7 +483,7 @@ var act;
                     from + (to ? ' &ndash; ' + to : '+'));
 
             });
-
+            //debugger;
             div.innerHTML = legendLabels.join('<br>');
             return div;
         };

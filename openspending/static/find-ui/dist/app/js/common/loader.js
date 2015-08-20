@@ -71,7 +71,7 @@
 
 
 
-        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=5&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
         urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
         urlPrefix = urlPrefix.replace(/{yearTo}/g, yearsExtremes[1]);
