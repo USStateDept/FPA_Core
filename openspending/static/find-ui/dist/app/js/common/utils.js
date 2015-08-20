@@ -776,7 +776,7 @@ var act;
                     if (v[1] < 1 && v[1] != null) {
                         inStatus = false;
                         // console.log("The value of v triggering the change is: " + v);
-                        alert("The value of v triggering the change is: " + v);
+                        // alert("The value of v triggering the change is: " + v);
                     }
                 });
                 console.log("inStatus is: " + inStatus);
