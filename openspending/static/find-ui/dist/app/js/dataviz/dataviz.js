@@ -827,7 +827,7 @@
                 window.utils.updateHash(currentHash);
 
                 if (chartType == "map") {
-
+                    console.time("choropleth");
                     addDataToGeoJson(window.loader.lastGeoJson, geometryType);
 
                     addChoroplethLayer(window.loader.lastGeoJson, geometryType, cluster, indicators[0]);

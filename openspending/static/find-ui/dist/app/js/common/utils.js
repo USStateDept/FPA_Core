@@ -354,6 +354,8 @@ var act;
 
 
         map.fitBounds(bounds);
+        console.log("zoomed to features");
+        console.timeEnd("choropleth");
         // debugger;
     };
 
@@ -428,6 +430,7 @@ var act;
 
         var onEachFeature = function(feature, layer) {
             //  debugger;
+            console.log("onEachFeature");
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
@@ -445,7 +448,9 @@ var act;
             });
         }
 
-        map.on('layeradd', function() {
+        map.once('layeradd', function() {
+            //debugger;
+            //console.log("layerAdd");
             window.utils.zoomToFeatures(featuresAdded);
         });
 
