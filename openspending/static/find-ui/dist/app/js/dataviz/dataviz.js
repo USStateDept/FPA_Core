@@ -1057,7 +1057,7 @@
                 }
                 //debugger;
                 if (_.indexOf(regions, _r) > -1) {
-                    _f.properties[onlyIndicator] = dataByRegion[_r];
+                    _f.properties[onlyIndicator] = _.round(dataByRegion[_r], 2);
                 }
             }
 
@@ -1071,54 +1071,17 @@
 
     var addChoroplethLayer = function(lastGeoJson, type, cluster, onlyIndicator) {
         var hashParams = window.utils.getHashParams();
-        var yearsFilter = hashParams.f.split("|");
-        var maxYear = yearsFilter[1];
+        // var yearsFilter = hashParams.f.split("|");
+        // var maxYear = yearsFilter[1];
         var regions = hashParams.r.split("|");
-
-        function onEachFeature(feature, layer) {
-
-            if (feature.properties) {
-                // console.log(feature.properties);
-                var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
-                layer.bindPopup(name);
-            }
-        }
 
         window.loader.geoJson[type] = lastGeoJson;
         //debugger;
-        window.loader.geoJsonLayers[type] = L.geoJson(lastGeoJson, {
-            style: {
-                weight: 0, //no border
-                opacity: 1,
-                color: 'gray',
-                //dashArray: '3',
-                fillOpacity: 0.0, //DO NOT DISLAY
-                fillColor: '#cccccc'
-            },
-            onEachFeature: onEachFeature
-        });
+        //window.loader.geoJsonLayers[type] = L.geoJson(lastGeoJson);
 
-        for (var _type in window.loader.geoJsonLayers) {
-            if (window.loader.geoJsonLayers[_type]) {
-                // debugger;
-                // map.removeLayer(window.loader.geoJsonLayers[_type]);
-            }
-            if (type == _type) {
-                //debugger;
-                map.addLayer(window.loader.geoJsonLayers[_type]);
-            }
-        }
-        // debugger;
-        //HIGHLIGHT EACH REGION
-        var featuresAdded = [];
-        _.forEach(regions, function(_r) {
-            //debugger;
-            window.utils.highlightOnMapViz(_r, type, cluster, onlyIndicator, window.loader.lastGeoJson, featuresAdded);
-        });
+        window.utils.highlightOnMapViz(regions, type, cluster, onlyIndicator, window.loader.lastGeoJson);
         // debugger;
         //window.utils.zoomToFeatures(featuresAdded);
-
-
 
     }
 

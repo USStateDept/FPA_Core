@@ -357,12 +357,17 @@ var act;
         // debugger;
     };
 
-    window.utils.highlightOnMapViz = function(region, type, cluster, indicator, gjson, featuresAdded) {
+    window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson) {
+
+        if (window.loader.geoJsonLayers[type]) {
+            map.removeLayer(window.loader.geoJsonLayers[type]);
+        }
 
         var geojson = gjson['features'];
-
+        var featuresAdded = [];
         var style = function(feature) {
             // debugger;
+
             var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
             //console.log("*********feature" + feature);
             if (!name) {
@@ -376,13 +381,13 @@ var act;
                 };
             }
 
-            if (region.indexOf(":") > -1) {
+            if (regions[0].indexOf(":") > -1) {
                 name = type + ":" + name;
             } else { //if country
                 name = name.toLowerCase();
             }
 
-            if (region == name) {
+            if (_.indexOf(regions, name) > -1) {
 
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
@@ -409,14 +414,40 @@ var act;
             }
         }
 
-        var onEachFeature = function(feature, layer) {
+        var highlightFeature = function() {
 
+        }
+
+        var resetHighlight = function() {
+
+        }
+
+        var zoomToFeature = function(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+        var onEachFeature = function(feature, layer) {
+            //  debugger;
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
-                layer.bindPopup(name + "</br>" + feature.properties[indicator]);
+                var popupText = name;
+                if (feature.properties[indicator]) {
+                    popupText += "</br>" + feature.properties[indicator];
+                }
+                layer.bindPopup(popupText);
             }
+
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: zoomToFeature
+            });
         }
+
+        map.on('layeradd', function() {
+            window.utils.zoomToFeatures(featuresAdded);
+        });
 
         //var level = "sovereignt";
         /* var isCountry = geounit.iso_a2;
@@ -722,7 +753,7 @@ var act;
             return size;
         };
         var size = Object.size(series);
-        
+
         for (var countryName in series) {
             var visible = false;
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
@@ -732,12 +763,13 @@ var act;
             // if (defaultCountries.indexOf(countryName) > -1) {
             //debugger;
             console.log("series[countryName] is: " + series[countryName]);
-            function inBounds(a){
-                var inStatus=true;
-                $.each(a, function(k,v){
+
+            function inBounds(a) {
+                var inStatus = true;
+                $.each(a, function(k, v) {
                     console.log("Index is: " + v[1]);
-                    if (v[1]<1 && v[1]!=null){
-                        inStatus= false;
+                    if (v[1] < 1 && v[1] != null) {
+                        inStatus = false;
                         // console.log("The value of v triggering the change is: " + v);
                         alert("The value of v triggering the change is: " + v);
                     }
@@ -781,7 +813,7 @@ var act;
             chartObj["type"] = "line";
         }
 
-        var ymin=inBounds(series[countryName]); //if there are neg values, return false; otherwise return true
+        var ymin = inBounds(series[countryName]); //if there are neg values, return false; otherwise return true
 
         var jsonLine = {
             chart: chartObj,
