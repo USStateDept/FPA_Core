@@ -15,22 +15,6 @@
         });
     });
 
-    //stick div for homepage
-    function sticky_relocate() {
-        var window_top = $(window).scrollTop();
-        var div_top = $('#sticky-anchor').offset().top;
-        if (window_top + 60 > div_top) {
-            $('#sticky').addClass('stick');
-        } else {
-            $('#sticky').removeClass('stick');
-        }
-    }
-
-    $(function() {
-        // $(window).scroll(sticky_relocate);
-        // sticky_relocate();
-    });
-
     //textillate
     $('.tlt').textillate({
         // the default selector to use when detecting multiple texts to animate
