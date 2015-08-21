@@ -27,8 +27,8 @@
     }
 
     $(function() {
-        $(window).scroll(sticky_relocate);
-        sticky_relocate();
+        // $(window).scroll(sticky_relocate);
+        // sticky_relocate();
     });
 
     //textillate
