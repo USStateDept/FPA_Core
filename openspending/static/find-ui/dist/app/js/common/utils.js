@@ -727,11 +727,16 @@ var act;
             }
         });
 
+
         var titleArray = _.map(indicatorsMeta, function(meta) {
-            return meta[0].label;
+            
+            var title = meta[0].label;
+            var units = meta[0].units;
+
+            return title + "(" + units + ")";
         });
 
-        var title = titleArray.join(" and ");
+        var title = titleArray.join(" and ");        
 
         var subtitleObj = _.map(indicatorsMeta, function(meta) {
             return meta = {
@@ -838,7 +843,7 @@ var act;
                 //categories: categories
                 title: {
                     enabled: true,
-                    text: ''
+                    text: 'Years'
                 },
                 startOnTick: true,
                 endOnTick: true,
@@ -846,7 +851,7 @@ var act;
             },
             yAxis: {
                 title: {
-                    text: ''
+                    text: title
                 },
                 min: ymin ? 0 : null,
                 plotLines: [{
@@ -969,7 +974,7 @@ var act;
                 xAxis: {
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label
+                        text: indicatorsMeta[0][0].label + " (" + indicatorsMeta[0][0].units + ")"
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -977,7 +982,7 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label
+                        text: indicatorsMeta[1][0].label + " (" + indicatorsMeta[1][0].units + ")"
                     }
                 },
                 series: series
@@ -1066,7 +1071,7 @@ var act;
                     //categories: categories
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label
+                        text: indicatorsMeta[0][0].label + " (" + indicatorsMeta[0][0].units + ")"
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -1074,12 +1079,12 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label
+                        text: indicatorsMeta[1][0].label + " (" + indicatorsMeta[1][0].units + ")"
                     }
                 },
                 zAxis: {
                     title: {
-                        text: indicatorsMeta[2][0].label
+                        text: indicatorsMeta[2][0].label+ " (" + indicatorsMeta[2][0].units + ")"
                     }
                 },
 
@@ -1160,7 +1165,7 @@ var act;
                 yAxis: {
                     min: 0,
                     title: {
-                        text: indicatorsMeta[0][0].label
+                        text: title//indicatorsMeta[0][0].label
                     }
                 },
                 legend: {
