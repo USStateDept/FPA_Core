@@ -519,6 +519,8 @@ var act;
                     from + (to ? ' &ndash; ' + to : '+'));
 
             });
+
+            legendLabels.push('<i style="background:#CCCCCC"></i> No Data');
             //debugger;
             div.innerHTML = legendLabels.join('<br>');
             return div;
