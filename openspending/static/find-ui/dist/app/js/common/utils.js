@@ -861,7 +861,10 @@ var act;
                 }]
             },
             tooltip: {
-                valueSuffix: ''
+                valueSuffix: '',
+                shared: false,
+                pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y:,.2f}</b><br/>'
+
             },
             legend: {
                 layout: 'vertical',
