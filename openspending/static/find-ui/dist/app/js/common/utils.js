@@ -733,10 +733,32 @@ var act;
             var title = meta[0].label;
             var units = meta[0].units;
 
-            return title + "(" + units + ")";
+            units = units==null ? "" : "(" + units + ")";
+            
+            return title + units;
         });
 
-        var title = titleArray.join(" and ");        
+
+
+        var xUnits = indicatorsMeta[0][0].units;
+        
+        var yUnits; 
+        if(type=="scatter"||type=="bubble"){
+            yUnits = indicatorsMeta[1][0].units;
+        }
+
+        var zUnits; 
+        
+        if(type=="bubble"){
+            zUnits = indicatorsMeta[2][0].units;
+        }
+
+        xUnits = xUnits==null ? "" : " (" + xUnits + ")";
+        yUnits = yUnits==null ? "" : " (" + yUnits + ")";
+        zUnits = zUnits==null ? "" : " (" + zUnits + ")";
+
+        var title = titleArray.join(" and ");  
+          
 
         var subtitleObj = _.map(indicatorsMeta, function(meta) {
             return meta = {
@@ -977,7 +999,7 @@ var act;
                 xAxis: {
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label + " (" + indicatorsMeta[0][0].units + ")"
+                        text: indicatorsMeta[0][0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -985,7 +1007,7 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label + " (" + indicatorsMeta[1][0].units + ")"
+                        text: indicatorsMeta[1][0].label + yUnits
                     }
                 },
                 series: series
@@ -1074,7 +1096,7 @@ var act;
                     //categories: categories
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label + " (" + indicatorsMeta[0][0].units + ")"
+                        text: indicatorsMeta[0][0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -1082,12 +1104,12 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label + " (" + indicatorsMeta[1][0].units + ")"
+                        text: indicatorsMeta[1][0].label + yUnits
                     }
                 },
                 zAxis: {
                     title: {
-                        text: indicatorsMeta[2][0].label+ " (" + indicatorsMeta[2][0].units + ")"
+                        text: indicatorsMeta[2][0].label+ zUnits
                     }
                 },
 
