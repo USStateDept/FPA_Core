@@ -156,7 +156,7 @@
   cursor: pointer;
 }
 .downloadLinks span {
-  display: none;
+  visibility: hidden;
   font-size: 12px;
   color: #fff;
   background-color: #eae6e6;
@@ -166,7 +166,7 @@
 }
 .indicator-item:hover .downloadLinks span {
   background-color: #5c74b4;
-  display: inline;
+  visibility: visible;
 }
 .indicator-item .glyphicon.glyphicon-plus,
 .indicator-item .glyphicon.glyphicon-minus {
