@@ -2,6 +2,10 @@
 .app .icon-category-70:after {
   content: url("../images/filecabinet.png") center center no-repeat;
 }
+.app .fa.fa-5x.fa-cubes {
+  text-align: center;
+  width: 100%;
+}
 .app .icon-category-10:after,
 .app .icon-category-peace-and-security:after {
   content: '\e60d';
