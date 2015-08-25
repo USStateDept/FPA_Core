@@ -159,6 +159,9 @@ body {
   display: inline-block;
   cursor: pointer;
 }
+.app .footer {
+  padding: 50px;
+}
 .app .footer h1 {
   font-size: 36px;
   font-weight: 200;
@@ -168,10 +171,16 @@ body {
   padding-bottom: 20px;
 }
 .app .footer .updates ul {
-  color: #fff;
+  color: #000;
   font-size: 22px;
 }
 .app .footer #data-stories h3 {
+  color: #852224;
+}
+.app .footer #data-stories a {
+  color: #000;
+}
+.app .footer a {
   color: #fff;
 }
 .app .footer-links {
@@ -263,6 +272,9 @@ background green,
 }
 #data-stories h1 {
   color: #fff;
+}
+#data-stories-full h3 {
+  color: #852224;
 }
 .carousel-fade .carousel-inner .item {
   opacity: 0;

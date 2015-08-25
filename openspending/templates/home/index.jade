@@ -151,60 +151,61 @@
 .container-full.bg-medium
         
   .row.footer
-    .col-md-4.updates#updates
+    .col-md-12
+        .row
+          .col-md-12.text-center
+            h1 Data Stories
+    .col-md-12#data-stories
+        .row
+          .col-md-3
+            a(href="/datastories")
+              div.well
+                .row
+                  .col-md-12
+                    h3 U5MR is declining around the world
+                .row
+                  .col-md-12
+                    p The number of kids that die before their 5th birthday has been cut in half in the last 20 years.
+          .col-md-3
+            div.well                  
+              .row
+                .col-md-12
+                  h3 If you are over 15 years old and reading this, them you are part of the 85% of the literate adult world.               
+              .row
+                .col-md-12
+                  p The global adult literacy rate has increased by about 10% since 1990, and more people are literate than ever before.
+          .col-md-3
+            div.well                  
+              .row
+                .col-md-12
+                  h3 Dramatic increases in Mobile subscriptions in sub-Saharan Africa
+              .row
+                .col-md-12
+                  p 146 million mobile accounts created in the last 15 years within sub-Saharan Africa shows the ubiquitous growth of mobile technology in developing countries
+          .col-md-3
+            div.well                  
+              .row
+                .col-md-12
+                  h3 Fewer people are living in extreme poverty
+              .row
+                .col-md-12
+                  p The percentage of people living on less than $1.25 a day has dropped by more than half since 1990.
+
+  .row.footer.bg-dark
+    .col-md-12.updates#updates
       .row
         .col-md-12.text-center
           h1 Updates   
-      .well.bg-none  
-        ul
-          li
-            | New indicators from @WorldBank have been added to the site! See the latest trends! #FINDit
-          li
-            | New indicators from @MCCgov have been added. Check them out! #FINDit      
-          li
-            | Ever wondered how GDP and Greenhouse Gas Emissions are related? #FINDit here!
-    .col-md-8#data-stories
-        .row
-          .col-md-12.text-center
-            h1 Data Stories    
-        .row
-          .col-md-6
-            h3 U5MR is declining around the world
-            div.well
-              .row
-                .col-md-3
-                  a(href="/datastories")
-                    img(src="{{ static_path('find-ui/dist/app/images/chart_scatter.png') }}")
-                .col-md-9
-                  p The number of kids that die before their 5th birthday has been cut in half in the last 20 years.
-          .col-md-6
-            h3 Vaccines, women's education, & reducing poverty are key
-            div.well                  
-              .row
-                .col-md-3
-                  img(src="{{ static_path('find-ui/dist/app/images/chart_pie.png' )}}")
-                .col-md-9
-                  p As one of the UN's Millennium Development Goals set in 2000, the organization sought the global under-five mortality rate by two-thirds by 2015, as compared to 1990 levels.
-          .col-md-6
-            h3 There are still places where many infants and children die
-            div.well                  
-              .row
-                .col-md-3
-                  img(src="{{ static_path('find-ui/dist/app/images/chart_curved.png') }}")
-                .col-md-9
-                  p The countries that are unlikely to hit the Millennium Development Goal — and still have high infant and childhood mortality rates — are mostly clustered in Sub-Saharan
-          .col-md-6
-            h3 Maps
-            div.well.map-bg                  
-              .row
-                .col-md-12(style="visibility:hidden")
-                  br
-                  br
-                  br
-                  br
-                .row
-                  .col-md-12
-                    p This is an introduction text. It has a fixed size and custom line height, so you can experiment with it.
+      .row  
+        .col-md-4
+          div.well
+            p New indicators from @WorldBank have been added to the site! See the latest trends! #FINDit
+        .col-md-4
+          div.well
+            p New indicators from @MCCgov have been added. Check them out! #FINDit      
+        .col-md-4
+          div.well
+            p Ever wondered how GDP and Greenhouse Gas Emissions are related? #FINDit here!
 
 {% endblock %}
 
