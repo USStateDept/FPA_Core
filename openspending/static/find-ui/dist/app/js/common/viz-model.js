@@ -1,4 +1,4 @@
-function rc() {
+/*function rc() {
 
     var selectedCountry = arguments[0];
     var activeCountries = vizModel.activeCountries();
@@ -48,7 +48,7 @@ function rc() {
     // });
     // vizModel.activeCountries.push(selectedCountry);
 
-}
+}*/
 
 (function() {
 
@@ -383,7 +383,7 @@ function rc() {
 
 
         removeCountry: function() {
-
+            debugger;
 
             var selectedCountry = arguments[0];
             var activeCountries = vizModel.activeCountries();
