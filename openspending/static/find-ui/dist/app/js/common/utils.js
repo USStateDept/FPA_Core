@@ -807,19 +807,19 @@ var act;
             //window.averageSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
             //debugger;
-            console.log("series[countryName] is: " + series[countryName]);
+            // console.log("series[countryName] is: " + series[countryName]);
 
             function inBounds(a) {
                 var inStatus = true;
                 $.each(a, function(k, v) {
-                    console.log("Index is: " + v[1]);
+                    // console.log("Index is: " + v[1]);
                     if (v[1] < 1 && v[1] != null) {
                         inStatus = false;
                         // console.log("The value of v triggering the change is: " + v);
                         // alert("The value of v triggering the change is: " + v);
                     }
                 });
-                console.log("inStatus is: " + inStatus);
+                // console.log("inStatus is: " + inStatus);
                 return inStatus;
             }
             // seriesArray.push({
