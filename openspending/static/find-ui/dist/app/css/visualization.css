@@ -2,6 +2,10 @@
 .app .icon-category-70:after {
   content: url("../images/filecabinet.png") center center no-repeat;
 }
+.app .fa.fa-5x.fa-cubes {
+  text-align: center;
+  width: 100%;
+}
 .app .icon-category-10:after,
 .app .icon-category-peace-and-security:after {
   content: '\e60d';
@@ -156,7 +160,7 @@
   cursor: pointer;
 }
 .downloadLinks span {
-  display: none;
+  visibility: hidden;
   font-size: 12px;
   color: #fff;
   background-color: #eae6e6;
@@ -166,7 +170,7 @@
 }
 .indicator-item:hover .downloadLinks span {
   background-color: #5c74b4;
-  display: inline;
+  visibility: visible;
 }
 .indicator-item .glyphicon.glyphicon-plus,
 .indicator-item .glyphicon.glyphicon-minus {

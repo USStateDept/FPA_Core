@@ -333,9 +333,20 @@ var act;
 
     window.utils.clearOnMap = function(model) { // clear all of map
         // debugger;
+        var levels = model.countryGroupings();
+        //["sovereignt","usaid_reg","continent","dod_cmd","dos_region","wb_inc_lvl"]
+        //var level = "sovereignt";
+        _.forEach(levels, function(_l) {
+            var layerId = _l.id;
+            if (layerId == "all") {
+                layerId = "sovereignt";
+            }
+            var layer = window.visualization.geoJsonLayers[layerId];
+            if (layer) {
+                window.map.removeLayer(layer);
+            }
+        })
 
-        var level = "sovereignt";
-        window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     };
 
     window.utils.zoomToFeatures = function(features) {
@@ -727,11 +738,38 @@ var act;
             }
         });
 
+
         var titleArray = _.map(indicatorsMeta, function(meta) {
-            return meta[0].label;
+
+            var title = meta[0].label;
+            var units = meta[0].units;
+
+            units = units == null ? "" : "(" + units + ")";
+
+            return title + units;
         });
 
+
+
+        var xUnits = indicatorsMeta[0][0].units;
+
+        var yUnits;
+        if (type == "scatter" || type == "bubble") {
+            yUnits = indicatorsMeta[1][0].units;
+        }
+
+        var zUnits;
+
+        if (type == "bubble") {
+            zUnits = indicatorsMeta[2][0].units;
+        }
+
+        xUnits = xUnits == null ? "" : " (" + xUnits + ")";
+        yUnits = yUnits == null ? "" : " (" + yUnits + ")";
+        zUnits = zUnits == null ? "" : " (" + zUnits + ")";
+
         var title = titleArray.join(" and ");
+
 
         var subtitleObj = _.map(indicatorsMeta, function(meta) {
             return meta = {
@@ -838,7 +876,7 @@ var act;
                 //categories: categories
                 title: {
                     enabled: true,
-                    text: ''
+                    text: 'Years'
                 },
                 startOnTick: true,
                 endOnTick: true,
@@ -846,7 +884,7 @@ var act;
             },
             yAxis: {
                 title: {
-                    text: ''
+                    text: title
                 },
                 min: ymin ? 0 : null,
                 plotLines: [{
@@ -856,7 +894,10 @@ var act;
                 }]
             },
             tooltip: {
-                valueSuffix: ''
+                valueSuffix: '',
+                shared: false,
+                pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y:,.2f}</b><br/>'
+
             },
             legend: {
                 layout: 'vertical',
@@ -969,7 +1010,7 @@ var act;
                 xAxis: {
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label
+                        text: indicatorsMeta[0][0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -977,7 +1018,7 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label
+                        text: indicatorsMeta[1][0].label + yUnits
                     }
                 },
                 series: series
@@ -1066,7 +1107,7 @@ var act;
                     //categories: categories
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label
+                        text: indicatorsMeta[0][0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -1074,12 +1115,12 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label
+                        text: indicatorsMeta[1][0].label + yUnits
                     }
                 },
                 zAxis: {
                     title: {
-                        text: indicatorsMeta[2][0].label
+                        text: indicatorsMeta[2][0].label + zUnits
                     }
                 },
 
@@ -1160,7 +1201,7 @@ var act;
                 yAxis: {
                     min: 0,
                     title: {
-                        text: indicatorsMeta[0][0].label
+                        text: title //indicatorsMeta[0][0].label
                     }
                 },
                 legend: {

@@ -1277,8 +1277,13 @@
             }).addTo(map);
 
             window.loader.data = responseData;
+
             cluster = indicatorsData[0][0].cluster
+
             getGeoJsonForMap(cluster, responseData, type);
+
+            showTable(responseData);
+
             //window.loader.changeGroup("all");
         } else {
             if (chartType == "scatter") {

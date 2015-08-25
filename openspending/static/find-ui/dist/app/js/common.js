@@ -1,6 +1,6 @@
 (function() {
     //scroll aniation on href
-    $(function() {
+    /* $(function() {
         $('a[href*=#]:not([href=#])').click(function() {
             if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
                 var target = $(this.hash);
@@ -13,23 +13,7 @@
                 }
             }
         });
-    });
-
-    //stick div for homepage
-    function sticky_relocate() {
-        var window_top = $(window).scrollTop();
-        var div_top = $('#sticky-anchor').offset().top;
-        if (window_top + 60 > div_top) {
-            $('#sticky').addClass('stick');
-        } else {
-            $('#sticky').removeClass('stick');
-        }
-    }
-
-    $(function() {
-        // $(window).scroll(sticky_relocate);
-        // sticky_relocate();
-    });
+    });*/
 
     //textillate
     $('.tlt').textillate({
