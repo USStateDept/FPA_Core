@@ -23,7 +23,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row
     .col-md-12
-      input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
+      input#filterCountries.btn-block(data-bind="value:filterCountry,valueUpdate:'keyup',event:{keyup:filterCountries}" placeHolder="Find a Country")
   .row
     p
   .row.countries-list
