@@ -82,8 +82,8 @@ def dataorgs():
 
 
     for indicator in query_all.all():
-        if not getattr(indicator, "mapping", None):
-            continue
+        #if not getattr(indicator, "mapping", None):
+        #    continue
         keyname = indicator.name
         years = getattr(indicator,"years",None)
         if years:
