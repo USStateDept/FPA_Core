@@ -723,9 +723,9 @@ var act;
         var seriesArray = [];
         if (window.utils.masterCells.length == 0)
             window.utils.masterCells = window.utils.masterCells.concat(cells);
-        //debugger;
-        var _cells = window.utils.masterCells;
 
+        var _cells = cells; //window.utils.masterCells;
+        //debugger;
         _.forEach(_cells, function(c) {
             if (c.region) {
                 series[c.region] = [];
@@ -738,7 +738,7 @@ var act;
             }
         });
 
-
+        //debugger;
         var titleArray = _.map(indicatorsMeta, function(meta) {
 
             var title = meta[0].label;

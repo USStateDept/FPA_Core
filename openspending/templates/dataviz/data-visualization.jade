@@ -51,7 +51,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       .row
         p
  
- //- #slide-panel
+ #slide-panel
     a.btn#opener
       i.glyphicon.glyphicon-align-justify
     .container-full#content
@@ -100,7 +100,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       //-   a(href='#tab-countries', data-toggle='tab') Countries
 
                 .col-md-10
-                  .tab-content
+                  .tab-content(style="height:300px;overflow-y:auto" )
                     #tab-category.tab-pane.active
                       .row(data-bind="foreach:categoriesModel")
                         .col-sm-6.col-md-6.col-sm-4.flip
@@ -108,7 +108,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                             .face.front
                               div.well.category-wrapper()
                                 span.badge(data-bind="html:length")
-                                div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
+                                //-div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
                                 h4(data-bind="html:label")
                             .face.back
                               div.list-group()
@@ -147,7 +147,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                             .face.front
                               div.well.category-wrapper()
                                 span.badge(data-bind="html:length")
-                                div.well.category.icon-category-70()
+                                //-div.well.category.icon-category-70()
                                 h4(data-bind="html:label")
                             .face.back
                               div.list-group()
@@ -219,7 +219,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .row
                 p
               .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
-                .col-md-8.countries-col(style="height:400px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
+                .col-md-8.countries-col(style="height:200px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
                   .row.f32(data-bind="foreach:activeGroup().regions")
                     .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
                       span.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
