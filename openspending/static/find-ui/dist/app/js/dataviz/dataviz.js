@@ -51,7 +51,7 @@
         var panel = $('#slide-panel');
         if (panel.hasClass("visible")) {
             panel.removeClass('visible').animate({
-                'margin-left': '-400px'
+                'margin-left': '-600px'
             });
         } else {
             panel.addClass('visible').animate({
@@ -736,8 +736,17 @@
                 return indicator.id;
             });
 
+            var currentHash = window.utils.getHashParams();
+            var indicatorsArr = currentHash.i.split("|");
+            //var newIndicators = indicatorsArr.concat(geounits);
+            currentHash.i = indicators.join("|");
+
+            //debugger;
+            window.utils.updateHash(currentHash);
+
             var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-            var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+            var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
             //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
@@ -1353,9 +1362,12 @@
     var setExtremes = function(startYear, endYear) {
 
         var chart = $('#viz-container').highcharts();
-        var xAxis = chart.series[0].xAxis;
+        if (chart) {
+            var xAxis = chart.series[0].xAxis;
 
-        xAxis.setExtremes(startYear, endYear);
+            xAxis.setExtremes(startYear, endYear);
+        }
+
 
     }
 
