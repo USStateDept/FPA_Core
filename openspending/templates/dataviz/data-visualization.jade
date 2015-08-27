@@ -238,8 +238,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
         li.active
           a(href='#viz-container', data-toggle='tab') Chart       
         li
-          a(href='#data-table', data-toggle='tab') Data Table
+          a(href='#data-table', data-target="#data-table, #data-table-save", data-toggle='tab') Data Table
       .tab-content
+        #data-table-save.tab-pane
+          .row(style="padding:10px 0")
+            span Export data: 
+            input#savecsv(type="button" value="CSV")
+            input#savexlsx(type="button" value="XLSX")
         #viz-container.active.tab-pane
         #data-table.tab-pane
         
@@ -275,6 +280,9 @@ script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.dataview.js
 script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.checkboxselectcolumn.js') }}")
 script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.rowselectionmodel.js') }}")
 script(src="{{ static_path('find-ui/bower_components/slickgrid-bootstrap/bootstrap/bootstrap-slickgrid.js') }}")
+//script(src="{{ static_path('find-ui/bower_components/requirejs/require.js') }}")
+script(src="{{ static_path('find-ui/bower_components/js-xlsx/dist/xlsx.core.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/file-saver/FileSaver.min.js') }}")
 
 //- script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}")
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")

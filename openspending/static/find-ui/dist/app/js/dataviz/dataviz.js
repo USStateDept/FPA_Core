@@ -891,7 +891,10 @@
             /* options go here as an object */
         });
     }
-
+	
+	var saveFields = [];
+	var saveData = [];
+	
     var showTable = function(data) {
         //debugger;
         //get colum names from cells
@@ -1042,10 +1045,157 @@
 
             dataView.sort(comparer, args.sortAsc);
         });
-
-
-
+		
+		columns.forEach(function(column,i){
+			saveFields.push(column.field);
+		});
+		saveData = dataWide;
     }
+	
+	//var converter = require('json-2-csv');
+	
+	$("#savexlsx").click(function(){
+		exportData('xlsx');
+	});
+	
+	$("#savecsv").click(function(){
+		exportData('csv');
+	});
+	
+	var exportData = function(type) {
+		
+		var wb = {} //work book
+		wb.Sheets = {};
+		wb.Props = {};
+		wb.SSF = {};
+		wb.SheetNames = ['FIND Data Export'];  //name all your sheets
+
+		//make new work sheet
+		//array of arrays in variable data
+		//first array is headers
+		//one new array for each site's data
+		ws = {}
+		data = [];
+		data.push(saveFields);
+		
+		//sets saveData to proper columns
+		saveData.forEach(function(entry) {
+			dataTemp = [];
+			saveFields.forEach(function(field){
+				dataTemp.push(entry[field]);
+			});
+			data.push(dataTemp);
+		});
+		
+		/* the range object is used to keep track of the range of the sheet */
+		var range = {
+			s: {
+				c: 0,
+				r: 0
+			},
+			e: {
+				c: 0,
+				r: 0
+			}
+		};
+
+		/* Iterate through each element in the structure */
+		for (var R = 0; R != data.length; ++R) {
+			if (range.e.r < R) range.e.r = R;
+			for (var C = 0; C != data[R].length; ++C) {
+				if (range.e.c < C) range.e.c = C;
+
+				/* create cell object: .v is the actual data */
+				var cell = {
+					v: data[R][C]
+				};
+				if (cell.v == null) continue;
+
+				/* create the correct cell reference */
+				var cell_ref = XLSX.utils.encode_cell({
+					c: C,
+					r: R
+				});
+
+				/* determine the cell type */
+				if (typeof cell.v === 'number') cell.t = 'n';
+				else if (typeof cell.v === 'boolean') cell.t = 'b';
+				else cell.t = 's';
+
+				/* add to structure */
+				ws[cell_ref] = cell;
+			}
+		}
+		ws['!ref'] = XLSX.utils.encode_range(range);
+
+		//there are some options you can add, wch sets column width
+		var wscols = [{
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}];
+		ws['!cols'] = wscols;
+
+		/* add worksheet to workbook */
+		wb.Sheets["FIND Data Export"] = ws;
+
+		// workbook options
+		var wopts = {
+						bookType: 'xlsx',
+						bookSST: false,
+						type: 'binary'
+					};
+
+		//writes workbook
+		var wbout = XLSX.write(wb, wopts);
+		
+		/*convert to CSV if needed*/
+		if (type == 'csv');
+			var csv = XLSX.utils.sheet_to_csv(ws);
+		
+		function s2ab(s) {
+			var buf = new ArrayBuffer(s.length);
+			var view = new Uint8Array(buf);
+			for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+			return buf;
+		}
+
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1; //January is 0!
+
+		var yyyy = today.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd
+		}
+		if (mm < 10) {
+			mm = '0' + mm
+		}
+		var today = dd + '_' + mm + '_' + yyyy;
+
+		//USES FILESAVER.JS LIBRARY !! not associated with sheetjs
+		if (type == 'csv') {
+			saveAs(new Blob([s2ab(csv)],{type:"application/octet-stream"}), "FINDdata_" + today + ".csv")
+		} else {
+			saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "FINDdata_" + today + ".xlsx")
+		}	
+	}
 
     var addDataToGeoJson = function(lastGeoJson, type) {
 
