@@ -739,7 +739,8 @@
             var currentHash = window.utils.getHashParams();
             var indicatorsArr = currentHash.i.split("|");
             //var newIndicators = indicatorsArr.concat(geounits);
-            currentHash.i = indicators.join("|");
+            currentHash.i = indicators[indicators.length - 1]; //USE ONLY ONE INDICATOR
+            currentHash.i = indicators.join("|"); //USE ONLY ONE INDICATOR
 
             //debugger;
             window.utils.updateHash(currentHash);
@@ -754,6 +755,8 @@
             $.when.apply($, _deferredList).done(function(response) {
                 indicatorDataLoadHandler(arguments);
             });
+
+            model.activeIndicators.removeAll();
 
             //$.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
             //_deferred.done(indicatorDataLoadHandler);
@@ -786,6 +789,8 @@
             $.when.apply($, _deferredList).done(function(response) {
                 indicatorDataLoadHandler(arguments);
             });
+
+            model.activeCountries.removeAll();
 
         }
     }
