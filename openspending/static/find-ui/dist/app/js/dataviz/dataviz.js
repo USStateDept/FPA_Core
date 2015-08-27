@@ -51,7 +51,7 @@
         var panel = $('#slide-panel');
         if (panel.hasClass("visible")) {
             panel.removeClass('visible').animate({
-                'margin-left': '-400px'
+                'margin-left': '-600px'
             });
         } else {
             panel.addClass('visible').animate({
@@ -547,12 +547,14 @@
             });
 
             _.forEach(countryGroupings, function(countryGroup, i) {
+
                 if (activeGroupId == countryGroup.id) {
                     model.activeGroup(countryGroup);
                 }
                 model.countryGroupings.push(countryGroup);
             });
 
+            /*debugger;
 
             var filterValue = $("#filterCountries")[0].value;
 
@@ -561,7 +563,7 @@
                 currentTarget: {
                     value: filterValue
                 }
-            });
+            });*/
         },
 
         removeCountry: function() {
@@ -734,8 +736,18 @@
                 return indicator.id;
             });
 
+            var currentHash = window.utils.getHashParams();
+            var indicatorsArr = currentHash.i.split("|");
+            //var newIndicators = indicatorsArr.concat(geounits);
+            currentHash.i = indicators[indicators.length - 1]; //USE ONLY ONE INDICATOR
+            currentHash.i = indicators.join("|"); //USE ONLY ONE INDICATOR
+
+            //debugger;
+            window.utils.updateHash(currentHash);
+
             var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-            var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+            var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
             //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
@@ -743,6 +755,8 @@
             $.when.apply($, _deferredList).done(function(response) {
                 indicatorDataLoadHandler(arguments);
             });
+
+            model.activeIndicators.removeAll();
 
             //$.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
             //_deferred.done(indicatorDataLoadHandler);
@@ -752,11 +766,31 @@
             model.addComparator("group");
         },
 
-        addComparator: function(model) {
-            debugger;
-            model.countryGroup();
-            debugger;
+        addComparator: function() {
 
+            var geounits = _.map(model.activeCountries(), function(_a) {
+                return _a.geounit;
+            });
+            //debugger;
+            var currentHash = window.utils.getHashParams();
+            var regionsArr = currentHash.r.split("|");
+            var newRegions = regionsArr.concat(geounits);
+            currentHash.r = newRegions.join("|");
+
+            //debugger;
+            window.utils.updateHash(currentHash);
+
+            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+            var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
+            _deferredList = _deferredList.concat(_deferredMetaList);
+
+            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+
+            $.when.apply($, _deferredList).done(function(response) {
+                indicatorDataLoadHandler(arguments);
+            });
+
+            model.activeCountries.removeAll();
 
         }
     }
@@ -1483,9 +1517,12 @@
     var setExtremes = function(startYear, endYear) {
 
         var chart = $('#viz-container').highcharts();
-        var xAxis = chart.series[0].xAxis;
+        if (chart) {
+            var xAxis = chart.series[0].xAxis;
 
-        xAxis.setExtremes(startYear, endYear);
+            xAxis.setExtremes(startYear, endYear);
+        }
+
 
     }
 

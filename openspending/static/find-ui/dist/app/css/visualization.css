@@ -154,6 +154,9 @@
   max-height: 410px;
   background-color: #fff;
 }
+.flippedCol .list-group #slide-panel span.list {
+  max-height: 300px;
+}
 .downloadLinks {
   margin: 5px 0px 0px 20px;
   color: #5c74b4;
@@ -513,27 +516,51 @@
   background-size: contain;
 }
 #data-table,
-#indicators,
-#comparator {
+#indicators {
   height: 470px;
   width: 100%;
   overflow: auto;
+}
+#comparator {
+  width: 100%;
 }
 .slick-viewport,
 .slick-header {
   font-size: 12px;
 }
 #slide-panel {
-  width: 400px;
+  width: 600px;
+  background-color: #eee;
   height: 400px;
   padding: 10px;
-  background: #fff;
   position: absolute;
   top: 200px;
   left: 0px;
   z-index: 2000;
-  margin-left: -400px;
+  margin-left: -600px;
   box-shadow: 10px 10px 5px #eee;
+  font-size: 12px;
+}
+#slide-panel .container-full {
+  overflow: hidden;
+}
+#slide-panel .selection-list .btn-default {
+  font-size: 12px;
+}
+#slide-panel .well {
+  height: 80px;
+  padding: 10px;
+}
+#slide-panel h4 {
+  font-size: 12px;
+  max-height: 50px;
+  overflow: hidden;
+}
+#slide-panel .flip {
+  min-height: 100px;
+}
+#slide-panel .flippedCol .list-group {
+  max-height: 250px;
 }
 #opener {
   float: right;

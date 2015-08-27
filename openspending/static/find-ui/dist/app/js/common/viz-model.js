@@ -383,7 +383,7 @@
 
 
         removeCountry: function() {
-            debugger;
+
 
             var selectedCountry = arguments[0];
             var activeCountries = vizModel.activeCountries();
