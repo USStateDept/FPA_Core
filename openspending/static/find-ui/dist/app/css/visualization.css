@@ -544,7 +544,8 @@
 #slide-panel .container-full {
   overflow: hidden;
 }
-#slide-panel .selection-list .btn-default {
+#slide-panel .selection-list .btn-default,
+#slide-panel .flags-labels {
   font-size: 12px;
 }
 #slide-panel .well {
