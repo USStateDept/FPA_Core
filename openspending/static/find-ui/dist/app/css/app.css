@@ -86,6 +86,9 @@ body {
   text-align: center;
   font-size: 40px;
 }
+.app .data-story-text {
+  padding: 0 0 20px;
+}
 .app img {
   width: 100%;
   height: auto;
@@ -316,6 +319,10 @@ background green,
 @media (min-width: 992px) {
   .category-wrapper {
     height: 210px;
+  }
+  .app .data-story-container {
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
   }
 }
 @media (min-width: 1200px) {
