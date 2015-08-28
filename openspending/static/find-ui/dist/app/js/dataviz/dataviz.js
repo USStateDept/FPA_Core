@@ -980,6 +980,8 @@
             dataTempObj['country'] = country;
             data.forEach(function(entry) {
                 if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
+					if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
+						entry[indicator] = entry[indicator].toFixed(2); //Rounds number to 2 decimal places
                     dataTempObj[entry['year']] = entry[indicator];
                 }
             });
