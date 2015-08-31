@@ -191,9 +191,9 @@ var act;
 
             var newSourceArray = ["MCC","CDA","DHS","SDG",,"UIS","WHO","IMF"];
             var label=newSource.label.split("-")[0].trim();
-            console.log(newSource.label);
+            // console.log(newSource.label);
             if (newSourceArray.indexOf(label)!=-1){
-                console.log("REACHED THIS LINE");
+                // console.log("REACHED THIS LINE");
                 sourcesModel.push(newSource);
             }
 
