@@ -11,6 +11,16 @@ Install
 
 [See a shorter version here](DevOps/install-2.md)
 
+Development
+-------------------------------
+
+[See a list of some software you may want to checkout](development/things_to_know.md)
+
+[The Database Schema](DevOps/dbschema.png)
+
+[Issues are tracked through Github](https://github.com/USStateDept/FPA_Core/issues)
+
+
 
 Loading Data into the system
 --------------------------------
