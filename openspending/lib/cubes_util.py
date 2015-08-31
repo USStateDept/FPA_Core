@@ -34,6 +34,7 @@ def get_cubes_breaks(vals, field, method='jenks', k=5):
     """
     arrayvals = np.array([x[field] for x in vals])
     arrayvals = arrayvals[arrayvals != np.array(None)]
+    arrayvals = np.unique(arrayvals)
     if len(arrayvals) == 0:
         return {"labels":[],"data":[]}
     k = int(k)
