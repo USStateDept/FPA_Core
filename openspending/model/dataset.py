@@ -247,7 +247,8 @@ class Dataset(db.Model):
             'dataorg': dataorg_dict,
             'created_at': self.created_at,
             'years':the_years,
-            'url':source_url
+            'url':source_url,
+            'units':self.units
         }
 
 

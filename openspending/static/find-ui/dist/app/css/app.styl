@@ -113,7 +113,8 @@ html, body
 		width 100%
 		text-align center
 		font-size 40px
-	
+.app .data-story-text
+	padding: 0 0 20px
 .app img
 	width 100%
 	height auto
@@ -193,6 +194,7 @@ html, body
 
 .app .footer
 	
+	padding 50px
 	
 	h1
 		font-size 36px
@@ -205,13 +207,18 @@ html, body
 	.updates
 		
 		ul			
-			color $colorLight
+			color #000
 			font-size 22px
 			
 	#data-stories
 		
 		h3
-			color $colorLight
+			color $colorDark
+		a
+			color #000
+	
+	a
+		color $colorLight
 
 		
 		
@@ -316,6 +323,10 @@ body .app ul.dropdown-menu.account-dropdown
 	& h1
 		color #FFF
 		
+#data-stories-full
+	h3 
+		color $colorDark
+		
 .carousel-fade
 	
 	.carousel-inner
@@ -362,6 +373,9 @@ body .app ul.dropdown-menu.account-dropdown
 
 	.category-wrapper
 		height 210px
+	.app .data-story-container
+		margin-bottom -99999px
+		padding-bottom 99999px
 
 
 //large

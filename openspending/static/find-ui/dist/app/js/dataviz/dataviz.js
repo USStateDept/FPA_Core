@@ -15,6 +15,7 @@
     //var groupByRegion = false;
     var modalTitle = "";
     var modalMessage = "";
+    var geometryType = "sovereignt";
 
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
@@ -22,6 +23,8 @@
     //var region = hashParams.r;
     var chartType = hashParams.c;
     var regions = hashParams.r.split("|");
+
+    var cluster = {};
     //groupByRegion = parseInt(hashParams.grp);
 
     var statsData, statsDataSeries;
@@ -48,7 +51,7 @@
         var panel = $('#slide-panel');
         if (panel.hasClass("visible")) {
             panel.removeClass('visible').animate({
-                'margin-left': '-400px'
+                'margin-left': '-600px'
             });
         } else {
             panel.addClass('visible').animate({
@@ -111,98 +114,98 @@
                 //failure message here?               
             }
         },
-        chartBarToggleMin: function(){
+        chartBarToggleMin: function() {
             var key = "min";
             var labelKey = "Global Minimum";
             var arrayBefore = [];
-            
-            var action = this.barUpdateCategories(key,labelKey,arrayBefore);
-            this.barUpdateData(key,action,arrayBefore);
+
+            var action = this.barUpdateCategories(key, labelKey, arrayBefore);
+            this.barUpdateData(key, action, arrayBefore);
         },
 
-        chartBarToggleMax: function(){
+        chartBarToggleMax: function() {
             var key = "max";
             var labelKey = "Global Maximum";
             var arrayBefore = ['Global Minimum'];
-            
-            var action = this.barUpdateCategories(key,labelKey,arrayBefore);
-            this.barUpdateData(key,action,arrayBefore);
+
+            var action = this.barUpdateCategories(key, labelKey, arrayBefore);
+            this.barUpdateData(key, action, arrayBefore);
         },
 
-        chartBarToggleAvg: function(){
+        chartBarToggleAvg: function() {
             var key = "avg"
             var labelKey = "Global Average";
-            var arrayBefore = ['Global Minimum','Global Maximum'];
-            
-             var action = this.barUpdateCategories(key,labelKey, arrayBefore);
-            this.barUpdateData(key,action,arrayBefore);
+            var arrayBefore = ['Global Minimum', 'Global Maximum'];
+
+            var action = this.barUpdateCategories(key, labelKey, arrayBefore);
+            this.barUpdateData(key, action, arrayBefore);
         },
-        
-        barFindIndex: function(key,searchArray){
+
+        barFindIndex: function(key, searchArray) {
             var useIndex = 0;
-            
+
             var chart = $('#viz-container').highcharts();
-            
+
             var categories = chart.xAxis[0].names;
 
-            if ( key == 'min' ){
+            if (key == 'min') {
                 useIndex = 0;
-            } else if ( key == 'max' ) {
-                if ( $.inArray("Global Minimum",categories) > -1 ){
+            } else if (key == 'max') {
+                if ($.inArray("Global Minimum", categories) > -1) {
                     useIndex = 1;
                 }
-            } else if ( key == 'avg' ) {
-                if ( $.inArray("Global Minimum",categories) > -1 ) {
-                  useIndex++;
+            } else if (key == 'avg') {
+                if ($.inArray("Global Minimum", categories) > -1) {
+                    useIndex++;
                 }
-                if ( $.inArray("Global Maximum",categories) > -1 ) {
-                  useIndex++;
+                if ($.inArray("Global Maximum", categories) > -1) {
+                    useIndex++;
                 }
             }
 
             return useIndex;
         },
 
-        barUpdateData: function(key,action,searchArray){
-            var no = this.barFindIndex(key,searchArray);
+        barUpdateData: function(key, action, searchArray) {
+            var no = this.barFindIndex(key, searchArray);
             var chart = $('#viz-container').highcharts();
             var newY = $("#data-proxy").data(key);
             var data = [];
 
-            for ( i=0; i < chart.series[0].data.length; i++ ){
+            for (i = 0; i < chart.series[0].data.length; i++) {
                 data.push(chart.series[0].data[i].y);
             }
-            
-            if ( action == "add" ) {
-                data.splice(no,0,newY);
-            } else if ( action == "remove" ) {
-                data.splice(no,1);
+
+            if (action == "add") {
+                data.splice(no, 0, newY);
+            } else if (action == "remove") {
+                data.splice(no, 1);
             }
 
-           chart.series[0].setData(data);
+            chart.series[0].setData(data);
         },
-        
-         barUpdateCategories: function(key,labelKey,searchArray){
-            var foundIndex = this.barFindIndex(key,searchArray);
+
+        barUpdateCategories: function(key, labelKey, searchArray) {
+            var foundIndex = this.barFindIndex(key, searchArray);
             var chart = $('#viz-container').highcharts();
             var categories = chart.xAxis[0].names;
             var action = "none";
             //check if key is in category label
-            
-            if ( $.inArray(labelKey,chart.xAxis[0].names) > -1) {
-              //present, remove it
+
+            if ($.inArray(labelKey, chart.xAxis[0].names) > -1) {
+                //present, remove it
                 action = "remove";
-                categories.splice(foundIndex,1);
+                categories.splice(foundIndex, 1);
             } else {
-              //absent, add it back
-              action = "add";
-              categories.splice(foundIndex,0,labelKey);
+                //absent, add it back
+                action = "add";
+                categories.splice(foundIndex, 0, labelKey);
             }
 
-            chart.xAxis[0].setCategories(categories,false);
+            chart.xAxis[0].setCategories(categories, false);
             return action;
         },
-        
+
         showRegionalAverage: function() {
 
         },
@@ -286,6 +289,8 @@
             //redrawChart(yearsFilter[0], yearsFilter[1]);
 
         },
+
+        activeChart: ko.observable(chartType),
 
         activeIndicators: ko.observableArray([]),
 
@@ -542,12 +547,14 @@
             });
 
             _.forEach(countryGroupings, function(countryGroup, i) {
+
                 if (activeGroupId == countryGroup.id) {
                     model.activeGroup(countryGroup);
                 }
                 model.countryGroupings.push(countryGroup);
             });
 
+            /*debugger;
 
             var filterValue = $("#filterCountries")[0].value;
 
@@ -556,7 +563,7 @@
                 currentTarget: {
                     value: filterValue
                 }
-            });
+            });*/
         },
 
         removeCountry: function() {
@@ -729,8 +736,18 @@
                 return indicator.id;
             });
 
+            var currentHash = window.utils.getHashParams();
+            var indicatorsArr = currentHash.i.split("|");
+            //var newIndicators = indicatorsArr.concat(geounits);
+            currentHash.i = indicators[indicators.length - 1]; //USE ONLY ONE INDICATOR
+            currentHash.i = indicators.join("|"); //USE ONLY ONE INDICATOR
+
+            //debugger;
+            window.utils.updateHash(currentHash);
+
             var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-            var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
+            var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
             //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
@@ -738,6 +755,8 @@
             $.when.apply($, _deferredList).done(function(response) {
                 indicatorDataLoadHandler(arguments);
             });
+
+            model.activeIndicators.removeAll();
 
             //$.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
             //_deferred.done(indicatorDataLoadHandler);
@@ -747,11 +766,31 @@
             model.addComparator("group");
         },
 
-        addComparator: function(model) {
-            debugger;
-            model.countryGroup();
-            debugger;
-            
+        addComparator: function() {
+
+            var geounits = _.map(model.activeCountries(), function(_a) {
+                return _a.geounit;
+            });
+            //debugger;
+            var currentHash = window.utils.getHashParams();
+            var regionsArr = currentHash.r.split("|");
+            var newRegions = regionsArr.concat(geounits);
+            currentHash.r = newRegions.join("|");
+
+            //debugger;
+            window.utils.updateHash(currentHash);
+
+            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+            var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
+            _deferredList = _deferredList.concat(_deferredMetaList);
+
+            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+
+            $.when.apply($, _deferredList).done(function(response) {
+                indicatorDataLoadHandler(arguments);
+            });
+
+            model.activeCountries.removeAll();
 
         }
     }
@@ -816,9 +855,17 @@
 
                 //update hash
                 var currentHash = window.utils.getHashParams();
+
                 currentHash.f = startYear + "|" + endYear;
 
                 window.utils.updateHash(currentHash);
+
+                if (chartType == "map") {
+                    console.time("choropleth");
+                    addDataToGeoJson(window.loader.lastGeoJson, geometryType);
+
+                    addChoroplethLayer(window.loader.lastGeoJson, geometryType, cluster, indicators[0]);
+                }
                 //redrawChart(startYear, endYear);
             },
             slide: function(event, ui) {
@@ -844,7 +891,10 @@
             /* options go here as an object */
         });
     }
-
+	
+	var saveFields = [];
+	var saveData = [];
+	
     var showTable = function(data) {
         //debugger;
         //get colum names from cells
@@ -930,6 +980,8 @@
             dataTempObj['country'] = country;
             data.forEach(function(entry) {
                 if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
+					if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
+						entry[indicator] = entry[indicator].toFixed(2); //Rounds number to 2 decimal places
                     dataTempObj[entry['year']] = entry[indicator];
                 }
             });
@@ -938,30 +990,30 @@
         }
 
         data.forEach(function(entry) {
-			
-			var numIndicators = Object.keys(entry).length - 3;
-			
-			for (i=0; i < numIndicators; i ++){
-				var indicator = Object.keys(entry)[i];
-				
-				if (dataWide.length == 0) {
-					createDataWide(0, indicator, entry['region'], i);
-				} else {
-					var indicatorCountryExists = 0;
-					var id = 0;
-					dataWide.forEach(function(dataEntry, i) {
-						if (dataEntry['indicator'] == indicator && dataEntry['country'] == entry['region']) {
-							indicatorCountryExists = 1;
-						}
-						id = i + 1;
-					});
-					if (!indicatorCountryExists) {
-						createDataWide(id, indicator, entry['region'], i);
-					}
-				}
-			}
+
+            var numIndicators = Object.keys(entry).length - 3;
+
+            for (i = 0; i < numIndicators; i++) {
+                var indicator = Object.keys(entry)[i];
+
+                if (dataWide.length == 0) {
+                    createDataWide(0, indicator, entry['region'], i);
+                } else {
+                    var indicatorCountryExists = 0;
+                    var id = 0;
+                    dataWide.forEach(function(dataEntry, i) {
+                        if (dataEntry['indicator'] == indicator && dataEntry['country'] == entry['region']) {
+                            indicatorCountryExists = 1;
+                        }
+                        id = i + 1;
+                    });
+                    if (!indicatorCountryExists) {
+                        createDataWide(id, indicator, entry['region'], i);
+                    }
+                }
+            }
         });
-        
+
         var options = {
             enableCellNavigation: true,
             enableColumnReorder: true,
@@ -969,25 +1021,25 @@
             defaultColumnWidth: 150,
             rowHeight: 35
         }
-		
+
         var dataView = new Slick.Data.DataView();
 
         // Pass it as a data provider to SlickGrid.
         var grid = new Slick.Grid("#data-table", dataView, columns, options);
-        
+
         // Make the grid respond to DataView change events.
-        dataView.onRowCountChanged.subscribe(function (e, args) {
-          grid.updateRowCount();
-          grid.render();
+        dataView.onRowCountChanged.subscribe(function(e, args) {
+            grid.updateRowCount();
+            grid.render();
         });
 
-        dataView.onRowsChanged.subscribe(function (e, args) {
-          grid.invalidateRows(args.rows);
-          grid.render();
+        dataView.onRowsChanged.subscribe(function(e, args) {
+            grid.invalidateRows(args.rows);
+            grid.render();
         });
-        
+
         dataView.setItems(dataWide);
-        
+
         grid.onSort.subscribe(function(e, args) {
             var comparer = function(a, b) {
                 return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
@@ -995,14 +1047,260 @@
 
             dataView.sort(comparer, args.sortAsc);
         });
-        
-        
+		
+		columns.forEach(function(column,i){
+			saveFields.push(column.field);
+		});
+		saveData = dataWide;
+    }
+	
+	//var converter = require('json-2-csv');
+	
+	$("#savexlsx").click(function(){
+		exportData('xlsx');
+	});
+	
+	$("#savecsv").click(function(){
+		exportData('csv');
+	});
+	
+	var exportData = function(type) {
+		
+		var wb = {} //work book
+		wb.Sheets = {};
+		wb.Props = {};
+		wb.SSF = {};
+		wb.SheetNames = ['FIND Data Export'];  //name all your sheets
+
+		//make new work sheet
+		//array of arrays in variable data
+		//first array is headers
+		//one new array for each site's data
+		ws = {}
+		data = [];
+		data.push(saveFields);
+		
+		//sets saveData to proper columns
+		saveData.forEach(function(entry) {
+			dataTemp = [];
+			saveFields.forEach(function(field){
+				dataTemp.push(entry[field]);
+			});
+			data.push(dataTemp);
+		});
+		
+		/* the range object is used to keep track of the range of the sheet */
+		var range = {
+			s: {
+				c: 0,
+				r: 0
+			},
+			e: {
+				c: 0,
+				r: 0
+			}
+		};
+
+		/* Iterate through each element in the structure */
+		for (var R = 0; R != data.length; ++R) {
+			if (range.e.r < R) range.e.r = R;
+			for (var C = 0; C != data[R].length; ++C) {
+				if (range.e.c < C) range.e.c = C;
+
+				/* create cell object: .v is the actual data */
+				var cell = {
+					v: data[R][C]
+				};
+				if (cell.v == null) continue;
+
+				/* create the correct cell reference */
+				var cell_ref = XLSX.utils.encode_cell({
+					c: C,
+					r: R
+				});
+
+				/* determine the cell type */
+				if (typeof cell.v === 'number') cell.t = 'n';
+				else if (typeof cell.v === 'boolean') cell.t = 'b';
+				else cell.t = 's';
+
+				/* add to structure */
+				ws[cell_ref] = cell;
+			}
+		}
+		ws['!ref'] = XLSX.utils.encode_range(range);
+
+		//there are some options you can add, wch sets column width
+		var wscols = [{
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}, {
+			wch: 20
+		}];
+		ws['!cols'] = wscols;
+
+		/* add worksheet to workbook */
+		wb.Sheets["FIND Data Export"] = ws;
+
+		// workbook options
+		var wopts = {
+						bookType: 'xlsx',
+						bookSST: false,
+						type: 'binary'
+					};
+
+		//writes workbook
+		var wbout = XLSX.write(wb, wopts);
+		
+		/*convert to CSV if needed*/
+		if (type == 'csv');
+			var csv = XLSX.utils.sheet_to_csv(ws);
+		
+		function s2ab(s) {
+			var buf = new ArrayBuffer(s.length);
+			var view = new Uint8Array(buf);
+			for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+			return buf;
+		}
+
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1; //January is 0!
+
+		var yyyy = today.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd
+		}
+		if (mm < 10) {
+			mm = '0' + mm
+		}
+		var today = dd + '_' + mm + '_' + yyyy;
+
+		//USES FILESAVER.JS LIBRARY !! not associated with sheetjs
+		if (type == 'csv') {
+			saveAs(new Blob([s2ab(csv)],{type:"application/octet-stream"}), "FINDdata_" + today + ".csv")
+		} else {
+			saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "FINDdata_" + today + ".xlsx")
+		}	
+	}
+
+    var addDataToGeoJson = function(lastGeoJson, type) {
+
+        var data = window.loader.data;
+        var gjson = lastGeoJson;
+
+        var hashParams = window.utils.getHashParams();
+        var yearsFilter = hashParams.f.split("|");
+        var indicators = hashParams.i.split("|");
+        var onlyIndicator = indicators[0];
+        var regions = hashParams.r.split("|");
+        var maxYear = yearsFilter[1]; //2013
+        //debugger;
+        var dataByRegion = {};
+        _.map(regions, function(_r) {
+            dataByRegion[_r] = 0;
+        });
+
+        var usePrefix = false;
+
+        if (regions[0].indexOf(":") > -1) {
+            usePrefix = true
+        }
+
+        _.map(data.cells, function(_c) {
+            if (_c.year == parseInt(maxYear)) {
+                if (usePrefix) { //if not countries
+                    dataByRegion[type + ":" + _c.region] = _c[onlyIndicator + "__amount_avg"];
+                } else {
+                    dataByRegion[_c.region] = _c[onlyIndicator + "__amount_avg"];
+                }
+                //debugger;
+            }
+        });
+
+        _.forEach(gjson.features, function(_f) {
+            var name = _f.properties.sovereignt || _f.properties.usaid_reg || _f.properties.continent || _f.properties.dod_cmd || _f.properties.dos_region || _f.properties.wb_inc_lvl;
+            if (name) {
+
+                var _r = name.toLowerCase();
+                if (usePrefix) { //if not countries
+                    _r = type + ":" + name;
+                }
+                //debugger;
+                if (_.indexOf(regions, _r) > -1) {
+                    _f.properties[onlyIndicator] = _.round(dataByRegion[_r], 2);
+                }
+            }
+
+        });
+
+        window.loader.lastGeoJson = gjson;
+        window.loader.indicator = onlyIndicator; //indicator;
+        console.log(window.loader.lastGeoJson);
+        // debugger;
+    }
+
+    var addChoroplethLayer = function(lastGeoJson, type, cluster, onlyIndicator) {
+        var hashParams = window.utils.getHashParams();
+        // var yearsFilter = hashParams.f.split("|");
+        // var maxYear = yearsFilter[1];
+        var regions = hashParams.r.split("|");
+
+        window.loader.geoJson[type] = lastGeoJson;
+        //debugger;
+        //window.loader.geoJsonLayers[type] = L.geoJson(lastGeoJson);
+
+        window.utils.highlightOnMapViz(regions, type, cluster, onlyIndicator, window.loader.lastGeoJson);
+        // debugger;
+        //window.utils.zoomToFeatures(featuresAdded);
 
     }
 
-    var geoJSONHandler = function(response, type) {
+    var geoJSONHandler = function(response, type, cluster) {
 
-        function onEachFeature(feature, layer) {
+        // debugger;
+        var hashParams = window.utils.getHashParams();
+        var yearsFilter = hashParams.f.split("|");
+        var maxYear = yearsFilter[1];
+        var regions = hashParams.r.split("|");
+        var indicators = hashParams.i.split("|");
+        var onlyIndicator = indicators[0];
+
+
+
+
+
+
+        window.loader.lastGeoJson = response;
+
+        addDataToGeoJson(window.loader.lastGeoJson, type);
+
+        addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator);
+
+        window.utils.addLegend(cluster);
+
+        //if (!window.visualization.geoJsonLayers[type]) {
+        //if layer doesnt exist then add it and symbolize as invisible 
+
+        return;
+
+
+        /*function onEachFeature(feature, layer) {
 
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
@@ -1033,7 +1331,7 @@
             if (type == _type) {
                 map.addLayer(geoJsonLayers[_type]);
             }
-        }
+        }*/
 
         /*} else {
             //if layer exists bring it on top
@@ -1042,26 +1340,31 @@
 
     }
 
-    /*var changeGroup = function(groupId) {
-        debugger;
-        if (groupId == "all") {
-            groupId = "sovereignt";
+    var getGeoJsonForMap = function(cluster, cells, type) {
+        /* var groupId = "sovereignt";
+        debugger;*/
+
+
+        if (type == "name") {
+            type = "sovereignt";
         }
 
-        if (!geoJsonLayers[groupId]) {
-            window.loader.loadGeoJSON(groupId, geoJSONHandler);
-            debugger;
+        geometryType = type;
+
+        if (!window.loader.geoJsonLayers[type]) {
+            window.loader.loadGeoJSON(type, geoJSONHandler, cluster);
         } else {
-            //debugger;
-            //move this layer on top
-            //TODO: Leroy
+
         }
 
-    }*/
+
+
+
+    };
 
     var indicatorDataLoadHandler = function(args) {
 
-    //this might be the basic data loader
+        //this might be the basic data loader
 
         var responseDeferred = args;
 
@@ -1079,7 +1382,7 @@
         _.forEach(indicatorsData, function(response) {
 
             var data = response[0];
-            
+
             var levels = data.levels;
             var cutBy = "name";
             //debugger;
@@ -1103,14 +1406,18 @@
 
         var mergedCells = [];
 
+        var type = "sovereignt"; // for map visualization, getGeoJsonForMap needs this
+
         _.forEach(indicatorsData, function(response) {
 
             var data = response[0];
             var cutBy = data.cutBy;
+            type = cutBy;
 
             _.forEach(data.cells, function(cell) {
 
                 cell.region = cell["geometry__country_level0." + cutBy];
+
                 cell.year = cell.geometry__time;
 
                 delete cell.geometry__time;
@@ -1142,72 +1449,82 @@
         var responseData = {
             cells: mergedCells
         }
-        
+
         var responseStats = statsData[0];
 
-        if(chartType=="map") {
-                $("#loading").hide();
+        if (chartType == "map") {
+            $("#loading").hide();
             map = L.map('viz-container').setView([0, 0], 3);
 
             L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                    maxZoom: 18,
-                    noWrap: true
-                }).addTo(map);
-            
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 18,
+                noWrap: true
+            }).addTo(map);
+
             window.loader.data = responseData;
-            window.loader.changeGroup("all");
+
+            cluster = indicatorsData[0][0].cluster
+
+            getGeoJsonForMap(cluster, responseData, type);
+
+            showTable(responseData);
+
+            //window.loader.changeGroup("all");
         } else {
-				if (chartType == "scatter"){
-					yearsExtremesForData = window.utils.getHashParams().f.split("|");
-				}
+            if (chartType == "scatter") {
+                yearsExtremesForData = window.utils.getHashParams().f.split("|");
+            }
 
-				var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
-               
-				var highChartsJson = sortedData.highcharts;
-                //add the min,max and avg to the data-proxy span
-                if ( chartType == "bar" ){
-                  $("#bar-globals").show();
-                  $("#data-proxy").data("min",highChartsJson.series[0].data[0][1]);
-                  $("#data-proxy").data("max",highChartsJson.series[0].data[1][1]);
-                  $("#data-proxy").data("avg",highChartsJson.series[0].data[2][1]);
-                } else {
-                    $("#bar-globals").hide();
+            var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
+
+            var highChartsJson = sortedData.highcharts;
+            //add the min,max and avg to the data-proxy span
+            if (chartType == "bar") {
+                $("#bar-globals").show();
+                $("#data-proxy").data("min", highChartsJson.series[0].data[0][1]);
+                $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
+                $("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
+            } else {
+                $("#bar-globals").hide();
+            }
+
+            highChartsJson.chart.events = {
+                load: function() {
+                    //debugger;
+                    var allowedSetExtremeCharts = ["line"];
+                    var xAxis = this.series[0].xAxis;
+                    if (chartType == "bar") {
+                        yearsFilter[0] = yearsFilter[1];
+                    }
+
+                    $("#loading").hide();
+
+                    if (_.indexOf(allowedSetExtremeCharts, chartType) > -1) {
+                        xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
+                    }
+
                 }
-				
-                highChartsJson.chart.events = {
-					load: function() {
-						//debugger;
-						var allowedSetExtremeCharts = ["line"];
-						var xAxis = this.series[0].xAxis;
-						if (chartType == "bar") {
-							yearsFilter[0] = yearsFilter[1];
-						}
+            }
+            //debugger;
+            //highChartsJson.subtitle.text = type;
+            var chart = $('#viz-container').highcharts(highChartsJson);
 
-						$("#loading").hide();
-
-						if (_.indexOf(allowedSetExtremeCharts, chartType) > -1) {
-							xAxis.setExtremes(yearsFilter[0], yearsFilter[1]);
-						}
-
-					}
-				}
-				//debugger;
-				//highChartsJson.subtitle.text = type;
-				var chart = $('#viz-container').highcharts(highChartsJson);
-                
-				showTable(responseData);
-			}
-		}
+            showTable(responseData);
+        }
+    }
 
     var useNarrowExtremes = true;
 
     var setExtremes = function(startYear, endYear) {
 
         var chart = $('#viz-container').highcharts();
-        var xAxis = chart.series[0].xAxis;
+        if (chart) {
+            var xAxis = chart.series[0].xAxis;
 
-        xAxis.setExtremes(startYear, endYear);
+            xAxis.setExtremes(startYear, endYear);
+        }
+
 
     }
 
@@ -1215,21 +1532,21 @@
 
         var activeChart = $('#viz-container').highcharts();
         //first three series are the stats
-		//debugger;
+        //debugger;
         var json = window.utils.prepareHighchartsJson({
             cells: window.utils.masterCells
         }, {
             cells: []
         }, indicatorsMeta, chartType, indicators, year);
 
-		if (chartType == "scatter") {
+        if (chartType == "scatter") {
             var series = json.highcharts.series;
-			
-			//debugger;
+
+            //debugger;
             _.forEach(series, function(s, i) {
                 var data = s.data;
-				if (i > 2)
-					activeChart.series[i].setData(data, true);
+                if (i > 2)
+                    activeChart.series[i].setData(data, true);
             });
         }
 
@@ -1268,7 +1585,7 @@
             });
             //debugger;
             activeChart.series[0].setData(currentData, true);
-            
+
         }
 
 

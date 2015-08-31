@@ -79,6 +79,9 @@
       display block
       max-height 410px
       background-color #FFF
+      
+    #slide-panel span.list
+      max-height 300px
     
 
 .downloadLinks
@@ -87,7 +90,7 @@
   cursor pointer
   
   span
-    display none
+    visibility hidden
     font-size 12px
     color #FFF
     background-color $bgLighter
@@ -97,7 +100,7 @@
   
 .indicator-item:hover .downloadLinks span
   background-color $bgLight
-  display inline
+  visibility visible
 
 .indicator-item .glyphicon.glyphicon-plus,
 .indicator-item .glyphicon.glyphicon-minus
@@ -471,26 +474,53 @@
     background url(../images/noun_cloud_84986.png) center center no-repeat
     background-size contain
     
-#data-table, #indicators, #comparator
+#data-table, #indicators
   height 470px
   width 100%
   overflow auto
+  
+#comparator
+  width 100%
   
 .slick-viewport,.slick-header
   font-size 12px
   
 #slide-panel
-  width 400px
+  width 600px
+  background-color #EEE
   height 400px
   padding 10px
-  background #FFF
+  //-background #FFF
   position absolute
   top 200px
   left 0px
   z-index 2000
   //overflow auto
-  margin-left -400px
+  margin-left -600px
   box-shadow 10px 10px 5px #EEE
+  font-size 12px
+  .container-full
+    overflow hidden
+    
+  .selection-list .btn-default,
+  .flags-labels
+    font-size 12px
+    
+  .well
+    //border none
+    height 80px
+    padding 10px
+    
+  h4
+    font-size 12px
+    max-height 50px
+    overflow hidden
+    
+  .flip
+    min-height 100px
+    
+  .flippedCol .list-group
+    max-height 250px
 
 #opener
   float right
@@ -509,3 +539,26 @@
 
 .slick-header-column.ui-state-default
   box-sizing content-box
+  
+.info
+  padding 6px 8px
+  font 14px/16px Arial, Helvetica, sans-serif
+  background white
+  background rgba(255,255,255,0.8)
+  box-shadow 0 0 15px rgba(0,0,0,0.2)
+  border-radius 5px
+  
+.info h4
+  margin 0 0 5px
+  color #777
+
+.legend
+  line-height 18px
+  color #555
+  
+.legend i
+  width 18px
+  height 18px
+  float left
+  margin-right 8px
+  opacity 0.7

@@ -14,6 +14,8 @@ link(href='{{ static_path("find-ui/dist/app/css/flags32.css") }}', rel='styleshe
 link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
+link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', rel='stylesheet')
+
 {% endblock %}
 
 {% block content %}
@@ -25,13 +27,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row
     .col-md-2
-      .tabbable.tabs-left
+      .tabbable.tabs-left.tabs-app
         ul.nav.nav-tabs
-          li
+          li.active
             a(href='#tab-category', data-toggle='tab') Sector
           li
             a(href='#tab-source', data-toggle='tab') Collections        
-          li.active
+          li
             a(href='#tab-alphabetic', data-toggle='tab') A - Z
           //- li
           //-   a(href='#tab-countries', data-toggle='tab') Countries
@@ -79,7 +81,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 .face.front
                   div.well.category-wrapper()
                     span.badge(data-bind="html:length")
-                    div.well.category.icon-category-70()
+                    div.fa.fa-5x.fa-cubes()
                     h4(data-bind="html:label")
                 .face.back
                   div.list-group()
