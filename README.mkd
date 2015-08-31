@@ -10,9 +10,12 @@ To assist the Office of US Foreign Assistance Resources in implementing the Fore
 Data Project, the US State Department's Office of eDiplomacy’s Geo Development Services Team (Geo|DST) is implementing a data management and visualization solution.  The focus of this project is to make country-level 
 indicators more available and accessible through visualization tools.
 
-## Developer installation
+## Developer installation and documentation
 
-Please see doc/install.rst.
+Please see [install instructions](doc/DevOps/install.md)
+
+[Other Documentation is available](doc/readme.md)
+
 
 ## Issue tracking
 
@@ -23,3 +26,12 @@ Please report bugs and submit feature requests at https://github.com/USStateDept
 FPA_Core carries the OpenSpending's originally licensed code under the GNU Affero Licence except where
 otherwise indicated. A copy of this licence is available in the file
 LICENSE.txt
+
+
+## Acknowledgements
+
+  - [OpenSpending](https://github.com/openspending/openspending)
+  - [MapTheMoney - SpenDB](https://github.com/spendb/spendb)
+  - [Cubes by DataBrewery](https://github.com/DataBrewery/cubes)
+  - [Angular Boilerplate](http://joshdmiller.github.io/ng-boilerplate/#/home)
+  - And many, many dependencies
