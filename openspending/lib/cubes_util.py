@@ -40,6 +40,9 @@ def get_cubes_breaks(vals, field, method='jenks', k=5):
     k = int(k)
     if len(arrayvals) < k:
         k= len(arrayvals)
+    if k == 1:
+        return {"labels":["%s - %s"%(arrayvals[0], arrayvals[0])],
+                "data": arrayvals}
     classreturn = []
     if method=='equal':
         classreturn = mapclassify.Equal_Interval(arrayvals, k=k).bins
