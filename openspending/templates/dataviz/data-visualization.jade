@@ -258,35 +258,52 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 //-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
 
-script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
-script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
-script(src="{{ static_path('find-ui/bower_components/lodash-math/lodash.math.js') }}")
-script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
-script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
-script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")
+
+
+// script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
+// script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/lodash-math/lodash.math.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")
 //-script(src="{{ static_path('find-ui/bower_components/tidy-table/tidy-table.min.js') }}")
-script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
-script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
-script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+// script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
+// script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
 
 //-slickgrid
-script(src="{{ static_path('find-ui/bower_components/slickgrid/lib/jquery.event.drag-2.2.js') }}")
-script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.core.js') }}")
-script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.grid.js') }}")
-script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.dataview.js') }}")
-script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.checkboxselectcolumn.js') }}")
-script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.rowselectionmodel.js') }}")
-script(src="{{ static_path('find-ui/bower_components/slickgrid-bootstrap/bootstrap/bootstrap-slickgrid.js') }}")
-//script(src="{{ static_path('find-ui/bower_components/requirejs/require.js') }}")
+
+// script(src="{{ static_path('find-ui/bower_components/slickgrid/lib/jquery.event.drag-2.2.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.core.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.grid.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.dataview.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.checkboxselectcolumn.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.rowselectionmodel.js') }}")
+// script(src="{{ static_path('find-ui/bower_components/slickgrid-bootstrap/bootstrap/bootstrap-slickgrid.js') }}")
+script(src="{{ static_path('find-ui/bower_components/requirejs/require.js') }}")
+
+
+{% assets "vendor_common_js" %}
+script(type='text/javascript', src='{{ASSET_URL }}')
+{% endassets %}
+
 script(src="{{ static_path('find-ui/bower_components/js-xlsx/dist/xlsx.core.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/file-saver/FileSaver.min.js') }}")
 
+{% assets "slickgrid" %}
+script(type='text/javascript', src='{{ASSET_URL }}')
+{% endassets %}
+
+{% assets "interactive_common_js" %}
+script(type='text/javascript', src='{{ASSET_URL }}')
+{% endassets %}
+
 //- script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}")
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
-script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
+// script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 //-script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
 
