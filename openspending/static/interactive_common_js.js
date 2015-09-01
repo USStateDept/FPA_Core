@@ -17740,7 +17740,7 @@ i),d.exportMenuWidth=i.offsetWidth,d.exportMenuHeight=i.offsetHeight;a={display:
 
 
 
-        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
         urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
         urlPrefix = urlPrefix.replace(/{yearTo}/g, yearsExtremes[1]);
@@ -17902,7 +17902,7 @@ i),d.exportMenuWidth=i.offsetWidth,d.exportMenuHeight=i.offsetHeight;a={display:
         });
     }
 
-    window.loader.changeGroup = function(groupId) {
+    /*window.loader.changeGroup = function(groupId) {
         console.log(window.loader.data);
 
         if (groupId == "all") {
@@ -17917,14 +17917,13 @@ i),d.exportMenuWidth=i.offsetWidth,d.exportMenuHeight=i.offsetHeight;a={display:
             //TODO: Leroy
         }
 
-    }
+    }*/
 
     // add indicator data to geojson to render thematically
 
-    var addDataToGeoJson = function(lastGeoJson) {
 
-        var data = window.loader.data;
-        var gjson = lastGeoJson;
+    /*
+    var geoJSONHandler = function(response, type) {
 
         var hashParams = window.utils.getHashParams();
         var yearsFilter = hashParams.f.split("|");
@@ -17932,60 +17931,6 @@ i),d.exportMenuWidth=i.offsetWidth,d.exportMenuHeight=i.offsetHeight;a={display:
         var onlyIndicator = indicators[0];
         var regions = hashParams.r.split("|");
         var maxYear = 2013; //yearsFilter[1];
-
-        var dataByRegion = {};
-        _.map(regions, function(_r) {
-            dataByRegion[_r] = 0;
-        })
-
-        _.map(data.cells, function(_c) {
-            if (_c.year == parseInt(maxYear)) {
-                dataByRegion[_c.region] = _c[onlyIndicator + "__amount_avg"];
-            }
-        });
-
-
-        //console.log("data");
-        //console.log(data);
-        //console.log(gjson);
-
-        //what is - 3?
-
-        //Select the value based on year
-        // var currentYear = yearsExtremes
-
-
-
-        // var fifteen = data.cells[data.cells.length - 3];
-        // var region = fifteen.region;
-        // var regionCapitalized = fifteen.region.charAt(0).toUpperCase() + fifteen.region.substring(1);
-        // var indicator = JSON.stringify(data.cells[data.cells.length - 1]);
-        // indicator = indicator.substring(2, indicator.indexOf(':') - 1);
-        // var indicatorVal = fifteen[indicator];
-
-        // var countries = gjson.features;
-
-        //countries=countries.toLowerCase();
-        //gjson.features[0].properties["economic_gender_gap__amount_avg"]=null
-        //debugger;
-        for (var i = 0; i < gjson.features.length; i++) {
-            var _r = gjson.features[i].properties.sovereignt.toLowerCase();
-            if (_.indexOf(regions, _r) > -1) {
-                gjson.features[i].properties[onlyIndicator] = dataByRegion[_r];
-            }
-            /*if (gjson.features[i].properties.sovereignt == regionCapitalized) {
-                gjson.features[i].properties[indicator] = indicatorVal;
-            }*/
-        }
-
-        window.loader.lastGeoJson = gjson;
-        window.loader.indicator = onlyIndicator; //indicator;
-        console.log(window.loader.lastGeoJson);
-        // debugger;
-    }
-
-    var geoJSONHandler = function(response, type) {
-
 
         function onEachFeature(feature, layer) {
 
@@ -18006,7 +17951,6 @@ i),d.exportMenuWidth=i.offsetWidth,d.exportMenuHeight=i.offsetHeight;a={display:
 
         window.loader.geoJsonLayers[type] = L.geoJson(response, {
             style: {
-
                 weight: 0, //no border
                 opacity: 1,
                 color: 'gray',
@@ -18023,28 +17967,17 @@ i),d.exportMenuWidth=i.offsetWidth,d.exportMenuHeight=i.offsetHeight;a={display:
             }
         }
 
+        //HIGHLIGHT EACH REGION
+        var featuresAdded = [];
+        _.forEach(regions, function(_r) {
+            window.utils.highlightOnMapViz(_r, onlyIndicator, window.loader.lastGeoJson, featuresAdded);
+        });
 
-        var url = window.location.href;
+        window.utils.zoomToFeatures(featuresAdded);
 
-        countryIndex = url.indexOf("r=") + 2;
+    }*/
 
-        var country = url.substring(countryIndex);
-        //console.log(country);
-        var region = null;
-        if (country.indexOf('|') > -1) {
-
-            countries = country.split('|');
-
-            for (var i = 0; i < countries.length; i++) {
-                var currentCountry = countries[i];
-                window.utils.highlightOnMapViz(currentCountry, region, window.loader.lastGeoJson);
-            }
-        } else {
-            window.utils.highlightOnMapViz(country, region, window.loader.lastGeoJson);
-        }
-    }
-
-    window.loader.loadGeoJSON = function(type, handlerFunc) {
+    window.loader.loadGeoJSON = function(type, handlerFunc, cluster) {
 
         url = "/static/json/" + type + "_None.geojson";
         $.ajax({
@@ -18055,7 +17988,7 @@ i),d.exportMenuWidth=i.offsetWidth,d.exportMenuHeight=i.offsetHeight;a={display:
 
             },
             success: function(response) {
-                handlerFunc(response, type)
+                handlerFunc(response, type, cluster)
             }
         });
 
@@ -18274,8 +18207,7 @@ var act;
                 "subcategories": subcategories
             }
 
-
-
+            
             categoriesModel.push(newCategory);
 
         }
@@ -18303,7 +18235,13 @@ var act;
                 "indicators": indicatorsInSource
             }
 
-            sourcesModel.push(newSource);
+            var newSourceArray = ["MCC","CDA","DHS","SDG",,"UIS","WHO","IMF"];
+            var label=newSource.label.split("-")[0].trim();
+            // console.log(newSource.label);
+            if (newSourceArray.indexOf(label)!=-1){
+                // console.log("REACHED THIS LINE");
+                sourcesModel.push(newSource);
+            }
 
         }
         //debugger;
@@ -18446,37 +18384,86 @@ var act;
 
     window.utils.clearOnMap = function(model) { // clear all of map
         // debugger;
+        var levels = model.countryGroupings();
+        //["sovereignt","usaid_reg","continent","dod_cmd","dos_region","wb_inc_lvl"]
+        //var level = "sovereignt";
+        _.forEach(levels, function(_l) {
+            var layerId = _l.id;
+            if (layerId == "all") {
+                layerId = "sovereignt";
+            }
+            var layer = window.visualization.geoJsonLayers[layerId];
+            if (layer) {
+                window.map.removeLayer(layer);
+            }
+        })
 
-        var level = "sovereignt";
-        window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     };
 
-    window.utils.highlightOnMapViz = function(country, region, gjson) {
+    window.utils.zoomToFeatures = function(features) {
 
-        var geojson = gjson['features'];
-
-        var featuresAdded = [];
-
-        var level = "sovereignt";
+        var group = new L.featureGroup(features);
+        var bounds = group.getBounds();
 
         //debugger;
-        //console.log(window.loader.indicator);
+        var southWestLng = bounds._southWest.lng;
+        var northEastLng = bounds._northEast.lng;
 
+        bounds._southWest.lng = bounds._southWest.lat;
+        bounds._southWest.lat = southWestLng;
+        bounds._northEast.lng = bounds._northEast.lat;
+        bounds._northEast.lat = northEastLng;
+
+
+        map.fitBounds(bounds);
+        console.log("zoomed to features");
+        console.timeEnd("choropleth");
+        // debugger;
+    };
+
+    window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson) {
+
+        if (window.loader.geoJsonLayers[type]) {
+            map.removeLayer(window.loader.geoJsonLayers[type]);
+        }
+
+        var geojson = gjson['features'];
+        var featuresAdded = [];
         var style = function(feature) {
+            // debugger;
 
+            var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
             //console.log("*********feature" + feature);
-            if (country == feature.properties[level].toLowerCase()) {
+            if (!name) {
+                return {
+                    weight: 0,
+                    opacity: 0,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.0,
+                    fillColor: '#666666'
+                };
+            }
+
+            if (regions[0].indexOf(":") > -1) {
+                name = type + ":" + name;
+            } else { //if country
+                name = name.toLowerCase();
+            }
+
+            if (_.indexOf(regions, name) > -1) {
 
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
                 featuresAdded.push(polygon);
+                //debugger;
                 return {
                     weight: 2,
                     opacity: 1,
                     color: '#FFFFFF',
                     //dashArray: '3',
                     fillOpacity: 0.5,
-                    fillColor: window.utils.getColor(feature.properties[window.loader.indicator])
+                    fillColor: window.utils.getColor(feature.properties[indicator], cluster)
                     //fillColor: '#00FF00'////fillColor: '#00FF00'
                 };
             } else {
@@ -18491,71 +18478,113 @@ var act;
             }
         }
 
-        var onEachFeature = function(feature, layer) {
+        var highlightFeature = function() {
 
+        }
+
+        var resetHighlight = function() {
+
+        }
+
+        var zoomToFeature = function(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+        var onEachFeature = function(feature, layer) {
+            //  debugger;
+            console.log("onEachFeature");
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
-                layer.bindPopup(name + "</br>" + feature.properties[window.loader.indicator]);
+                var popupText = name;
+                if (feature.properties[indicator]) {
+                    popupText += "</br>" + feature.properties[indicator];
+                }
+                layer.bindPopup(popupText);
             }
+
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: zoomToFeature
+            });
         }
-        window.loader.geoJsonLayers[level] = L.geoJson(window.loader.geoJson[level], {
+
+        map.once('layeradd', function() {
+            //debugger;
+            //console.log("layerAdd");
+            window.utils.zoomToFeatures(featuresAdded);
+        });
+
+        //var level = "sovereignt";
+        /* var isCountry = geounit.iso_a2;
+        var drillDown = false;
+        debugger;*/
+        /* if (isCountry) {
+            level = "sovereignt";
+        } else {
+            level = geounit.geounit.split(":")[0];
+            drillDown = _.indexOf(geounit.geounit.split(":"), "all") > -1;
+        }*/
+
+        window.loader.geoJsonLayers[type] = L.geoJson(window.loader.geoJson[type], {
             onEachFeature: onEachFeature,
             style: style
         });
 
-        map.addLayer(window.loader.geoJsonLayers[level]);
-        debugger;
+        map.addLayer(window.loader.geoJsonLayers[type]);
+
+
         //window.utils.addLegend();
     };
 
-    /*  window.utils.getColor=function(d) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
-                      '#FFEDA0';
-},*/
 
-    window.utils.getColor = function(d) {
-        console.log(d);
-        debugger;
-        d = d + 5000;
-        return d > 50000 ? '#800026' :
-            d > 40000 ? '#BD0026' :
-            d > 30000 ? '#E31A1C' :
-            d > 20000 ? '#FC4E2A' :
-            d > 10000 ? '#FD8D3C' :
-            d > 5000 ? '#FEB24C' :
-            d > 1000 ? '#FED976' :
-            '#FFEDA0';
+
+    window.utils.getColor = function(d, cluster) {
+
+
+        var breaks = cluster.data;
+        var color = '#CCCCCC'; //default
+        var colorRamp = ['#800026', '#BD0026', '#E31A1C', '#FC4E2A', '#FD8D3C', '#FEB24C', '#FED976', '#FFEDA0'];
+        _.forEach(breaks, function(_b, i) {
+            if (d >= _b) {
+                color = colorRamp[i];
+            }
+        })
+
+        //  debugger;
+        return color;
     };
 
-    window.utils.addLegend = function() {
+    window.utils.addLegend = function(cluster) {
+
         var legend = L.control({
-            position: 'bottomleft'
+            position: 'topright'
         });
 
+        var breaks = cluster.data;
+        var labels = cluster.labels;
+        var legendLabels = [];
+        // debugger;
         legend.onAdd = function(map) {
-            debugger;
+            //debugger;
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 1000, 5000, 10000, 20000, 30000, 40000, 50000],
-                labels = [],
-                from, to;
+                grades = breaks;
 
-            for (var i = 0; i < grades.length; i++) {
-                from = grades[i];
-                to = grades[i + 1];
+            _.forEach(breaks, function(_b, i) {
+                //debugger;
+                var from = _.round(_b, 2);
+                var to = _.round(grades[i + 1], 2);
 
-                labels.push(
-                    '<i style="background:' + window.utils.getColor(from + 1) + '"></i> ' +
-                    from + (to ? '&ndash;' + to : '+'));
-            }
+                legendLabels.push(
+                    '<i style="background:' + window.utils.getColor(from + 1, cluster) + '"></i> ' +
+                    from + (to ? ' &ndash; ' + to : '+'));
 
-            div.innerHTML = labels.join('<br>');
+            });
+
+            legendLabels.push('<i style="background:#CCCCCC"></i> No Data');
+            //debugger;
+            div.innerHTML = legendLabels.join('<br>');
             return div;
         };
 
@@ -18601,7 +18630,6 @@ var act;
                 var drillDownLabels = _.map(geounit.regions, function(_a) {
                     return _a.label;
                 });
-
             }
         }
 
@@ -18746,9 +18774,9 @@ var act;
         var seriesArray = [];
         if (window.utils.masterCells.length == 0)
             window.utils.masterCells = window.utils.masterCells.concat(cells);
-        //debugger;
-        var _cells = window.utils.masterCells;
 
+        var _cells = cells; //window.utils.masterCells;
+        //debugger;
         _.forEach(_cells, function(c) {
             if (c.region) {
                 series[c.region] = [];
@@ -18761,11 +18789,38 @@ var act;
             }
         });
 
+        //debugger;
         var titleArray = _.map(indicatorsMeta, function(meta) {
-            return meta[0].label;
+
+            var title = meta[0].label;
+            var units = meta[0].units;
+
+            units = units == null ? "" : "(" + units + ")";
+
+            return title + units;
         });
 
+
+
+        var xUnits = indicatorsMeta[0][0].units;
+
+        var yUnits;
+        if (type == "scatter" || type == "bubble") {
+            yUnits = indicatorsMeta[1][0].units;
+        }
+
+        var zUnits;
+
+        if (type == "bubble") {
+            zUnits = indicatorsMeta[2][0].units;
+        }
+
+        xUnits = xUnits == null ? "" : " (" + xUnits + ")";
+        yUnits = yUnits == null ? "" : " (" + yUnits + ")";
+        zUnits = zUnits == null ? "" : " (" + zUnits + ")";
+
         var title = titleArray.join(" and ");
+
 
         var subtitleObj = _.map(indicatorsMeta, function(meta) {
             return meta = {
@@ -18794,6 +18849,7 @@ var act;
             return size;
         };
         var size = Object.size(series);
+
         for (var countryName in series) {
             var visible = false;
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
@@ -18802,10 +18858,32 @@ var act;
             //window.averageSeries = series[countryName];
             // if (defaultCountries.indexOf(countryName) > -1) {
             //debugger;
+            // console.log("series[countryName] is: " + series[countryName]);
+
+            function inBounds(a) {
+                var inStatus = true;
+                $.each(a, function(k, v) {
+                    // console.log("Index is: " + v[1]);
+                    if (v[1] < 1 && v[1] != null) {
+                        inStatus = false;
+                        // console.log("The value of v triggering the change is: " + v);
+                        // alert("The value of v triggering the change is: " + v);
+                    }
+                });
+                // console.log("inStatus is: " + inStatus);
+                return inStatus;
+            }
+            // seriesArray.push({
+            //     name: countryName,
+            //     data: series[countryName],
+            //     visible: inBounds(series[countryName]) && (counter > 3 || size == 3) ? true : false,
+            //     zIndex: counter++
+            // });
+
             seriesArray.push({
                 name: countryName,
                 data: series[countryName],
-                visible: counter > 3 || size == 3 ? true : false,
+                visible: (counter > 3 || size == 3) ? true : false,
                 zIndex: counter++
             });
 
@@ -18831,6 +18909,8 @@ var act;
             chartObj["type"] = "line";
         }
 
+        var ymin = inBounds(series[countryName]); //if there are neg values, return false; otherwise return true
+
         var jsonLine = {
             chart: chartObj,
             title: {
@@ -18847,7 +18927,7 @@ var act;
                 //categories: categories
                 title: {
                     enabled: true,
-                    text: ''
+                    text: 'Years'
                 },
                 startOnTick: true,
                 endOnTick: true,
@@ -18855,8 +18935,9 @@ var act;
             },
             yAxis: {
                 title: {
-                    text: ''
+                    text: title
                 },
+                min: ymin ? 0 : null,
                 plotLines: [{
                     value: 0,
                     width: 0.25,
@@ -18864,7 +18945,10 @@ var act;
                 }]
             },
             tooltip: {
-                valueSuffix: ''
+                valueSuffix: '',
+                shared: false,
+                pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y:,.2f}</b><br/>'
+
             },
             legend: {
                 layout: 'vertical',
@@ -18977,7 +19061,7 @@ var act;
                 xAxis: {
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label
+                        text: indicatorsMeta[0][0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -18985,7 +19069,7 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label
+                        text: indicatorsMeta[1][0].label + yUnits
                     }
                 },
                 series: series
@@ -19074,7 +19158,7 @@ var act;
                     //categories: categories
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label
+                        text: indicatorsMeta[0][0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -19082,12 +19166,12 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label
+                        text: indicatorsMeta[1][0].label + yUnits
                     }
                 },
                 zAxis: {
                     title: {
-                        text: indicatorsMeta[2][0].label
+                        text: indicatorsMeta[2][0].label + zUnits
                     }
                 },
 
@@ -19168,7 +19252,7 @@ var act;
                 yAxis: {
                     min: 0,
                     title: {
-                        text: indicatorsMeta[0][0].label
+                        text: title //indicatorsMeta[0][0].label
                     }
                 },
                 legend: {
@@ -19209,7 +19293,7 @@ var act;
     }
 
 }());
-function rc(){
+/*function rc() {
 
     var selectedCountry = arguments[0];
     var activeCountries = vizModel.activeCountries();
@@ -19259,7 +19343,7 @@ function rc(){
     // });
     // vizModel.activeCountries.push(selectedCountry);
 
-}
+}*/
 
 (function() {
 
@@ -19446,7 +19530,7 @@ function rc(){
 
             var allowMultivariate = ["scatter", "bubble", "radar", "tree"];
 
-            var allowSinglevariate = ["line", "bar","map"];
+            var allowSinglevariate = ["line", "bar", "map"];
 
             var indicators = _.map(vizModel.activeIndicators(), function(indicator) {
                 return indicator.id;
@@ -19723,7 +19807,7 @@ function rc(){
 
 
             var groupId = arguments[0].id;
-            
+
             window.visualization.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);
@@ -20145,4 +20229,4 @@ function rc(){
     }
 
 
-}());
+}())
