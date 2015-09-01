@@ -149,7 +149,6 @@
   overflow-y: scroll;
 }
 .flippedCol .list-group span.list {
-  overflow: hidden;
   display: block;
   max-height: 410px;
   background-color: #fff;
