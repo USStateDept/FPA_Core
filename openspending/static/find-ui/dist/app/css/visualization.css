@@ -147,11 +147,11 @@
   max-height: 450px;
   overflow-x: hidden;
   overflow-y: scroll;
+  background-color: #fff;
 }
 .flippedCol .list-group span.list {
   display: block;
   max-height: 410px;
-  background-color: #fff;
 }
 .flippedCol .list-group #slide-panel span.list {
   max-height: 300px;
