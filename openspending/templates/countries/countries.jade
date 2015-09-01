@@ -28,7 +28,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     p
   .row.countries-list
     .col-md-8(style="height:400px;overflow-y:auto")
-      .row.f32(data-bind="foreach:countriesModel" )
+      #countryList.row.f32(data-bind="foreach:countriesModel")
         .col-md-6.col-sm-12.col-xs-12
           div.flag-item(data-bind='click:function(data,evt){$root.selectCountry(data,evt,true)},css:{selected:selected}')
             div.flag(data-bind="css:iso_a2.toLowerCase()")
