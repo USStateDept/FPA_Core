@@ -38,6 +38,7 @@
                 // console.log(feature.properties);
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
                 layer.bindPopup(name);
+                layer.bindLabel(name, {noHide:true,direction:'right'});
             }
         }
 
@@ -50,11 +51,11 @@
         window.visualization.geoJsonLayers[type] = L.geoJson(response, {
             style: {
 
-                weight: 0, //no border
+                weight: 1, //no border
                 opacity: 1,
                 color: 'gray',
                 //dashArray: '3',
-                fillOpacity: 0.0, //DO NOT DISLAY
+                fillOpacity: 1.0, //DO NOT DISLAY
                 fillColor: '#cccccc'
             },
             onEachFeature: onEachFeature
@@ -94,8 +95,8 @@
 
             map = L.map('map').setView([0, 0], 1);
 
-            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {//'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
                 maxZoom: 18
             }).addTo(map);
 
