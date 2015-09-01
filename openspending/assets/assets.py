@@ -19,22 +19,27 @@ def register_assets(assets_class):
                         output='slickgrid.js')
         assets_class.register('slickgrid',tempjs)  
 
-    if "interactive_common_js" not in assets_class:
+    if "vendor_common_js" not in assets_class:
         tempjs = Bundle('find-ui/bower_components/jquery-ui/jquery-ui.js',
                         'find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js',
-                        'find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js',
                         'find-ui/bower_components/lodash/lodash.min.js',
                         'find-ui/bower_components/leaflet/dist/leaflet.js',
                         'find-ui/bower_components/knockout/dist/knockout.js',
                         'find-ui/bower_components/highcharts/highcharts.js',
                         'find-ui/bower_components/highcharts/highcharts-more.js',
                         'find-ui/bower_components/highcharts/modules/exporting.js',
+                        filters=None,
+                        output='vendor_common_js.js')
+        assets_class.register('vendor_common_js', tempjs)
+
+    if "interactive_common_js" not in assets_class:
+        tempjs = Bundle('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js',
                         'find-ui/dist/app/js/common/config.js',
                         'find-ui/dist/app/js/common/loader.js',
                         'find-ui/dist/app/js/common/utils.js',
                         'find-ui/dist/app/js/common/viz-model.js',
                         'find-ui/dist/app/js/visualization/visualization.js',
-                        filters=None,
+                        filters='jsmin',
                         output='interactive_common_js.js')
         assets_class.register('interactive_common_js',tempjs)       
 

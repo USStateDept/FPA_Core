@@ -47,6 +47,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 {% block footer_scripts %}
 link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 
+
+{% assets "vendor_common_js" %}
+script(type='text/javascript', src='{{ASSET_URL }}')
+{% endassets %}
+
 {% assets "interactive_common_js" %}
 script(type='text/javascript', src='{{ASSET_URL }}')
 {% endassets %}
