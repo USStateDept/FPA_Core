@@ -1,3 +1,6 @@
+[<----- Back to index](../readme.md)
+
+
 Moving from Development to Production
 ===================================
 
@@ -18,8 +21,6 @@ Backend
 3. Go to services and stop the apache service.  
 
 4. Open a command line and go to D:\FPA_Core\
-
-5. Pull in the latest code - take note of the move from MVPv1 to MVPv2, you must remove the submodules.  See change_notes_MVPv1_to_MVPv2.md
 
 6. Run the follow commands to pull in any changes to the python modules, update the database, and reindex for the search.  Note there is no virtualenv.  Everything is installed in the core Python install.
 

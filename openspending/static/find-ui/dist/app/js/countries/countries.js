@@ -21,7 +21,7 @@
 				}
 			}
 
-			$("#countryList div").first().css("background-color","#FFFF00");
+			$("#countryList div").first().css("background-color","#FFFF99");
 
 			return true;
 		}

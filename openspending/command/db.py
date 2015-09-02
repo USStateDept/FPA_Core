@@ -91,3 +91,40 @@ def migrate():
 def init():
     """ Initialize the database """
     migrate()
+
+
+
+
+from openspending import model
+
+
+from sqlalchemy.orm import class_mapper
+
+
+
+
+@manager.command
+def schemadraw(**args):
+    try:
+        from sqlalchemy_schemadisplay import create_uml_graph
+    except ImportError:
+        log.critical("You must install sqlalchemy_schemadisplay\n$pip install sqlalchemy_schemadisplay")
+        sys.exit(1)
+
+
+    # lets find all the mappers in our model
+    mappers = []
+    for attr in dir(model):
+        if attr[0] == '_': continue
+        try:
+            cls = getattr(model, attr)
+            mappers.append(class_mapper(cls))
+        except:
+            pass
+
+    # pass them to the function and set some formatting options
+    graph = create_uml_graph(mappers,
+        show_operations=False, # not necessary in this case
+        show_multiplicity_one=False # some people like to see the ones, some don't
+    )
+    graph.write_png('./doc/DevOps/dbschema.png') # write out the file
