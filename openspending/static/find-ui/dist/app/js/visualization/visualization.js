@@ -124,10 +124,6 @@
 
     var model = window.vizModel;
 
-    var countriesListLoadHandler = function(response) {
-
-        window.utils.bindCountries(response, model);
-    }
 
     var indicatorListLoadHandler = function(response) {
 
@@ -141,7 +137,8 @@
     }
 
     window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
-    window.loader.loadCountries("", countriesListLoadHandler);
+
+    window.utils.bindCountries(window.preloadedData.countries_list, model);
 
     var indicatorDataLoadHandler = function(response) {
 

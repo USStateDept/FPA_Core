@@ -296,6 +296,12 @@ link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.l
 {% endblock %}
 
 {% block footer_scripts %}
+script
+  window.preloadedData = {};
+  window.preloadedData.countries_list = {{ countries_list | safe }};
+
+
+
 //-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")

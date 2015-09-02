@@ -259,6 +259,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 //-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
 
+<script type="text/javascript">
+  window.preloadedData = {};
+  window.preloadedData.countries_list = {{ countries_list | safe }}
+</script>
+
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
 script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")

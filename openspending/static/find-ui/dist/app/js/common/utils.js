@@ -228,7 +228,6 @@ var act;
     window.utils.bindCountries = function(response, model) {
 
 
-
         var countryGroupings = _.clone(model.countryGroupings(), true);
 
         //push regions in country groupings
@@ -320,10 +319,7 @@ var act;
     };
 
     window.utils.removeOnMap = function(model, geounits) { //clear a single country
-        // debugger;
-        // console.log("removeOnMap has been called!");
-        // console.log("Geounits is: " + JSON.stringify(geounits));
-        // console.log("Act (from removeOnMap) is: " + JSON.stringify(act));
+
         // rc(act);
         window.map.removeLayer(window.visualization.geoJsonLayers[level]);
         $.each(vizModel.activeCountries(), function(idx, country) {
@@ -370,7 +366,7 @@ var act;
 
 
         map.fitBounds(bounds);
-        console.log("zoomed to features");
+
         console.timeEnd("choropleth");
         // debugger;
     };

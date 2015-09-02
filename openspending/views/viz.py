@@ -11,6 +11,8 @@ from flask.ext.login import current_user
 from openspending.core import db
 from openspending.model import Tags
 
+from openspending.views.api_v2.countries import countries_list
+
 log = logging.getLogger(__name__)
 
 
@@ -27,19 +29,25 @@ def visualization(format='html'):
     # tags = []
     # for tag in Tags.all_by_category().all():
     #     tags.append(tag.as_dict())
+    countries_list_data = countries_list()
 
-    return render_template('visualization/visualization.jade')
+    return render_template('visualization/visualization.jade',
+                            countries_list=countries_list_data)
 
 
 @blueprint.route('/data-visualization')
 #@blueprint.route('/datasets.<fmt:format>')
 def datavisualization(format='html'):
-    """ Get the datasets indicators list by sec"""
+    """ 
+    Provide the template and associated data for the data-visualization of the site
+    """
+    countries_list_data = countries_list()
     # tags = []
     # for tag in Tags.all_by_category().all():
     #     tags.append(tag.as_dict())
 
-    return render_template('dataviz/data-visualization.jade')
+    return render_template('dataviz/data-visualization.jade', 
+                            countries_list=countries_list_data)
 
 
 @blueprint.route('/countries')
