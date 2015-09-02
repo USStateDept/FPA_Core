@@ -60,6 +60,10 @@ def create_app(**config):
         'jinja2.ext.i18n'
     ])
 
+    #add some sqlalchemy connection numbers
+    app.config['SQLALCHEMY_POOL_SIZE'] = 50
+    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 200
+
     db.init_app(app)
     cache.init_app(app)
     mail.init_app(app)
@@ -83,6 +87,10 @@ def create_app(**config):
                 resquesttoken = request.json.get('csrf_token')
             if not token or resquesttoken != token:
                 abort(403)
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        db.session.remove()
 
     with app.app_context():
         app.cubes_workspace = Workspace()
