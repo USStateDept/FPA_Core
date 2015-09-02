@@ -210,7 +210,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 p
               .row
                 .col-md-12
-                  input#filterCountriesInput.btn-block(placeHolder="Find a Country")
+                  input.btn-block(data-bind="event:{keyup:filterCountries}" placeHolder="Find a Country")
               .row
                 p
               .row
@@ -225,11 +225,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       span.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                         span.flags-labels(style="vertical-align:middle" data-bind="html:label")
                       div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
-                    span(data-bind="foreach:$data.countries,css:{hasCountryFilter:$root.hasCountryFilter}")
+                    span(data-bind="foreach:activeCountries,css:{hasCountryFilter:$root.hasCountryFilter}")
                       .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
                         div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                           div.flag(data-bind="css:iso_a2.toLowerCase()")
-                          span.flags-labels(style="vertical-align:middle" data-bind="html:label") 
+                          span.flags-labels(style="vertical-align:middle" data-bind="html:label")
   
 
   .row.tabs-app
@@ -288,6 +288,7 @@ script(src="{{ static_path('find-ui/bower_components/file-saver/FileSaver.min.js
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 //-script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
 
 {% endblock %}

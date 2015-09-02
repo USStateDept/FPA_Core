@@ -39,41 +39,41 @@
     //     if
 
     // }
-    $('#filterCountriesInput').keyup(function(e){
-        // console.log("this.value is: " + this.value);
-        var inputText = this.value;
-        // console.log("Input text is: " + inputText);
-        // console.log("Type of input text is: " + typeof inputText);
-        filterCountries(e, inputText);
-    });
-    var filterCountries = function(e, inputText){
-        // console.log("this is: "+ this.toString());
-        // if (e.keyCode==13){
-            // $("#countryList div div").first().click();
-        // }
-        // else{
-        //     debugger;
-        console.log("inputText is: " + inputText);
-            var filterValue = inputText;
-            // console.log("filterValue is: " + filterValue);
-            // console.log("Type of filterValue is: " + typeof filterValue);
+    // $('#filterCountriesInput').keyup(function(e){
+    //     // console.log("this.value is: " + this.value);
+    //     var inputText = this.value;
+    //     // console.log("Input text is: " + inputText);
+    //     // console.log("Type of input text is: " + typeof inputText);
+    //     filterCountries(e, inputText);
+    // });
+    // var filterCountries = function(e, inputText){
+    //     // console.log("this is: "+ this.toString());
+    //     // if (e.keyCode==13){
+    //         // $("#countryList div div").first().click();
+    //     // }
+    //     // else{
+    //     //     debugger;
+    //     console.log("inputText is: " + inputText);
+    //         var filterValue = inputText;
+    //         // console.log("filterValue is: " + filterValue);
+    //         // console.log("Type of filterValue is: " + typeof filterValue);
 
-            var countries = vizModel.countriesModelMaster();
-            console.log("Countries is: " + countries);
-            console.log("Countries is: " + typeof countries);
-        //     vizModel.countriesModel.removeAll();
-        //     debugger;
-        //     for (var x in countries) {
-        //         if (countries[x].label.toLowerCase().indexOf(filterValue.toLowerCase()) >= 0) {
-        //             vizModel.countriesModel.push(countries[x]);
-        //         }
-        //     }
+    //         var countries = vizModel.countriesModelMaster();
+    //         console.log("Countries is: " + countries);
+    //         console.log("Countries is: " + typeof countries);
+    //     //     vizModel.countriesModel.removeAll();
+    //     //     debugger;
+    //     //     for (var x in countries) {
+    //     //         if (countries[x].label.toLowerCase().indexOf(filterValue.toLowerCase()) >= 0) {
+    //     //             vizModel.countriesModel.push(countries[x]);
+    //     //         }
+    //     //     }
 
-        //     $("#countryList div").first().css("background-color","#FFFF00");
+    //     //     $("#countryList div").first().css("background-color","#FFFF00");
 
-        //     return true;
-        // }
-    }
+    //     //     return true;
+    //     // }
+    // }
 
     $('#modal').modal({
         show: false,
