@@ -455,6 +455,7 @@ var act;
                     popupText += "</br>" + feature.properties[indicator];
                 }
                 layer.bindPopup(popupText);
+                layer.bindLabel(name, {noHide:true,direction:'right'});
             }
 
             layer.on({
@@ -623,6 +624,7 @@ var act;
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
                 layer.bindPopup(name);
+                layer.bindLabel(name, {noHide:true,direction:'right'});
             }
         }
         window.visualization.geoJsonLayers[level] = L.geoJson(window.visualization.geoJson[level], {
