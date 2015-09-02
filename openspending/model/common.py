@@ -92,6 +92,8 @@ class JSONType(TypeDecorator):
         return dumps(value)
 
     def process_result_value(self, value, dialiect):
+        if value == None:
+            return {}
         return loads(value)
 
     def copy_value(self, value):
