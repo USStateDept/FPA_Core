@@ -1659,15 +1659,22 @@
             //switch to group by indicators
             groupBy = "indicators";
         }
+       
         var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-        var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
-        deferredList = deferredList.concat(deferredMetaList);
+       
+        $.when.apply($, deferredMetaList).done(function(response){
 
-        //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
+            var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
+            deferredList = deferredList.concat(deferredMetaList);
 
-        $.when.apply($, deferredList).done(function(response) {
-            indicatorDataLoadHandler(arguments, yearsExtremes);
+            $.when.apply($, deferredList).done(function(response) {
+                //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
+                indicatorDataLoadHandler(arguments, yearsExtremes);
+            });
         });
+
+        
+       
 
         eventBind();
 
