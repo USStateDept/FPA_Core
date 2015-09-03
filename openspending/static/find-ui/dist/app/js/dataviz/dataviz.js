@@ -327,33 +327,9 @@
 
         countriesModelMaster: ko.observableArray([]),
 
-        countryGroupings: ko.observableArray([{
-            "id": "all",
-            "label": "All",
-            "regions": []
-        }, {
-            "id": "continent",
-            "label": "Continent",
-            "regions": []
-        }, {
-            "id": "dod_cmd",
-            "label": "Department of Defense",
-            "regions": []
-        }, {
-            "id": "dos_region",
-            "label": "Department of State",
-            "regions": []
-        }, {
-            "id": "usaid_reg",
-            "label": "USAID",
-            "regions": []
-        }, {
-            "id": "wb_inc_lvl",
-            "label": "World Bank",
-            "regions": []
-        }]),
+        countryGroupings: ko.observableArray([]),
 
-        countryGroupRegions: ko.observableArray([]),
+        //countryGroupRegions: ko.observableArray([]),
 
         activeCountries: ko.observableArray([]),
 
@@ -659,7 +635,7 @@
             model.activeRegion(""); //set active region to undefined
 
 
-            model.countryGroupRegions.removeAll();
+            //model.countryGroupRegions.removeAll();
 
 
             if (groupId == "all") {
@@ -670,7 +646,7 @@
 
                 _.forEach(model.countryGroupings(), function(countryGroup) {
                     if (groupId == countryGroup.id) {
-                        model.countryGroupRegions(_.clone(countryGroup.regions, true));
+                        //model.countryGroupRegions(_.clone(countryGroup.regions, true));
                         model.selectCountryGroupRegion(countryGroup.regions[0]);
                     }
                 })

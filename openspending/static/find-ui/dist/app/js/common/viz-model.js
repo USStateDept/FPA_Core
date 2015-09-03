@@ -519,7 +519,7 @@
             vizModel.activeRegion(""); //set active region to undefined
 
 
-            vizModel.countryGroupRegions.removeAll();
+            //vizModel.countryGroupRegions.removeAll();
 
 
             if (groupId == "all") {
@@ -530,7 +530,7 @@
 
                 _.forEach(vizModel.countryGroupings(), function(countryGroup) {
                     if (groupId == countryGroup.id) {
-                        vizModel.countryGroupRegions(_.clone(countryGroup.regions, true));
+                        //vizModel.countryGroupRegions(_.clone(countryGroup.regions, true));
                         vizModel.selectCountryGroupRegion(_.values(countryGroup.regions)[0]);
                     }
                 });
@@ -544,7 +544,6 @@
         selectCountryGroupRegion: function() {
 
             //debugger;
-            console.log(selectedRegion);
             var selectedRegion = arguments[0];
             var selectedGroup = vizModel.activeGroup();
 
@@ -729,33 +728,10 @@
 
         countriesModelMaster: ko.observableArray([]),
 
-        countryGroupings: ko.observableArray([{
-            "id": "all",
-            "label": "All Countries",
-            "regions": []
-        }, {
-            "id": "continent",
-            "label": "Continent",
-            "regions": []
-        }, {
-            "id": "dod_cmd",
-            "label": "Department of Defense",
-            "regions": []
-        }, {
-            "id": "dos_region",
-            "label": "Department of State",
-            "regions": []
-        }, {
-            "id": "usaid_reg",
-            "label": "USAID",
-            "regions": []
-        }, {
-            "id": "wb_inc_lvl",
-            "label": "Income Groups",
-            "regions": []
-        }]),
+        countryGroupings: ko.observableArray([]),
 
-        countryGroupRegions: ko.observableArray([]),
+        //can't find where this is being used
+        //countryGroupRegions: ko.observableArray([]),
 
         newSearch: ko.observable(true)
 
