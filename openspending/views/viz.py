@@ -57,8 +57,10 @@ def countries(format='html'):
     # tags = []
     # for tag in Tags.all_by_category().all():
     #     tags.append(tag.as_dict())
+    countries_list_data = countries_list()
 
-    return render_template('countries/countries.jade')
+    return render_template('countries/countries.jade',
+                countries_list=countries_list_data)
 
 @blueprint.route('/categories')
 #@blueprint.route('/datasets.<fmt:format>')

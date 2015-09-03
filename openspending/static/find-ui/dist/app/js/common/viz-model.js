@@ -331,8 +331,9 @@
 
             vizModel.activeCountries.push(selectedCountry);
 
-            var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
-            vizModel.countriesModelMaster.removeAll();
+            //not used in this scope  do we still need to remove all?
+            // var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
+            // vizModel.countriesModelMaster.removeAll();
 
 
             var countryGroupings = _.clone(vizModel.countryGroupings(), true);
