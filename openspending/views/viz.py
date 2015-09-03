@@ -80,7 +80,7 @@ def categories(format='html'):
     countries_list_data = countries_list()
     categories_list_data = categories_list()
 
-    return render_template('visualization/visualization.jade',
+    return render_template('categories/categories.jade',
                             countries_list=countries_list_data,
                             categories_list=categories_list_data)
 
@@ -91,7 +91,9 @@ def data(format='html'):
     # tags = []
     # for tag in Tags.all_by_category().all():
     #     tags.append(tag.as_dict())
+    countries_list_data = countries_list()
     categories_list_data = categories_list()
 
     return render_template('data/data.jade',
+                            countries_list=countries_list_data,
                             categories_list=categories_list_data)
