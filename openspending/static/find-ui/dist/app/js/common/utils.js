@@ -384,8 +384,7 @@ var act;
         var geojson = gjson['features'];
         var featuresAdded = [];
         var style = function(feature) {
-            // debugger;
-
+        
             var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
             //console.log("*********feature" + feature);
             if (!name) {
@@ -589,7 +588,7 @@ var act;
         }
 
 
-        window.map.removeLayer(window.visualization.geoJsonLayers[level]);
+        //window.map.removeLayer(window.visualization.geoJsonLayers[level]);
         //debugger;
         var style = function(feature) {
 

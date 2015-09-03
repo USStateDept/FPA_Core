@@ -97,8 +97,7 @@
 
             var s = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {//'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
-                maxZoom: 18,
-                maxNativeZoom: 18
+                maxZoom: 18
             }).addTo(map);
             
             //load geojson for countries
