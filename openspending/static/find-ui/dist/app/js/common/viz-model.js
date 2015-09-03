@@ -531,7 +531,7 @@
                 _.forEach(vizModel.countryGroupings(), function(countryGroup) {
                     if (groupId == countryGroup.id) {
                         vizModel.countryGroupRegions(_.clone(countryGroup.regions, true));
-                        vizModel.selectCountryGroupRegion(countryGroup.regions[0]);
+                        vizModel.selectCountryGroupRegion(_.values(countryGroup.regions)[0]);
                     }
                 });
 
@@ -544,7 +544,7 @@
         selectCountryGroupRegion: function() {
 
             //debugger;
-
+            console.log(selectedRegion);
             var selectedRegion = arguments[0];
             var selectedGroup = vizModel.activeGroup();
 

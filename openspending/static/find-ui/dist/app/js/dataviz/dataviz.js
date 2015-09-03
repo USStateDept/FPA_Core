@@ -1689,7 +1689,7 @@
 
     }
 
-    window.loader.loadCountries("", countriesListLoadHandler);
+    window.utils.bindCountries(window.preloadedData.countries_list, model);
 
     initialize();
 

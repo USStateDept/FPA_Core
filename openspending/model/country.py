@@ -77,7 +77,7 @@ class Country(db.Model):
         return tempobj
 
     @classmethod
-    @cache.memoize(timeout=360)
+    #@cache.memoize(timeout=360)
     def get_all_json(cls):
         regions = ['continent', 'georegion', 'dos_region', 'usaid_reg', 'dod_cmd',\
                     'feed_the_f', 'region_un', 'wb_inc_lvl']
@@ -97,17 +97,21 @@ class Country(db.Model):
                             FROM public.geometry__country_level0 as country_level0 \
                             WHERE country_level0.label = country_level0.sovereignt \
                             ORDER BY country_level0.name;")
-        output = {"data":[]}
+        output = []
         for country in result:
-            tempreg = {}
+            tempreg= {}
+            #tempreg = [country[reg] for reg in regions]
             for reg in regions:
                 tempreg[reg] = country[reg]
 
-            output['data'].append({
+            output.append({
                     'geounit': country["geounit"],
                     'label': country['label'],
                     'iso_a2': country['iso_a2'],
-                    'regions': tempreg
+                    'regions': tempreg,
+                    'selected' : False,
+                    'filtered' : False,
+                    'id' : country['iso_a2']
                 })
         return output
 
