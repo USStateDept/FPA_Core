@@ -163,6 +163,10 @@ link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css
 {% block footer_scripts %}
 link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 
+script
+  window.preloadedData = {};
+  window.preloadedData.categories_list = {{ categories_list | safe}};
+
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
 //-script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")

@@ -1656,6 +1656,7 @@
 
     }
 
+
     window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
 
 

@@ -136,14 +136,13 @@
 
     }
 
-    window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
+    indicatorListLoadHandler(window.preloadedData.categories_list);
 
     window.utils.bindCountries(window.preloadedData.countries_list, model);
 
     var indicatorDataLoadHandler = function(response) {
 
         var highChartsJson = window.prepareHighchartsJson(response, model.activeChart(), model.activeIndicators(), model.activeGroup(), model.activeRegion());
-        console.log("here");
         model.activeData(highChartsJson);
 
         var highChartsJson = model.activeData();

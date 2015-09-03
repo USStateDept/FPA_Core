@@ -298,6 +298,7 @@ link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.l
 {% block footer_scripts %}
 script
   window.preloadedData = {};
+  window.preloadedData.categories_list = {{ categories_list | safe}};
   window.preloadedData.countries_list = {{ countries_list | safe }};
 
 
