@@ -305,6 +305,10 @@ def trigger_reset():
 
 
 
+from openspending.forum.utils.forum_settings import flaskbb_config
+from openspending.forum.forum.models import (Topic,
+                                  TopicsRead)
+
 @blueprint.route('/user', methods=['GET'])
 @blueprint.route('/user/<int:account_id>', methods=['GET'])
 def profile(account_id=None):
@@ -324,9 +328,23 @@ def profile(account_id=None):
 
     dataview_list = Dataview.query.filter_by(account_id=account.id).all()
 
+    topics_tracked = current_user.tracked_topics.count()
+
+    # page = request.args.get("forumpage", 1, type=int)
+    # topics = current_user.tracked_topics.\
+    #     outerjoin(TopicsRead,
+    #               db.and_(TopicsRead.topic_id == Topic.id,
+    #                       TopicsRead.user_id == current_user.id)).\
+    #     add_entity(TopicsRead).\
+    #     order_by(Topic.last_updated.desc()).\
+    #     paginate(page, flaskbb_config['TOPICS_PER_PAGE'], True)
+
+    # return render_template("forum/forum/topictracker.html", topics=topics)
+
     return render_template('user/user.jade',
                             account=account,
-                            dataviews=dataview_list)
+                            dataviews=dataview_list,
+                            topics_tracked=topics_tracked)
 
 
 
