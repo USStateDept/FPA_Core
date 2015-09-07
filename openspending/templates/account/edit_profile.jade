@@ -1,0 +1,42 @@
+{% extends "base.jade" %}
+
+{% block page_title %}Edit Profile{% endblock %}
+
+{% block optional_head %}
+
+style
+  .error-message{
+    color: red
+  }
+    
+
+{% endblock %} 
+
+{% block content %}
+div.container
+  .row
+    p &nbsp;
+    div.col-md-4.col-md-offset-1
+      h3 Edit your profile
+      {% formfill form_fill with form_errors %}
+      form.basic.register.form-horiztonal(id="editprofile", action="{{ url_for('account.edit_profile_post', account_id=account_id) }}", method="POST")
+        input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
+        fieldset
+          div.form-group
+            label(for="fullname") Full Name
+            input.form-control(name="fullname", placeholder="Full Name")
+          div.form-group
+            label(for="website") Website
+            input.form-control(name="website", placeholder="http://state.gov")
+          div.form-actions
+            input.btn.btn-primary(value="Create new account", type="submit")
+      {% endformfill %}
+  .row
+    p &nbsp;
+
+
+{% endblock %}
+
+
+
+
