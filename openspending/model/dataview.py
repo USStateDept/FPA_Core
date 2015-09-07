@@ -88,8 +88,7 @@ class Dataview(db.Model):
         return {
             'title': self.title,
             'description': self.description,
-            'settings': self.settings,
-            'urlhash' : self.urlhash
+            'settings': self.settings
         }
 
 

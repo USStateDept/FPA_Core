@@ -15,18 +15,20 @@ link(href="{{ static_path('find-ui/dist/app/css/user.css') }}", rel='stylesheet'
 {% endblock %}
 
 {% block content %}
-.flash
-  p {{ message }}
 .container.content-text
   .row
     .col-md-12
       .row
-        h1 User Profile
+        h1 {{ account.fullname}}
       .row
-        p
+        {% if account.website %}
+        a(href="{{ account.website }}", target="_blank") {{ account.website }}
+        {% endif %}
       .row
-        p This is the user profile page.
-        p This is meant to show the framework of how we can handle this and is not the final / production version.
+        {% if current_user.id == account.id or current_user.admin %}
+        a(href="{{ url_for('account.edit_profile', account_id=account.id) }}")
+          button Edit Profile
+        {% endif %}
       .row
         h2 Saved Data Views
         table.dv_table
@@ -35,14 +37,18 @@ link(href="{{ static_path('find-ui/dist/app/css/user.css') }}", rel='stylesheet'
           tr
             th Created Date
             th Visualization URL
-            th Action
+            {% if current_user.id == account.id %}
+            th Delete
+            {% endif %}
           {% endif %}
           tr
-            td {{ views.created_at }}
+            td {{ views.created_at |format_date}}
             td 
-              a(href="/data-visualization{{ views.settings.hash }}"){{ views.settings.hash }}
+              a(href="/data-visualization{{ views.settings.hash }}"){{ views.title }}
+            {% if current_user.id == account.id %}
             td.center
               a(href="/user/removedv/{{ views.id }}") X
+            {% endif %}
           {% else %}
           tr
             td(colspan=5).no-border.no-dv-yet You have not saved any dataviews yet.

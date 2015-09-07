@@ -11,16 +11,7 @@ from openspending.auth import require
 
 blueprint = Blueprint('user', __name__)
 
-@blueprint.route('/user', methods=['GET'])
-@blueprint.route('/user/<int:account_id>', methods=['GET'])
-def profile():
-    """ Render the user page. """
 
-    msg = ''
-    list = {}
-    if current_user.is_authenticated():
-      list = Dataview.query.filter_by(account_id=current_user.id).all()
-    return render_template('user/user.jade',dataviews=list,message=msg)
     
 @blueprint.route('/user/adddv', methods=['POST'])    
 def saveData():

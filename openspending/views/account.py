@@ -309,15 +309,24 @@ def trigger_reset():
 @blueprint.route('/user/<int:account_id>', methods=['GET'])
 def profile(account_id=None):
     """ Render the user page. """
-
-    msg = ''
-    dataview_list = {}
-    if current_user.is_authenticated():
-        dataview_list = Dataview.query.filter_by(account_id=current_user.id).all()
-    else:
-        flash_error("This is for authenticated users only")
+    if not current_user.is_authenticated():
+        flash_error("This is only for registered users")
         abort(403)
-    return render_template('user/user.jade',dataviews=dataview_list,message=msg)
+
+    if account_id:
+        account = Account.by_id(account_id)
+    else:
+        account = current_user
+
+    if not account:
+        flash_error("Cannot find the user account")
+        abort(404)
+
+    dataview_list = Dataview.query.filter_by(account_id=account.id).all()
+
+    return render_template('user/user.jade',
+                            account=account,
+                            dataviews=dataview_list)
 
 
 
@@ -359,7 +368,7 @@ def edit_profile_post(account_id):
         # Grab the actual data and validate it
         data = AccountSettings().deserialize(values)
 
-        if (data['website'].find('http://') == -1):
+        if (data['website'].find('http://') == -1) and data['website'] != "":
             data['website'] = 'http://%s'%data['website']
 
         account.fullname = data['fullname']
