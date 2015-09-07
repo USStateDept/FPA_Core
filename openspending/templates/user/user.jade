@@ -8,13 +8,13 @@
 {% endblock %}
 
 
-{% block optional_head %}
 
+{% block optional_head %}
+link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
+link(href="{{ static_path('find-ui/dist/app/css/user.css') }}", rel='stylesheet')
 {% endblock %}
 
 {% block content %}
-style
-  {% include "user/dv.css" %}
 .flash
   p {{ message }}
 .container.content-text
@@ -51,5 +51,13 @@ style
 
 {% block footer_scripts %}
 
+script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/user/user.js') }}")
 
 {% endblock %}
+
+
+
+
+
+

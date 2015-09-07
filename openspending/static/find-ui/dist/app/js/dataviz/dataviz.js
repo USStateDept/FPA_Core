@@ -104,15 +104,7 @@
         },
 
         saveVZ: function() {
-
-            var viz_hash = encodeURI(location.hash).substring(1);
-            if (viz_hash != "") {
-                $.get("/user/adddv?h=" + viz_hash, function() {
-                    //update some sort of flash message here? 
-                });
-            } else {
-                //failure message here?               
-            }
+            window.popupDVSave();
         },
         chartBarToggleMin: function() {
             var key = "min";

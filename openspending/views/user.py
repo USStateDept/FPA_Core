@@ -12,6 +12,7 @@ from openspending.auth import require
 blueprint = Blueprint('user', __name__)
 
 @blueprint.route('/user', methods=['GET'])
+@blueprint.route('/user/<int:account_id>', methods=['GET'])
 def dataloader():
     """ Render the user page page. """
     msg = ''
