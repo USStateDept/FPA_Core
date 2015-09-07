@@ -1,5 +1,5 @@
 import colander
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, abort
 from flask.ext.login import current_user, login_user, logout_user
 from flask import current_app
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -14,6 +14,8 @@ from openspending.lib.helpers import flash_error
 from openspending.lib.helpers import flash_notice, flash_success
 from openspending.lib.reghelper import sendhash
 from openspending.views.context import generate_csrf_token
+
+from openspending.model import Dataview
 
 
 from wtforms import Form, TextField, PasswordField, validators
@@ -302,3 +304,77 @@ def trigger_reset():
     return redirect(url_for('account.email_message', id=account.id))
 
 
+
+@blueprint.route('/user', methods=['GET'])
+@blueprint.route('/user/<int:account_id>', methods=['GET'])
+def profile(account_id=None):
+    """ Render the user page. """
+
+    msg = ''
+    dataview_list = {}
+    if current_user.is_authenticated():
+        dataview_list = Dataview.query.filter_by(account_id=current_user.id).all()
+    else:
+        flash_error("This is for authenticated users only")
+        abort(403)
+    return render_template('user/user.jade',dataviews=dataview_list,message=msg)
+
+
+
+@blueprint.route('/user/<int:account_id>/edit', methods=['GET'])
+def edit_profile(account_id):
+    account = Account.by_id(account_id)
+    if not account:
+        flash_error("This is not a valid account")
+        abort(404)
+    if account.id != current_user.id and not current_user.admin:
+        flash_error("You cannot access this content")
+        abort(403)
+
+    values = {
+                "fullname": account.fullname,
+                "website": account.website,
+                "csrf_token": generate_csrf_token()
+                }
+
+    return render_template('account/edit_profile.jade', form_fill=values,
+                            account_id=account_id)
+
+
+
+@blueprint.route('/user/<int:account_id>/edit', methods=['POST', 'PUT'])
+def edit_profile_post(account_id):
+    """ Perform registration of a new user """
+    errors, values = {}, dict(request.form.items())
+
+    account = Account.by_id(account_id)
+    if not account:
+        flash_error("This is not a valid account")
+        abort(404)
+    if account.id != current_user.id and not current_user.admin:
+        flash_error("You cannot access this content")
+        abort(403)
+
+    try:
+        # Grab the actual data and validate it
+        data = AccountSettings().deserialize(values)
+
+        if (data['website'].find('http://') == -1):
+            data['website'] = 'http://%s'%data['website']
+
+        account.fullname = data['fullname']
+        account.website = data['website']
+        db.session.commit()
+
+
+        # TO DO redirect to email sent page
+        return redirect(url_for('account.profile', account_id=account.id))
+    except colander.Invalid as i:
+        errors = i.asdict()
+        print errors
+    if request.form.get("csrf_token",None):
+        values['csrf_token'] = request.form.get('csrf_token')
+    else:
+        values["csrf_token"] = generate_csrf_token()
+    return render_template('account/edit_profile.jade', form_fill=values,
+                           form_errors=errors, account_id=account_id)

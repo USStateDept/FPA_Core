@@ -20,7 +20,7 @@
 
         {% if current_user and current_user.is_authenticated() %}
             <div class="btn-group navbar-btn navbar-right" style="padding-left: 15px; margin-right: -10px">
-                <a class="btn btn-primary" href="{{ url_for('user.dataloader', username=current_user.username) }}">
+                <a class="btn btn-primary" href="{{ url_for('account.profile', account_id=current_user.id) }}">
                     <span class="fa fa-user"></span> {{ current_user.username }}
                 </a>
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">

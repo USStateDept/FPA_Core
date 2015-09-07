@@ -13,7 +13,7 @@ blueprint = Blueprint('user', __name__)
 
 @blueprint.route('/user', methods=['GET'])
 @blueprint.route('/user/<int:account_id>', methods=['GET'])
-def dataloader():
+def profile():
     """ Render the user page. """
 
     msg = ''

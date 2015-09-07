@@ -39,7 +39,7 @@ nav.navbar.navbar-default.navbar-fixed-top
             {{ current_user.fullname }}
           ul.dropdown-menu.account-dropdown
             li
-              a(href="/user") User Profile
+              a(href="{{url_for('account.profile') }}") User Profile
             //li.divider
             //li
             //  p
