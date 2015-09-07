@@ -31,7 +31,9 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       //-button.btn.btn-default.facebook(data-bind="click:shareFacebook")
       button.btn.btn-default.twitter(data-bind="click:shareTwitter")
       button.btn.btn-default.share(data-bind="click:shareUrl")
+      {% if current_user.is_authenticated() %}
       button.btn.btn-default.saveVZ(data-bind="click:saveVZ",title="Click to Save this Visualization")
+      {% endif %}
     .col-md-2
       span(data-bind="visible:activeChart()!='map'")
         button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
