@@ -216,22 +216,21 @@
 
         return defferreds;
 
-    }
+    };
 
-    window.loader.loadCountries = function(url, handlerFunc) {
-        // url = "data/access-to-improved.json";
-        //url = "static/find-ui/dist/data/countries.json";
-        url = "/api/3/countries_list";
-        $.ajax({
-            url: url,
-            // jsonp: "prefix",
-            dataType: "json",
-            data: {
+    // remove in favor of loading directly from template as variable
+    // window.loader.loadCountries = function(model) {
+    //     url = "/api/3/countries_list";
+    //     $.ajax({
+    //         url: url,
+    //         // jsonp: "prefix",
+    //         dataType: "json",
+    //         data: {
 
-            },
-            success: handlerFunc
-        });
-    }
+    //         },
+    //         success: handlerFunc
+    //     });
+    // };
 
     /*window.loader.changeGroup = function(groupId) {
         console.log(window.loader.data);
