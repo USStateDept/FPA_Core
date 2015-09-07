@@ -1,7 +1,7 @@
 import colander
 import logging
 import urllib
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from flask.ext.login import current_user
 from flask import current_app
 from openspending.core import db
@@ -26,18 +26,19 @@ def saveData():
     if current_user.is_authenticated() and current_user.id:
       """ unquote the js uri encoding """
       viz_hash = urllib.unquote(request.query_string)
+      if not viz_hash:
+        return jsonify({"status":"error", "message":"There was no visualization to save."})      
       """ re add the #"""
       viz_hash = '#'+viz_hash[2:]
-      if not viz_hash:
-        viz_hash="test"
-      logging.info("new row ================ %s ",viz_hash)
+      dataviewobj = Dataview.by_user_settings(settings={'hash':viz_hash}, account_id=current_user.id)
+      if dataviewobj:
+        return jsonify({"status":"error", "message":"Saved Visualization already exists."})
       newrow = Dataview({'account_id':current_user.id,'settings':{'hash':viz_hash}})
       db.session.add(newrow)
       db.session.commit()
-      msg = 'Saved visualization'
+      return jsonify({"status":"success", "message":"Saved Visualization."})
     else:
-      msg = 'You must be logged in'    
-    return redirect("/user")
+      abort(403)
 
 @blueprint.route('/user/removedv/<int:targetid>', methods=['GET'])    
 def deleteData(targetid):
