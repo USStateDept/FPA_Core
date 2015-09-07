@@ -38,13 +38,14 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
         p.validateTips Please enter a title for your visualization
         form
           fieldset
+            input(type="hidden", name="csrf_token", id="csrf_token", value="{{ csrf_token() }}")
             label(for="title") Title
             br
-            input.text.ui-widget-content.ui-corner-all(type="text", name="title", id="title")
+            input.text.ui-widget-content.ui-corner-all(type="text", name="savedv-title", id="savedv-title")
             br
             label(for="description") Description
             br
-            input.text.ui-widget-content.ui-corner-all(type="text", name="description", id="description")
+            input.text.ui-widget-content.ui-corner-all(type="text", name="savedv-description", id="savedv-description")
             input(type="submit", tabindex="-1", style="position:absolute;top:-1000px")
       div#dialog-form-msg(title="Save Visualization")
         div.dvsave-msg

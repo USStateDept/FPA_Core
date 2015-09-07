@@ -14,30 +14,38 @@ blueprint = Blueprint('user', __name__)
 @blueprint.route('/user', methods=['GET'])
 @blueprint.route('/user/<int:account_id>', methods=['GET'])
 def dataloader():
-    """ Render the user page page. """
+    """ Render the user page. """
+
     msg = ''
     list = {}
     if current_user.is_authenticated():
       list = Dataview.query.filter_by(account_id=current_user.id).all()
     return render_template('user/user.jade',dataviews=list,message=msg)
     
-@blueprint.route('/user/adddv', methods=['GET'])    
+@blueprint.route('/user/adddv', methods=['POST'])    
 def saveData():
     """ save a dv to the current  user """
     if current_user.is_authenticated() and current_user.id:
       """ unquote the js uri encoding """
-      viz_hash = urllib.unquote(request.query_string)
-      if not viz_hash:
-        return jsonify({"status":"error", "message":"There was no visualization to save."})      
+      title = request.form.get('title')
+      description = request.form.get('description')
+      viz_hash = request.form.get('viz_settings')
+      if not title or not viz_hash:
+        return jsonify({"status":"error", "message": "You must provide a title and a visualization"})
       """ re add the #"""
-      viz_hash = '#'+viz_hash[2:]
+      viz_hash = '#f='+ viz_hash[2:]
       dataviewobj = Dataview.by_user_settings(settings={'hash':viz_hash}, account_id=current_user.id)
       if dataviewobj:
-        return jsonify({"status":"error", "message":"Saved Visualization already exists."})
-      newrow = Dataview({'account_id':current_user.id,'settings':{'hash':viz_hash}})
-      db.session.add(newrow)
+        dataviewobj.title = title
+        dataviewobj.description = description
+      else:
+        newrow = Dataview(dict(settings={'hash':viz_hash}, 
+                                account_id=current_user.id,
+                                title=title,
+                                description=description))      
+        db.session.add(newrow)
       db.session.commit()
-      return jsonify({"status":"success", "message":"Saved Visualization."})
+      return jsonify({"status":"success", "message":"Saved Visualization %s."%title})
     else:
       abort(403)
 
