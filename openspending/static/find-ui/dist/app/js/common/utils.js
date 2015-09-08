@@ -10,6 +10,8 @@ var act;
     window.utils = {};
 
     window.utils.masterCells = [];
+    
+    window.utils.statsData = [];
 
     window.utils.flipCardEvent = function() {
 
@@ -644,7 +646,10 @@ var act;
         //debugger;
         var seriesArray = [];
         if (window.utils.masterCells.length == 0)
-            window.utils.masterCells = window.utils.masterCells.concat(cells);
+            window.utils.masterCells = cells;
+        //debugger;
+        if (window.utils.statsData.length == 0)
+            window.utils.statsData = statsCells;
 
         var _cells = cells; //window.utils.masterCells;
         //debugger;
@@ -957,11 +962,9 @@ var act;
             var indicator3 = indicators[2];
 
             //debugger;
-            //debugger;
             _.forEach(statsCells, function(c) {
-
-                if (latestYear === c.geometry__time) {
-
+                if (latestYear == c.geometry__time) {
+                    //debugger;
                     series["Global Minimum"] = {
                         data: [c[indicator1 + "__amount_min"], c[indicator2 + "__amount_min"], c[indicator3 + "__amount_min"]],
                         year: c.geometry__time
@@ -1048,8 +1051,9 @@ var act;
 
                 series: seriesArray
             }
+            //debugger;
         }
-
+        
         if (type == "bar") {
             //debugger;
 
@@ -1099,7 +1103,7 @@ var act;
                 name: indicatorsMeta[0][0].label,
                 data: data
             }];
-
+            
             var jsonBar = {
                 chart: {
                     type: 'column'
