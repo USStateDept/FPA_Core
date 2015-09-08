@@ -87,7 +87,7 @@
         //Individual Countries
         //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@name:argentina;albania;india
 
-        //Regions in a group 
+        //Regions in a group
         //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
 
         //All Countries in one or many regions of a group
@@ -209,7 +209,19 @@
                 data: {
 
                 }
+            }).done(function( data ) {
+              // success
+              console.log("SUCCESS data: " + data);
+            }).fail(function( jqXHR, textStatus, errorThrown ) {
+              // failure
+              console.log("FAILURE textStatus: " + textStatus);
+              console.log("FAILURE errorThrown: " + errorThrown);
+            }).always(function( a, textStatus ){
+              // complete no matter what
+              console.log("COMPLETE data: " + a);
+              console.log("COMPLETE textStatus: " + textStatus);
             });
+
             defferreds.push(d);
 
         });
@@ -276,7 +288,7 @@
         addDataToGeoJson(window.loader.lastGeoJson);
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
         window.loader.geoJson[type] = response;
 
         window.loader.geoJsonLayers[type] = L.geoJson(response, {
