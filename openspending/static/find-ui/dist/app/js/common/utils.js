@@ -1141,7 +1141,7 @@ var act;
                 },
                 series: seriesArray
             }
-
+            //debugger;
         }
 
         var json;
