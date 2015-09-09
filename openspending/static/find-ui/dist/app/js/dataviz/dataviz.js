@@ -732,12 +732,13 @@
 
                   $.when.apply($, _deferredList)
                   .done(function(response) {
-                    console.log("success getting data ... drawing");
-                    indicatorDataLoadHandler(arguments);
-                  }).fail(function(response) {
-                    console.log("failure getting data ... retrying");
-                    _takeDataDrawChart();
+                      console.log("success getting data ... drawing");
+                      indicatorDataLoadHandler(arguments);
+                  })
+                  .fail(function(response){
+                      $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
                   });
+
 
               });
 
@@ -770,8 +771,13 @@
             var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
-            $.when.apply($, _deferredList).done(function(response) {
+            $.when.apply($, _deferredList)
+            .done(function(response) {
+                console.log("success getting data ... drawing");
                 indicatorDataLoadHandler(arguments);
+            })
+            .fail(function(response){
+                $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
             });
 
             model.activeCountries.removeAll();
@@ -1580,6 +1586,8 @@
 
     var indicatorListLoadHandler = function(response) {
 
+      var res = response;
+
         for (var indicatorId in response.data.indicators.data) {
             var years = response.data.indicators.data[indicatorId].years;
             var yearStart = years[0];
@@ -1642,34 +1650,31 @@
             groupBy = "indicators";
         }
 
-        function takeDataDrawChart() {
-          // chart data
-          var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
-          deferredList = deferredList.concat(deferredMetaList);
 
-          $.when.apply($, deferredList)
-          .done(function(response) {
-              console.log("success getting data ... drawing");
-              indicatorDataLoadHandler(arguments, yearsExtremes);
-          })
-          .fail(function(response){
-              console.log("failure getting data ... retrying");
-              // on fail we need to do this function again
-              takeDataDrawChart();
+        function takeDataDrawChart() {
+          // meta data
+          var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+          $.when.apply($, deferredMetaList).done(function(response){
+
+              // chart data
+              var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
+
+              deferredList = deferredList.concat(deferredMetaList);
+
+              $.when.apply($, deferredList)
+              .done(function(response) {
+                  console.log("success getting data ... drawing");
+                  indicatorDataLoadHandler(arguments, yearsExtremes);
+              })
+              .fail(function(response){
+                  $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
+              });
+
           });
 
         }
 
-        // meta data
-        var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-
-        $.when.apply($, deferredMetaList).done(function(response){
-          console.log("meta separated");
-          takeDataDrawChart();
-        });
-
-
-
+        takeDataDrawChart();
         eventBind();
 
     }

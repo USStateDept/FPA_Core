@@ -33,20 +33,6 @@
 
     window.loader.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
 
-        //line
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=bar&r=usaid_reg:OAPA|canada
-
-        //bar
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=bar&r=usaid_reg:OAPA|canada
-
-        //bubble
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_growth|gdp_per_capita|health_expenditure_public&c=bubble&r=usaid_reg:OAPA|canada
-
-        //dod_cmd:USCENTCOM:all|dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina
-
-        // geounits = "dod_cmd:USCENTCOM:all|dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina".split("|");
-        // geounits = "dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina".split("|");
-        // geounits = "dod_cmd:USCENTCOM|kuwait|qatar|dod_cmd:USSOUTHCOM|argentina".split("|");
 
         var indicatorIds = indicators;
 
@@ -80,19 +66,6 @@
 
         var urlAllCountriesInRegionsInGroupTemplate = urlPrefix + "&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@{groupId}:{regions}";
 
-        //Individual Countries
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@name:argentina;albania;india
-
-        //Regions in a group
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
-
-        //All Countries in one or many regions of a group
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
-
-        //all regions in a group
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time
-
-
         var urls = [];
 
         if (countries.length) {
@@ -104,7 +77,6 @@
         }
 
         if (groupsWithAllRegions.length) {
-            //debugger;
             _.forEach(groupsWithAllRegions, function(group) {
                 var groupId = group.substring(0, group.indexOf(":all"));
                 urls.push({
@@ -117,7 +89,6 @@
         }
 
         if (regionsWithAllCountries.length) {
-            //debugger;
             //first get all groups together
             var groups = [],
                 groupRegions = {};
@@ -140,9 +111,6 @@
             });
 
             for (groupId in groupRegions) {
-
-
-
                 urls.push({
                     url: urlAllCountriesInRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
                     level: "countries",
@@ -217,6 +185,7 @@
         _.forEach(urls, function(item) {
             getDataFromServer(item);
         });
+
 
         return defferreds;
 
