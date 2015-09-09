@@ -487,7 +487,7 @@
                 return;
             }
 
-            // var selectedCountry = arguments[0];
+
             if (selectedCountry.selected) {
                 return false;
             }
@@ -721,21 +721,31 @@
             //debugger;
             window.utils.updateHash(currentHash);
 
-            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
-            var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
-            _deferredList = _deferredList.concat(_deferredMetaList);
 
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+            function _takeDataDrawChart() {
 
-            $.when.apply($, _deferredList).done(function(response) {
-                indicatorDataLoadHandler(arguments);
-            });
+              var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+              $.when.apply($, _deferredMetaList).done(function(response){
+
+                var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
+                _deferredList = _deferredList.concat(_deferredMetaList);
+
+                  $.when.apply($, _deferredList)
+                  .done(function(response) {
+                    console.log("success getting data ... drawing");
+                    indicatorDataLoadHandler(arguments);
+                  }).fail(function(response) {
+                    console.log("failure getting data ... retrying");
+                    _takeDataDrawChart();
+                  });
+
+              });
+
+            }
+
+            _takeDataDrawChart();
 
             model.activeIndicators.removeAll();
-
-            //$.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
-            //_deferred.done(indicatorDataLoadHandler);
         },
 
         addRegionComparator: function() {
@@ -759,8 +769,6 @@
             var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
             var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
             _deferredList = _deferredList.concat(_deferredMetaList);
-
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
 
             $.when.apply($, _deferredList).done(function(response) {
                 indicatorDataLoadHandler(arguments);
@@ -1275,11 +1283,6 @@
         var indicators = hashParams.i.split("|");
         var onlyIndicator = indicators[0];
 
-
-
-
-
-
         window.loader.lastGeoJson = response;
 
         addDataToGeoJson(window.loader.lastGeoJson, type);
@@ -1448,9 +1451,10 @@
         //debugger;
         if (chartType == "map") {
             $("#loading").hide();
-            map = L.map('viz-container').setView([0, 0], 3);
 
-            L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {//'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            map = L.map('viz-container').setView([0, 0], 3);
+            L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
+                //'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
                 maxZoom: 18,
                 noWrap: true
@@ -1485,7 +1489,7 @@
 
             highChartsJson.chart.events = {
                 load: function() {
-                    //debugger;
+
                     var allowedSetExtremeCharts = ["line"];
                     var xAxis = this.series[0].xAxis;
                     if (chartType == "bar") {
@@ -1656,19 +1660,31 @@
             groupBy = "indicators";
         }
 
+        function takeDataDrawChart() {
+          // chart data
+          var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
+          deferredList = deferredList.concat(deferredMetaList);
+
+          $.when.apply($, deferredList)
+          .done(function(response) {
+              console.log("success getting data ... drawing");
+              indicatorDataLoadHandler(arguments, yearsExtremes);
+          })
+          .fail(function(response){
+              console.log("failure getting data ... retrying");
+              // on fail we need to do this function again
+              takeDataDrawChart();
+          });
+
+        }
+
+        // meta data
         var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
 
         $.when.apply($, deferredMetaList).done(function(response){
-
-            var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
-            deferredList = deferredList.concat(deferredMetaList);
-
-            $.when.apply($, deferredList).done(function(response) {
-                //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
-                indicatorDataLoadHandler(arguments, yearsExtremes);
-            });
+          console.log("meta separated");
+          takeDataDrawChart();
         });
-
 
 
 
