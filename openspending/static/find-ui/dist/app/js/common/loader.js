@@ -87,7 +87,7 @@
         //Individual Countries
         //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@name:argentina;albania;india
 
-        //Regions in a group 
+        //Regions in a group
         //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
 
         //All Countries in one or many regions of a group
@@ -202,36 +202,45 @@
         //debugger;
         var defferreds = [];
 
+
         _.forEach(urls, function(item) {
+          console.log("URL: " + item.url);
             var d = $.ajax({
                 url: item.url,
                 dataType: "json",
-                data: {
-
-                }
+                data: {}
+            }).done(function( data ) {
+              // success
+              console.log("SUCCESS data: " + data);
+            }).fail(function( jqXHR, textStatus, errorThrown ) {
+              // failure
+              console.log("FAILURE errorThrown: " + errorThrown);
+            }).always(function( a, textStatus ){
+              // complete no matter what
+              console.log("COMPLETE textStatus: " + textStatus);
             });
+
             defferreds.push(d);
 
         });
 
         return defferreds;
 
-    }
+    };
 
-    window.loader.loadCountries = function(url, handlerFunc) {
-        // url = "data/access-to-improved.json";
-        //url = "static/find-ui/dist/data/countries.json";
-        url = "/api/3/countries_list";
-        $.ajax({
-            url: url,
-            // jsonp: "prefix",
-            dataType: "json",
-            data: {
+    // remove in favor of loading directly from template as variable
+    // window.loader.loadCountries = function(model) {
+    //     url = "/api/3/countries_list";
+    //     $.ajax({
+    //         url: url,
+    //         // jsonp: "prefix",
+    //         dataType: "json",
+    //         data: {
 
-            },
-            success: handlerFunc
-        });
-    }
+    //         },
+    //         success: handlerFunc
+    //     });
+    // };
 
     /*window.loader.changeGroup = function(groupId) {
         console.log(window.loader.data);
@@ -277,7 +286,7 @@
         addDataToGeoJson(window.loader.lastGeoJson);
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
         window.loader.geoJson[type] = response;
 
         window.loader.geoJsonLayers[type] = L.geoJson(response, {

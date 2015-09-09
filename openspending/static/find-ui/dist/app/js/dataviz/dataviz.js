@@ -327,33 +327,9 @@
 
         countriesModelMaster: ko.observableArray([]),
 
-        countryGroupings: ko.observableArray([{
-            "id": "all",
-            "label": "All",
-            "regions": []
-        }, {
-            "id": "continent",
-            "label": "Continent",
-            "regions": []
-        }, {
-            "id": "dod_cmd",
-            "label": "Department of Defense",
-            "regions": []
-        }, {
-            "id": "dos_region",
-            "label": "Department of State",
-            "regions": []
-        }, {
-            "id": "usaid_reg",
-            "label": "USAID",
-            "regions": []
-        }, {
-            "id": "wb_inc_lvl",
-            "label": "World Bank",
-            "regions": []
-        }]),
+        countryGroupings: ko.observableArray([]),
 
-        countryGroupRegions: ko.observableArray([]),
+        //countryGroupRegions: ko.observableArray([]),
 
         activeCountries: ko.observableArray([]),
 
@@ -659,7 +635,7 @@
             model.activeRegion(""); //set active region to undefined
 
 
-            model.countryGroupRegions.removeAll();
+            //model.countryGroupRegions.removeAll();
 
 
             if (groupId == "all") {
@@ -670,7 +646,7 @@
 
                 _.forEach(model.countryGroupings(), function(countryGroup) {
                     if (groupId == countryGroup.id) {
-                        model.countryGroupRegions(_.clone(countryGroup.regions, true));
+                        //model.countryGroupRegions(_.clone(countryGroup.regions, true));
                         model.selectCountryGroupRegion(countryGroup.regions[0]);
                     }
                 })
@@ -981,7 +957,7 @@
             data.forEach(function(entry) {
                 if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
 					if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
-						entry[indicator] = entry[indicator].toFixed(2); //Rounds number to 2 decimal places
+						entry[indicator] = (entry[indicator].toFixed(2))/1; //Rounds number to 2 decimal places
                     dataTempObj[entry['year']] = entry[indicator];
                 }
             });
@@ -1013,7 +989,7 @@
                 }
             }
         });
-
+        
         var options = {
             enableCellNavigation: true,
             enableColumnReorder: true,
@@ -1451,7 +1427,7 @@
         }
 
         var responseStats = statsData[0];
-
+        //debugger;
         if (chartType == "map") {
             $("#loading").hide();
             map = L.map('viz-container').setView([0, 0], 3);
@@ -1477,7 +1453,7 @@
             }
 
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
-
+            //debugger;
             var highChartsJson = sortedData.highcharts;
             //add the min,max and avg to the data-proxy span
             if (chartType == "bar") {
@@ -1509,8 +1485,9 @@
             //debugger;
             //highChartsJson.subtitle.text = type;
             var chart = $('#viz-container').highcharts(highChartsJson);
-
+            //debugger;
             showTable(responseData);
+            //debugger;
         }
     }
 
@@ -1529,14 +1506,14 @@
     }
 
     var updateChartData = function(year) {
-
+        //debugger;
         var activeChart = $('#viz-container').highcharts();
         //first three series are the stats
         //debugger;
         var json = window.utils.prepareHighchartsJson({
             cells: window.utils.masterCells
         }, {
-            cells: []
+            cells: window.utils.statsData
         }, indicatorsMeta, chartType, indicators, year);
 
         if (chartType == "scatter") {
@@ -1552,6 +1529,7 @@
 
         if (chartType == "bubble") {
             var seriesArray = json.highcharts.series;
+            //debugger;
             _.forEach(seriesArray, function(s, i) {
                 var data = s.data;
                 if (i > 2) {
@@ -1591,7 +1569,7 @@
 
 
     };
-
+    //debugger;
 
     //deferred.done(indicatorDataLoadHandler);
 
@@ -1680,6 +1658,7 @@
 
     }
 
+
     window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
 
 
@@ -1689,8 +1668,8 @@
 
     }
 
-    window.loader.loadCountries("", countriesListLoadHandler);
-
+    window.utils.bindCountries(window.preloadedData.countries_list, model);
+    
     initialize();
 
 }())

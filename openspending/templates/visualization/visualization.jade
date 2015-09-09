@@ -103,7 +103,7 @@ link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.l
               p
             .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
               .col-md-8.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
-                .row.f32(data-bind="foreach:activeGroup().regions")
+                .row.f32(data-bind="foreach:_.values(activeGroup().regions)")
                   .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
                     span(data-bind='click:$root.selectCountry,css:{selected:selected}')
                       span(style="vertical-align:middle" data-bind="html:label")
@@ -296,6 +296,13 @@ link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.l
 {% endblock %}
 
 {% block footer_scripts %}
+script
+  window.preloadedData = {};
+  window.preloadedData.categories_list = {{ categories_list | safe}};
+  window.preloadedData.countries_list = {{ countries_list | safe }};
+
+
+
 //-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")

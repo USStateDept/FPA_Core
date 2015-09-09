@@ -33,7 +33,7 @@ blueprint = Blueprint('categories_api2', __name__)
 @api_json_errors
 @jsonp
 @cache.cached(timeout=600)
-def dataorgs():
+def categories_list():
 
     page_num = request.args.get('page', None)
 

@@ -23,6 +23,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row#loading
     .col-md-12
       img(src='/static/find-ui/dist/app/images/loader.GIF')
+
   .row
     p
   .row
@@ -221,7 +222,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                 p
               .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
                 .col-md-8.countries-col(style="height:200px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
-                  .row.f32(data-bind="foreach:activeGroup().regions")
+                  .row.f32(data-bind="foreach:_.values(activeGroup().regions)")
                     .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
                       span(data-bind='click:$root.selectCountry,css:{selected:selected}')
                         span(style="vertical-align:middle" data-bind="html:label")
@@ -251,17 +252,30 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
         
   .row
     .col-md-12
+<<<<<<< HEAD
       center
         p.
           * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
         p.
           If you select a subnational area, you will be shown national information. For more information about the geography tile layer, visit openstreetmap.org.    
+=======
+    center
+      p.
+        * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
+      p.
+        If you select a subnational area, you will be shown national information. For more information about the geography tile layer, visit openstreetmap.org.
+     
+>>>>>>> 76caad6708ebaeafa94bc5b9427e8a3046dcd709
 
 {% endblock %}
 
 {% block footer_scripts %}
 //-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
+
+script
+  window.preloadedData = {};
+  window.preloadedData.countries_list = {{ countries_list | safe }};
 
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
 script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")

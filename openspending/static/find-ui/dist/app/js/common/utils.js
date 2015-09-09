@@ -10,6 +10,8 @@ var act;
     window.utils = {};
 
     window.utils.masterCells = [];
+    
+    window.utils.statsData = [];
 
     window.utils.flipCardEvent = function() {
 
@@ -228,102 +230,18 @@ var act;
     window.utils.bindCountries = function(response, model) {
 
 
-
-        var countryGroupings = _.clone(model.countryGroupings(), true);
-
-        //push regions in country groupings
-        _.forEach(countryGroupings, function(countryGroup, i) {
-
-            var groupId = countryGroup.id;
-            countryGroup.selected = false;
-            countryGroup.filtered = false;
-            countryGroup.geounit = groupId + ":all";
-
-            if (countryGroup.id != "all") {
-                var trackRegion = [];
-                _.forEach(response.data, function(country) { //for each Country
-
-                    //find level this country belongs to in this group
-                    var region = country.regions[groupId];
-                    var regionObj = {
-                        id: region,
-                        label: region,
-                        geounit: groupId + ":" + region,
-                        countries: [],
-                        selected: false,
-                        filtered: false
-                    }
-
-                    if (_.indexOf(trackRegion, region) < 0) {
-                        trackRegion.push(region);
-                        //debugger;
-                        countryGroup.regions.push(regionObj);
-                    }
-
-                });
-            } else {
-
-                countryGroup.regions.push({ //push a region called All for All
-                    id: "all",
-                    label: "All Countries",
-                    countries: [],
-                    selected: false,
-                    filtered: false
-                });
-
-            }
+        model.countryGroupings(response['data']['regions']);
 
 
-        });
+        model.countriesModel(response['data']['countries']);
 
-        //push country in regions
-        _.forEach(countryGroupings, function(countryGroup, i) {
+        model.countriesModelMaster(_.clone(response['data']['countries'], true));
 
-            _.forEach(countryGroup.regions, function(region) {
-
-                _.forEach(response.data, function(country) { //for each Country
-                    var regionId = region.id;
-
-                    var c = countryGroup;
-
-                    if (country.regions[countryGroup.id] == regionId || regionId == "all") {
-                        country.selected = false;
-                        country.filtered = false;
-                        country.id = country.iso_a2;
-                        region.countries.push(country);
-                    }
-
-                });
-
-            });
-
-        });
-
-
-
-        model.countryGroupings.removeAll();
-
-        _.forEach(countryGroupings, function(countryGroup, i) {
-            model.countryGroupings.push(countryGroup);
-        });
-
-
-        _.forEach(response.data, function(country) {
-            country.selected = false;
-        });
-
-
-        model.countriesModel(response.data);
-        model.countriesModelMaster(_.clone(response.data, true));
-
-        model.activeGroup(countryGroupings[0]);
+        model.activeGroup(model.countryGroupings()[0]);
     };
 
     window.utils.removeOnMap = function(model, geounits) { //clear a single country
-        // debugger;
-        // console.log("removeOnMap has been called!");
-        // console.log("Geounits is: " + JSON.stringify(geounits));
-        // console.log("Act (from removeOnMap) is: " + JSON.stringify(act));
+
         // rc(act);
         window.map.removeLayer(window.visualization.geoJsonLayers[level]);
         $.each(vizModel.activeCountries(), function(idx, country) {
@@ -370,7 +288,7 @@ var act;
 
 
         map.fitBounds(bounds);
-        console.log("zoomed to features");
+
         console.timeEnd("choropleth");
         // debugger;
     };
@@ -728,7 +646,10 @@ var act;
         //debugger;
         var seriesArray = [];
         if (window.utils.masterCells.length == 0)
-            window.utils.masterCells = window.utils.masterCells.concat(cells);
+            window.utils.masterCells = cells;
+        //debugger;
+        if (window.utils.statsData.length == 0)
+            window.utils.statsData = statsCells;
 
         var _cells = cells; //window.utils.masterCells;
         //debugger;
@@ -1041,11 +962,9 @@ var act;
             var indicator3 = indicators[2];
 
             //debugger;
-            //debugger;
             _.forEach(statsCells, function(c) {
-
-                if (latestYear === c.geometry__time) {
-
+                if (latestYear == c.geometry__time) {
+                    //debugger;
                     series["Global Minimum"] = {
                         data: [c[indicator1 + "__amount_min"], c[indicator2 + "__amount_min"], c[indicator3 + "__amount_min"]],
                         year: c.geometry__time
@@ -1132,8 +1051,9 @@ var act;
 
                 series: seriesArray
             }
+            //debugger;
         }
-
+        
         if (type == "bar") {
             //debugger;
 
@@ -1183,7 +1103,7 @@ var act;
                 name: indicatorsMeta[0][0].label,
                 data: data
             }];
-
+            
             var jsonBar = {
                 chart: {
                     type: 'column'
