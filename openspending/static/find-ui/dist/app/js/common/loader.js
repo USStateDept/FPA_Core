@@ -207,12 +207,10 @@
              data: {}
            }).done(function( res ) {
              // push to defferreds
-             console.log("SUCCESS getting data" + res);
-
+            // console.log("SUCCESS getting data" + res);
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
-             console.log("FAILURE getting data ... RETRYING");
-             getDataFromServer(a);
+             //console.log("FAILURE getting data ... RETRYING");
           });
 
           defferreds.push(d);
@@ -343,7 +341,7 @@
              data: {}
            }).done(function( res ) {
              // success
-             console.log("pushing meta onto defferreds");
+             //console.log("pushing meta onto defferreds");
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
              console.log("FAILURE getting meta ... RETRYING");

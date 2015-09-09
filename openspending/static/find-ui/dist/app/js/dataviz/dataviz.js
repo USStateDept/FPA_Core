@@ -487,7 +487,7 @@
                 return;
             }
 
-            // var selectedCountry = arguments[0];
+
             if (selectedCountry.selected) {
                 return false;
             }
@@ -721,21 +721,31 @@
             //debugger;
             window.utils.updateHash(currentHash);
 
-            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
-            var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
-            _deferredList = _deferredList.concat(_deferredMetaList);
 
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+            function _takeDataDrawChart() {
 
-            $.when.apply($, _deferredList).done(function(response) {
-                indicatorDataLoadHandler(arguments);
-            });
+              var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+              $.when.apply($, _deferredMetaList).done(function(response){
+
+                var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
+                _deferredList = _deferredList.concat(_deferredMetaList);
+
+                  $.when.apply($, _deferredList)
+                  .done(function(response) {
+                    console.log("success getting data ... drawing");
+                    indicatorDataLoadHandler(arguments);
+                  }).fail(function(response) {
+                    console.log("failure getting data ... retrying");
+                    _takeDataDrawChart();
+                  });
+
+              });
+
+            }
+
+            _takeDataDrawChart();
 
             model.activeIndicators.removeAll();
-
-            //$.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
-            //_deferred.done(indicatorDataLoadHandler);
         },
 
         addRegionComparator: function() {
@@ -759,8 +769,6 @@
             var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
             var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
             _deferredList = _deferredList.concat(_deferredMetaList);
-
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
 
             $.when.apply($, _deferredList).done(function(response) {
                 indicatorDataLoadHandler(arguments);
@@ -1634,31 +1642,28 @@
             groupBy = "indicators";
         }
 
-        var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+        function takeDataDrawChart() {
+          var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+          $.when.apply($, deferredMetaList).done(function(response){
 
-        $.when.apply($, deferredMetaList).done(function(response){
+              var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
+              deferredList = deferredList.concat(deferredMetaList);
 
-            var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
-            deferredList = deferredList.concat(deferredMetaList);
-
-
-
-            $.when.apply($, deferredList).done(function(response) {
-
-                console.log(arguments);
-
-                if( arguments[0][1] == "success") {
+              $.when.apply($, deferredList)
+              .done(function(response) {
+                  console.log("success getting data ... drawing");
                   indicatorDataLoadHandler(arguments, yearsExtremes);
-                }else {
-                  console.log("refresh here");
-                }
-                
-            });
-        });
+              })
+              .fail(function(response){
+                  console.log("failure getting data ... retrying");
+                  takeDataDrawChart();
+              });
 
+          });
 
+        }
 
-
+        takeDataDrawChart();
         eventBind();
 
     }
