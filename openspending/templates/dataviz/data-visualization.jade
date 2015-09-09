@@ -34,8 +34,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       button.btn.btn-default.saveVZ(data-bind="click:saveVZ",title="Click to Save this Visualization")
     .col-md-2
       span(data-bind="visible:activeChart()!='map'")
-        button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
-        button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
     .col-md-2
       .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
   .row
@@ -258,6 +258,9 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       span(data-bind="visible:activeChart()!='map'")
         button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
         button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
+      br
+      br
+      br
       p.
         * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
       p.
