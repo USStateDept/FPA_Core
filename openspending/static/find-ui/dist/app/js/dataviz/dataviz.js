@@ -1643,27 +1643,33 @@
         }
 
         function takeDataDrawChart() {
-          var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-          $.when.apply($, deferredMetaList).done(function(response){
+          // chart data
+          var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
+          deferredList = deferredList.concat(deferredMetaList);
 
-              var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
-              deferredList = deferredList.concat(deferredMetaList);
-
-              $.when.apply($, deferredList)
-              .done(function(response) {
-                  console.log("success getting data ... drawing");
-                  indicatorDataLoadHandler(arguments, yearsExtremes);
-              })
-              .fail(function(response){
-                  console.log("failure getting data ... retrying");
-                  takeDataDrawChart();
-              });
-
+          $.when.apply($, deferredList)
+          .done(function(response) {
+              console.log("success getting data ... drawing");
+              indicatorDataLoadHandler(arguments, yearsExtremes);
+          })
+          .fail(function(response){
+              console.log("failure getting data ... retrying");
+              // on fail we need to do this function again
+              takeDataDrawChart();
           });
 
         }
 
-        takeDataDrawChart();
+        // meta data
+        var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+
+        $.when.apply($, deferredMetaList).done(function(response){
+          console.log("meta separated");
+          takeDataDrawChart();
+        });
+
+
+
         eventBind();
 
     }

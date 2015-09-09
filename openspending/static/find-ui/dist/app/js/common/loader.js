@@ -199,8 +199,6 @@
         var defferreds = [];
 
         function getDataFromServer(a) {
-          var toPush = false;
-
           var d = $.ajax({
              url: a.url,
              dataType: "json",
