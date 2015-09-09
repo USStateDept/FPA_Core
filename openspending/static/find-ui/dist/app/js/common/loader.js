@@ -202,27 +202,21 @@
         //debugger;
         var defferreds = [];
 
+
         _.forEach(urls, function(item) {
+          console.log("URL: " + item.url);
             var d = $.ajax({
                 url: item.url,
                 dataType: "json",
-                data: {
-
-                }
+                data: {}
             }).done(function( data ) {
               // success
               console.log("SUCCESS data: " + data);
             }).fail(function( jqXHR, textStatus, errorThrown ) {
               // failure
-              console.log("FAILURE textStatus: " + textStatus);
               console.log("FAILURE errorThrown: " + errorThrown);
-
-              //fail and send whatever contents we have thus failure
-              return defferreds;
-              
             }).always(function( a, textStatus ){
               // complete no matter what
-              console.log("COMPLETE data: " + a);
               console.log("COMPLETE textStatus: " + textStatus);
             });
 
