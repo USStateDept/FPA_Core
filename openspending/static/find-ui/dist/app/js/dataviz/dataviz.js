@@ -16,7 +16,7 @@
     var modalTitle = "";
     var modalMessage = "";
     var geometryType = "sovereignt";
-
+    
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
     //var group = hashParams.g;
@@ -274,7 +274,7 @@
             model.activeYears.removeAll();
 
             model.activeYears(yearsArray);
-
+            debugger;
             if (pickedFromDropdown) {
                 $("#filter-years").slider('values', 0, years);
                 $("#filter-years").slider('values', 1, years);
@@ -794,18 +794,38 @@
 
     var createYearSlider = function(minYear, maxYear) {
 
-        //var minYear = parseInt(yearsRange[0]);
-        //var maxYear = parseInt(yearsRange[1]);
-
         var minYearFilter = parseInt(yearsFilter[0]);
         var maxYearFilter = parseInt(yearsFilter[1]);
+        
+        if (maxYearFilter != maxYear){
+            //update hash
+            var currentHash = window.utils.getHashParams();
 
+            currentHash.f = minYear + "|" + maxYear;
+
+            window.utils.updateHash(currentHash);
+            
+            minYearFilter = minYear;
+            maxYearFilter = maxYear;
+        }
+        
+        //debugger;
         var isRange = false;
 
         if (chartType == "line" || chartType == "scatter") {
             isRange = true;
+        } else {
+            minYearFilter = maxYearFilter;
         }
-
+        
+        if (minYearFilter != maxYearFilter) {
+            yearLabel = minYearFilter + "-" + maxYearFilter;
+        } else {
+            yearLabel = maxYearFilter;
+        }
+                
+        $("#filter-years-label").html(yearLabel);
+        
         var sliderOptions = {
             range: isRange,
             min: minYear,
@@ -826,9 +846,12 @@
                     yearLabel = startYear + "-" + endYear;
                     // model.selectYear([startYear, endYear]);
                 } else {
+                    yearLabel = endYear;
                     // model.selectYear([startYear]);
                 }
-
+                
+                $("#filter-years-label").html(yearLabel);
+                
                 //update hash
                 var currentHash = window.utils.getHashParams();
 
@@ -847,7 +870,7 @@
             slide: function(event, ui) {
                 //  debugger;
 
-                // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
+                //$("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
 
             }
         }
@@ -1448,9 +1471,8 @@
 
             //window.loader.changeGroup("all");
         } else {
-            if (chartType == "scatter") {
-                yearsExtremesForData = window.utils.getHashParams().f.split("|");
-            }
+            
+            //yearsExtremesForData = window.utils.getHashParams().f.split("|");
 
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
             //debugger;
@@ -1576,7 +1598,8 @@
 
     var indicatorListLoadHandler = function(response) {
 
-        for (var indicatorId in response.data.indicators.data) {
+        /*for (var indicatorId in response.data.indicators.data) {
+            debugger;
             var years = response.data.indicators.data[indicatorId].years;
             var yearStart = years[0];
             var yearEnd = years[years.length - 1];
@@ -1586,7 +1609,7 @@
 
                 yearsExtremes.push(yearStart);
                 yearsExtremes.push(yearEnd);
-
+                debugger;
             } else {
 
                 if (yearStart < yearsExtremes[0]) {
@@ -1596,36 +1619,53 @@
                 if (yearEnd > yearsExtremes[1]) {
                     yearsExtremes[1] = yearEnd;
                 }
+                debugger;
             }
-        }
+        }*/
 
-        if (yearsExtremes[0] < 1990) {
-            yearsExtremes[0] = 1990;
-        }
-
+        //debugger;
         _.forEach(indicators, function(indicatorId) {
             var years = response.data.indicators.data[indicatorId].years;
             var yearStart = years[0];
             var yearEnd = years[years.length - 1];
 
-            if (yearsExtremesForData.length == 0) {
+            if (yearsExtremes.length == 0) {
 
+                yearsExtremes.push(yearStart);
+                yearsExtremes.push(yearEnd);
+                //debugger;
+            } else {
+
+                if (yearStart > yearsExtremes[0]) {
+                    yearsExtremes[0] = yearStart;
+                }
+
+                if (yearEnd < yearsExtremes[1]) {
+                    yearsExtremes[1] = yearEnd;
+                }
+                //debugger;
+            }
+            
+            if (yearsExtremesForData.length == 0) {
                 yearsExtremesForData.push(yearStart);
                 yearsExtremesForData.push(yearEnd);
 
             } else {
 
-                if (yearStart < yearsExtremesForData[0]) {
+                if (yearStart > yearsExtremesForData[0]) {
                     yearsExtremesForData[0] = yearStart;
                 }
 
-                if (yearEnd > yearsExtremesForData[1]) {
+                if (yearEnd < yearsExtremesForData[1]) {
                     yearsExtremesForData[1] = yearEnd;
                 }
             }
 
         });
-
+        
+        if (yearsExtremes[0] < 1990) {
+            yearsExtremes[0] = 1990;
+        }
         //debugger;
         //create slider first
         createYearSlider(yearsExtremes[0], yearsExtremes[1]);
