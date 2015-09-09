@@ -675,7 +675,7 @@ var act;
 
             return title + units;
         });
-        console.log('Indicators processing.');
+
         var xUnits = indicatorsMeta[0][0].units;
 
         var yUnits;
