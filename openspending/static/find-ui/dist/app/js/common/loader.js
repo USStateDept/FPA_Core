@@ -48,9 +48,7 @@
         // geounits = "dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina".split("|");
         // geounits = "dod_cmd:USCENTCOM|kuwait|qatar|dod_cmd:USSOUTHCOM|argentina".split("|");
 
-
         var indicatorIds = indicators;
-
 
         // sort by types of geo units to drill down API calls
         var countries = _.remove(geounits, function(c) {
@@ -68,8 +66,6 @@
         var regionsInGroups = geounits;
 
         //////////////////////////////////////////////
-
-
 
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
@@ -199,34 +195,36 @@
             level: "statistics",
             geounits: "global"
         });
-        //debugger;
+
         var defferreds = [];
 
+        function getDataFromServer(a) {
+          var d = $.ajax({
+             url: a.url,
+             dataType: "json",
+             data: {}
+           }).done(function( res ) {
+             // success
+             console.log("SUCCESS ... pushing data onto defferreds");
+             // push to defferreds
+             console.log("Result: " + res);
+           }).fail(function( jqXHR, textStatus, errorThrown ) {
+             // failure
+             console.log("FAILURE getting data ... RETRYING");
+             getDataFromServer(a);
+         });
+
+         defferreds.push(d);
+
+        }
 
         _.forEach(urls, function(item) {
-          console.log("URL: " + item.url);
-            var d = $.ajax({
-                url: item.url,
-                dataType: "json",
-                data: {}
-            }).done(function( data ) {
-              // success
-              console.log("SUCCESS data: " + data);
-            }).fail(function( jqXHR, textStatus, errorThrown ) {
-              // failure
-              console.log("FAILURE errorThrown: " + errorThrown);
-            }).always(function( a, textStatus ){
-              // complete no matter what
-              console.log("COMPLETE textStatus: " + textStatus);
-            });
-
-            defferreds.push(d);
-
+            getDataFromServer(item);
         });
 
         return defferreds;
 
-    };
+    }
 
     // remove in favor of loading directly from template as variable
     // window.loader.loadCountries = function(model) {
@@ -338,28 +336,31 @@
 
         var defferreds = [];
 
-        _.forEach(indicators, function(indicator) {
+        function getMetaFromServer(a) {
+          var d = $.ajax({
+             url: "/api/3/datasets/" + a,
+             dataType: "json",
+             data: {}
+           }).done(function( res ) {
+             // success
+             console.log("SUCCESS ... pushing meta onto defferreds");
+           }).fail(function( jqXHR, textStatus, errorThrown ) {
+             // failure
+             console.log("FAILURE getting meta ... RETRYING");
+             getMetaFromServer(a);
+         });
 
-            var url = "/api/3/datasets/" + indicator;
+         // push to defferreds
+         defferreds.push(d);
+       }
 
-            var deferred = $.ajax({
+      _.forEach(indicators, function(indicator) {
+        getMetaFromServer(indicator);
+      });
 
-                url: url,
+      return defferreds;
+      //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
 
-                dataType: "json",
-
-                data: {
-
-                }
-
-            });
-
-            defferreds.push(deferred);
-
-        })
-
-        return defferreds;
-        //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
     }
 
 

@@ -67,8 +67,8 @@
 
             modalTitle = "Share";
             modalMessage = "";
-            //go.usa.gov 
-            // 
+            //go.usa.gov
+            //
             var encodeUrl = "http://find.state.gov";
 
 
@@ -108,10 +108,10 @@
             var viz_hash = encodeURI(location.hash).substring(1);
             if (viz_hash != "") {
                 $.get("/user/adddv?h=" + viz_hash, function() {
-                    //update some sort of flash message here? 
+                    //update some sort of flash message here?
                 });
             } else {
-                //failure message here?               
+                //failure message here?
             }
         },
         chartBarToggleMin: function() {
@@ -867,10 +867,10 @@
             /* options go here as an object */
         });
     }
-	
+
 	var saveFields = [];
 	var saveData = [];
-	
+
     var showTable = function(data) {
         //debugger;
         //get colum names from cells
@@ -989,7 +989,7 @@
                 }
             }
         });
-        
+
         var options = {
             enableCellNavigation: true,
             enableColumnReorder: true,
@@ -1023,25 +1023,25 @@
 
             dataView.sort(comparer, args.sortAsc);
         });
-		
+
 		columns.forEach(function(column,i){
 			saveFields.push(column.field);
 		});
 		saveData = dataWide;
     }
-	
+
 	//var converter = require('json-2-csv');
-	
+
 	$("#savexlsx").click(function(){
 		exportData('xlsx');
 	});
-	
+
 	$("#savecsv").click(function(){
 		exportData('csv');
 	});
-	
+
 	var exportData = function(type) {
-		
+
 		var wb = {} //work book
 		wb.Sheets = {};
 		wb.Props = {};
@@ -1055,7 +1055,7 @@
 		ws = {}
 		data = [];
 		data.push(saveFields);
-		
+
 		//sets saveData to proper columns
 		saveData.forEach(function(entry) {
 			dataTemp = [];
@@ -1064,7 +1064,7 @@
 			});
 			data.push(dataTemp);
 		});
-		
+
 		/* the range object is used to keep track of the range of the sheet */
 		var range = {
 			s: {
@@ -1142,11 +1142,11 @@
 
 		//writes workbook
 		var wbout = XLSX.write(wb, wopts);
-		
+
 		/*convert to CSV if needed*/
 		if (type == 'csv');
 			var csv = XLSX.utils.sheet_to_csv(ws);
-		
+
 		function s2ab(s) {
 			var buf = new ArrayBuffer(s.length);
 			var view = new Uint8Array(buf);
@@ -1172,7 +1172,7 @@
 			saveAs(new Blob([s2ab(csv)],{type:"application/octet-stream"}), "FINDdata_" + today + ".csv")
 		} else {
 			saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "FINDdata_" + today + ".xlsx")
-		}	
+		}
 	}
 
     var addDataToGeoJson = function(lastGeoJson, type) {
@@ -1271,7 +1271,7 @@
         window.utils.addLegend(cluster);
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
 
         return;
 
@@ -1287,7 +1287,7 @@
         lastGeoJson = response;
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
         geoJson[type] = response;
 
         geoJsonLayers[type] = L.geoJson(response, {
@@ -1637,9 +1637,9 @@
             //switch to group by indicators
             groupBy = "indicators";
         }
-       
+
         var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-       
+
         $.when.apply($, deferredMetaList).done(function(response){
 
             var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
@@ -1651,8 +1651,8 @@
             });
         });
 
-        
-       
+
+
 
         eventBind();
 
@@ -1669,7 +1669,7 @@
     }
 
     window.utils.bindCountries(window.preloadedData.countries_list, model);
-    
+
     initialize();
 
 }())
