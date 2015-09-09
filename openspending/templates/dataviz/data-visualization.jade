@@ -43,6 +43,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row(style="padding:10px")
     .col-md-4
       span#bar-globals(data-bind="visible:activeChart()!='map'")
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
         button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMin",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
         button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMax",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
         button.btn.btn-default.dropdown-toggle#global-avg(data-bind="click:chartBarToggleAvg",type='button', data-toggle='dropdown', aria-expanded='true') Average
@@ -253,6 +255,9 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row
     .col-md-12
     center
+      span(data-bind="visible:activeChart()!='map'")
+        button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+        button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
       p.
         * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
       p.
