@@ -829,17 +829,11 @@
         var minYearFilter = parseInt(yearsFilter[0]);
         var maxYearFilter = parseInt(yearsFilter[1]);
         
-        if (maxYearFilter != maxYear){
-            //update hash
-            var currentHash = window.utils.getHashParams();
-
-            currentHash.f = minYear + "|" + maxYear;
-
-            window.utils.updateHash(currentHash);
-            
-            minYearFilter = minYear;
+        if (maxYearFilter != maxYear)
             maxYearFilter = maxYear;
-        }
+        
+        if (minYearFilter != minYear)
+            minYearFilter = minYear;
         
         //debugger;
         var isRange = false;
