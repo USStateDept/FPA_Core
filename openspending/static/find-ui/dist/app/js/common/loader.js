@@ -204,10 +204,8 @@
              dataType: "json",
              data: {}
            }).done(function( res ) {
-             // success
-             console.log("SUCCESS ... pushing data onto defferreds");
              // push to defferreds
-             console.log("Result: " + res);
+             console.log("SUCCESS getting data" + res);
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
              console.log("FAILURE getting data ... RETRYING");
@@ -343,7 +341,6 @@
              data: {}
            }).done(function( res ) {
              // success
-             console.log("SUCCESS ... pushing meta onto defferreds");
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
              console.log("FAILURE getting meta ... RETRYING");
