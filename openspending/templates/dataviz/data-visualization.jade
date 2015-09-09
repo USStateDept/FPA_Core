@@ -252,21 +252,12 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
         
   .row
     .col-md-12
-<<<<<<< HEAD
-      center
-        p.
-          * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
-        p.
-          If you select a subnational area, you will be shown national information. For more information about the geography tile layer, visit openstreetmap.org.    
-=======
     center
       p.
         * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
       p.
         If you select a subnational area, you will be shown national information. For more information about the geography tile layer, visit openstreetmap.org.
      
->>>>>>> 76caad6708ebaeafa94bc5b9427e8a3046dcd709
-
 {% endblock %}
 
 {% block footer_scripts %}
@@ -307,7 +298,7 @@ script(src="{{ static_path('find-ui/bower_components/file-saver/FileSaver.min.js
 //- script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}")
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
-//-script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
 
 {% endblock %}

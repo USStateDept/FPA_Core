@@ -529,8 +529,8 @@
                 }
                 model.countryGroupings.push(countryGroup);
             });
-
-            /*debugger;
+            $('input[data-bind].btn-block').trigger('keyup');
+                                        /*debugger;
 
             var filterValue = $("#filterCountries")[0].value;
 
@@ -773,9 +773,27 @@
 
     ko.applyBindings(model);
 
+    var filterCountryList = function(countryName) {
+          var $countryWrapper = $('.country-wrapper');
+          //debugger;
+          if(countryName.length == 0) { $countryWrapper.show(); }
+          $countryWrapper.hide();
+          $('.flags-labels:contains(' + countryName + ')').parents('.country-wrapper').show();
+    };
 
     var initialize = function() {
 
+        $.expr[":"].contains = $.expr.createPseudo(function(arg) {
+            return function( elem ) {
+                return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+            };
+        });
+
+        $('input[data-bind].btn-block').on('keyup', function(e) {
+
+          filterCountryList(e.target.value);
+          
+        });
         //track hash update
         window.onhashchange = function(evt) {
             var newURL = evt.newURL;
