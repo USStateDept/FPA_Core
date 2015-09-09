@@ -1257,11 +1257,6 @@
         var indicators = hashParams.i.split("|");
         var onlyIndicator = indicators[0];
 
-
-
-
-
-
         window.loader.lastGeoJson = response;
 
         addDataToGeoJson(window.loader.lastGeoJson, type);
@@ -1430,9 +1425,10 @@
         //debugger;
         if (chartType == "map") {
             $("#loading").hide();
-            map = L.map('viz-container').setView([0, 0], 3);
 
-            L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {//'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            map = L.map('viz-container').setView([0, 0], 3);
+            L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
+                //'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
                 maxZoom: 18,
                 noWrap: true
@@ -1467,7 +1463,7 @@
 
             highChartsJson.chart.events = {
                 load: function() {
-                    //debugger;
+
                     var allowedSetExtremeCharts = ["line"];
                     var xAxis = this.series[0].xAxis;
                     if (chartType == "bar") {
@@ -1645,9 +1641,18 @@
             var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
             deferredList = deferredList.concat(deferredMetaList);
 
+
+
             $.when.apply($, deferredList).done(function(response) {
-                //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
-                indicatorDataLoadHandler(arguments, yearsExtremes);
+
+                console.log(arguments);
+
+                if( arguments[0][1] == "success") {
+                  indicatorDataLoadHandler(arguments, yearsExtremes);
+                }else {
+                  console.log("refresh here");
+                }
+                
             });
         });
 

@@ -199,6 +199,8 @@
         var defferreds = [];
 
         function getDataFromServer(a) {
+          var toPush = false;
+
           var d = $.ajax({
              url: a.url,
              dataType: "json",
@@ -206,14 +208,14 @@
            }).done(function( res ) {
              // push to defferreds
              console.log("SUCCESS getting data" + res);
+
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
              console.log("FAILURE getting data ... RETRYING");
              getDataFromServer(a);
-         });
+          });
 
-         defferreds.push(d);
-
+          defferreds.push(d);
         }
 
         _.forEach(urls, function(item) {
@@ -341,6 +343,7 @@
              data: {}
            }).done(function( res ) {
              // success
+             console.log("pushing meta onto defferreds");
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
              console.log("FAILURE getting meta ... RETRYING");
