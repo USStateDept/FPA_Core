@@ -54,20 +54,48 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       div#filter-years
       .row
         p
+  .row.tabs-app
+    .col-md-12
+      ul.nav.nav-tabs
+        li.active
+          a(href='#viz-container', data-target="#viz-container, #filters", data-toggle='tab') Chart       
+        li
+          a(href='#data-table', data-target="#data-table, #data-table-save", data-toggle='tab') Data Table
+      .tab-content
+        #filters.active.tab-pane
+          .row(style="padding:10px 0")
+            button#modalBtn(data-toggle="modal",data-target="#slide-panel1")
+              span.glyphicon.glyphicon-nav(aria-hidden="true")
+              span(style="margin-left:6px; top: -4px; color:#666; font-weight:bold") Edit Visualization
+        #data-table-save.tab-pane
+          .row(style="padding:10px 0")
+            span Export data: 
+            input#savecsv(type="button" value="CSV")
+            input#savexlsx(type="button" value="XLSX")
+        #viz-container.active.tab-pane
+        #data-table.tab-pane
+        
+  .row
+    .col-md-12
+    center
+      p.
+        * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
+      p.
+        If you select a subnational area, you will be shown national information. For more information about the geography tile layer, visit openstreetmap.org.
 
- #slide-panel
-    a.btn#opener
-      i.glyphicon.glyphicon-align-justify
-    .container-full#content
-      .row.tabs-app
-        .col-md-12
+  #slide-panel1.modal.fade(role="dialog")
+    .modal-dialogue.modal-lg
+      .modal-content
+        .modal-header
+          //button.pull-right(data-dismiss="modal") Close
           ul.nav.nav-tabs
             li.active
               a(href='#comparator', data-toggle='tab') Comparator
             li
-              a(href='#indicators', data-toggle='tab') Indicators        
+              a(href='#indicators', data-toggle='tab') Indicators
+        .modal-body  
           .tab-content
-            #indicators.tab-pane
+            #indicators.tab-pane(style="overflow-auto")
               .row
                 p
               .row
@@ -87,10 +115,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         span.glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
                         a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
                   .dropdown.pull-right(data-bind="visible:activeIndicators().length > 0")
-                    button.btn.btn-default.dropdown-toggle(type='button' data-bind="click:$root.redrawChart") Swap Indicator
+                    button.btn.btn-default.dropdown-toggle(data-dismiss="modal",data-bind="click:$root.redrawChart") Swap Indicator
               .row
                 p 
-              .row
+              .row(style="overflow:auto; height:350px; padding:10px 0;")
                 .col-md-2
                   .tabbable.tabs-left
                     ul.nav.nav-tabs
@@ -104,7 +132,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       //-   a(href='#tab-countries', data-toggle='tab') Countries
 
                 .col-md-10
-                  .tab-content(style="height:300px;overflow-y:auto" )
+                  .tab-content
                     #tab-category.tab-pane.active
                       .row(data-bind="foreach:categoriesModel")
                         .col-sm-6.col-md-6.col-sm-4.flip
@@ -112,7 +140,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                             .face.front
                               div.well.category-wrapper()
                                 span.badge(data-bind="html:length")
-                                //-div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
+                                div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
                                 h4(data-bind="html:label")
                             .face.back
                               div.list-group()
@@ -151,7 +179,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                             .face.front
                               div.well.category-wrapper()
                                 span.badge(data-bind="html:length")
-                                //-div.well.category.icon-category-70()
+                                div.well.category.icon-category-70()
                                 h4(data-bind="html:label")
                             .face.back
                               div.list-group()
@@ -209,7 +237,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .row.title
                 .col-md-12
                   .dropdown.pull-right(data-bind="visible:groupByRegion() || activeCountries().length > 0")
-                    button.btn.btn-default.dropdown-toggle(type='button' data-bind="click:addComparator") Add Comparator
+                    button.btn.btn-default.dropdown-toggle(data-dismiss="modal",data-bind="click:addComparator") Add Comparator
               .row
                 p
               .row
@@ -223,7 +251,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .row
                 p
               .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
-                .col-md-8.countries-col(style="height:200px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
+                .col-md-8.countries-col(style="height:350px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
                   .row.f32(data-bind="foreach:_.values(activeGroup().regions)")
                     .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
                       span(data-bind='click:$root.selectCountry,css:{selected:selected}')
@@ -234,23 +262,6 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                           div.flag(data-bind="css:iso_a2.toLowerCase()")
                           span.flags-labels(style="vertical-align:middle" data-bind="html:label") 
-  
-
-  .row.tabs-app
-    .col-md-12
-      ul.nav.nav-tabs
-        li.active
-          a(href='#viz-container', data-toggle='tab') Chart       
-        li
-          a(href='#data-table', data-target="#data-table, #data-table-save", data-toggle='tab') Data Table
-      .tab-content
-        #data-table-save.tab-pane
-          .row(style="padding:10px 0")
-            span Export data: 
-            input#savecsv(type="button" value="CSV")
-            input#savexlsx(type="button" value="XLSX")
-        #viz-container.active.tab-pane
-        #data-table.tab-pane
         
   .row
     .col-md-12
