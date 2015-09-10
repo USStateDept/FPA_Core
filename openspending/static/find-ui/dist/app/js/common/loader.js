@@ -33,24 +33,8 @@
 
     window.loader.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
 
-        //line
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=bar&r=usaid_reg:OAPA|canada
-
-        //bar
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_total&c=bar&r=usaid_reg:OAPA|canada
-
-        //bubble
-        //http://localhost:5000/data-visualization#f=1990|2014&i=gdp_growth|gdp_per_capita|health_expenditure_public&c=bubble&r=usaid_reg:OAPA|canada
-
-        //dod_cmd:USCENTCOM:all|dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina
-
-        // geounits = "dod_cmd:USCENTCOM:all|dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina".split("|");
-        // geounits = "dod_cmd:USCENTCOM|dod_cmd:all|kuwait|qatar|dod_cmd:USSOUTHCOM:all|argentina".split("|");
-        // geounits = "dod_cmd:USCENTCOM|kuwait|qatar|dod_cmd:USSOUTHCOM|argentina".split("|");
-
 
         var indicatorIds = indicators;
-
 
         // sort by types of geo units to drill down API calls
         var countries = _.remove(geounits, function(c) {
@@ -69,8 +53,6 @@
 
         //////////////////////////////////////////////
 
-
-
         var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
         urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
@@ -84,19 +66,6 @@
 
         var urlAllCountriesInRegionsInGroupTemplate = urlPrefix + "&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@{groupId}:{regions}";
 
-        //Individual Countries
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@name:argentina;albania;india
-
-        //Regions in a group 
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
-
-        //All Countries in one or many regions of a group
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@name|geometry__time&cut=geometry__country_level0@dos_region:EUR;SCA
-
-        //all regions in a group
-        //http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?cubes=gdp_per_capita&cut=geometry__time:1990-2014&order=time&drilldown=geometry__country_level0@dos_region|geometry__time
-
-
         var urls = [];
 
         if (countries.length) {
@@ -108,7 +77,6 @@
         }
 
         if (groupsWithAllRegions.length) {
-            //debugger;
             _.forEach(groupsWithAllRegions, function(group) {
                 var groupId = group.substring(0, group.indexOf(":all"));
                 urls.push({
@@ -121,7 +89,6 @@
         }
 
         if (regionsWithAllCountries.length) {
-            //debugger;
             //first get all groups together
             var groups = [],
                 groupRegions = {};
@@ -144,9 +111,6 @@
             });
 
             for (groupId in groupRegions) {
-
-
-
                 urls.push({
                     url: urlAllCountriesInRegionsInGroupTemplate.replace(/{groupId}/g, groupId).replace(/{regions}/g, groupRegions[groupId].join(";")),
                     level: "countries",
@@ -199,24 +163,33 @@
             level: "statistics",
             geounits: "global"
         });
-        //debugger;
+
         var defferreds = [];
 
+        function getDataFromServer(a) {
+          var d = $.ajax({
+             url: a.url,
+             dataType: "json",
+             data: {}
+           }).done(function( res ) {
+             // push to defferreds
+            // console.log("SUCCESS getting data" + res);
+           }).fail(function( jqXHR, textStatus, errorThrown ) {
+             // failure
+             //console.log("FAILURE getting data ... RETRYING");
+          });
+
+          defferreds.push(d);
+        }
+
         _.forEach(urls, function(item) {
-            var d = $.ajax({
-                url: item.url,
-                dataType: "json",
-                data: {
-
-                }
-            });
-            defferreds.push(d);
-
+            getDataFromServer(item);
         });
+
 
         return defferreds;
 
-    };
+    }
 
     // remove in favor of loading directly from template as variable
     // window.loader.loadCountries = function(model) {
@@ -276,7 +249,7 @@
         addDataToGeoJson(window.loader.lastGeoJson);
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
         window.loader.geoJson[type] = response;
 
         window.loader.geoJsonLayers[type] = L.geoJson(response, {
@@ -328,28 +301,31 @@
 
         var defferreds = [];
 
-        _.forEach(indicators, function(indicator) {
+        function getMetaFromServer(a) {
+          var d = $.ajax({
+             url: "/api/3/datasets/" + a,
+             dataType: "json",
+             data: {}
+           }).done(function( res ) {
+             // success
+             //console.log("pushing meta onto defferreds");
+           }).fail(function( jqXHR, textStatus, errorThrown ) {
+             // failure
+             console.log("FAILURE getting meta ... RETRYING");
+             getMetaFromServer(a);
+         });
 
-            var url = "/api/3/datasets/" + indicator;
+         // push to defferreds
+         defferreds.push(d);
+       }
 
-            var deferred = $.ajax({
+      _.forEach(indicators, function(indicator) {
+        getMetaFromServer(indicator);
+      });
 
-                url: url,
+      return defferreds;
+      //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
 
-                dataType: "json",
-
-                data: {
-
-                }
-
-            });
-
-            defferreds.push(deferred);
-
-        })
-
-        return defferreds;
-        //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
     }
 
 

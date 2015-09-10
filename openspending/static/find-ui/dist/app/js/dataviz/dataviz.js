@@ -67,8 +67,8 @@
 
             modalTitle = "Share";
             modalMessage = "";
-            //go.usa.gov 
-            // 
+            //go.usa.gov
+            //
             var encodeUrl = "http://find.state.gov";
 
 
@@ -104,7 +104,9 @@
         },
 
         saveVZ: function() {
+
             window.popupDVSave();
+
         },
         chartBarToggleMin: function() {
             var key = "min";
@@ -479,7 +481,7 @@
                 return;
             }
 
-            // var selectedCountry = arguments[0];
+
             if (selectedCountry.selected) {
                 return false;
             }
@@ -521,8 +523,8 @@
                 }
                 model.countryGroupings.push(countryGroup);
             });
-
-            /*debugger;
+            $('input[data-bind].btn-block').trigger('keyup');
+                                        /*debugger;
 
             var filterValue = $("#filterCountries")[0].value;
 
@@ -713,21 +715,32 @@
             //debugger;
             window.utils.updateHash(currentHash);
 
-            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, yearsExtremes, countries, groupByRegion);
-            var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
-            _deferredList = _deferredList.concat(_deferredMetaList);
 
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
+            function _takeDataDrawChart() {
 
-            $.when.apply($, _deferredList).done(function(response) {
-                indicatorDataLoadHandler(arguments);
-            });
+              var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+              $.when.apply($, _deferredMetaList).done(function(response){
+
+                var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
+                _deferredList = _deferredList.concat(_deferredMetaList);
+
+                  $.when.apply($, _deferredList)
+                  .done(function(response) {
+                      console.log("success getting data ... drawing");
+                      indicatorDataLoadHandler(arguments);
+                  })
+                  .fail(function(response){
+                      $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
+                  });
+
+
+              });
+
+            }
+
+            _takeDataDrawChart();
 
             model.activeIndicators.removeAll();
-
-            //$.when(_deferredList[0], _deferredList[1]).done(indicatorDataLoadHandler)
-            //_deferred.done(indicatorDataLoadHandler);
         },
 
         addRegionComparator: function() {
@@ -752,10 +765,13 @@
             var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
             _deferredList = _deferredList.concat(_deferredMetaList);
 
-            //var _deferredList = window.loader.loadIndicatorData(indicators, group, region, [1990, 2014], countries, groupBy);
-
-            $.when.apply($, _deferredList).done(function(response) {
+            $.when.apply($, _deferredList)
+            .done(function(response) {
+                console.log("success getting data ... drawing");
                 indicatorDataLoadHandler(arguments);
+            })
+            .fail(function(response){
+                $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
             });
 
             model.activeCountries.removeAll();
@@ -765,9 +781,27 @@
 
     ko.applyBindings(model);
 
+    var filterCountryList = function(countryName) {
+          var $countryWrapper = $('.country-wrapper');
+          //debugger;
+          if(countryName.length == 0) { $countryWrapper.show(); }
+          $countryWrapper.hide();
+          $('.flags-labels:contains(' + countryName + ')').parents('.country-wrapper').show();
+    };
 
     var initialize = function() {
 
+        $.expr[":"].contains = $.expr.createPseudo(function(arg) {
+            return function( elem ) {
+                return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+            };
+        });
+
+        $('input[data-bind].btn-block').on('keyup', function(e) {
+
+          filterCountryList(e.target.value);
+          
+        });
         //track hash update
         window.onhashchange = function(evt) {
             var newURL = evt.newURL;
@@ -859,10 +893,10 @@
             /* options go here as an object */
         });
     }
-	
+
 	var saveFields = [];
 	var saveData = [];
-	
+
     var showTable = function(data) {
         //debugger;
         //get colum names from cells
@@ -949,7 +983,7 @@
             data.forEach(function(entry) {
                 if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
 					if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
-						entry[indicator] = entry[indicator].toFixed(2); //Rounds number to 2 decimal places
+						entry[indicator] = (entry[indicator].toFixed(2))/1; //Rounds number to 2 decimal places
                     dataTempObj[entry['year']] = entry[indicator];
                 }
             });
@@ -1015,25 +1049,25 @@
 
             dataView.sort(comparer, args.sortAsc);
         });
-		
+
 		columns.forEach(function(column,i){
 			saveFields.push(column.field);
 		});
 		saveData = dataWide;
     }
-	
+
 	//var converter = require('json-2-csv');
-	
+
 	$("#savexlsx").click(function(){
 		exportData('xlsx');
 	});
-	
+
 	$("#savecsv").click(function(){
 		exportData('csv');
 	});
-	
+
 	var exportData = function(type) {
-		
+
 		var wb = {} //work book
 		wb.Sheets = {};
 		wb.Props = {};
@@ -1047,7 +1081,7 @@
 		ws = {}
 		data = [];
 		data.push(saveFields);
-		
+
 		//sets saveData to proper columns
 		saveData.forEach(function(entry) {
 			dataTemp = [];
@@ -1056,7 +1090,7 @@
 			});
 			data.push(dataTemp);
 		});
-		
+
 		/* the range object is used to keep track of the range of the sheet */
 		var range = {
 			s: {
@@ -1134,11 +1168,11 @@
 
 		//writes workbook
 		var wbout = XLSX.write(wb, wopts);
-		
+
 		/*convert to CSV if needed*/
 		if (type == 'csv');
 			var csv = XLSX.utils.sheet_to_csv(ws);
-		
+
 		function s2ab(s) {
 			var buf = new ArrayBuffer(s.length);
 			var view = new Uint8Array(buf);
@@ -1164,7 +1198,7 @@
 			saveAs(new Blob([s2ab(csv)],{type:"application/octet-stream"}), "FINDdata_" + today + ".csv")
 		} else {
 			saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "FINDdata_" + today + ".xlsx")
-		}	
+		}
 	}
 
     var addDataToGeoJson = function(lastGeoJson, type) {
@@ -1249,11 +1283,6 @@
         var indicators = hashParams.i.split("|");
         var onlyIndicator = indicators[0];
 
-
-
-
-
-
         window.loader.lastGeoJson = response;
 
         addDataToGeoJson(window.loader.lastGeoJson, type);
@@ -1263,7 +1292,7 @@
         window.utils.addLegend(cluster);
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
 
         return;
 
@@ -1279,7 +1308,7 @@
         lastGeoJson = response;
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
         geoJson[type] = response;
 
         geoJsonLayers[type] = L.geoJson(response, {
@@ -1419,12 +1448,13 @@
         }
 
         var responseStats = statsData[0];
-
+        //debugger;
         if (chartType == "map") {
             $("#loading").hide();
-            map = L.map('viz-container').setView([0, 0], 3);
 
-            L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {//'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            map = L.map('viz-container').setView([0, 0], 3);
+            L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
+                //'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
                 maxZoom: 18,
                 noWrap: true
@@ -1445,7 +1475,7 @@
             }
 
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
-
+            //debugger;
             var highChartsJson = sortedData.highcharts;
             //add the min,max and avg to the data-proxy span
             if (chartType == "bar") {
@@ -1459,7 +1489,7 @@
 
             highChartsJson.chart.events = {
                 load: function() {
-                    //debugger;
+
                     var allowedSetExtremeCharts = ["line"];
                     var xAxis = this.series[0].xAxis;
                     if (chartType == "bar") {
@@ -1477,8 +1507,9 @@
             //debugger;
             //highChartsJson.subtitle.text = type;
             var chart = $('#viz-container').highcharts(highChartsJson);
-
+            //debugger;
             showTable(responseData);
+            //debugger;
         }
     }
 
@@ -1497,14 +1528,14 @@
     }
 
     var updateChartData = function(year) {
-
+        //debugger;
         var activeChart = $('#viz-container').highcharts();
         //first three series are the stats
         //debugger;
         var json = window.utils.prepareHighchartsJson({
             cells: window.utils.masterCells
         }, {
-            cells: []
+            cells: window.utils.statsData
         }, indicatorsMeta, chartType, indicators, year);
 
         if (chartType == "scatter") {
@@ -1520,6 +1551,7 @@
 
         if (chartType == "bubble") {
             var seriesArray = json.highcharts.series;
+            //debugger;
             _.forEach(seriesArray, function(s, i) {
                 var data = s.data;
                 if (i > 2) {
@@ -1559,12 +1591,14 @@
 
 
     };
-
+    //debugger;
 
     //deferred.done(indicatorDataLoadHandler);
 
 
     var indicatorListLoadHandler = function(response) {
+
+      var res = response;
 
         for (var indicatorId in response.data.indicators.data) {
             var years = response.data.indicators.data[indicatorId].years;
@@ -1627,23 +1661,32 @@
             //switch to group by indicators
             groupBy = "indicators";
         }
-       
-        var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-       
-        $.when.apply($, deferredMetaList).done(function(response){
 
-            var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
-            deferredList = deferredList.concat(deferredMetaList);
 
-            $.when.apply($, deferredList).done(function(response) {
-                //$.when(deferredList[0], deferredList[1]).done(indicatorDataLoadHandler);
-                indicatorDataLoadHandler(arguments, yearsExtremes);
-            });
-        });
+        function takeDataDrawChart() {
+          // meta data
+          var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
+          $.when.apply($, deferredMetaList).done(function(response){
 
-        
-       
+              // chart data
+              var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
 
+              deferredList = deferredList.concat(deferredMetaList);
+
+              $.when.apply($, deferredList)
+              .done(function(response) {
+                  console.log("success getting data ... drawing");
+                  indicatorDataLoadHandler(arguments, yearsExtremes);
+              })
+              .fail(function(response){
+                  $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
+              });
+
+          });
+
+        }
+
+        takeDataDrawChart();
         eventBind();
 
     }
