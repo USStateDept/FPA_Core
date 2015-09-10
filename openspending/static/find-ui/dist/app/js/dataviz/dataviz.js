@@ -23,7 +23,6 @@
     //var region = hashParams.r;
     var chartType = hashParams.c;
     var regions = hashParams.r.split("|");
-
     var cluster = {};
     //groupByRegion = parseInt(hashParams.grp);
 
@@ -305,6 +304,7 @@
         indicatorsModelMaster: ko.observableArray([]),
 
         filterIndicators: function(m, evt) {
+
             var charCode = evt.charCode;
             var value = evt.currentTarget.value;
 
@@ -468,6 +468,7 @@
         },
 
         selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
+          debugger;
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
 
             selectedCountry = _.clone(selectedCountry, true);
@@ -806,7 +807,7 @@
         $('input[data-bind].btn-block').on('keyup', function(e) {
 
           filterCountryList(e.target.value);
-          
+
         });
         //track hash update
         window.onhashchange = function(evt) {
@@ -1347,7 +1348,6 @@
         /* var groupId = "sovereignt";
         debugger;*/
 
-
         if (type == "name") {
             type = "sovereignt";
         }
@@ -1359,9 +1359,6 @@
         } else {
 
         }
-
-
-
 
     };
 
@@ -1668,6 +1665,14 @@
             groupBy = "indicators";
         }
 
+        // temp localstorage
+        // store a variable for a counter for # of 500 errors
+        // initally after a few tries, automatically reload the page
+        // if errors persist, fail gracefully
+        if (localStorage.getItem("error_counter") === null) {
+            localStorage.setItem('error_counter', '0')
+        }
+        var num_errors = +localStorage.getItem('error_counter');
 
         function takeDataDrawChart() {
           // meta data
@@ -1681,11 +1686,22 @@
 
               $.when.apply($, deferredList)
               .done(function(response) {
-                  console.log("success getting data ... drawing");
+                  //console.log("success getting data ... drawing");
                   indicatorDataLoadHandler(arguments, yearsExtremes);
               })
               .fail(function(response){
+                if ( num_errors < 2 ){
+                  // update counter
+                  localStorage.setItem('error_counter', num_errors + 1);
+                  // hard refresh
+                  location.reload();
+                } else {
+                  // reset counter
+                  localStorage.setItem('error_counter', '0');
+                  // no more hard refresh, fail gracefully
                   $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
+                }
+
               });
 
           });
