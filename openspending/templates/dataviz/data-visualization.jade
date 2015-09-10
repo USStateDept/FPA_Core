@@ -66,7 +66,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
           .row(style="padding:10px 0")
             button#modalBtn(data-toggle="modal",data-target="#slide-panel1")
               span.glyphicon.glyphicon-nav(aria-hidden="true")
-              span(style="margin-left:6px; top: -4px;") Edit Visualization
+              span(style="margin-left:6px; top: -4px; color:#666; font-weight:bold") Edit Visualization
         #data-table-save.tab-pane
           .row(style="padding:10px 0")
             span Export data: 
@@ -95,7 +95,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               a(href='#indicators', data-toggle='tab') Indicators
         .modal-body  
           .tab-content
-            #indicators.tab-pane
+            #indicators.tab-pane(style="overflow-auto")
               .row
                 p
               .row
@@ -118,7 +118,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                     button.btn.btn-default.dropdown-toggle(data-dismiss="modal",data-bind="click:$root.redrawChart") Swap Indicator
               .row
                 p 
-              .row
+              .row(style="overflow:auto; height:350px; padding:10px 0;")
                 .col-md-2
                   .tabbable.tabs-left
                     ul.nav.nav-tabs
