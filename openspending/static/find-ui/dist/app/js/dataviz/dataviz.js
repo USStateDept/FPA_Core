@@ -1651,6 +1651,7 @@
             var yearEnd = years[years.length - 1];
 
             if (yearsExtremes.length == 0) {
+<<<<<<< HEAD
 
                 yearsExtremes.push(yearStart);
                 yearsExtremes.push(yearEnd);
@@ -1661,6 +1662,18 @@
                     yearsExtremes[0] = yearStart;
                 }
 
+=======
+
+                yearsExtremes.push(yearStart);
+                yearsExtremes.push(yearEnd);
+                //debugger;
+            } else {
+
+                if (yearStart > yearsExtremes[0]) {
+                    yearsExtremes[0] = yearStart;
+                }
+
+>>>>>>> c4a4d5c7c0f7753884573c09f3d2bdb7ea61fad7
                 if (yearEnd < yearsExtremes[1]) {
                     yearsExtremes[1] = yearEnd;
                 }
