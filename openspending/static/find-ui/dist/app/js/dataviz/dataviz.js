@@ -1654,12 +1654,21 @@
             var yearEnd = years[years.length - 1];
 
             if (yearsExtremes.length == 0) {
+<<<<<<< HEAD
 
                 yearsExtremes.push(yearStart);
                 yearsExtremes.push(yearEnd);
                 //debugger;
             } else {
 
+=======
+
+                yearsExtremes.push(yearStart);
+                yearsExtremes.push(yearEnd);
+                //debugger;
+            } else {
+
+>>>>>>> a0b69552a0b702714b2995f488c49eaa6511b33c
                 if (yearStart > yearsExtremes[0]) {
                     yearsExtremes[0] = yearStart;
                 }
