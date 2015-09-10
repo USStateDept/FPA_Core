@@ -424,6 +424,7 @@
   height: 400px;
   background-color: #eae6e6;
   padding: 20px;
+  horizontal-align: center;
 }
 .app .expand-button {
   z-index: 1000;
