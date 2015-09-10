@@ -196,6 +196,7 @@
 .app #viz-container {
   min-width: 50%;
   height: 550px;
+  background-color: #fff;
 }
 .app .selected-tab-value {
   color: #852224;
