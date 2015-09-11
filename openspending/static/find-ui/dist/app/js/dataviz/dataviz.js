@@ -1466,8 +1466,16 @@
             window.loader.data = responseData;
 
             cluster = indicatorsData[0][0].cluster
+            
+            var regType = hashParams.r.split("|");
+            
+            if(regType[0].indexOf(":")>-1)
+                regType[0]=regType[0].slice(0, regType[0].indexOf(":"));
 
-            getGeoJsonForMap(cluster, responseData, type);
+            if(regType.length>1)
+                regType=regType.splice(0,1); //only one map region can be selected temporarily
+            
+            getGeoJsonForMap(cluster, responseData, regType);
 
             showTable(responseData);
 

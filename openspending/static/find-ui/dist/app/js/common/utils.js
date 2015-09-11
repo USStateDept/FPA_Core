@@ -294,7 +294,7 @@ var act;
     };
 
     window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson) {
-
+        
         if (window.loader.geoJsonLayers[type]) {
             map.removeLayer(window.loader.geoJsonLayers[type]);
         }
@@ -322,7 +322,7 @@ var act;
                 name = name.toLowerCase();
             }
 
-            if (_.indexOf(regions, name) > -1) {
+            if ( regions[0].indexOf(name) > -1 || regions.indexOf(name) > -1) {
 
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
