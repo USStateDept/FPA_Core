@@ -1471,6 +1471,10 @@
             
             if(regType[0].indexOf(":")>-1)
                 regType[0]=regType[0].slice(0, regType[0].indexOf(":"));
+            else
+                regType[0]="sovereignt";
+
+            debugger;
 
             if(regType.length>1)
                 regType=regType.splice(0,1); //only one map region can be selected temporarily
