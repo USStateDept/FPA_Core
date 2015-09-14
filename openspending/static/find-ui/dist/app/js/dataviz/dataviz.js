@@ -830,10 +830,10 @@
         var minYearFilter = parseInt(yearsFilter[0]);
         var maxYearFilter = parseInt(yearsFilter[1]);
         
-        if (maxYearFilter != maxYear)
+        if (maxYearFilter > maxYear)
             maxYearFilter = maxYear;
         
-        if (minYearFilter != minYear)
+        if (minYearFilter < minYear)
             minYearFilter = minYear;
         
         //debugger;
@@ -848,7 +848,7 @@
         if (minYearFilter != maxYearFilter) {
             yearLabel = minYearFilter + "-" + maxYearFilter;
         } else {
-            yearLabel = maxYearFilter;
+            yearLabel = maxYearFilter.toString();
         }
                 
         $("#filter-years-label").html(yearLabel);
@@ -1492,7 +1492,7 @@
         } else {
             
             //yearsExtremesForData = window.utils.getHashParams().f.split("|");
-
+    
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
             //debugger;
             var highChartsJson = sortedData.highcharts;

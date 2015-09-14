@@ -844,7 +844,7 @@ var act;
         // user should be able to switch between the x, y and z
         var latestYear = yearsExtremesForData[1];
         var firstYear = yearsExtremesForData[0];
-
+        
         if (type == "scatter") {
 
             seriesArray = [];
