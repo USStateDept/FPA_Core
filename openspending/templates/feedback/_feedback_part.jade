@@ -19,4 +19,10 @@ div.popupcontainer
 
 link(href='{{ static_path("find-ui/dist/app/css/feedback.css") }}' , rel='stylesheet')
 script(src="{{ static_path('find-ui/bower_components/jquery-cookie/jquery.cookie.js') }}")
+
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/feedback.js') }}")
+{% else %}
 script(src="{{ static_path('find-ui/dist/app/js/feedback.js') }}")
+
+{% endif %}

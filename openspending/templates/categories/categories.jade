@@ -60,12 +60,21 @@ script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }
 //-script(src='//code.highcharts.com/highcharts.js')
 //-script(src='//code.highcharts.com/modules/exporting.js')
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/visualization/config.js') }}")
+//-script(src="{{ static_path('find-ui/build/app/js/visualization/highcharts-json.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/loader.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/utils.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/visualization/visualization.js') }}")
+{% else %}
 script(src="{{ static_path('find-ui/dist/app/js/visualization/config.js') }}")
 //-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
+{% endif %}
 
 {% endblock %}
 
