@@ -88,8 +88,7 @@ class Dataview(db.Model):
         return {
             'title': self.title,
             'description': self.description,
-            'settings': self.settings,
-            'urlhash' : self.urlhash
+            'settings': self.settings
         }
 
 
@@ -127,6 +126,9 @@ class Dataview(db.Model):
     def by_urlhash(cls, urlhash):
         return db.session.query(cls).filter_by(urlhash=urlhash).first()
 
+    @classmethod
+    def by_user_settings(cls, settings, account_id):
+        return db.session.query(cls).filter_by(settings=settings, account_id=account_id).first()
 
     @classmethod
     def by_id(cls, id):
