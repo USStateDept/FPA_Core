@@ -309,8 +309,14 @@ script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.
 //-script(src="{{ static_path('find-ui/bower_components/tidy-table/tidy-table.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/common/config.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/loader.js') }}")
+{% else %}
 script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
+{% endif %}
 
 //-slickgrid
 script(src="{{ static_path('find-ui/bower_components/slickgrid/lib/jquery.event.drag-2.2.js') }}")
@@ -324,6 +330,16 @@ script(src="{{ static_path('find-ui/bower_components/slickgrid-bootstrap/bootstr
 script(src="{{ static_path('find-ui/bower_components/js-xlsx/dist/xlsx.core.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/file-saver/FileSaver.min.js') }}")
 
+{% if not config.DEBUG %}
+//- script(src="{{ static_path('find-ui/build/app/js/dataviz/highcharts-json.js') }}")
+//- script(src="{{ static_path('find-ui/build/app/js/visualization/visualization.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/utils.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/dataviz/dataviz.js') }}")
+{% if current_user.is_authenticated() %}
+script(src="{{ static_path('find-ui/build/app/js/dataviz/savedv.js') }}")
+{% endif %}
+{% else %}
 //- script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}")
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
@@ -331,6 +347,7 @@ script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
 {% if current_user.is_authenticated() %}
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/savedv.js') }}")
+{% endif %}
 {% endif %}
 
 {% endblock %}

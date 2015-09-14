@@ -65,7 +65,12 @@ link(href="{{ static_path('find-ui/dist/app/css/user.css') }}", rel='stylesheet'
 {% block footer_scripts %}
 
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/user/user.js') }}")
+{% else %}
 script(src="{{ static_path('find-ui/dist/app/js/user/user.js') }}")
+{% endif %}
 
 {% endblock %}
 
