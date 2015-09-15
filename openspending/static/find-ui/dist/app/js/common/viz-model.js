@@ -116,41 +116,46 @@
 
         removeIndicator: function(selectedIndicator) {
 
+            debugger;
             var indicatorIndex = _.indexOf(vizModel.activeIndicators(), selectedIndicator);
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
             vizModel.activeIndicators.splice(indicatorIndex, 1);
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                vizModel.indicatorsModel.push(indicator);
-            });
 
 
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.categoriesModel.push(category);
-            });
-            //debugger;
+            $("[data-indicatorid='" + selectedIndicator.id + "']").parent().removeClass("selected");
 
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
+            // var categoriesModel = _.clone(vizModel.categoriesModel(), true);
+            // var sourcesModel = _.clone(vizModel.sourcesModel(), true);
 
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.sourcesModel.push(source);
-            });
+            // vizModel.indicatorsModel.removeAll();
+            // _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
+            //     if (selectedIndicator.id == indicator.id) {
+            //         indicator.selected = !indicator.selected;
+            //     }
+            //     vizModel.indicatorsModel.push(indicator);
+            // });
+            //
+            //
+            // vizModel.categoriesModel.removeAll();
+            // _.forEach(categoriesModel, function(category) {
+            //     _.forEach(category.indicators, function(indicator) {
+            //         if (selectedIndicator.id == indicator.id) {
+            //             indicator.selected = !indicator.selected;
+            //         }
+            //     });
+            //     vizModel.categoriesModel.push(category);
+            // });
+            // //debugger;
+            //
+            // vizModel.sourcesModel.removeAll();
+            // _.forEach(sourcesModel, function(source) {
+            //     _.forEach(source.indicators, function(indicator) {
+            //         if (selectedIndicator.id == indicator.id) {
+            //
+            //             indicator.selected = !indicator.selected;
+            //         }
+            //     });
+            //     vizModel.sourcesModel.push(source);
+            // });
 
             window.utils.flipCardEvent();
 
@@ -170,7 +175,6 @@
 
         selectIndicatorMultiple: function(selectedIndicator, evt, goToVisualize) {
 
-
             if (goToVisualize) {
                 //TODO: Calculate Year Extremes
                 window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&r=dos_region:all";
@@ -179,53 +183,73 @@
 
             window.clickedIndicator = true;
 
+            //selectedIndicator.selected = !selectedIndicator.selected;
+
+            var $this = $("[data-indicatorid='" + selectedIndicator.id + "']").parent();
+
+            if($this.hasClass("selected")) {
+              $this.removeClass("selected");
+              vizModel.removeIndicator(selectedIndicator);
+            } else {
+              $this.addClass("selected");
+              vizModel.activeIndicators.push(selectedIndicator);
+            }
+
+            // if(selectedIndicator.selected == true){
+            //   vizModel.activeIndicators.push(selectedIndicator);
+            // } else {
+            //   vizModel.removeIndicator(selectedIndicator);
+            // }
+
             var categoriesModel = _.clone(vizModel.categoriesModel(), true);
             var sourcesModel = _.clone(vizModel.sourcesModel(), true);
 
-            vizModel.activeIndicators.removeAll();
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                if (indicator.selected) {
-                    vizModel.activeIndicators.push(indicator)
-                }
-                vizModel.indicatorsModel.push(indicator);
-            });
+            //debugger;
 
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.categoriesModel.push(category);
-            });
-
-
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.sourcesModel.push(source);
-            });
-
-            window.utils.flipCardEvent();
-
-            var filterValue = $("#filterIndicators")[0].value;
-
-
-            vizModel.filterIndicators(null, {
-                currentTarget: {
-                    value: filterValue
-                }
-            });
+            // vizModel.activeIndicators.removeAll();
+            // vizModel.indicatorsModel.removeAll();
+            // _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
+            //     if (selectedIndicator.id == indicator.id) {
+            //         indicator.selected = !indicator.selected;
+            //     }
+            //     if (indicator.selected) {
+            //         vizModel.activeIndicators.push(indicator)
+            //     }
+            //     vizModel.indicatorsModel.push(indicator);
+            // });
+            //
+            // vizModel.categoriesModel.removeAll();
+            // _.forEach(categoriesModel, function(category) {
+            //     _.forEach(category.indicators, function(indicator) {
+            //         if (selectedIndicator.id == indicator.id) {
+            //             indicator.selected = !indicator.selected;
+            //         }
+            //     });
+            //     vizModel.categoriesModel.push(category);
+            // });
+            //
+            //
+            // vizModel.sourcesModel.removeAll();
+            // _.forEach(sourcesModel, function(source) {
+            //     _.forEach(source.indicators, function(indicator) {
+            //         if (selectedIndicator.id == indicator.id) {
+            //
+            //             indicator.selected = !indicator.selected;
+            //         }
+            //     });
+            //     vizModel.sourcesModel.push(source);
+            // });
+            //
+            // window.utils.flipCardEvent();
+            //
+            // var filterValue = $("#filterIndicators")[0].value;
+            //
+            //
+            // vizModel.filterIndicators(null, {
+            //     currentTarget: {
+            //         value: filterValue
+            //     }
+            // });
 
         },
 
@@ -473,36 +497,39 @@
 
         clearActiveIndicators: function() {
 
+            // remove from list
             vizModel.activeIndicators.removeAll();
 
-
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
-
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                indicator.selected = false;
-                vizModel.indicatorsModel.push(indicator);
-            });
+            // removed selected class
+            $( ".indicator-item").removeClass("selected");
 
 
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                vizModel.categoriesModel.push(category);
-            });
-            //debugger;
-
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                vizModel.sourcesModel.push(source);
-            });
+            // var categoriesModel = _.clone(vizModel.categoriesModel(), true);
+            // var sourcesModel = _.clone(vizModel.sourcesModel(), true);
+            //
+            //
+            // vizModel.indicatorsModel.removeAll();
+            // _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
+            //     indicator.selected = false;
+            //     vizModel.indicatorsModel.push(indicator);
+            // });
+            //
+            //
+            // vizModel.categoriesModel.removeAll();
+            // _.forEach(categoriesModel, function(category) {
+            //     _.forEach(category.indicators, function(indicator) {
+            //         indicator.selected = false;
+            //     });
+            //     vizModel.categoriesModel.push(category);
+            // });
+            //
+            // vizModel.sourcesModel.removeAll();
+            // _.forEach(sourcesModel, function(source) {
+            //     _.forEach(source.indicators, function(indicator) {
+            //         indicator.selected = false;
+            //     });
+            //     vizModel.sourcesModel.push(source);
+            // });
 
             window.utils.flipCardEvent();
 
