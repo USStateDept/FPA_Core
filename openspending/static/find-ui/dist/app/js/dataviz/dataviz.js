@@ -28,12 +28,6 @@
 
     var statsData, statsDataSeries;
 
-    var eventBind = function() {
-        //var val = $('#filter-years').slider("option", "value");
-        window.utils.flipCardEvent();
-        // $('.dropdown-toggle').dropdown();
-    }
-
     $('#modal').modal({
         show: false,
         keyboard: false
@@ -363,43 +357,9 @@
         removeIndicator: function(selectedIndicator) {
 
             var indicatorIndex = _.indexOf(model.activeIndicators(), selectedIndicator);
-            var categoriesModel = _.clone(model.categoriesModel(), true);
-            var sourcesModel = _.clone(model.sourcesModel(), true);
-
             model.activeIndicators.splice(indicatorIndex, 1);
-            model.indicatorsModel.removeAll();
-            _.forEach(model.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                model.indicatorsModel.push(indicator);
-            });
 
-
-            model.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                model.categoriesModel.push(category);
-            });
-            //debugger;
-
-            model.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                model.sourcesModel.push(source);
-            });
-
-            window.utils.flipCardEvent();
-
+          //  window.utils.flipCardEvent();
         },
 
         selectSubcategory: function(selectedSubcategory, evt) {
@@ -416,56 +376,17 @@
 
         selectIndicatorMultiple: function(selectedIndicator, evt, direct) {
 
-
-
             clickedIndicator = true;
-
-            var categoriesModel = _.clone(model.categoriesModel(), true);
-            var sourcesModel = _.clone(model.sourcesModel(), true);
-
-            model.activeIndicators.removeAll();
-            model.indicatorsModel.removeAll();
-            _.forEach(model.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                if (indicator.selected) {
-                    model.activeIndicators.push(indicator)
-                }
-                model.indicatorsModel.push(indicator);
-            });
-
-            model.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                model.categoriesModel.push(category);
-            });
-
-
-            model.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                model.sourcesModel.push(source);
-            });
+            model.activeIndicators.push(selectedIndicator);
 
             window.utils.flipCardEvent();
 
         },
 
         selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
-          debugger;
-            var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
 
-            selectedCountry = _.clone(selectedCountry, true);
+
+            var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
 
             if (isGroup) { //breakdown a group
                 selectedCountry.label += " Regions";
@@ -482,59 +403,15 @@
                 return;
             }
 
-
-            if (selectedCountry.selected) {
-                return false;
-            }
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
-
             model.activeCountries.push(selectedCountry);
 
-            var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
-            model.countriesModelMaster.removeAll();
+            var abbr = selectedCountry.id.toLowerCase();
+            console.log(abbr);
+
+            var $this = $("."+abbr+"").parent();
+            $this.addClass("selected");
 
 
-            var countryGroupings = _.clone(model.countryGroupings(), true);
-            model.countryGroupings.removeAll();
-
-            var activeGroupId = model.activeGroup().id;
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = true;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = true;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = true;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-
-                if (activeGroupId == countryGroup.id) {
-                    model.activeGroup(countryGroup);
-                }
-                model.countryGroupings.push(countryGroup);
-            });
-            $('input[data-bind].btn-block').trigger('keyup');
-                                        /*debugger;
-
-            var filterValue = $("#filterCountries")[0].value;
-
-
-            model.filterCountries(null, {
-                currentTarget: {
-                    value: filterValue
-                }
-            });*/
         },
 
         removeCountry: function() {
@@ -582,45 +459,10 @@
         },
 
         clearActiveIndicators: function() {
-
             model.activeIndicators.removeAll();
-
-
-            var categoriesModel = _.clone(model.categoriesModel(), true);
-            var sourcesModel = _.clone(model.sourcesModel(), true);
-
-
-            model.indicatorsModel.removeAll();
-            _.forEach(model.indicatorsModelMaster(), function(indicator) {
-                indicator.selected = false;
-                model.indicatorsModel.push(indicator);
-            });
-
-
-            model.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                model.categoriesModel.push(category);
-            });
-            //debugger;
-
-            model.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                model.sourcesModel.push(source);
-            });
-
-            window.utils.flipCardEvent();
-
         },
 
         selectCountryGroup: function() {
-
-
 
             var groupId = arguments[0].id;
 
@@ -727,7 +569,6 @@
 
                   $.when.apply($, _deferredList)
                   .done(function(response) {
-                      console.log("success getting data ... drawing");
                       indicatorDataLoadHandler(arguments);
                   })
                   .fail(function(response){
@@ -768,7 +609,6 @@
 
             $.when.apply($, _deferredList)
             .done(function(response) {
-                console.log("success getting data ... drawing");
                 indicatorDataLoadHandler(arguments);
             })
             .fail(function(response){
@@ -1460,9 +1300,9 @@
             window.loader.data = responseData;
 
             cluster = indicatorsData[0][0].cluster
-            
+
             var regType = hashParams.r.split("|");
-            
+
             if(regType[0].indexOf(":")>-1)
                 regType[0]=regType[0].slice(0, regType[0].indexOf(":"));
             else
@@ -1472,7 +1312,7 @@
 
             if(regType.length>1)
                 regType=regType.splice(0,1); //only one map region can be selected temporarily
-            
+
             getGeoJsonForMap(cluster, responseData, regType);
 
             showTable(responseData);
@@ -1692,7 +1532,6 @@
 
               $.when.apply($, deferredList)
               .done(function(response) {
-                  //console.log("success getting data ... drawing");
                   indicatorDataLoadHandler(arguments, yearsExtremes);
               })
               .fail(function(response){
@@ -1715,7 +1554,7 @@
         }
 
         takeDataDrawChart();
-        eventBind();
+        window.utils.flipCardEvent();
 
     }
 

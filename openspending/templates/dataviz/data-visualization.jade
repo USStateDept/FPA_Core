@@ -118,8 +118,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         .glyphicon.glyphicon-menu-down
                         span() &nbsp;Selected Indicators&nbsp;
                         span.badge(data-bind="html:activeIndicators().length")
-                        a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear
-                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="foreach:activeIndicators")
+                        a(data-bind="visible:activeIndicators().length>0")&nbsp;Clear
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="click:clearActiveIndicators, foreach:activeIndicators")
 
                       li(role='presentation')
                         span.glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
@@ -238,8 +238,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         .glyphicon.glyphicon-menu-down
                         span() &nbsp;Selected Countries&nbsp;
                         span.badge(data-bind="html:activeCountries().length")
-                        a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear
-                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="foreach:activeCountries")
+                        a(data-bind="visible:activeCountries().length>0")&nbsp;Clear
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="click:clearActiveIndicators, foreach:activeCountries")
 
                       li(role='presentation')
                         span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
@@ -351,9 +351,3 @@ script(src="{{ static_path('find-ui/dist/app/js/dataviz/savedv.js') }}")
 {% endif %}
 
 {% endblock %}
-
-
-
-
-
-

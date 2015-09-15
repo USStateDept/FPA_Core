@@ -116,47 +116,13 @@
 
         removeIndicator: function(selectedIndicator) {
 
-            debugger;
             var indicatorIndex = _.indexOf(vizModel.activeIndicators(), selectedIndicator);
             vizModel.activeIndicators.splice(indicatorIndex, 1);
 
 
             $("[data-indicatorid='" + selectedIndicator.id + "']").parent().removeClass("selected");
 
-            // var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            // var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
-            // vizModel.indicatorsModel.removeAll();
-            // _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-            //     if (selectedIndicator.id == indicator.id) {
-            //         indicator.selected = !indicator.selected;
-            //     }
-            //     vizModel.indicatorsModel.push(indicator);
-            // });
-            //
-            //
-            // vizModel.categoriesModel.removeAll();
-            // _.forEach(categoriesModel, function(category) {
-            //     _.forEach(category.indicators, function(indicator) {
-            //         if (selectedIndicator.id == indicator.id) {
-            //             indicator.selected = !indicator.selected;
-            //         }
-            //     });
-            //     vizModel.categoriesModel.push(category);
-            // });
-            // //debugger;
-            //
-            // vizModel.sourcesModel.removeAll();
-            // _.forEach(sourcesModel, function(source) {
-            //     _.forEach(source.indicators, function(indicator) {
-            //         if (selectedIndicator.id == indicator.id) {
-            //
-            //             indicator.selected = !indicator.selected;
-            //         }
-            //     });
-            //     vizModel.sourcesModel.push(source);
-            // });
-
+            // TODO fix flip sequence to match only when selected from card
             window.utils.flipCardEvent();
 
         },
@@ -183,8 +149,6 @@
 
             window.clickedIndicator = true;
 
-            //selectedIndicator.selected = !selectedIndicator.selected;
-
             var $this = $("[data-indicatorid='" + selectedIndicator.id + "']").parent();
 
             if($this.hasClass("selected")) {
@@ -195,61 +159,8 @@
               vizModel.activeIndicators.push(selectedIndicator);
             }
 
-            // if(selectedIndicator.selected == true){
-            //   vizModel.activeIndicators.push(selectedIndicator);
-            // } else {
-            //   vizModel.removeIndicator(selectedIndicator);
-            // }
-
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
-            //debugger;
-
-            // vizModel.activeIndicators.removeAll();
-            // vizModel.indicatorsModel.removeAll();
-            // _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-            //     if (selectedIndicator.id == indicator.id) {
-            //         indicator.selected = !indicator.selected;
-            //     }
-            //     if (indicator.selected) {
-            //         vizModel.activeIndicators.push(indicator)
-            //     }
-            //     vizModel.indicatorsModel.push(indicator);
-            // });
-            //
-            // vizModel.categoriesModel.removeAll();
-            // _.forEach(categoriesModel, function(category) {
-            //     _.forEach(category.indicators, function(indicator) {
-            //         if (selectedIndicator.id == indicator.id) {
-            //             indicator.selected = !indicator.selected;
-            //         }
-            //     });
-            //     vizModel.categoriesModel.push(category);
-            // });
-            //
-            //
-            // vizModel.sourcesModel.removeAll();
-            // _.forEach(sourcesModel, function(source) {
-            //     _.forEach(source.indicators, function(indicator) {
-            //         if (selectedIndicator.id == indicator.id) {
-            //
-            //             indicator.selected = !indicator.selected;
-            //         }
-            //     });
-            //     vizModel.sourcesModel.push(source);
-            // });
-            //
-            // window.utils.flipCardEvent();
-            //
-            // var filterValue = $("#filterIndicators")[0].value;
-            //
-            //
-            // vizModel.filterIndicators(null, {
-            //     currentTarget: {
-            //         value: filterValue
-            //     }
-            // });
+            // TODO fix flip sequence to match only when selected from card
+            window.utils.flipCardEvent();
 
         },
 
@@ -329,8 +240,6 @@
 
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
 
-            selectedCountry = _.clone(selectedCountry, true);
-
             if (isGroup) { //breakdown a group
                 selectedCountry.label += " Regions";
             }
@@ -346,62 +255,19 @@
                 return;
             }
 
-            // var selectedCountry = arguments[0];
-            if (selectedCountry.selected) {
-                return false;
-            }
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
-
             vizModel.activeCountries.push(selectedCountry);
 
-            //not used in this scope  do we still need to remove all?
-            // var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
-            // vizModel.countriesModelMaster.removeAll();
+            var abbr = selectedCountry.id.toLowerCase();
+            console.log(abbr);
 
+            var $this = $("."+abbr+"").parent();
+            $this.addClass("selected");
 
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
+            // allows for immediate ui response
+            setTimeout(function(){
+              window.utils.highlightOnMap(vizModel, selectedCountry)
+            },25);
 
-            var activeGroupId = vizModel.activeGroup().id;
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = true;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = true;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = true;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-
-            var filterValue = $("#filterCountries")[0].value;
-
-
-            vizModel.filterCountries(null, {
-                currentTarget: {
-                    value: filterValue
-                }
-            });
-
-            // console.log("vizModel is: " + JSON.stringify(vizModel));
-            // console.log("selectedCountry is: " + JSON.stringify(selectedCountry));
-            window.utils.highlightOnMap(vizModel, selectedCountry);
 
         },
 
@@ -496,43 +362,10 @@
         },
 
         clearActiveIndicators: function() {
-
             // remove from list
             vizModel.activeIndicators.removeAll();
-
             // removed selected class
             $( ".indicator-item").removeClass("selected");
-
-
-            // var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            // var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-            //
-            //
-            // vizModel.indicatorsModel.removeAll();
-            // _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-            //     indicator.selected = false;
-            //     vizModel.indicatorsModel.push(indicator);
-            // });
-            //
-            //
-            // vizModel.categoriesModel.removeAll();
-            // _.forEach(categoriesModel, function(category) {
-            //     _.forEach(category.indicators, function(indicator) {
-            //         indicator.selected = false;
-            //     });
-            //     vizModel.categoriesModel.push(category);
-            // });
-            //
-            // vizModel.sourcesModel.removeAll();
-            // _.forEach(sourcesModel, function(source) {
-            //     _.forEach(source.indicators, function(indicator) {
-            //         indicator.selected = false;
-            //     });
-            //     vizModel.sourcesModel.push(source);
-            // });
-
-            window.utils.flipCardEvent();
-
         },
 
         selectCountryGroup: function() {

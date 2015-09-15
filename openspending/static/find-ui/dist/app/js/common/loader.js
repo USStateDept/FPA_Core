@@ -308,10 +308,8 @@
              data: {}
            }).done(function( res ) {
              // success
-             //console.log("pushing meta onto defferreds");
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
-             console.log("FAILURE getting meta ... RETRYING");
              getMetaFromServer(a);
          });
 

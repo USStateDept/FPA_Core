@@ -10,14 +10,12 @@ var act;
     window.utils = {};
 
     window.utils.masterCells = [];
-    
+
     window.utils.statsData = [];
 
     window.utils.flipCardEvent = function() {
 
         $(".flip").click(function() {
-
-
 
             if (window.expandedCategory) {
                 window.expandedCategory = false;
@@ -163,7 +161,7 @@ var act;
                 "subcategories": subcategories
             }
 
-            
+
             categoriesModel.push(newCategory);
 
         }
@@ -250,7 +248,7 @@ var act;
             window.utils.highlightOnMap(vizModel, country);
         });
         // window.utils.highlightOnMap(vizModel, act);
-        // var level = "sovereignt";        
+        // var level = "sovereignt";
         // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     };
 
@@ -294,7 +292,7 @@ var act;
     };
 
     window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson) {
-        
+
         if (window.loader.geoJsonLayers[type]) {
             map.removeLayer(window.loader.geoJsonLayers[type]);
         }
@@ -302,7 +300,7 @@ var act;
         var geojson = gjson['features'];
         var featuresAdded = [];
         var style = function(feature) {
-        
+
             var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
             //console.log("*********feature" + feature);
             if (!name) {
@@ -482,8 +480,7 @@ var act;
         //first remove the layer
         var activeCountries = model.activeCountries();
         act = activeCountries;
-        // console.log("Active countries is: " + JSON.stringify(activeCountries));
-        // console.log("Act is: " + JSON.stringify(act));
+
         var listOfLabels = _.map(activeCountries, function(_a) {
             return _a.label;
         });
@@ -505,9 +502,6 @@ var act;
             }
         }
 
-
-        //window.map.removeLayer(window.visualization.geoJsonLayers[level]);
-        //debugger;
         var style = function(feature) {
 
             if ((drillDown && (_.indexOf(drillDownLabels, feature.properties[level]) > -1)) || (feature.properties[level] == geounit.label) || _.indexOf(listOfLabels, feature.properties[level]) > -1) {
@@ -1053,7 +1047,7 @@ var act;
             }
             //debugger;
         }
-        
+
         if (type == "bar") {
             //debugger;
 
@@ -1103,7 +1097,7 @@ var act;
                 name: indicatorsMeta[0][0].label,
                 data: data
             }];
-            
+
             var jsonBar = {
                 chart: {
                     type: 'column'
