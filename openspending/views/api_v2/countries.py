@@ -34,7 +34,7 @@ blueprint = Blueprint('countries_api2', __name__)
 @blueprint.route('/countries_list')
 @api_json_errors
 @jsonp
-#@cache.cached(timeout=10)
+@cache.cached(timeout=30)
 def countries_list():
 
     country_data = {"data":{
