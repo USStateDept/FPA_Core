@@ -94,11 +94,6 @@
             mapCreated = true;
 
             map = L.map('map').setView([0, 0], 1);
-
-            var s = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {//'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
-                maxZoom: 18
-            }).addTo(map);
             
             //load geojson for countries
             window.visualization.changeGroup("all");

@@ -337,11 +337,11 @@ var act;
                 };
             } else {
                 return {
-                    weight: 0,
-                    opacity: 0,
+                    weight: 1,
+                    opacity: 1,
                     color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.0,
+                    //dashArray: '3',
+                    fillOpacity: 0.5,
                     fillColor: '#666666'
                 };
             }
