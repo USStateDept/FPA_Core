@@ -9,10 +9,16 @@ var runSequence = require('gulp-run-sequence');
 
 var plugins = require('gulp-load-plugins')();
 
+var uglify = require('gulp-uglify');
+
+
+
+
 var app_dir = {
     src: __dirname + "/src/",
     tests: __dirname + "/tests/",
     dist: __dirname + "/dist/",
+    build: __dirname + "/build/",
     css: "**/*.css",
     js: "app/**/*.js",
     images: "app/images",
@@ -51,11 +57,13 @@ gulp.task('dist-minify-css', function() {
         .pipe(gulp.dest(app_dir.dist))
 });
 
+
+
 gulp.task('dist-uglify-js', function() {
     console.log(">>>>>>>> Uglifying JS");
     return gulp.src(app_dir.dist + app_dir.js)
-        .pipe(plugins.uglify())
-        .pipe(gulp.dest(app_dir.dist + "/app"))
+        .pipe(uglify())
+        .pipe(gulp.dest(app_dir.build + "/app"))
 });
 
 /*gulp.task('dist-minify-html', function() {
@@ -93,6 +101,7 @@ gulp.task('dist-minify', ['dist-minify-css', 'dist-uglify-js', /*'dist-minify-ht
 gulp.task('dist-minify-sequence', function() {
     runSequence('dist-delete', 'dist-copy-clean', 'dist-minify-css', 'dist-uglify-js');
 });
+
 
 
 

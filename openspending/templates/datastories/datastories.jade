@@ -42,11 +42,21 @@ script(src="{{ static_path('find-ui/bower_components/lodash-math/lodash.math.js'
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
+
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/common/config.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/loader.js') }}")
+
+script(src="{{ static_path('find-ui/build/app/js/common/utils.js') }}")
+
+script(src="{{ static_path('find-ui/build/app/js/datastories/datastories.js') }}")
+{% else %}
 script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
 
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 
 script(src="{{ static_path('find-ui/dist/app/js/datastories/datastories.js') }}")
+{% endif %}
 
 {% endblock %}
