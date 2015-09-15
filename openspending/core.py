@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from flask import Flask, redirect, session, abort
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
@@ -24,6 +25,10 @@ from openspending.lib.routing import FormatConverter, NoDotConverter
 from flask import g
 import flask_whooshalchemy as whoosearch
 from flask_debugtoolbar import DebugToolbarExtension
+
+
+from werkzeug.contrib.profiler import ProfilerMiddleware, MergeStream
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -70,6 +75,13 @@ def create_app(**config):
     assets.init_app(app)
     login_manager.init_app(app)
     configure_uploads(app, (sourcefiles,))
+
+    # f = open('profiler.log', 'w')
+    # stream = MergeStream(sys.stdout, f)
+    # app.config['PROFILE'] = True
+    # app.wsgi_app = ProfilerMiddleware(app.wsgi_app, stream=stream, sort_by=['cumtime'], restrictions=[300])#, profile_dir=app.config.get("UPLOADS_FOLDER") + "/profiler")
+
+    
 
     @app.before_request
     def require_basic_auth(*args, **kwargs):

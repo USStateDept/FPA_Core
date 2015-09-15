@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 import json
 
-from flask import request, g, Response
+from flask import request, g, Response, jsonify
 
 from openspending.views.api_v3.common import blueprint
 
@@ -57,7 +57,12 @@ log = logging.getLogger(__name__)
 def slicer_agg():
     d = DataBrowser()
     print "\n\n", d.selectable, "\n"
-    return str(d.selectable)
+    obj = []
+    for row in d._execute_query_iterator():
+        obj.append(row)
+
+    
+    return json.dumps(obj)
 
 
 

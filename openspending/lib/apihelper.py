@@ -10,6 +10,8 @@ from openspending.core import db
 
 from openspending.lib.helpers import get_dataset
 
+from openspending.lib.cubes_util import get_cubes_breaks
+
 
 
 log = logging.getLogger(__name__)
@@ -128,37 +130,40 @@ class DataBrowser(object):
 
         self.t = {}
 
+        self.cachedresult = None
+
         self._parse_params()
 
         self._map_tables()
 
-        self.selectable = select(self.selects).select_from(self.joins)
-
         if self.drilldown:
             self._drilldowns()
+
+            self.selectable = select(self.selects).select_from(self.joins)
+
             for table_name, dds in self.drilldown.iteritems():
                 for dd in dds:
                     self.selectable = self.selectable.group_by(self.t[table_name].c[dd])
-                    cutobj = self.cut.get(table_name, {}).get(dd, None)
-                    if cutobj:
-                        self.selectable.having(self.t[table_name].c[dd].in_(cutobj))
+                    # print "HERE IS CUT", self.cut, table_name, dd
+                    # cutobj = self.cut.get(table_name, {}).get(dd, None)
+                    # if cutobj:
+                    #     print "\n\nHERS IS A CUT"
+                    #     print self.t[table_name].c[dd].in_(cutobj)
+                    #     self.selectable.having(self.t[table_name].c[dd].in_(cutobj))
         else:
-            for table_name, cols in self.cut.iteritems():
-                for col in cols:
-                    self.selectable = self.selectable.where(self.t[table_name].c[col].in_(cutobj))         
+
+            self.selectable = select(self.selects).select_from(self.joins)
+
+        for table_name, cols in self.cut.iteritems():
+            for colname, values in cols.iteritems():
+                self.selectable = self.selectable.where(self.t[table_name].c[colname].in_(values))         
      
         #completed the selects, now doing the wheres and groupby
 
 
 
-
-
-    
-
-
     def _drilldowns(self):
         #make sure column exists
-        print self.drilldown
         for tablename, drilldowns in self.drilldown.iteritems():
             for dd in drilldowns:
                 self.selects.append(self.t[tablename].c[dd])
@@ -175,110 +180,45 @@ class DataBrowser(object):
 
         callables = {"__max":func.max, "__min": func.min, "__avg":func.avg, "__sum":func.sum}
 
-        self.selects = [func.count(self.t['geometry__time'].c.id)]
+        self.selects = [func.count(self.t['geometry__time'].c.id).label("count")]
 
         for cubes_ts in self.cubes_tables:
-            self.joins = self.joins.join(self.t[cubes_ts], \
+            self.joins = self.joins.outerjoin(self.t[cubes_ts], \
                                         self.t[cubes_ts].c.geom_time_id==self.t['geometry__time'].c.id)
             for lab, caller in callables.iteritems():
-                self.selects.append(caller(self.t[cubes_ts].c.amount).label(cubes_ts + lab))
+                self.selects.append(caller(self.t[cubes_ts].c.amount).label(cubes_ts.strip("__entry") + lab))
 
         
 
+    def _getcache(self):
+        if self.cachedresult:
+            return self.cachedresult
+        else:
+            self.cachedresult = self._execute_query_iterator()
+            return self.cachedresult        
+
+    def _execute_query_iterator(self):
+        results = db.session.execute(self.selectable)
+        for u in results.fetchall():
+            yield dict(u)
 
 
-    def _execute_query(self):
-        #add cuts
-        #add group bys
-        return {}
-        # z = session.execute(select([t["geometry__time"].c.time]).select_from(joins))
+    def get_clusters(self, field=None):
+        results = self._getcache()
 
+        if not field:
+            field = sef.cubes_tables[0].strip("__entry") + "__avg"
 
-
-
-    def get_records(self):
-        """
-        calculate or get cache and return the nested records with the
-        improved info
-        """
-        if not getattr(self.dataframe, "empty", None):
-            self._calc_results()
-        #do some cleaning
-        #ret = {x['parameter_id']:x  for x in recs}
-        return self.dataframe.to_dict('records')
-
-    def get_dataframe(self):
-        """
-        Calculate or return the cached dataframe
-        """
-        if not getattr(self.dataframe, "empty", None):
-            self._calc_results()
-
-        return self.dataframe
-
-
-    def _calc_results(self):
-        """
-        public method to compile the query and retrieve the results
-        returns a pandas dataframe
-        """
-
-        self.db_uri = current_app.config['SQLALCHEMY_DATABASE_URI']
-
-        datacon = bz.Data(self.db_uri + "::datavalues")
+        return get_cubes_breaks(result, field, method='jenks', k=5)
 
 
 
-        #only use the accepted datasets
-        datafilters = ((datacon.status=='published')|(datacon.status=='loaded')) & \
-                        (datacon.spotcheck_id == None) & \
-                        (datacon.datacontroller_id is not None)
-
-
-        paramfilter = None
-        for code, paramobj in self.params.iteritems():
-            if paramfilter:
-                paramfilter = paramfilter | (datacon.parameter_id==paramobj.id)
-            else:
-                paramfilter = (datacon.parameter_id==paramobj.id)
-
-        daterangefilter = None
-        if self.daterange.get('start',None):
-            daterangefilter = (datacon.datetime_utc > self.daterange.get('start'))
-
-        #there should never be an end without a start
-        if self.daterange.get('end',None) and daterangefilter:
-            daterangefilter = daterangefilter & (datacon.datetime_utc < self.daterange.get('end'))
-        log.debug(daterangefilter)
-
-
-        if daterangefilter:
-            datafilters = datafilters & daterangefilter
-        if paramfilter:
-            datafilters = datafilters & paramfilter
-
-        datacon = datacon[datafilters]
-        #get only the parameters that we need
-        #data controller should be changed to site when it gets added to the model
-        # datacon = datacon[[datacon.parameter_id, \
-        #                     datacon.datetime_utc,\
-        #                     datacon.value, \
-        #                     datacon.datacontroller_id]]
-
-
-        #aggregations
-        tempdataframe = bz.into(bz.DataFrame, datacon)
-        tempdataframe = tempdataframe[['parameter_id',\
-                                    'datetime_utc',\
-                                    'value', \
-                                    'datacontroller_id']]
-
-
-        if self.sample != 'all':
-            self._resample(tempdataframe)
-
-        self.dataframe = tempdataframe
-
+    def get_json_result(self):
+        results = self._getcache()
+        resultmodel = {
+            "cells": results
+        }
+        return resultmodel
 
 
 
