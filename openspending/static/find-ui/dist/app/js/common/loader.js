@@ -14,21 +14,22 @@
     window.loader.data = null;
     window.loader.indicator = null;
 
-    window.loader.loadIndicatorList = function(url, handlerFunc) {
+    // window.loader.loadIndicatorList = function(url, handlerFunc) {
+    //     console.log(handlerFunc);
 
-        //url = "data/indicators2.json";
+    //     //url = "data/indicators2.json";
 
-        $.ajax({
-            url: url,
-            jsonp: "callback",
-            dataType: "jsonp",
-            //dataType: "json",
-            data: {
+    //     $.ajax({
+    //         url: url,
+    //         jsonp: "callback",
+    //         dataType: "jsonp",
+    //         //dataType: "json",
+    //         data: {
 
-            },
-            success: handlerFunc
-        });
-    }
+    //         },
+    //         success: handlerFunc
+    //     });
+    // }
 
     window.loader.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
 

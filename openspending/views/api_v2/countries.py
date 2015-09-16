@@ -30,11 +30,11 @@ blueprint = Blueprint('countries_api2', __name__)
 
 
 
+def make_name(*args):
+    return "countries_list67677667"
 
 @blueprint.route('/countries_list')
-@api_json_errors
-@jsonp
-@cache.memoize(30)
+@cache.memoize(timeout=30, make_name=make_name)
 def countries_list():
 
     country_data = {"data":{

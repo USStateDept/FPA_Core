@@ -12,7 +12,7 @@ from flask import Blueprint, request, Response
 from openspending.model import Dataset
 from openspending.lib.findui import jsonp
 #, Source, Run, DataOrg, SourceFile
-# from openspending.auth import require
+# from openspending.auth import requir
 import json
 from openspending.core import cache
 # from openspending.lib.indices import clear_index_cache
@@ -28,12 +28,13 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('categories_api2', __name__)
 
 
+def make_name(*args):
+    return "categories_list67677667"
 
 @blueprint.route('/categories')
-@api_json_errors
-@jsonp
-#@cache.cache(timeout=600)
-@cache.memoize(50)
+#@api_json_errors
+@cache.memoize(timeout=30, make_name=make_name)
+#@jsonp
 def categories_list():
 
     page_num = request.args.get('page', None)

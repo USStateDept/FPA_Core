@@ -296,6 +296,7 @@ link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/
 script
   window.preloadedData = {};
   window.preloadedData.countries_list = {{ countries_list | safe }};
+  window.preloadedData.categories_list = {{ categories_list | safe }};
 
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
 script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")

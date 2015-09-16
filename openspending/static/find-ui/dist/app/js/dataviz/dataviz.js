@@ -1328,12 +1328,10 @@
             //yearsExtremesForData = window.utils.getHashParams().f.split("|");
     
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
-            console.log(sortedData);
             //debugger;
             var highChartsJson = sortedData.highcharts;
             //add the min,max and avg to the data-proxy span
             if (chartType == "bar") {
-                console.log(highChartsJson.series[0].data)
                 $("#bar-globals").show();
                 $("#data-proxy").data("min", highChartsJson.series[0].data[0][1]);
                 $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
@@ -1453,32 +1451,9 @@
 
     var indicatorListLoadHandler = function(response) {
 
+
       var res = response;
 
-        /*for (var indicatorId in response.data.indicators.data) {
-            debugger;
-            var years = response.data.indicators.data[indicatorId].years;
-            var yearStart = years[0];
-            var yearEnd = years[years.length - 1];
-            var years = response.data.indicators.data[indicatorId].years;
-
-            if (yearsExtremes.length == 0) {
-
-                yearsExtremes.push(yearStart);
-                yearsExtremes.push(yearEnd);
-                debugger;
-            } else {
-
-                if (yearStart < yearsExtremes[0]) {
-                    yearsExtremes[0] = yearStart;
-                }
-
-                if (yearEnd > yearsExtremes[1]) {
-                    yearsExtremes[1] = yearEnd;
-                }
-                debugger;
-            }
-        }*/
 
         //debugger;
         _.forEach(indicators, function(indicatorId) {
@@ -1578,9 +1553,7 @@
 
     }
 
-
-    window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
-
+    indicatorListLoadHandler(window.preloadedData.categories_list);
 
     var countriesListLoadHandler = function(response) {
 
