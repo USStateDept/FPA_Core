@@ -9,8 +9,8 @@ from flask.ext.mail import Mail
 from flask.ext.assets import Environment
 from flaskext.uploads import UploadSet, IMAGES, configure_uploads
 import formencode_jinja2
-from celery import Celery
-from cubes import Workspace
+#from celery import Celery
+#from cubes import Workspace
 #from flask.ext.httpauth import HTTPDigestAuth
 from flask.ext.login import current_user
 from flask import request
@@ -104,10 +104,10 @@ def create_app(**config):
     def shutdown_session(exception=None):
         db.session.remove()
 
-    with app.app_context():
-        app.cubes_workspace = Workspace()
+    # with app.app_context():
+    #     app.cubes_workspace = Workspace()
         
-        app.cubes_workspace.register_default_store('OpenSpendingStore')
+    #     app.cubes_workspace.register_default_store('OpenSpendingStore')
 
 
     return app
@@ -152,20 +152,20 @@ def create_web_app(**config):
     return app
 
 
-def create_celery(app):
-    celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
-    celery.conf.update(app.config)
-    TaskBase = celery.Task
+# def create_celery(app):
+#     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
+#     celery.conf.update(app.config)
+#     TaskBase = celery.Task
 
-    class ContextTask(TaskBase):
-        abstract = True
+#     class ContextTask(TaskBase):
+#         abstract = True
         
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
+#         def __call__(self, *args, **kwargs):
+#             with app.app_context():
+#                 return TaskBase.__call__(self, *args, **kwargs)
     
-    celery.Task = ContextTask
-    return celery
+#     celery.Task = ContextTask
+#     return celery
 
 
 
