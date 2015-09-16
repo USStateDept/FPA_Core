@@ -70,9 +70,9 @@
         _.forEach(statsCells, function(c) {
             //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
             //if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
-            series["Global Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
-            series["Global Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
-            series["Global Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
+            series["Global Minimum"].push([c["geometry__time"], c[indicatorId + "__min"]]);
+            series["Global Maximum"].push([c["geometry__time"], c[indicatorId + "__max"]]);
+            series["Global Average"].push([c["geometry__time"], c[indicatorId + "__avg"]]);
             // }
         });
 

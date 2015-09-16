@@ -406,7 +406,7 @@
             model.activeCountries.push(selectedCountry);
 
             var abbr = selectedCountry.id.toLowerCase();
-            console.log(abbr);
+
 
             var $this = $("."+abbr+"").parent();
             $this.addClass("selected");
@@ -839,6 +839,7 @@
             dataTempObj['indicator'] = indicator;
             dataTempObj['country'] = country;
             data.forEach(function(entry) {
+
                 if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
 					if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
 						entry[indicator] = (entry[indicator].toFixed(2))/1; //Rounds number to 2 decimal places
@@ -852,7 +853,7 @@
         data.forEach(function(entry) {
 
             var numIndicators = Object.keys(entry).length - 3;
-
+            
             for (i = 0; i < numIndicators; i++) {
                 var indicator = Object.keys(entry)[i];
 
@@ -1085,9 +1086,9 @@
         _.map(data.cells, function(_c) {
             if (_c.year == parseInt(maxYear)) {
                 if (usePrefix) { //if not countries
-                    dataByRegion[type + ":" + _c.region] = _c[onlyIndicator + "__amount_avg"];
+                    dataByRegion[type + ":" + _c.region] = _c[onlyIndicator + "__avg"];
                 } else {
-                    dataByRegion[_c.region] = _c[onlyIndicator + "__amount_avg"];
+                    dataByRegion[_c.region] = _c[onlyIndicator + "__avg"];
                 }
                 //debugger;
             }
@@ -1111,7 +1112,6 @@
 
         window.loader.lastGeoJson = gjson;
         window.loader.indicator = onlyIndicator; //indicator;
-        console.log(window.loader.lastGeoJson);
         // debugger;
     }
 
@@ -1223,8 +1223,9 @@
             return !r[0].cells;
         });
 
+
         var statsData = _.remove(responseDeferred, function(r) {
-            return r[0].attributes.length == 1 && r[0].attributes[0] == "geometry__time";
+            return r[0].attributes.length == 1 && r[0].attributes[0] == "geometry__time.time";
         });
 
 
@@ -1234,23 +1235,18 @@
 
             var data = response[0];
 
-            var levels = data.levels;
-            var cutBy = "name";
-            //debugger;
-            for (var levelId in levels) {
-                if (levelId != "geometry__time") {
 
-                    if (levelId == "geometry__country_level0") {
-                        cutBy = "name";
-                    } else {
-                        var len = "geometry__country_level0@".length;
-                        cutBy = levelId.substring(len, levelId.length);
-                    }
+            _.forEach(data.attributes, function(v){
+                if (v == "geometry__country_level0"){
+                    data.cutBy = "name";
+                    return false;
                 }
-            }
+                else if (v.indexOf("geometry__country_level0") > -1){
+                    data.cutBy = v.split(".")[1];
+                    return false;
+                }
+            });
 
-            data.cutBy = cutBy;
-            // debugger;
         });
         //debugger;
         //normalize the data now
@@ -1266,25 +1262,25 @@
             type = cutBy;
 
             _.forEach(data.cells, function(cell) {
+                cell.region = cell["geo__" + cutBy];
 
-                cell.region = cell["geometry__country_level0." + cutBy];
+                cell.year = cell['time'];
 
-                cell.year = cell.geometry__time;
+                delete cell['time'];
+                delete cell["geo__" + cutBy];
+                delete cell.count;
 
-                delete cell.geometry__time;
-                delete cell["geometry__country_level0." + cutBy];
-                delete cell.num_entries;
-
+                /*remove from API?*/
                 for (var id in cell) {
-                    if (id.indexOf("__amount_max") > -1) {
+                    if (id.indexOf("__max") > -1) {
                         delete cell[id];
                     }
 
-                    if (id.indexOf("__amount_min") > -1) {
+                    if (id.indexOf("__min") > -1) {
                         delete cell[id];
                     }
 
-                    if (id.indexOf("__amount_sum") > -1) {
+                    if (id.indexOf("__sum") > -1) {
                         delete cell[id];
                     }
                 }

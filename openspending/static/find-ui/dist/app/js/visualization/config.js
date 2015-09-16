@@ -7,7 +7,11 @@
 
             "categories": "/categories",
 
-            "search": "/search"
+            "search": "/search",
+            
+            "aggregate": "/slicer/aggregate",
+
+            "model": "/slicer/model"
         }
 
     }

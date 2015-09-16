@@ -151,6 +151,8 @@ class DataBrowser(object):
 
         self._map_tables()
 
+        self.drilldowntables = []
+
         if self.drilldown:
             self._drilldowns()
 
@@ -158,6 +160,7 @@ class DataBrowser(object):
 
             for table_name, dds in self.drilldown.iteritems():
                 for dd in dds:
+                    self.drilldowntables.append(table_name + "." + dd)
                     self.selectable = self.selectable.group_by(self.t[table_name].c[dd])
         else:
 
@@ -245,6 +248,8 @@ class DataBrowser(object):
 
 
         resultmodel['models'] = tempmodel
+
+        resultmodel['attributes'] = self.drilldowntables
 
         if self.clusterparams['cluster']:
             resultmodel['cluster'] = self.get_clusters(resultmodel['cells'])        

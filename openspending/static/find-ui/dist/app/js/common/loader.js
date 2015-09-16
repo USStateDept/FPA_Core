@@ -52,7 +52,7 @@
 
         //////////////////////////////////////////////
 
-        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        var urlPrefix = "/api/3/slicer/aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&daterange={yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
         urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
         urlPrefix = urlPrefix.replace(/{yearTo}/g, yearsExtremes[1]);
@@ -302,7 +302,7 @@
 
         function getMetaFromServer(a) {
           var d = $.ajax({
-             url: "/api/3/datasets/" + a,
+             url: "/api/3/slicer/model?cubes=" + a,
              dataType: "json",
              data: {}
            }).done(function( res ) {
@@ -316,9 +316,8 @@
          defferreds.push(d);
        }
 
-      _.forEach(indicators, function(indicator) {
-        getMetaFromServer(indicator);
-      });
+       getMetaFromServer(indicators.join('|'));
+
 
       return defferreds;
       //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
