@@ -676,8 +676,6 @@ var act;
             return title + units;
         });
 
-
-
         var xUnits = indicatorsMeta[0][0].units;
 
         var yUnits;
@@ -846,7 +844,7 @@ var act;
         // user should be able to switch between the x, y and z
         var latestYear = yearsExtremesForData[1];
         var firstYear = yearsExtremesForData[0];
-
+        
         if (type == "scatter") {
 
             seriesArray = [];
@@ -1141,7 +1139,7 @@ var act;
                 },
                 series: seriesArray
             }
-
+            //debugger;
         }
 
         var json;
