@@ -280,7 +280,7 @@
 
     }*/
 
-    window.loader.loadGeoJSON = function(type, handlerFunc, cluster) {
+    window.loader.loadGeoJSON = function(type, handlerFunc, cluster,countries) {
 
         url = "/static/json/" + type + "_None.geojson";
         $.ajax({
@@ -291,7 +291,7 @@
 
             },
             success: function(response) {
-                handlerFunc(response, type, cluster)
+                handlerFunc(response, type, cluster,countries)
             }
         });
 

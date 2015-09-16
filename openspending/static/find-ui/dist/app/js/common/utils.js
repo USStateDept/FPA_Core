@@ -284,7 +284,10 @@ var act;
         // debugger;
     };
 
-    window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson) {
+    window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson,countries) {
+
+        if (regions[0].indexOf(":") > -1) 
+            regions=countries;
 
         if (window.loader.geoJsonLayers[type]) {
             map.removeLayer(window.loader.geoJsonLayers[type]);
@@ -318,13 +321,14 @@ var act;
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
                 featuresAdded.push(polygon);
-                //debugger;
+                
                 return {
+
                     weight: 2,
                     opacity: 1,
                     color: '#FFFFFF',
                     //dashArray: '3',
-                    fillOpacity: 0.5,
+                    fillOpacity: 1,
                     fillColor: window.utils.getColor(feature.properties[indicator], cluster)
                     //fillColor: '#00FF00'////fillColor: '#00FF00'
                 };
