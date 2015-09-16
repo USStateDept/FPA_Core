@@ -34,7 +34,7 @@ blueprint = Blueprint('countries_api2', __name__)
 @blueprint.route('/countries_list')
 @api_json_errors
 @jsonp
-@cache.cached(timeout=30)
+@cache.memoize(30)
 def countries_list():
 
     country_data = {"data":{
@@ -124,10 +124,10 @@ def countries_list():
 
 
     country_data['data']['regions'] = countrygroupingset
-    resp = Response(response=json.dumps({'data':json.dumps(country_data)}),
-            status=200, \
-            mimetype="application/json")
-    return resp
+    # resp = Response(response=json.dumps({'data':json.dumps(country_data)}),
+    #         status=200, \
+    #         mimetype="application/json")
+    return json.dumps(country_data)
 
 
 

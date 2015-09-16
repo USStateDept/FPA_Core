@@ -32,7 +32,8 @@ blueprint = Blueprint('categories_api2', __name__)
 @blueprint.route('/categories')
 @api_json_errors
 @jsonp
-@cache.cached(timeout=600)
+#@cache.cache(timeout=600)
+@cache.memoize(50)
 def categories_list():
 
     page_num = request.args.get('page', None)
@@ -158,9 +159,10 @@ def categories_list():
         outputschema['data']['indicators']['total'] += 1
 
     #outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
-    resp = Response(response=json.dumps({'data':outputschema}),
-            status=200, \
-            mimetype="application/json")
-    return resp
+    # resp = Response(response=json.dumps({'data':outputschema}),
+    #         status=200, \
+    #         mimetype="application/json")
+    # return resp
+    return json.dumps(outputschema)
 
 
