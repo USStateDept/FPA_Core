@@ -222,7 +222,7 @@ class DataBrowser(object):
             return self.cachedresult        
 
     def _execute_query_iterator(self):
-        results = db.session.execute(self.selectable)
+        results = db.session.execute(self.selectable.order_by(self.t['geometry__time'].c['time']))
         for u in results.fetchall():
             yield dict(u)
 
