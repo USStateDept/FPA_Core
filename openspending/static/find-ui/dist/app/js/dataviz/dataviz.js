@@ -1042,7 +1042,7 @@
 		}
 	}
 
-    var addDataToGeoJson = function(lastGeoJson, type) {
+    var addDataToGeoJson = function(lastGeoJson, type,countries) {
 
         var data = window.loader.data;
         var gjson = lastGeoJson;
@@ -1053,6 +1053,10 @@
         var onlyIndicator = indicators[0];
         var regions = hashParams.r.split("|");
         var maxYear = yearsFilter[1]; //2013
+        
+        if (regions[0].indexOf(":") > -1) {
+            regions = countries;
+        }
         //debugger;
         var dataByRegion = {};
         _.map(regions, function(_r) {
@@ -1098,7 +1102,7 @@
         // debugger;
     }
 
-    var addChoroplethLayer = function(lastGeoJson, type, cluster, onlyIndicator) {
+    var addChoroplethLayer = function(lastGeoJson, type, cluster, onlyIndicator,countries) {
         var hashParams = window.utils.getHashParams();
         // var yearsFilter = hashParams.f.split("|");
         // var maxYear = yearsFilter[1];
@@ -1108,15 +1112,14 @@
         //debugger;
         //window.loader.geoJsonLayers[type] = L.geoJson(lastGeoJson);
 
-        window.utils.highlightOnMapViz(regions, type, cluster, onlyIndicator, window.loader.lastGeoJson);
+        window.utils.highlightOnMapViz(regions, type, cluster, onlyIndicator, window.loader.lastGeoJson,countries);
         // debugger;
         //window.utils.zoomToFeatures(featuresAdded);
 
     }
 
-    var geoJSONHandler = function(response, type, cluster) {
+    var geoJSONHandler = function(response, type, cluster,countries) {
 
-        // debugger;
         var hashParams = window.utils.getHashParams();
         var yearsFilter = hashParams.f.split("|");
         var maxYear = yearsFilter[1];
@@ -1126,9 +1129,9 @@
 
         window.loader.lastGeoJson = response;
 
-        addDataToGeoJson(window.loader.lastGeoJson, type);
+        addDataToGeoJson(window.loader.lastGeoJson, type,countries);
 
-        addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator);
+        addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator, countries);
 
         window.utils.addLegend(cluster);
 
@@ -1178,7 +1181,7 @@
 
     }
 
-    var getGeoJsonForMap = function(cluster, cells, type) {
+    var getGeoJsonForMap = function(cluster, cells, type,countries) {
         /* var groupId = "sovereignt";
         debugger;*/
 
@@ -1189,7 +1192,7 @@
         geometryType = type;
 
         if (!window.loader.geoJsonLayers[type]) {
-            window.loader.loadGeoJSON(type, geoJSONHandler, cluster);
+            window.loader.loadGeoJSON(type, geoJSONHandler, cluster,countries);
         } else {
 
         }
@@ -1199,7 +1202,6 @@
     var indicatorDataLoadHandler = function(args) {
 
         //this might be the basic data loader
-
         var responseDeferred = args;
 
         indicatorsMeta = _.remove(responseDeferred, function(r) {
@@ -1283,9 +1285,22 @@
         var responseData = {
             cells: mergedCells
         }
-
-        var responseStats = statsData[0];
         //debugger;
+        var responseStats = statsData[0];
+
+        var countries=[];
+
+        for(var i=0;i<responseData.cells.length;i++)
+        {
+            if(countries.indexOf(responseData.cells[i].region)>-1)
+            {
+                break;
+            }
+            else{
+                countries.push(responseData.cells[i].region);
+            }
+        }
+        
         if (chartType == "map") {
             $("#loading").hide();
 
@@ -1297,17 +1312,9 @@
 
             var regType = hashParams.r.split("|");
 
-            if(regType[0].indexOf(":")>-1)
-                regType[0]=regType[0].slice(0, regType[0].indexOf(":"));
-            else
-                regType[0]="sovereignt";
-
-            debugger;
-
-            if(regType.length>1)
-                regType=regType.splice(0,1); //only one map region can be selected temporarily
-
-            getGeoJsonForMap(cluster, responseData, regType);
+            regType="sovereignt";
+            
+            getGeoJsonForMap(cluster, responseData, regType, countries);
 
             showTable(responseData);
 
