@@ -52,7 +52,7 @@ def get_cubes_breaks(vals, field, method='jenks', k=5):
         classreturn = mapclassify.Fisher_Jenks(arrayvals, k=k).bins
     returnset = {}
     classreturn= np.insert(classreturn, 0, arrayvals.min())
-    returnset['data'] = [x for x in classreturn]
+    returnset['data'] = list(classreturn)
     returnset['labels'] = []
     for ind in range(len(classreturn)):
         if ind == len(classreturn) -1:
