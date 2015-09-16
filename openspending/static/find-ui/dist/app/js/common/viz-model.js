@@ -219,6 +219,7 @@
               setTimeout(function(){
                 window.utils.highlightOnMap(vizModel, selectedCountry);
               },25);
+              
 
             } else {
               $this.addClass("selected");
@@ -258,18 +259,13 @@
 
         selectCountryGroup: function() {
 
-
-
             var groupId = arguments[0].id;
 
             window.visualization.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);
             vizModel.activeRegion(""); //set active region to undefined
-
-
             //vizModel.countryGroupRegions.removeAll();
-
 
             if (groupId == "all") {
                 vizModel.selectCountryGroupRegion("all"); //just select all countries
@@ -285,8 +281,6 @@
                 });
 
             }
-
-
 
         },
 
