@@ -77,7 +77,9 @@ var act;
     }
 
     window.utils.bindIndicators = function(response, model) {
-        //debugger;
+
+
+
         var categoriesAll = response.data.categories;
         var subcategoriesAll = response.data.subcategories;
         var sourcesAll = response.data.sources;
@@ -238,18 +240,8 @@ var act;
         model.activeGroup(model.countryGroupings()[0]);
     };
 
-    window.utils.removeOnMap = function(model, geounits) { //clear a single country
-
-        // rc(act);
+    window.utils.removeOnMap = function() { //clear a single country
         window.map.removeLayer(window.visualization.geoJsonLayers[level]);
-        $.each(vizModel.activeCountries(), function(idx, country) {
-            // console.log(country);
-            // alert(JSON.stringify(country));
-            window.utils.highlightOnMap(vizModel, country);
-        });
-        // window.utils.highlightOnMap(vizModel, act);
-        // var level = "sovereignt";
-        // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
     };
 
     window.utils.clearOnMap = function(model) { // clear all of map
@@ -257,6 +249,7 @@ var act;
         var levels = model.countryGroupings();
         //["sovereignt","usaid_reg","continent","dod_cmd","dos_region","wb_inc_lvl"]
         //var level = "sovereignt";
+        debugger;
         _.forEach(levels, function(_l) {
             var layerId = _l.id;
             if (layerId == "all") {
@@ -463,7 +456,23 @@ var act;
     };
 
     window.utils.highlightOnMap = function(model, geounit) {
-        // console.log("Geounit from highlightOnMap is: " + JSON.stringify(geounit));
+        // remove from map feauture
+        if(geounit.selected == false) {
+
+          window.visualization.changeGroup("all");
+          // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
+          // debugger;
+          // window.visualization.changeGroup("all");
+          //
+          var model =  vizModel.activeCountries();
+          for(var i = 0; i  < model.length; i++) {
+            // redraw Map
+            window.utils.highlightOnMap(vizModel, model[i]);
+          }
+
+
+          return;
+        }
 
         var featuresAdded = [];
         //if all then select all countries in countriesModel, else activeCountries
@@ -503,7 +512,6 @@ var act;
         }
 
         var style = function(feature) {
-
             if ((drillDown && (_.indexOf(drillDownLabels, feature.properties[level]) > -1)) || (feature.properties[level] == geounit.label) || _.indexOf(listOfLabels, feature.properties[level]) > -1) {
                 //debugger;
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
@@ -538,57 +546,14 @@ var act;
                 layer.bindLabel(name, {noHide:true,direction:'right'});
             }
         }
+
         window.visualization.geoJsonLayers[level] = L.geoJson(window.visualization.geoJson[level], {
             onEachFeature: onEachFeature,
             style: style
         });
-        // debugger;
+
         map.addLayer(window.visualization.geoJsonLayers[level]);
 
-        /*var countries = model.countriesModel();
-
-        if (model.activeCountries().length > 0) {
-            countries = model.activeCountries();
-        }
-
-        var countriesGeounit = _.map(countries, function(country) {
-            return country.label;
-        });*/
-
-
-
-        // debugger;
-
-
-
-
-
-
-        return;
-
-        setTimeout(function() {
-
-
-            /*L.geoJson(geoJsonLayers["sovereignt"].toGeoJSON(), {
-                style: style,
-                onEachFeature: onEachFeature
-            }).addTo(window.map);*/
-
-            var group = new L.featureGroup(featuresAdded);
-            var bounds = group.getBounds();
-
-
-            var southWestLng = bounds._southWest.lng;
-            var northEastLng = bounds._northEast.lng;
-
-            bounds._southWest.lng = bounds._southWest.lat;
-            bounds._southWest.lat = southWestLng;
-            bounds._northEast.lng = bounds._northEast.lat;
-            bounds._northEast.lat = northEastLng;
-
-
-            map.fitBounds(bounds);
-        }, 0);
 
     }
 

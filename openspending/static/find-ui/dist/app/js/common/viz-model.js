@@ -1,55 +1,3 @@
-/*function rc() {
-
-    var selectedCountry = arguments[0];
-    var activeCountries = vizModel.activeCountries();
-    var selectedIndex = _.indexOf(activeCountries, selectedCountry);
-
-    vizModel.activeCountries.splice(selectedIndex, 1);
-
-    var countryLabel = selectedCountry.label;
-    var countryId = selectedCountry.id;
-
-    //vizModel.activeCountries.removeAll();
-
-    var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-    vizModel.countryGroupings.removeAll();
-
-    var activeGroupId = vizModel.activeGroup().id;
-    // debugger;
-    _.forEach(countryGroupings, function(countryGroup, i) {
-        if (countryGroup.id == countryId) {
-            countryGroup.selected = false;
-        }
-        _.forEach(countryGroup.regions, function(region) {
-            if (region.id == countryId && region.label == countryLabel) {
-                region.selected = false;
-            }
-            _.forEach(region.countries, function(country) { //for each Country
-                if (country.id == countryId) {
-                    country.selected = false;
-                }
-            });
-
-        });
-    });
-
-    _.forEach(countryGroupings, function(countryGroup, i) {
-        if (activeGroupId == countryGroup.id) {
-            vizModel.activeGroup(countryGroup);
-        }
-        vizModel.countryGroupings.push(countryGroup);
-    });
-
-    window.utils.removeOnMap(vizModel, selectedCountry);
-
-
-    // _.each(activeCountries, function(country){
-    //  if (geounit)
-    // });
-    // vizModel.activeCountries.push(selectedCountry);
-
-}*/
-
 (function() {
 
 
@@ -231,10 +179,7 @@
 
             window.location.href = "/data-visualization#" + hashString;
 
-
-
         },
-
 
         selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) { /* breakdown by regions or countries*/
 
@@ -255,110 +200,53 @@
                 return;
             }
 
-            vizModel.activeCountries.push(selectedCountry);
 
             var abbr = selectedCountry.id.toLowerCase();
-            console.log(abbr);
-
             var $this = $("."+abbr+"").parent();
-            $this.addClass("selected");
 
-            // allows for immediate ui response
-            setTimeout(function(){
-              window.utils.highlightOnMap(vizModel, selectedCountry)
-            },25);
+            if ($this.hasClass("selected")) {
+              $this.removeClass("selected");
+              //vizModel.removeCountry(selectedCountry);
+              var activeCountries = vizModel.activeCountries();
+              var selectedIndex = _.indexOf(activeCountries, selectedCountry);
 
+              vizModel.activeCountries.splice(selectedIndex, 1);
 
-        },
+              // make sure selectetion is false
+              selectedCountry.selected = false;
 
+              // allows for immediate ui response
+              setTimeout(function(){
+                window.utils.highlightOnMap(vizModel, selectedCountry);
+              },25);
 
+            } else {
+              $this.addClass("selected");
+              selectedCountry.selected = true;
 
-        removeCountry: function() {
+              vizModel.activeCountries.push(selectedCountry);
 
+              // allows for immediate ui response
+              setTimeout(function(){
+                window.utils.highlightOnMap(vizModel, selectedCountry)
+              },25);
+            }
 
-            var selectedCountry = arguments[0];
-            var activeCountries = vizModel.activeCountries();
-            var selectedIndex = _.indexOf(activeCountries, selectedCountry);
-
-            vizModel.activeCountries.splice(selectedIndex, 1);
-
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
-
-            //vizModel.activeCountries.removeAll();
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-            // debugger;
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = false;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = false;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = false;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-            window.utils.removeOnMap(vizModel, selectedCountry);
-
-
-            // _.each(activeCountries, function(country){
-            // 	if (geounit)
-            // });
-            // vizModel.activeCountries.push(selectedCountry);
+            //selectedCountry.selected = !selectedCountry.selected
 
         },
-
 
         clearActiveCountries: function() {
+            var model =  vizModel.activeCountries();
+            for(var i = 0; i  < model.length; i++) {
 
+                var abbr = model[i].id.toLowerCase();
+                var $this = $("."+abbr+"").parent();
+                $this.removeClass("selected");
+
+            }
             vizModel.activeCountries.removeAll();
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                countryGroup.selected = false;
-                _.forEach(countryGroup.regions, function(region) {
-                    region.selected = false;
-                    _.forEach(region.countries, function(country) { //for each Country
-                        country.selected = false;
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-            //window.utils.highlightOnMap(vizModel, null);
-
-            window.utils.clearOnMap(vizModel);
-
-
+            window.visualization.changeGroup("all");
         },
 
         clearActiveIndicators: function() {
