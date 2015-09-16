@@ -4,14 +4,14 @@
 import logging
 from datetime import datetime
 import os
-import json
+
 
 from flask import request, g, Response, jsonify
 
 from openspending.views.api_v3.common import blueprint
 
 from openspending.lib.apihelper import DataBrowser
-
+from openspending.lib.jsonexport import to_json
 # #from openspending.core import cache
 # from openspending.auth import require
 # from openspending.lib.jsonexport import jsonify
@@ -56,13 +56,11 @@ log = logging.getLogger(__name__)
 #@cache.cached(timeout=60, key_prefix=cache_key)
 def slicer_agg():
     d = DataBrowser()
-    print "\n\n", d.selectable, "\n"
-    obj = []
-    for row in d._execute_query_iterator():
-        obj.append(row)
-
-    
-    return json.dumps(obj)
+    obj = d.get_json_result()
+    resp = Response(response=to_json(obj),
+            status=200, \
+            mimetype="application/json")
+    return resp
 
 
 

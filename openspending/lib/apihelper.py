@@ -21,6 +21,7 @@ from sqlalchemy import Table, MetaData, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import mapper
 from sqlalchemy.sql.expression import func 
 from sqlalchemy.sql import table, column, select
+from openspending.lib.helpers import get_dataset
 
 
 
@@ -111,8 +112,6 @@ class DataBrowser(object):
         input is query string
     """
 
-
-
     def __init__(self):
         self.params = {}
         self.cubes = []
@@ -121,6 +120,7 @@ class DataBrowser(object):
         self.agg = {}
         self.drilldown = {}
         self.cut={}
+        self.nulls=True
 
         self.dataframe = None
 
@@ -144,19 +144,22 @@ class DataBrowser(object):
             for table_name, dds in self.drilldown.iteritems():
                 for dd in dds:
                     self.selectable = self.selectable.group_by(self.t[table_name].c[dd])
-                    # print "HERE IS CUT", self.cut, table_name, dd
-                    # cutobj = self.cut.get(table_name, {}).get(dd, None)
-                    # if cutobj:
-                    #     print "\n\nHERS IS A CUT"
-                    #     print self.t[table_name].c[dd].in_(cutobj)
-                    #     self.selectable.having(self.t[table_name].c[dd].in_(cutobj))
         else:
 
             self.selectable = select(self.selects).select_from(self.joins)
 
         for table_name, cols in self.cut.iteritems():
             for colname, values in cols.iteritems():
-                self.selectable = self.selectable.where(self.t[table_name].c[colname].in_(values))         
+                self.selectable = self.selectable.where(self.t[table_name].c[colname].in_(values))
+        if self.daterange['start']:
+            self.selectable = self.selectable.where(self.t["geometry__time"].c["time"] >= self.daterange['start'])
+        if self.daterange['end']:
+            self.selectable = self.selectable.where(self.t["geometry__time"].c["time"] <= self.daterange['end'])
+
+        if not self.nulls:
+            for cube_tb in self.cubes_tables: 
+                self.selectable = self.selectable.where(self.t[cube_tb].c["amount"] != None)
+
      
         #completed the selects, now doing the wheres and groupby
 
@@ -166,7 +169,10 @@ class DataBrowser(object):
         #make sure column exists
         for tablename, drilldowns in self.drilldown.iteritems():
             for dd in drilldowns:
-                self.selects.append(self.t[tablename].c[dd])
+                if tablename == "geometry__country_level0":
+                    self.selects.append(self.t[tablename].c[dd].label("geo__%s"%dd))
+                else:
+                    self.selects.append(self.t[tablename].c[dd])
 
             #group_by(t['geometry__country_level0'].c['dos_region'])
 
@@ -194,7 +200,7 @@ class DataBrowser(object):
         if self.cachedresult:
             return self.cachedresult
         else:
-            self.cachedresult = self._execute_query_iterator()
+            self.cachedresult = [x for x in self._execute_query_iterator()]
             return self.cachedresult        
 
     def _execute_query_iterator(self):
@@ -203,13 +209,12 @@ class DataBrowser(object):
             yield dict(u)
 
 
-    def get_clusters(self, field=None):
-        results = self._getcache()
+    def get_clusters(self, resultsdict, field=None):
 
         if not field:
-            field = sef.cubes_tables[0].strip("__entry") + "__avg"
+            field = self.cubes_tables[0].strip("__entry") + "__avg"
 
-        return get_cubes_breaks(result, field, method='jenks', k=5)
+        return get_cubes_breaks(resultsdict, field, method=self.clusterparams['cluster'], k=self.clusterparams['clusternum'])
 
 
 
@@ -218,6 +223,17 @@ class DataBrowser(object):
         resultmodel = {
             "cells": results
         }
+
+        tempmodel = {}
+        for dataset in self.cubes:
+            tempmodel[dataset] = get_dataset(dataset).detailed_dict()
+
+
+        resultmodel['models'] = tempmodel
+
+        if self.clusterparams['cluster']:
+            resultmodel['cluster'] = self.get_clusters(resultmodel['cells'])        
+        
         return resultmodel
 
 
@@ -302,10 +318,18 @@ class DataBrowser(object):
                         self.drilldown[dd[0]] = [dd[1]]
                 else:
                     if self.drilldown.get(dd[0]):
-                        print self.drilldown[dd[0]]
                         self.drilldown[dd[0]].append(DEFAULTDRILLDOWN.get(dd[0]))
                     else:
                         self.drilldown[dd[0]] = [DEFAULTDRILLDOWN.get(dd[0])]
+
+        self.nulls = request.args.get("nulls", False)
+
+
+        self.clusterparams = {
+            "cluster": request.args.get("cluster", None),
+            "clusternum": request.args.get("clusternum",5)
+        }
+
                         
 # GEO_MAPPING = {"geometry__country_level0":  {
 #                         "name": {
