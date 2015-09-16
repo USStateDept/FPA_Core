@@ -458,18 +458,19 @@ var act;
     window.utils.highlightOnMap = function(model, geounit) {
         // remove from map feauture
         if(geounit.selected == false) {
-
-          window.visualization.changeGroup("all");
-          // window.map.removeLayer(window.visualization.geoJsonLayers[level]);
-          // debugger;
-          // window.visualization.changeGroup("all");
-          //
-          var model =  vizModel.activeCountries();
-          for(var i = 0; i  < model.length; i++) {
+          //window.utils.clearOnMap(vizModel);
+          // setTimeout(function(){
+          //   window.utils.highlightOnMap(vizModel, vizModel.activeCountries()[0]);
+          // },25);
+          //window.map.removeLayer(window.visualization.geoJsonLayers[level]);
+           //debugger;
+          // // window.visualization.changeGroup("all");
+          // //
+          for(var i = 0; i  < vizModel.activeCountries().length; i++) {
             // redraw Map
-            window.utils.highlightOnMap(vizModel, model[i]);
+            debugger;
+            window.utils.highlightOnMap(vizModel, vizModel.activeCountries()[i]);
           }
-
 
           return;
         }
@@ -522,17 +523,17 @@ var act;
                     opacity: 1,
                     color: '#FFFFFF',
                     //dashArray: '3',
-                    fillOpacity: 0.5,
-                    fillColor: '#00FF00'
+                    fillOpacity: 1.0,
+                    fillColor: '#852224'
                 };
             } else {
                 return {
-                    weight: 0,
-                    opacity: 0,
+                    weight: 1,
+                    opacity: 1,
                     color: 'white',
                     dashArray: '3',
-                    fillOpacity: 0.0,
-                    fillColor: '#666666'
+                    fillOpacity: 1.0,
+                    fillColor: 'grey'
                 };
             }
         }
@@ -553,8 +554,6 @@ var act;
         });
 
         map.addLayer(window.visualization.geoJsonLayers[level]);
-
-
     }
 
     window.utils.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, yearsExtremesForData) {
