@@ -5,7 +5,7 @@ from slugify import slugify
 import json
 import collections
 
-from flask import Blueprint, request
+from flask import Blueprint, request, Response
 #from flask.ext.login import current_user
 
 #from openspending.core import db, sourcefiles
@@ -158,7 +158,7 @@ def categories_list():
         outputschema['data']['indicators']['total'] += 1
 
     #outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
-
-    return json.dumps(outputschema)
+    resp = Response
+    return json.dumps({'data':outputschema})
     #return jsonify(outputschema)
 

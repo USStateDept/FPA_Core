@@ -5,7 +5,7 @@ from slugify import slugify
 import json
 import collections
 
-from flask import Blueprint, request
+from flask import Blueprint, request, Response
 #from flask.ext.login import current_user
 
 #from openspending.core import db, sourcefiles
@@ -124,8 +124,10 @@ def countries_list():
 
 
     country_data['data']['regions'] = countrygroupingset
-        
-    return json.dumps(country_data)
+    resp = Response(response=json.dumps({'data':json.dumps(country_data)}),
+            status=200, \
+            mimetype="application/json")
+    return resp
 
 
 
