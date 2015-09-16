@@ -28,12 +28,11 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('categories_api2', __name__)
 
 
-def make_name(*args):
-    return "categories_list67677667"
 
 @blueprint.route('/categories')
 #@api_json_errors
-@cache.memoize(timeout=30, make_name=make_name)
+
+@cache.cached(timeout=30, key_prefix="categories_cache_list")
 #@jsonp
 def categories_list():
 

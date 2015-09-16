@@ -1318,8 +1318,7 @@
             map = L.map('viz-container').setView([0, 0], 3);
 
             window.loader.data = responseData;
-
-            cluster = indicatorsData[0][0].cluster
+            cluster = responseStats[0].cluster
 
             var regType = hashParams.r.split("|");
 
