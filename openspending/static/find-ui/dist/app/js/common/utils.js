@@ -556,7 +556,7 @@ var act;
         map.addLayer(window.visualization.geoJsonLayers[level]);
     }
 
-    window.utils.prepareHighchartsJson = function(data, statsData, indicatorsMeta, type, indicators, yearsExtremesForData) {
+    window.utils.prepareHighchartsJson = function(data, statsData, type, indicators, yearsExtremesForData) {
         //debugger;
         //var defaultCountries = ["australia", "new zealand", "sweden", "germany", "france", "ghana", "kenya", "south africa", "bangladesh", "pakistan", "cambodia"];
         //var defaultVisibleCountries = ["australia", "germany", "kenya", "cambodia"];
@@ -566,6 +566,7 @@ var act;
         var statsCells = statsData.cells;
         var indicatorId = indicators[0];
         var title = indicators[0];
+        var metadatas = _.values(statsData['models']);
         //var groupId = group;
         //var cutBy = "name";
         var dataType = "avg"; //sum,avg
@@ -593,9 +594,9 @@ var act;
         _.forEach(statsCells, function(c) {
             //(c["geometry__time"] >= fromYear) && (c["geometry__time"] <= toYear) &&
             //if ((groupId == "all" || c["geometry__country_level0." + groupId] == region)) {
-            series["Global Minimum"].push([c["geometry__time"], c[indicatorId + "__amount_min"]]);
-            series["Global Maximum"].push([c["geometry__time"], c[indicatorId + "__amount_max"]]);
-            series["Global Average"].push([c["geometry__time"], c[indicatorId + "__amount_avg"]]);
+            series["Global Minimum"].push([c["time"], c[indicatorId + "__min"]]);
+            series["Global Maximum"].push([c["time"], c[indicatorId + "__max"]]);
+            series["Global Average"].push([c["time"], c[indicatorId + "__avg"]]);
             // }
         });
 
@@ -611,6 +612,13 @@ var act;
 
         var _cells = cells; //window.utils.masterCells;
         //debugger;
+
+        //maybe use group by for below?
+        // _.groupBy(_cells, function(n) {
+        //         return n.region;
+        //     });
+
+
         _.forEach(_cells, function(c) {
             if (c.region) {
                 series[c.region] = [];
@@ -619,32 +627,31 @@ var act;
 
         _.forEach(_cells, function(c) {
             if (c.region) {
-                series[c.region].push([c.year, c[indicatorId + "__amount_" + dataType]]);
+                series[c.region].push([c.year, c[indicatorId + "__" + dataType]]);
             }
         });
 
         //debugger;
-        var titleArray = _.map(indicatorsMeta, function(meta) {
-
-            var title = meta[0].label;
-            var units = meta[0].units;
+        var titleArray = _.map(metadatas, function(meta) {
+            var title = meta.label;
+            var units = meta.units;
 
             units = units == null ? "" : "(" + units + ")";
 
             return title + units;
         });
 
-        var xUnits = indicatorsMeta[0][0].units;
+        var xUnits = metadatas[0].units;
 
         var yUnits;
         if (type == "scatter" || type == "bubble") {
-            yUnits = indicatorsMeta[1][0].units;
+            yUnits = metadatas[1].units;
         }
 
         var zUnits;
 
         if (type == "bubble") {
-            zUnits = indicatorsMeta[2][0].units;
+            zUnits = metadatas[2].units;
         }
 
         xUnits = xUnits == null ? "" : " (" + xUnits + ")";
@@ -654,11 +661,11 @@ var act;
         var title = titleArray.join(" and ");
 
 
-        var subtitleObj = _.map(indicatorsMeta, function(meta) {
+        var subtitleObj = _.map(metadatas, function(meta) {
             return meta = {
-                "label": meta[0].label,
-                "url": meta[0].url,
-                "dataorg": meta[0].dataorg
+                "label": meta.label,
+                "url": meta.url,
+                "dataorg": meta.dataorg
             };
         });
 
@@ -836,8 +843,8 @@ var act;
                 _.forEach(statsCells, function(c) {
                     //if (c.geometry__time <= latestYear)
                     dataArray.push({
-                        x: c[indicator1 + "__amount_" + indicatorSuffix],
-                        y: c[indicator2 + "__amount_" + indicatorSuffix],
+                        x: c[indicator1 + "__" + indicatorSuffix],
+                        y: c[indicator2 + "__" + indicatorSuffix],
                         year: c.geometry__time
                     });
                 });
@@ -858,10 +865,10 @@ var act;
                     dataArray = [];
                     _.forEach(_cells, function(d) {
                         if (c.region == d.region && d.year >= firstYear && d.year <= latestYear) {
-                            if (!!d[indicator1 + "__amount_" + dataType] && !!d[indicator2 + "__amount_" + dataType])
+                            if (!!d[indicator1 + "__" + dataType] && !!d[indicator2 + "__" + dataType])
                                 dataArray.push({
-                                    x: d[indicator1 + "__amount_" + dataType],
-                                    y: d[indicator2 + "__amount_" + dataType],
+                                    x: d[indicator1 + "__" + dataType],
+                                    y: d[indicator2 + "__" + dataType],
                                     year: d.year
                                 });
                         }
@@ -893,7 +900,7 @@ var act;
                 xAxis: {
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label + xUnits
+                        text: metadatas[0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -901,7 +908,7 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label + yUnits
+                        text: metadatas[1].label + yUnits
                     }
                 },
                 series: series
@@ -922,15 +929,15 @@ var act;
                 if (latestYear == c.geometry__time) {
                     //debugger;
                     series["Global Minimum"] = {
-                        data: [c[indicator1 + "__amount_min"], c[indicator2 + "__amount_min"], c[indicator3 + "__amount_min"]],
+                        data: [c[indicator1 + "__min"], c[indicator2 + "__min"], c[indicator3 + "__min"]],
                         year: c.geometry__time
                     };
                     series["Global Maximum"] = {
-                        data: [c[indicator1 + "__amount_max"], c[indicator2 + "__amount_max"], c[indicator3 + "__amount_max"]],
+                        data: [c[indicator1 + "__max"], c[indicator2 + "__max"], c[indicator3 + "__max"]],
                         year: c.geometry__time
                     };
                     series["Global Average"] = {
-                        data: [c[indicator1 + "__amount_avg"], c[indicator2 + "__amount_avg"], c[indicator3 + "__amount_avg"]],
+                        data: [c[indicator1 + "__avg"], c[indicator2 + "__avg"], c[indicator3 + "__avg"]],
                         year: c.geometry__time
                     };
 
@@ -948,7 +955,7 @@ var act;
                     if (latestYear == c.year) {
                         series[c.region] = {
                             year: c.year,
-                            data: [c[indicator1 + "__amount_" + dataType], c[indicator2 + "__amount_" + dataType], c[indicator3 + "__amount_" + dataType]]
+                            data: [c[indicator1 + "__" + dataType], c[indicator2 + "__" + dataType], c[indicator3 + "__" + dataType]]
                         };
                     }
                 }
@@ -988,7 +995,7 @@ var act;
                     //categories: categories
                     title: {
                         enabled: true,
-                        text: indicatorsMeta[0][0].label + xUnits
+                        text: metadatas[0].label + xUnits
                     },
                     startOnTick: true,
                     endOnTick: true,
@@ -996,12 +1003,12 @@ var act;
                 },
                 yAxis: {
                     title: {
-                        text: indicatorsMeta[1][0].label + yUnits
+                        text: metadatas[1].label + yUnits
                     }
                 },
                 zAxis: {
                     title: {
-                        text: indicatorsMeta[2][0].label + zUnits
+                        text: metadatas[2].label + zUnits
                     }
                 },
 
@@ -1022,17 +1029,17 @@ var act;
                 if (latestYear == c.geometry__time) {
                     data.push([
                         "Global Minimum",
-                        c[indicatorId + "__amount_min"]
+                        c[indicatorId + "__min"]
 
                     ]);
                     data.push([
                         "Global Maximum",
-                        c[indicatorId + "__amount_max"]
+                        c[indicatorId + "__max"]
 
                     ]);
                     data.push([
                         "Global Average",
-                        c[indicatorId + "__amount_avg"]
+                        c[indicatorId + "__avg"]
 
                     ]);
                 }
@@ -1042,7 +1049,7 @@ var act;
             _.forEach(_cells, function(c) {
                 if (c.region && latestYear == c.year) {
                     //debugger;
-                    data.push([c.region, c[indicatorId + "__amount_" + dataType]]);
+                    data.push([c.region, c[indicatorId + "__" + dataType]]);
                 }
             });
 
@@ -1056,7 +1063,7 @@ var act;
 
             //debugger;
             seriesArray = [{
-                name: indicatorsMeta[0][0].label,
+                name: metadatas[0].label,
                 data: data
             }];
 
@@ -1092,7 +1099,7 @@ var act;
                 tooltip: {
                     formatter: function() {
                         var number = this.point.y
-                        return indicatorsMeta[0][0].label + '<br/>' + this.key + ': <b>' + Math.floor(this.point.y) + '</b>'
+                        return metadatas[0].label + '<br/>' + this.key + ': <b>' + Math.floor(this.point.y) + '</b>'
                     }
                 },
                 series: seriesArray

@@ -296,33 +296,6 @@
 
     }
 
-    window.loader.loadIndicatorsMeta = function(indicators) {
-
-        var defferreds = [];
-
-        function getMetaFromServer(a) {
-          var d = $.ajax({
-             url: "/api/3/slicer/model?cubes=" + a,
-             dataType: "json",
-             data: {}
-           }).done(function( res ) {
-             // success
-           }).fail(function( jqXHR, textStatus, errorThrown ) {
-             // failure
-             getMetaFromServer(a);
-         });
-
-         // push to defferreds
-         defferreds.push(d);
-       }
-
-       getMetaFromServer(indicators.join('|'));
-
-
-      return defferreds;
-      //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
-
-    }
 
 
     window.loader.loadUrlShorten = function(url) {

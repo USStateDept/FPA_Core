@@ -6,7 +6,7 @@
     var hashParams = window.utils.getHashParams();
     var yearsExtremes = []; //default, will be calculated
     var yearsExtremesForData = [];
-    var indicatorsMeta;
+    // var indicatorsMeta;
 
     var activeData;
     var regionalAverageData, regionalAverageSeries;
@@ -603,9 +603,7 @@
             //debugger;
             window.utils.updateHash(currentHash);
 
-            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
             var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
-            _deferredList = _deferredList.concat(_deferredMetaList);
 
             $.when.apply($, _deferredList)
             .done(function(response) {
@@ -1219,7 +1217,7 @@
 
         var responseDeferred = args;
 
-        indicatorsMeta = _.remove(responseDeferred, function(r) {
+        indicatorsNoDataRemoved= _.remove(responseDeferred, function(r) {
             return !r[0].cells;
         });
 
@@ -1329,11 +1327,13 @@
             
             //yearsExtremesForData = window.utils.getHashParams().f.split("|");
     
-            var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
+            var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
+            console.log(sortedData);
             //debugger;
             var highChartsJson = sortedData.highcharts;
             //add the min,max and avg to the data-proxy span
             if (chartType == "bar") {
+                console.log(highChartsJson.series[0].data)
                 $("#bar-globals").show();
                 $("#data-proxy").data("min", highChartsJson.series[0].data[0][1]);
                 $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
@@ -1391,7 +1391,7 @@
             cells: window.utils.masterCells
         }, {
             cells: window.utils.statsData
-        }, indicatorsMeta, chartType, indicators, year);
+        }, chartType, indicators, year);
 
         if (chartType == "scatter") {
             var series = json.highcharts.series;
@@ -1546,34 +1546,30 @@
 
         function takeDataDrawChart() {
           // meta data
-          var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-          $.when.apply($, deferredMetaList).done(function(response){
 
-              // chart data
-              var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
+          // chart data
+          var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
 
-              deferredList = deferredList.concat(deferredMetaList);
-
-              $.when.apply($, deferredList)
-              .done(function(response) {
-                  indicatorDataLoadHandler(arguments, yearsExtremes);
-              })
-              .fail(function(response){
-                if ( num_errors < 2 ){
-                  // update counter
-                  localStorage.setItem('error_counter', num_errors + 1);
-                  // hard refresh
-                  location.reload();
-                } else {
-                  // reset counter
-                  localStorage.setItem('error_counter', '0');
-                  // no more hard refresh, fail gracefully
-                  $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
-                }
-
-              });
+          $.when.apply($, deferredList)
+          .done(function(response) {
+              indicatorDataLoadHandler(arguments, yearsExtremes);
+          })
+          .fail(function(response){
+            if ( num_errors < 2 ){
+              // update counter
+              localStorage.setItem('error_counter', num_errors + 1);
+              // hard refresh
+              location.reload();
+            } else {
+              // reset counter
+              localStorage.setItem('error_counter', '0');
+              // no more hard refresh, fail gracefully
+              $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
+            }
 
           });
+
+
 
         }
 
