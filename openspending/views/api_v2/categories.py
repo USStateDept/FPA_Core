@@ -158,7 +158,9 @@ def categories_list():
         outputschema['data']['indicators']['total'] += 1
 
     #outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
-    resp = Response
-    return json.dumps({'data':outputschema})
-    #return jsonify(outputschema)
+    resp = Response(response=json.dumps({'data':outputschema}),
+            status=200, \
+            mimetype="application/json")
+    return resp
+
 

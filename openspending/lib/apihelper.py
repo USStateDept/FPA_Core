@@ -4,7 +4,7 @@ from dateutil import parser
 # import pandas as pd
 # import numpy as np
 
-from flask import current_app,request
+from flask import current_app,request, Response
 
 from openspending.core import db
 
@@ -22,6 +22,21 @@ from sqlalchemy.orm import mapper
 from sqlalchemy.sql.expression import func 
 from sqlalchemy.sql import table, column, select
 from openspending.lib.helpers import get_dataset
+from openspending.lib.jsonexport import to_json
+
+
+
+from collections import namedtuple
+
+import json
+import csv
+import codecs
+import decimal
+import datetime
+import xlsxwriter
+import os
+from StringIO import StringIO
+from tempfile import NamedTemporaryFile
 
 
 
@@ -234,7 +249,128 @@ class DataBrowser(object):
         if self.clusterparams['cluster']:
             resultmodel['cluster'] = self.get_clusters(resultmodel['cells'])        
         
-        return resultmodel
+        resp = Response(response=to_json(resultmodel),
+                status=200, \
+                mimetype="application/json")
+        return resp
+
+    def get_csv(self):
+        results = self._getcache()
+        # def csv_generator_p2(records, fields, include_header=True, header=None,
+        #                      dialect=csv.excel):
+        outputstream = StringIO()
+
+        def _row_string(row):
+
+            writer.writerow(row)
+            # Fetch UTF-8 output from the queue ...
+            data = queue.getvalue()
+            if not isinstance(data, unicode):
+                data = data.decode('utf-8')
+            # ... and reencode it into the target encoding
+            data = encoder.encode(data)
+            # empty queue
+            queue.truncate(0)
+
+            return data
+
+        queue = StringIO()
+        writer = csv.writer(queue, dialect=csv.excel)
+        encoder = codecs.getincrementalencoder("utf-8")()
+
+
+        if len(results) > 0:
+            fields = results[0].keys()
+        else:
+            log.warn("There is nothing to resturn")
+            raise
+            return
+        outputstream.write(_row_string(fields))
+
+        for record in results:
+            row = []
+            for field in fields:
+                value = record.get(field)
+                if isinstance(value, unicode):
+                    row.append(value.encode("utf-8"))
+                elif value is not None:
+                    row.append(value)
+                else:
+                    row.append(None)
+
+            outputstream.write(_row_string(row))
+        
+        headers = {"Content-Disposition": 'attachment; filename="' + self.cubes[0] + '.csv"'}
+        return Response(outputstream.getvalue(),
+                        mimetype='text/csv',
+                        headers=headers)
+
+    def get_xls(self):
+        results = self._getcache()
+
+        #def xls_generator_p2(records, fields, include_header=True, header=None):
+
+        def _value_converter(data):
+            data = unicode(data)
+            # ... and reencode it into the target encoding
+            #data = encoder.encode(data)
+
+            return data
+
+        #outputfile = NamedTemporaryFile(delete=False, dir=FILE_UPLOAD_TEMP_DIR)
+        #might need temporary file
+        #encoder = codecs.getincrementalencoder("utf-8")()
+        outputfile = NamedTemporaryFile(delete=False)
+        workbook = xlsxwriter.Workbook(outputfile.name)
+        worksheet = workbook.add_worksheet('resultset')
+
+        row = 0
+        if len(results) > 0:
+            fields = results[0].keys()
+        head_column = 0
+        for head in fields:
+            worksheet.write(row, head_column, _value_converter(head))
+            head_column +=1
+        row = 1
+
+
+        for record in results:
+            column = 0 
+            for field in fields:
+                value = record.get(field)
+                if isinstance(value, unicode):
+                    worksheet.write(row, column, _value_converter(value))
+                elif value is not None:
+                    worksheet.write(row, column, value)
+                else:
+                    worksheet.write(row, column, None)
+                column +=1
+            row +=1
+
+        workbook.close()
+        namedfile = outputfile.name
+        outputfile.close()
+        outputstream = ""
+        with open(namedfile, 'rb') as f:
+            outputstream = f.read()
+
+        os.remove(namedfile)
+
+        headers = {"Content-Disposition": 'attachment; filename="' + self.cubes[0] + '.xlsx"'}
+        return Response(outputstream,
+                        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        headers=headers)
+
+
+    def get_response(self):
+
+        if self.format.lower() in ['xls', 'excel']:
+            return self.get_xls()
+        elif self.format.lower() in ['csv']:
+            return self.get_csv()
+        else:
+            return self.get_json_result()
+        
 
 
 
@@ -273,7 +409,7 @@ class DataBrowser(object):
             if tempformat.lower() not in FORMATOPTS:
                 log.warn("Could not find format %s"%tempformat)
             else:
-                self.format = tempformat[0].lower()
+                self.format = tempformat.lower()
         else:
             self.format = 'json'
 
@@ -331,62 +467,62 @@ class DataBrowser(object):
         }
 
                         
-# GEO_MAPPING = {"geometry__country_level0":  {
-#                         "name": {
-#                           "name": "name",
-#                           "label": "Country Name"
-#                         },                        
-#                         "sovereignty": {
-#                           "name": "sovereignt",
-#                           "label": "Sovereignty"
-#                         },
-#                         "dos_region":{
-#                           "name": "dos_region",
-#                           "label": "Department of State Regions" 
-#                         },
-#                         "usaid_reg": {
-#                           "name": "usaid_reg",
-#                           "label": "USAID Regions"
-#                         },
-#                         "dod_cmd": {
-#                           "name": "dod_cmd",
-#                           "label": "Department of Defense Regions"
-#                         },
-#                         "feed_the_future": {
-#                           "name": "feed_the_f",
-#                           "label": "Feed the Future Regions"
-#                         },
-#                         "pepfar": {
-#                           "name": "pepfar",
-#                           "label": "PEPFAR Regions"
-#                         },
-#                         "paf": {
-#                           "name": "paf",
-#                           "label": "PAF Regions"
-#                         },
-#                         "oecd": {
-#                           "name": "oecd",
-#                           "label": "OECD Regions"
-#                         },
-#                         "region_un":{
-#                           "name": "region_un",
-#                           "label": "United Nation Regions"
-#                         },
-#                         "subregion":{
-#                           "name": "subregion",
-#                           "label": "Subregions"
-#                         },
-#                         "region_wb": {
-#                           "name": "region_wb",
-#                           "label": "World Bank Regions"
-#                         },
-#                         "wb_inc_lvl":{
-#                           "name": "wb_inc_lvl",
-#                           "label": "World Bank Income Level Regions"
-#                         },                        
-#                         "continent":{
-#                           "name": "continent",
-#                           "label": "Continents"
-#                         }
-#                     }
-#                 }
+GEO_MAPPING = {"geometry__country_level0":  {
+                        "name": {
+                          "name": "name",
+                          "label": "Country Name"
+                        },                        
+                        "sovereignty": {
+                          "name": "sovereignt",
+                          "label": "Sovereignty"
+                        },
+                        "dos_region":{
+                          "name": "dos_region",
+                          "label": "Department of State Regions" 
+                        },
+                        "usaid_reg": {
+                          "name": "usaid_reg",
+                          "label": "USAID Regions"
+                        },
+                        "dod_cmd": {
+                          "name": "dod_cmd",
+                          "label": "Department of Defense Regions"
+                        },
+                        "feed_the_future": {
+                          "name": "feed_the_f",
+                          "label": "Feed the Future Regions"
+                        },
+                        "pepfar": {
+                          "name": "pepfar",
+                          "label": "PEPFAR Regions"
+                        },
+                        "paf": {
+                          "name": "paf",
+                          "label": "PAF Regions"
+                        },
+                        "oecd": {
+                          "name": "oecd",
+                          "label": "OECD Regions"
+                        },
+                        "region_un":{
+                          "name": "region_un",
+                          "label": "United Nation Regions"
+                        },
+                        "subregion":{
+                          "name": "subregion",
+                          "label": "Subregions"
+                        },
+                        "region_wb": {
+                          "name": "region_wb",
+                          "label": "World Bank Regions"
+                        },
+                        "wb_inc_lvl":{
+                          "name": "wb_inc_lvl",
+                          "label": "World Bank Income Level Regions"
+                        },                        
+                        "continent":{
+                          "name": "continent",
+                          "label": "Continents"
+                        }
+                    }
+                }
