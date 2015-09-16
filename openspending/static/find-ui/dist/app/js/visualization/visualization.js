@@ -45,7 +45,7 @@
         window.visualization.lastGeoJson = response;
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
         window.visualization.geoJson[type] = response;
 
         window.visualization.geoJsonLayers[type] = L.geoJson(response, {
@@ -74,14 +74,18 @@
         if (groupId == "all") {
             groupId = "sovereignt";
         }
+        window.loader.loadGeoJSON(groupId, geoJSONHandler);
 
-        if (!window.visualization.geoJsonLayers[groupId]) {
-            window.loader.loadGeoJSON(groupId, geoJSONHandler);
-        } else {
-            //debugger;
-            //move this layer on top
-            //TODO: Leroy
-        }
+        return;
+
+        // 
+        // if (!window.visualization.geoJsonLayers[groupId]) {
+        //     window.loader.loadGeoJSON(groupId, geoJSONHandler);
+        // } else {
+        //     //debugger;
+        //     //move this layer on top
+        //     //TODO: Leroy
+        // }
 
     }
 
@@ -95,11 +99,6 @@
 
             map = L.map('map').setView([0, 0], 1);
 
-            var s = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {//'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
-                maxZoom: 18
-            }).addTo(map);
-            
             //load geojson for countries
             window.visualization.changeGroup("all");
             //window.loader.loadGeoJSON(defaultType, geoJSONHandler);

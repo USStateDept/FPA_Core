@@ -9,7 +9,6 @@
     // Control of Corruption
     // http://finddev.edip-maps.net/api/slicer/cube/geometry/cubes_aggregate?cubes=control_of_corruption&drilldown=geometry__time|geometry__country_level0@name&format=csv
 
-    //var geoJsonLayers = {};
     window.loader.geoJson = {};
     window.loader.geoJsonLayers = {};
     window.loader.data = null;
@@ -308,10 +307,8 @@
              data: {}
            }).done(function( res ) {
              // success
-             //console.log("pushing meta onto defferreds");
            }).fail(function( jqXHR, textStatus, errorThrown ) {
              // failure
-             console.log("FAILURE getting meta ... RETRYING");
              getMetaFromServer(a);
          });
 

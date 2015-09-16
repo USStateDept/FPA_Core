@@ -464,11 +464,8 @@
 .flag-item:hover {
   text-decoration: underline;
 }
-.manual-selection .flag-item {
-  opacity: 0.5;
-}
 .manual-selection .flag-item.selected {
-  opacity: 1;
+  background-color: #336b99;
 }
 .f32 .flag {
   vertical-align: text-bottom;

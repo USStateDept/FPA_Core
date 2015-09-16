@@ -1,55 +1,3 @@
-/*function rc() {
-
-    var selectedCountry = arguments[0];
-    var activeCountries = vizModel.activeCountries();
-    var selectedIndex = _.indexOf(activeCountries, selectedCountry);
-
-    vizModel.activeCountries.splice(selectedIndex, 1);
-
-    var countryLabel = selectedCountry.label;
-    var countryId = selectedCountry.id;
-
-    //vizModel.activeCountries.removeAll();
-
-    var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-    vizModel.countryGroupings.removeAll();
-
-    var activeGroupId = vizModel.activeGroup().id;
-    // debugger;
-    _.forEach(countryGroupings, function(countryGroup, i) {
-        if (countryGroup.id == countryId) {
-            countryGroup.selected = false;
-        }
-        _.forEach(countryGroup.regions, function(region) {
-            if (region.id == countryId && region.label == countryLabel) {
-                region.selected = false;
-            }
-            _.forEach(region.countries, function(country) { //for each Country
-                if (country.id == countryId) {
-                    country.selected = false;
-                }
-            });
-
-        });
-    });
-
-    _.forEach(countryGroupings, function(countryGroup, i) {
-        if (activeGroupId == countryGroup.id) {
-            vizModel.activeGroup(countryGroup);
-        }
-        vizModel.countryGroupings.push(countryGroup);
-    });
-
-    window.utils.removeOnMap(vizModel, selectedCountry);
-
-
-    // _.each(activeCountries, function(country){
-    //  if (geounit)
-    // });
-    // vizModel.activeCountries.push(selectedCountry);
-
-}*/
-
 (function() {
 
 
@@ -117,41 +65,12 @@
         removeIndicator: function(selectedIndicator) {
 
             var indicatorIndex = _.indexOf(vizModel.activeIndicators(), selectedIndicator);
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
             vizModel.activeIndicators.splice(indicatorIndex, 1);
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                vizModel.indicatorsModel.push(indicator);
-            });
 
 
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.categoriesModel.push(category);
-            });
-            //debugger;
+            $("[data-indicatorid='" + selectedIndicator.id + "']").parent().removeClass("selected");
 
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.sourcesModel.push(source);
-            });
-
+            // TODO fix flip sequence to match only when selected from card
             window.utils.flipCardEvent();
 
         },
@@ -170,7 +89,6 @@
 
         selectIndicatorMultiple: function(selectedIndicator, evt, goToVisualize) {
 
-
             if (goToVisualize) {
                 //TODO: Calculate Year Extremes
                 window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&r=dos_region:all";
@@ -179,53 +97,18 @@
 
             window.clickedIndicator = true;
 
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
+            var $this = $("[data-indicatorid='" + selectedIndicator.id + "']").parent();
 
-            vizModel.activeIndicators.removeAll();
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                if (indicator.selected) {
-                    vizModel.activeIndicators.push(indicator)
-                }
-                vizModel.indicatorsModel.push(indicator);
-            });
+            if($this.hasClass("selected")) {
+              $this.removeClass("selected");
+              vizModel.removeIndicator(selectedIndicator);
+            } else {
+              $this.addClass("selected");
+              vizModel.activeIndicators.push(selectedIndicator);
+            }
 
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.categoriesModel.push(category);
-            });
-
-
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.sourcesModel.push(source);
-            });
-
+            // TODO fix flip sequence to match only when selected from card
             window.utils.flipCardEvent();
-
-            var filterValue = $("#filterIndicators")[0].value;
-
-
-            vizModel.filterIndicators(null, {
-                currentTarget: {
-                    value: filterValue
-                }
-            });
 
         },
 
@@ -296,16 +179,11 @@
 
             window.location.href = "/data-visualization#" + hashString;
 
-
-
         },
-
 
         selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) { /* breakdown by regions or countries*/
 
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
-
-            selectedCountry = _.clone(selectedCountry, true);
 
             if (isGroup) { //breakdown a group
                 selectedCountry.label += " Regions";
@@ -322,190 +200,60 @@
                 return;
             }
 
-            // var selectedCountry = arguments[0];
-            if (selectedCountry.selected) {
-                return false;
+
+            var abbr = selectedCountry.id.toLowerCase();
+            var $this = $("."+abbr+"").parent();
+
+            if ($this.hasClass("selected")) {
+              $this.removeClass("selected");
+              //vizModel.removeCountry(selectedCountry);
+              var activeCountries = vizModel.activeCountries();
+              var selectedIndex = _.indexOf(activeCountries, selectedCountry);
+
+              vizModel.activeCountries.splice(selectedIndex, 1);
+
+              // make sure selectetion is false
+              selectedCountry.selected = false;
+
+              // allows for immediate ui response
+              setTimeout(function(){
+                window.utils.highlightOnMap(vizModel, selectedCountry);
+              },25);
+
+            } else {
+              $this.addClass("selected");
+              selectedCountry.selected = true;
+
+              vizModel.activeCountries.push(selectedCountry);
+
+              // allows for immediate ui response
+              setTimeout(function(){
+                window.utils.highlightOnMap(vizModel, selectedCountry)
+              },25);
             }
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
 
-            vizModel.activeCountries.push(selectedCountry);
-
-            //not used in this scope  do we still need to remove all?
-            // var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
-            // vizModel.countriesModelMaster.removeAll();
-
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = true;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = true;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = true;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-
-            var filterValue = $("#filterCountries")[0].value;
-
-
-            vizModel.filterCountries(null, {
-                currentTarget: {
-                    value: filterValue
-                }
-            });
-
-            // console.log("vizModel is: " + JSON.stringify(vizModel));
-            // console.log("selectedCountry is: " + JSON.stringify(selectedCountry));
-            window.utils.highlightOnMap(vizModel, selectedCountry);
+            //selectedCountry.selected = !selectedCountry.selected
 
         },
-
-
-
-        removeCountry: function() {
-
-
-            var selectedCountry = arguments[0];
-            var activeCountries = vizModel.activeCountries();
-            var selectedIndex = _.indexOf(activeCountries, selectedCountry);
-
-            vizModel.activeCountries.splice(selectedIndex, 1);
-
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
-
-            //vizModel.activeCountries.removeAll();
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-            // debugger;
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = false;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = false;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = false;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-            window.utils.removeOnMap(vizModel, selectedCountry);
-
-
-            // _.each(activeCountries, function(country){
-            // 	if (geounit)
-            // });
-            // vizModel.activeCountries.push(selectedCountry);
-
-        },
-
 
         clearActiveCountries: function() {
+            var model =  vizModel.activeCountries();
+            for(var i = 0; i  < model.length; i++) {
 
+                var abbr = model[i].id.toLowerCase();
+                var $this = $("."+abbr+"").parent();
+                $this.removeClass("selected");
+
+            }
             vizModel.activeCountries.removeAll();
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                countryGroup.selected = false;
-                _.forEach(countryGroup.regions, function(region) {
-                    region.selected = false;
-                    _.forEach(region.countries, function(country) { //for each Country
-                        country.selected = false;
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-            //window.utils.highlightOnMap(vizModel, null);
-
-            window.utils.clearOnMap(vizModel);
-
-
+            window.visualization.changeGroup("all");
         },
 
         clearActiveIndicators: function() {
-
+            // remove from list
             vizModel.activeIndicators.removeAll();
-
-
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
-
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                indicator.selected = false;
-                vizModel.indicatorsModel.push(indicator);
-            });
-
-
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                vizModel.categoriesModel.push(category);
-            });
-            //debugger;
-
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                vizModel.sourcesModel.push(source);
-            });
-
-            window.utils.flipCardEvent();
-
+            // removed selected class
+            $( ".indicator-item").removeClass("selected");
         },
 
         selectCountryGroup: function() {
