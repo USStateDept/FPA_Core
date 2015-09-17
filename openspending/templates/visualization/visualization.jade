@@ -166,7 +166,7 @@ link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.l
                               h4(data-bind="html:label")
                           .face.back
                             div.list-group()
-                              a.list-group-item.active(href="#" data-bind="html:label")
+                              a.list-group-item.active(href="#" data-bind="html:label + '<em style=\'float:right\'> click to close<em>'") 
                               span.list
                                 span.subcategories(data-bind="foreach:subcategories")
                                   a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")

@@ -118,7 +118,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         .glyphicon.glyphicon-menu-down
                         span() &nbsp;Selected Indicators&nbsp;
                         span.badge(data-bind="html:activeIndicators().length")
-                        a(data-bind="visible:activeIndicators().length>0")&nbsp;Clear
+                        a(data-bind="click:clearActiveIndicators, visible:activeIndicators().length>0")&nbsp;Clear
                     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="click:clearActiveIndicators, foreach:activeIndicators")
 
                       li(role='presentation')
@@ -154,7 +154,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                                 h4(data-bind="html:label")
                             .face.back
                               div.list-group()
-                                a.list-group-item.active(href="#" data-bind="html:label")
+                                a.list-group-item.active(href="#" data-bind="html:label + '<em style=\'float:right\'> click to close<em>'")
                                 span.list
                                   span.subcategories(data-bind="foreach:subcategories")
                                     a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")

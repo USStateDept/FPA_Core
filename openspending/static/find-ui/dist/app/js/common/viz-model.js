@@ -70,8 +70,8 @@
 
             $("[data-indicatorid='" + selectedIndicator.id + "']").parent().removeClass("selected");
 
-            // TODO fix flip sequence to match only when selected from card
-            window.utils.flipCardEvent();
+            // TODO -- inprogress -- make sure flip sequence is working properly
+            //window.utils.flipCardEvent();
 
         },
 
@@ -107,8 +107,8 @@
               vizModel.activeIndicators.push(selectedIndicator);
             }
 
-            // TODO fix flip sequence to match only when selected from card
-            window.utils.flipCardEvent();
+            // TODO -- inprogress -- make sure flip sequence is working properly
+            //window.utils.flipCardEvent();
 
         },
 
@@ -219,7 +219,7 @@
               setTimeout(function(){
                 window.utils.highlightOnMap(vizModel, selectedCountry);
               },25);
-              
+
 
             } else {
               $this.addClass("selected");

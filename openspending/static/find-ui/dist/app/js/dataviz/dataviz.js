@@ -379,7 +379,8 @@
             clickedIndicator = true;
             model.activeIndicators.push(selectedIndicator);
 
-            window.utils.flipCardEvent();
+            // TODO -- inprogress -- make sure flip sequence is working properly
+            //window.utils.flipCardEvent();
 
         },
 
@@ -1053,7 +1054,7 @@
         var onlyIndicator = indicators[0];
         var regions = hashParams.r.split("|");
         var maxYear = yearsFilter[1]; //2013
-        
+
         if (regions[0].indexOf(":") > -1) {
             regions = countries;
         }
@@ -1300,7 +1301,7 @@
                 countries.push(responseData.cells[i].region);
             }
         }
-        
+
         if (chartType == "map") {
             $("#loading").hide();
 
@@ -1313,7 +1314,7 @@
             var regType = hashParams.r.split("|");
 
             regType="sovereignt";
-            
+
             getGeoJsonForMap(cluster, responseData, regType, countries);
 
             showTable(responseData);
