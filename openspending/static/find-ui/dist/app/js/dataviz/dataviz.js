@@ -1,5 +1,6 @@
 (function() {
 
+    window.countries=[];
     window.clickedIndicator = false;
     window.expandedCategory = false;
 
@@ -1032,8 +1033,9 @@
         var regions = hashParams.r.split("|");
         var maxYear = yearsFilter[1]; //2013
 
+        debugger;
         if (regions[0].indexOf(":") > -1) {
-            regions = countries;
+            regions = window.countries;
         }
         //debugger;
         var dataByRegion = {};
@@ -1089,7 +1091,7 @@
         //debugger;
         //window.loader.geoJsonLayers[type] = L.geoJson(lastGeoJson);
 
-        window.utils.highlightOnMapViz(regions, type, cluster, onlyIndicator, window.loader.lastGeoJson,countries);
+        window.utils.highlightOnMapViz(regions, type, cluster, onlyIndicator, window.loader.lastGeoJson,window.countries);
         // debugger;
         //window.utils.zoomToFeatures(featuresAdded);
 
@@ -1106,9 +1108,9 @@
 
         window.loader.lastGeoJson = response;
 
-        addDataToGeoJson(window.loader.lastGeoJson, type,countries);
+        addDataToGeoJson(window.loader.lastGeoJson, type, window.countries);
 
-        addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator, countries);
+        addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator,window.countries);
 
         window.utils.addLegend(cluster);
 
@@ -1169,7 +1171,7 @@
         geometryType = type;
 
         if (!window.loader.geoJsonLayers[type]) {
-            window.loader.loadGeoJSON(type, geoJSONHandler, cluster,countries);
+            window.loader.loadGeoJSON(type, geoJSONHandler, cluster,window.countries);
         } else {
 
         }
@@ -1258,23 +1260,37 @@
         var responseData = {
             cells: mergedCells
         }
-        //debugger;
+        
         var responseStats = statsData[0];
 
-        var countries=[];
-
         for(var i=0;i<responseData.cells.length;i++)
-        {
-            if(countries.indexOf(responseData.cells[i].region)>-1)
             {
-                break;
+                if(window.countries.indexOf(responseData.cells[i].region)>-1)
+                {
+                    break;
+                }
+                else{
+                    window.countries.push(responseData.cells[i].region);
+                }
             }
-            else{
-                countries.push(responseData.cells[i].region);
-            }
-        }
 
         if (chartType == "map") {
+
+            
+
+           /* for(var i=0;i<responseData.cells.length;i++)
+            {
+                if(window.countries.indexOf(responseData.cells[i].region)>-1)
+                {
+                    break;
+                }
+                else{
+                    window.countries.push(responseData.cells[i].region);
+                }
+            }*/
+
+
+
             $("#loading").hide();
 
             map = L.map('viz-container').setView([0, 0], 3);
@@ -1286,7 +1302,7 @@
 
             regType="sovereignt";
 
-            getGeoJsonForMap(cluster, responseData, regType, countries);
+            getGeoJsonForMap(cluster, responseData, regType, window.countries);
 
             showTable(responseData);
 
