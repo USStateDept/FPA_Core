@@ -5,7 +5,7 @@ from slugify import slugify
 import json
 import collections
 
-from flask import Blueprint, request
+from flask import Blueprint, request, Response
 #from flask.ext.login import current_user
 
 #from openspending.core import db, sourcefiles
@@ -30,11 +30,11 @@ blueprint = Blueprint('countries_api2', __name__)
 
 
 
+def make_name(*args):
+    return "countries_list67677667"
 
 @blueprint.route('/countries_list')
-@api_json_errors
-@jsonp
-#@cache.cached(timeout=10)
+@cache.memoize(timeout=30, make_name=make_name)
 def countries_list():
 
     country_data = {"data":{
@@ -124,7 +124,9 @@ def countries_list():
 
 
     country_data['data']['regions'] = countrygroupingset
-        
+    # resp = Response(response=json.dumps({'data':json.dumps(country_data)}),
+    #         status=200, \
+    #         mimetype="application/json")
     return json.dumps(country_data)
 
 

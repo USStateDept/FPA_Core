@@ -14,21 +14,22 @@
     window.loader.data = null;
     window.loader.indicator = null;
 
-    window.loader.loadIndicatorList = function(url, handlerFunc) {
+    // window.loader.loadIndicatorList = function(url, handlerFunc) {
+    //     console.log(handlerFunc);
 
-        //url = "data/indicators2.json";
+    //     //url = "data/indicators2.json";
 
-        $.ajax({
-            url: url,
-            jsonp: "callback",
-            dataType: "jsonp",
-            //dataType: "json",
-            data: {
+    //     $.ajax({
+    //         url: url,
+    //         jsonp: "callback",
+    //         dataType: "jsonp",
+    //         //dataType: "json",
+    //         data: {
 
-            },
-            success: handlerFunc
-        });
-    }
+    //         },
+    //         success: handlerFunc
+    //     });
+    // }
 
     window.loader.loadIndicatorData = function(indicators, geounits, yearsExtremes) {
 
@@ -52,7 +53,7 @@
 
         //////////////////////////////////////////////
 
-        var urlPrefix = "/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&cut=geometry__time:{yearFrom}-{yearTo}&order=time";
+        var urlPrefix = "/api/3/slicer/aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&daterange={yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
         urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
         urlPrefix = urlPrefix.replace(/{yearTo}/g, yearsExtremes[1]);
@@ -296,34 +297,6 @@
 
     }
 
-    window.loader.loadIndicatorsMeta = function(indicators) {
-
-        var defferreds = [];
-
-        function getMetaFromServer(a) {
-          var d = $.ajax({
-             url: "/api/3/datasets/" + a,
-             dataType: "json",
-             data: {}
-           }).done(function( res ) {
-             // success
-           }).fail(function( jqXHR, textStatus, errorThrown ) {
-             // failure
-             getMetaFromServer(a);
-         });
-
-         // push to defferreds
-         defferreds.push(d);
-       }
-
-      _.forEach(indicators, function(indicator) {
-        getMetaFromServer(indicator);
-      });
-
-      return defferreds;
-      //http://finddev.edip-maps.net/api/3/datasets/cost_to_import
-
-    }
 
 
     window.loader.loadUrlShorten = function(url) {

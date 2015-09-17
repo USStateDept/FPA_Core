@@ -1,7 +1,7 @@
-from celery.utils.log import get_task_logger
+#from celery.utils.log import get_task_logger
 import io
 
-from openspending.core import create_app, create_celery
+#from openspending.core import create_app, create_celery
 from openspending.core import db
 from openspending.model.source import Source
 from openspending.importer import ORImporter
@@ -11,16 +11,19 @@ from sqlalchemy import text
 from dateutil.parser import *
 
 
-log = get_task_logger(__name__)
+#log = get_task_logger(__name__)
 
-flask_app = create_app()
-celery = create_celery(flask_app)
+import logging
+log = logging.getLogger(__name__)
+
+#flask_app = create_app()
+#celery = create_celery(flask_app)
 
 
 
 #we are using this in-sync becuase it takes less than 1 second
 # if the processing time grows, we should consider a task
-@celery.task(ignore_result=True)
+#@celery.task(ignore_result=True)
 def check_column(source_id, columnkey, columnvalue):
     with flask_app.app_context():
         source = Source.by_id(source_id)
@@ -79,24 +82,7 @@ def check_column(source_id, columnkey, columnvalue):
 
 
 
-
-
-        # if not source:
-        #     return log.error("No such source: %s", source_id)
-        # log.info("Analyzing: %s", source.url)
-        # source.analysis = analyze_csv(source.url)
-        # if 'error' in source.analysis:
-        #     log.error(source.analysis.get('error'))
-        # else:
-        #     log.info("Columns: %r", source.analysis.get('columns'))
-        # db.session.commit()
-
-
-
-
-
-
-@celery.task(ignore_result=True)
+#@celery.task(ignore_result=True)
 def load_source(source_id, sample=False):
     with flask_app.app_context():
         source = Source.by_id(source_id)
@@ -120,7 +106,7 @@ def load_source(source_id, sample=False):
 
 
 
-@celery.task(ignore_result=True)
+#@celery.task(ignore_result=True)
 def ping():
     with flask_app.app_context():
         log.info("Pong.")

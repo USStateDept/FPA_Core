@@ -5,14 +5,14 @@ from slugify import slugify
 import json
 import collections
 
-from flask import Blueprint, request
+from flask import Blueprint, request, Response
 #from flask.ext.login import current_user
 
 #from openspending.core import db, sourcefiles
 from openspending.model import Dataset
 from openspending.lib.findui import jsonp
 #, Source, Run, DataOrg, SourceFile
-# from openspending.auth import require
+# from openspending.auth import requir
 import json
 from openspending.core import cache
 # from openspending.lib.indices import clear_index_cache
@@ -30,9 +30,10 @@ blueprint = Blueprint('categories_api2', __name__)
 
 
 @blueprint.route('/categories')
-@api_json_errors
-@jsonp
-@cache.cached(timeout=600)
+#@api_json_errors
+
+@cache.cached(timeout=30, key_prefix="categories_cache_list")
+#@jsonp
 def categories_list():
 
     page_num = request.args.get('page', None)
@@ -158,7 +159,10 @@ def categories_list():
         outputschema['data']['indicators']['total'] += 1
 
     #outputschema['data']['indicators'] = list(sorted(outputschema['data']['indicators'].items(), key=lambda x: x))
-
+    # resp = Response(response=json.dumps({'data':outputschema}),
+    #         status=200, \
+    #         mimetype="application/json")
+    # return resp
     return json.dumps(outputschema)
-    #return jsonify(outputschema)
+
 

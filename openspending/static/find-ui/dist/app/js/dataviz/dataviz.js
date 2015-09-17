@@ -6,7 +6,7 @@
     var hashParams = window.utils.getHashParams();
     var yearsExtremes = []; //default, will be calculated
     var yearsExtremesForData = [];
-    var indicatorsMeta;
+    // var indicatorsMeta;
 
     var activeData;
     var regionalAverageData, regionalAverageSeries;
@@ -16,7 +16,7 @@
     var modalTitle = "";
     var modalMessage = "";
     var geometryType = "sovereignt";
-
+    
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
     //var group = hashParams.g;
@@ -261,7 +261,7 @@
             model.activeYears.removeAll();
 
             model.activeYears(yearsArray);
-
+            debugger;
             if (pickedFromDropdown) {
                 $("#filter-years").slider('values', 0, years);
                 $("#filter-years").slider('values', 1, years);
@@ -407,7 +407,7 @@
             model.activeCountries.push(selectedCountry);
 
             var abbr = selectedCountry.id.toLowerCase();
-            console.log(abbr);
+
 
             var $this = $("."+abbr+"").parent();
             $this.addClass("selected");
@@ -604,9 +604,7 @@
             //debugger;
             window.utils.updateHash(currentHash);
 
-            var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
             var _deferredList = window.loader.loadIndicatorData(indicators, newRegions, yearsExtremes);
-            _deferredList = _deferredList.concat(_deferredMetaList);
 
             $.when.apply($, _deferredList)
             .done(function(response) {
@@ -662,18 +660,32 @@
 
     var createYearSlider = function(minYear, maxYear) {
 
-        //var minYear = parseInt(yearsRange[0]);
-        //var maxYear = parseInt(yearsRange[1]);
-
         var minYearFilter = parseInt(yearsFilter[0]);
         var maxYearFilter = parseInt(yearsFilter[1]);
-
+        
+        if (maxYearFilter > maxYear)
+            maxYearFilter = maxYear;
+        
+        if (minYearFilter < minYear)
+            minYearFilter = minYear;
+        
+        //debugger;
         var isRange = false;
 
         if (chartType == "line" || chartType == "scatter") {
             isRange = true;
+        } else {
+            minYearFilter = maxYearFilter;
         }
-
+        
+        if (minYearFilter != maxYearFilter) {
+            yearLabel = minYearFilter + "-" + maxYearFilter;
+        } else {
+            yearLabel = maxYearFilter.toString();
+        }
+                
+        $("#filter-years-label").html(yearLabel);
+        
         var sliderOptions = {
             range: isRange,
             min: minYear,
@@ -694,9 +706,12 @@
                     yearLabel = startYear + "-" + endYear;
                     // model.selectYear([startYear, endYear]);
                 } else {
+                    yearLabel = endYear;
                     // model.selectYear([startYear]);
                 }
-
+                
+                $("#filter-years-label").html(yearLabel);
+                
                 //update hash
                 var currentHash = window.utils.getHashParams();
 
@@ -715,7 +730,7 @@
             slide: function(event, ui) {
                 //  debugger;
 
-                // $("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
+                //$("#filter-years-label")[0].innerHTML = ui.values[0] + " - " + ui.values[1];
 
             }
         }
@@ -823,6 +838,7 @@
             dataTempObj['indicator'] = indicator;
             dataTempObj['country'] = country;
             data.forEach(function(entry) {
+
                 if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
 					if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
 						entry[indicator] = (entry[indicator].toFixed(2))/1; //Rounds number to 2 decimal places
@@ -836,7 +852,7 @@
         data.forEach(function(entry) {
 
             var numIndicators = Object.keys(entry).length - 3;
-
+            
             for (i = 0; i < numIndicators; i++) {
                 var indicator = Object.keys(entry)[i];
 
@@ -1073,9 +1089,9 @@
         _.map(data.cells, function(_c) {
             if (_c.year == parseInt(maxYear)) {
                 if (usePrefix) { //if not countries
-                    dataByRegion[type + ":" + _c.region] = _c[onlyIndicator + "__amount_avg"];
+                    dataByRegion[type + ":" + _c.region] = _c[onlyIndicator + "__avg"];
                 } else {
-                    dataByRegion[_c.region] = _c[onlyIndicator + "__amount_avg"];
+                    dataByRegion[_c.region] = _c[onlyIndicator + "__avg"];
                 }
                 //debugger;
             }
@@ -1099,7 +1115,6 @@
 
         window.loader.lastGeoJson = gjson;
         window.loader.indicator = onlyIndicator; //indicator;
-        console.log(window.loader.lastGeoJson);
         // debugger;
     }
 
@@ -1205,12 +1220,13 @@
         //this might be the basic data loader
         var responseDeferred = args;
 
-        indicatorsMeta = _.remove(responseDeferred, function(r) {
+        indicatorsNoDataRemoved= _.remove(responseDeferred, function(r) {
             return !r[0].cells;
         });
 
+
         var statsData = _.remove(responseDeferred, function(r) {
-            return r[0].attributes.length == 1 && r[0].attributes[0] == "geometry__time";
+            return r[0].attributes.length == 1 && r[0].attributes[0] == "geometry__time.time";
         });
 
 
@@ -1220,23 +1236,18 @@
 
             var data = response[0];
 
-            var levels = data.levels;
-            var cutBy = "name";
-            //debugger;
-            for (var levelId in levels) {
-                if (levelId != "geometry__time") {
 
-                    if (levelId == "geometry__country_level0") {
-                        cutBy = "name";
-                    } else {
-                        var len = "geometry__country_level0@".length;
-                        cutBy = levelId.substring(len, levelId.length);
-                    }
+            _.forEach(data.attributes, function(v){
+                if (v == "geometry__country_level0"){
+                    data.cutBy = "name";
+                    return false;
                 }
-            }
+                else if (v.indexOf("geometry__country_level0") > -1){
+                    data.cutBy = v.split(".")[1];
+                    return false;
+                }
+            });
 
-            data.cutBy = cutBy;
-            // debugger;
         });
         //debugger;
         //normalize the data now
@@ -1252,25 +1263,25 @@
             type = cutBy;
 
             _.forEach(data.cells, function(cell) {
+                cell.region = cell["geo__" + cutBy];
 
-                cell.region = cell["geometry__country_level0." + cutBy];
+                cell.year = cell['time'];
 
-                cell.year = cell.geometry__time;
+                delete cell['time'];
+                delete cell["geo__" + cutBy];
+                delete cell.count;
 
-                delete cell.geometry__time;
-                delete cell["geometry__country_level0." + cutBy];
-                delete cell.num_entries;
-
+                /*remove from API?*/
                 for (var id in cell) {
-                    if (id.indexOf("__amount_max") > -1) {
+                    if (id.indexOf("__max") > -1) {
                         delete cell[id];
                     }
 
-                    if (id.indexOf("__amount_min") > -1) {
+                    if (id.indexOf("__min") > -1) {
                         delete cell[id];
                     }
 
-                    if (id.indexOf("__amount_sum") > -1) {
+                    if (id.indexOf("__sum") > -1) {
                         delete cell[id];
                     }
                 }
@@ -1308,8 +1319,7 @@
             map = L.map('viz-container').setView([0, 0], 3);
 
             window.loader.data = responseData;
-
-            cluster = indicatorsData[0][0].cluster
+            cluster = responseStats[0].cluster
 
             var regType = hashParams.r.split("|");
 
@@ -1321,11 +1331,10 @@
 
             //window.loader.changeGroup("all");
         } else {
-            if (chartType == "scatter") {
-                yearsExtremesForData = window.utils.getHashParams().f.split("|");
-            }
-
-            var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], indicatorsMeta, chartType, indicators, yearsExtremesForData);
+            
+            //yearsExtremesForData = window.utils.getHashParams().f.split("|");
+    
+            var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
             //debugger;
             var highChartsJson = sortedData.highcharts;
             //add the min,max and avg to the data-proxy span
@@ -1387,7 +1396,7 @@
             cells: window.utils.masterCells
         }, {
             cells: window.utils.statsData
-        }, indicatorsMeta, chartType, indicators, year);
+        }, chartType, indicators, year);
 
         if (chartType == "scatter") {
             var series = json.highcharts.series;
@@ -1449,58 +1458,53 @@
 
     var indicatorListLoadHandler = function(response) {
 
+
       var res = response;
 
-        for (var indicatorId in response.data.indicators.data) {
-            var years = response.data.indicators.data[indicatorId].years;
-            var yearStart = years[0];
-            var yearEnd = years[years.length - 1];
-            var years = response.data.indicators.data[indicatorId].years;
 
-            if (yearsExtremes.length == 0) {
-
-                yearsExtremes.push(yearStart);
-                yearsExtremes.push(yearEnd);
-
-            } else {
-
-                if (yearStart < yearsExtremes[0]) {
-                    yearsExtremes[0] = yearStart;
-                }
-
-                if (yearEnd > yearsExtremes[1]) {
-                    yearsExtremes[1] = yearEnd;
-                }
-            }
-        }
-
-        if (yearsExtremes[0] < 1990) {
-            yearsExtremes[0] = 1990;
-        }
-
+        //debugger;
         _.forEach(indicators, function(indicatorId) {
             var years = response.data.indicators.data[indicatorId].years;
             var yearStart = years[0];
             var yearEnd = years[years.length - 1];
 
-            if (yearsExtremesForData.length == 0) {
+            if (yearsExtremes.length == 0) {
 
+                yearsExtremes.push(yearStart);
+                yearsExtremes.push(yearEnd);
+                //debugger;
+            } else {
+
+                if (yearStart > yearsExtremes[0]) {
+                    yearsExtremes[0] = yearStart;
+                }
+
+                if (yearEnd < yearsExtremes[1]) {
+                    yearsExtremes[1] = yearEnd;
+                }
+                //debugger;
+            }
+            
+            if (yearsExtremesForData.length == 0) {
                 yearsExtremesForData.push(yearStart);
                 yearsExtremesForData.push(yearEnd);
 
             } else {
 
-                if (yearStart < yearsExtremesForData[0]) {
+                if (yearStart > yearsExtremesForData[0]) {
                     yearsExtremesForData[0] = yearStart;
                 }
 
-                if (yearEnd > yearsExtremesForData[1]) {
+                if (yearEnd < yearsExtremesForData[1]) {
                     yearsExtremesForData[1] = yearEnd;
                 }
             }
 
         });
-
+        
+        if (yearsExtremes[0] < 1990) {
+            yearsExtremes[0] = 1990;
+        }
         //debugger;
         //create slider first
         createYearSlider(yearsExtremes[0], yearsExtremes[1]);
@@ -1524,34 +1528,30 @@
 
         function takeDataDrawChart() {
           // meta data
-          var deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-          $.when.apply($, deferredMetaList).done(function(response){
 
-              // chart data
-              var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
+          // chart data
+          var deferredList = window.loader.loadIndicatorData(indicators, regions, yearsExtremes);
 
-              deferredList = deferredList.concat(deferredMetaList);
-
-              $.when.apply($, deferredList)
-              .done(function(response) {
-                  indicatorDataLoadHandler(arguments, yearsExtremes);
-              })
-              .fail(function(response){
-                if ( num_errors < 2 ){
-                  // update counter
-                  localStorage.setItem('error_counter', num_errors + 1);
-                  // hard refresh
-                  location.reload();
-                } else {
-                  // reset counter
-                  localStorage.setItem('error_counter', '0');
-                  // no more hard refresh, fail gracefully
-                  $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
-                }
-
-              });
+          $.when.apply($, deferredList)
+          .done(function(response) {
+              indicatorDataLoadHandler(arguments, yearsExtremes);
+          })
+          .fail(function(response){
+            if ( num_errors < 2 ){
+              // update counter
+              localStorage.setItem('error_counter', num_errors + 1);
+              // hard refresh
+              location.reload();
+            } else {
+              // reset counter
+              localStorage.setItem('error_counter', '0');
+              // no more hard refresh, fail gracefully
+              $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
+            }
 
           });
+
+
 
         }
 
@@ -1560,9 +1560,7 @@
 
     }
 
-
-    window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
-
+    indicatorListLoadHandler(window.preloadedData.categories_list);
 
     var countriesListLoadHandler = function(response) {
 

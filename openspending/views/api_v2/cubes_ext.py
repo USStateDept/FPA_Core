@@ -1,8 +1,9 @@
 import logging
 from datetime import datetime
 import os
+import json
 
-from flask import request, g
+from flask import request, g, Response
 
 #from openspending.core import cache
 from openspending.auth import require
@@ -12,6 +13,8 @@ from openspending.views.error import api_json_errors
 
 #imports prepare_cell_cubes_ext
 from openspending.lib.cubes_util import *
+from openspending.lib.cache import cache_key
+from openspending.core import cache
 from cubes.server.utils import *
 from cubes.formatters import JSONLinesGenerator, csv_generator, xls_generator
 from cubes.browser import SPLIT_DIMENSION_NAME
@@ -25,6 +28,7 @@ log = logging.getLogger(__name__)
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_model", methods=["JSON", "GET"])
 @requires_complex_browser
 @api_json_errors
+@cache.cached(timeout=60, key_prefix=cache_key)
 #@log_request("aggregate", "aggregates")
 def cubes_model(star_name):
 
@@ -62,9 +66,16 @@ def cubes_model(star_name):
 
 
 
+def xlschecker(*args, **kwargs):
+    if "format" in request.args:
+        if request.args.get("format") in ['excel', 'csv']:
+            return True
+    return False
+
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_aggregate", methods=["JSON", "GET"])
 @requires_complex_browser
 @api_json_errors
+@cache.cached(timeout=60, key_prefix=cache_key, unless=xlschecker)
 def aggregate_cubes(star_name):
 
     cubes_arg = request.args.get("cubes", None)
@@ -144,22 +155,29 @@ def aggregate_cubes(star_name):
     else:
         g.prettyprint = current_app.slicer.prettyprint
 
-    if "cluster" in request.args and output_format == "json":
-        clusteragg = request.args.get('clusteragg', 'avg')
-        if len(cubes) > 1 or len(cubes) < 1:
-            log.warn("cluster must have one and only one cube.  This call had %s"%str(cubes))
-        if clusteragg in ['avg', 'min', 'max', 'sum']:
-            clusterfield = "%s__amount_%s"%(cubes[0], clusteragg,) 
-        numclusters = request.args.get('numclusters',5)
+
+
+
+
+    if output_format == "json":
         resultdict= result.to_dict()
         tempcells = list(result._cells)
         resultdict['cells'] = tempcells
-        tempresult = get_cubes_breaks(tempcells, clusterfield, method=request.args.get('cluster'), k=numclusters)
-        resultdict.set('cluster', tempresult) 
-        return jsonify(resultdict)
-
-    if output_format == "json":
-        return jsonify(result)
+        resultdict['cell'] = list(resultdict['cell'])
+        if "cluster" in request.args:
+            clusteragg = request.args.get('clusteragg', 'avg')
+            if len(cubes) > 1 or len(cubes) < 1:
+                log.warn("cluster must have one and only one cube.  This call had %s"%str(cubes))
+            if clusteragg in ['avg', 'min', 'max', 'sum']:
+                clusterfield = "%s__amount_%s"%(cubes[0], clusteragg,) 
+            numclusters = request.args.get('numclusters',5)
+            tempresult = get_cubes_breaks(resultdict['cells'], clusterfield, method=request.args.get('cluster'), k=numclusters)
+            tempresult['data'] = list(tempresult['data'])
+            resultdict.set('cluster', tempresult)      
+        resp = Response(response=json.dumps(resultdict),
+            status=200, \
+            mimetype="application/json")
+        return(resp)
 
     elif output_format not in  ["csv","excel"]:
         raise RequestError("unknown response format '%s'" % output_format)
@@ -212,6 +230,7 @@ def aggregate_cubes(star_name):
 @blueprint.route("/api/slicer/cube/<star_name>/cubes_facts", methods=["JSON", "GET"])
 @requires_complex_browser
 @api_json_errors
+@cache.cached(timeout=60, key_prefix=cache_key)
 #@log_request("facts", "fields")
 def cubes_facts(star_name):
     cubes_arg = request.args.get("cubes", None)

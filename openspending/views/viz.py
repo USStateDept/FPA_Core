@@ -9,10 +9,11 @@ from flask import Response
 from flask.ext.login import current_user
 
 from openspending.core import db
-from openspending.model import Tags
+#from openspending.model import Tags
+
+from openspending.views.api_v2.categories import categories_list
 
 from openspending.views.api_v2.countries import countries_list
-from openspending.views.api_v2.categories import categories_list
 
 log = logging.getLogger(__name__)
 
