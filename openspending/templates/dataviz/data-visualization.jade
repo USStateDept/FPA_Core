@@ -238,11 +238,11 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         .glyphicon.glyphicon-menu-down
                         span() &nbsp;Selected Countries&nbsp;
                         span.badge(data-bind="html:activeCountries().length")
-                        a(data-bind="visible:activeCountries().length>0")&nbsp;Clear
+                        a(data-bind="click:clearActiveCountries, visible:activeCountries().length>0")&nbsp;Clear
                     ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="click:clearActiveIndicators, foreach:activeCountries")
 
-                      li(role='presentation')
-                        span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
+                      li(role='presentation', data-bind='click:$root.selectCountry')
+                        span.glyphicon.glyphicon-remove(data-bind='css:{selected:selected}')
                         a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
               .row.title
                 .col-md-12

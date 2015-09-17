@@ -16,7 +16,7 @@
     var modalTitle = "";
     var modalMessage = "";
     var geometryType = "sovereignt";
-    
+
     var yearsFilter = hashParams.f.split("|");
     var indicators = hashParams.i.split("|");
     //var group = hashParams.g;
@@ -333,24 +333,15 @@
 
         clearActiveCountries: function() {
 
+            var mod = model.activeCountries();
+            for(var i = 0; i  < mod.length; i++) {
+
+                var abbr = mod[i].id.toLowerCase();
+                var $this = $("."+abbr+"").parent();
+                $this.removeClass("selected");
+
+            }
             model.activeCountries.removeAll();
-
-            var countriesModelMaster = _.clone(model.countriesModelMaster(), true);
-            model.countriesModelMaster.removeAll();
-
-            var countriesModel = _.clone(model.countriesModel(), true);
-            model.countriesModel.removeAll();
-            _.forEach(countriesModel, function(country) {
-                country.selected = false;
-                model.countriesModel.push(country);
-            });
-
-            _.forEach(countriesModelMaster, function(country) {
-                country.selected = false;
-                model.countriesModelMaster.push(country);
-            });
-
-
 
         },
 
@@ -378,14 +369,12 @@
 
             clickedIndicator = true;
             model.activeIndicators.push(selectedIndicator);
-
             // TODO -- inprogress -- make sure flip sequence is working properly
             //window.utils.flipCardEvent();
 
         },
 
         selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
-
 
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
 
@@ -404,58 +393,30 @@
                 return;
             }
 
-            model.activeCountries.push(selectedCountry);
-
             var abbr = selectedCountry.id.toLowerCase();
-
-
             var $this = $("."+abbr+"").parent();
-            $this.addClass("selected");
 
+            // toggle the selection/deselection
+            if ($this.hasClass("selected")) {
+              $this.removeClass("selected");
+              var selectedCountry = arguments[0];
+              var activeCountries = model.activeCountries();
+              var selectedIndex = _.indexOf(activeCountries, selectedCountry);
 
-        },
+              var abbr = selectedCountry.id.toLowerCase();
+              var $this = $("."+abbr+"").parent();
+              $this.removeClass("selected");
 
-        removeCountry: function() {
+              model.activeCountries.splice(selectedIndex, 1);
+              // make sure selectetion is false
+              selectedCountry.selected = false;
 
-            var selectedCountry = arguments[0];
-            var activeCountries = model.activeCountries();
-            var selectedIndex = _.indexOf(activeCountries, selectedCountry);
+            } else {
+              $this.addClass("selected");
+              selectedCountry.selected = true;
 
-            model.activeCountries.splice(selectedIndex, 1);
-
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
-
-            //model.activeCountries.removeAll();
-
-            var countryGroupings = _.clone(model.countryGroupings(), true);
-            model.countryGroupings.removeAll();
-
-            var activeGroupId = model.activeGroup().id;
-            // debugger;
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = false;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = false;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = false;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    model.activeGroup(countryGroup);
-                }
-                model.countryGroupings.push(countryGroup);
-            });
+              model.activeCountries.push(selectedCountry);
+            }
 
         },
 
@@ -662,13 +623,13 @@
 
         var minYearFilter = parseInt(yearsFilter[0]);
         var maxYearFilter = parseInt(yearsFilter[1]);
-        
+
         if (maxYearFilter > maxYear)
             maxYearFilter = maxYear;
-        
+
         if (minYearFilter < minYear)
             minYearFilter = minYear;
-        
+
         //debugger;
         var isRange = false;
 
@@ -677,15 +638,15 @@
         } else {
             minYearFilter = maxYearFilter;
         }
-        
+
         if (minYearFilter != maxYearFilter) {
             yearLabel = minYearFilter + "-" + maxYearFilter;
         } else {
             yearLabel = maxYearFilter.toString();
         }
-                
+
         $("#filter-years-label").html(yearLabel);
-        
+
         var sliderOptions = {
             range: isRange,
             min: minYear,
@@ -709,9 +670,9 @@
                     yearLabel = endYear;
                     // model.selectYear([startYear]);
                 }
-                
+
                 $("#filter-years-label").html(yearLabel);
-                
+
                 //update hash
                 var currentHash = window.utils.getHashParams();
 
@@ -852,7 +813,7 @@
         data.forEach(function(entry) {
 
             var numIndicators = Object.keys(entry).length - 3;
-            
+
             for (i = 0; i < numIndicators; i++) {
                 var indicator = Object.keys(entry)[i];
 
@@ -1331,9 +1292,9 @@
 
             //window.loader.changeGroup("all");
         } else {
-            
+
             //yearsExtremesForData = window.utils.getHashParams().f.split("|");
-    
+
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
             //debugger;
             var highChartsJson = sortedData.highcharts;
@@ -1484,7 +1445,7 @@
                 }
                 //debugger;
             }
-            
+
             if (yearsExtremesForData.length == 0) {
                 yearsExtremesForData.push(yearStart);
                 yearsExtremesForData.push(yearEnd);
@@ -1501,7 +1462,7 @@
             }
 
         });
-        
+
         if (yearsExtremes[0] < 1990) {
             yearsExtremes[0] = 1990;
         }

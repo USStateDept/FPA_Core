@@ -99,6 +99,7 @@
 
             var $this = $("[data-indicatorid='" + selectedIndicator.id + "']").parent();
 
+            // toggle the selection/deselection
             if($this.hasClass("selected")) {
               $this.removeClass("selected");
               vizModel.removeIndicator(selectedIndicator);
@@ -181,7 +182,7 @@
 
         },
 
-        selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) { /* breakdown by regions or countries*/
+        selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
 
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
 
@@ -200,10 +201,10 @@
                 return;
             }
 
-
             var abbr = selectedCountry.id.toLowerCase();
             var $this = $("."+abbr+"").parent();
 
+            // toggle the selection/deselection
             if ($this.hasClass("selected")) {
               $this.removeClass("selected");
               //vizModel.removeCountry(selectedCountry);
@@ -215,7 +216,7 @@
               // make sure selectetion is false
               selectedCountry.selected = false;
 
-              // allows for immediate ui response
+              // allows for immediate ui response before map load
               setTimeout(function(){
                 window.utils.highlightOnMap(vizModel, selectedCountry);
               },25);
@@ -233,11 +234,10 @@
               },25);
             }
 
-            //selectedCountry.selected = !selectedCountry.selected
-
         },
 
         clearActiveCountries: function() {
+
             var model =  vizModel.activeCountries();
             for(var i = 0; i  < model.length; i++) {
 
