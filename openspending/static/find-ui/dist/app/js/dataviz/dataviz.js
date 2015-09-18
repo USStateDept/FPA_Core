@@ -1319,7 +1319,9 @@
                 $("#bar-globals").show();
                 $("#data-proxy").data("min", highChartsJson.series[0].data[0][1]);
                 $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
-                $("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
+                // $("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
+                console.log(highChartsJson.series[0].data);
+                console.log(highChartsJson.series[0].data[0][0]);                
             } else {
                 $("#bar-globals").hide();
             }
