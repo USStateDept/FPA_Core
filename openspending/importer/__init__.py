@@ -11,7 +11,7 @@ from openspending.model import Run
 from openspending.model.log_record import LogRecord
 from openspending.validation.model import Invalid
 from openspending.validation.data import convert_types
-
+from openspending.lib.denormalize import denormalize
 
 log = logging.getLogger(__name__)
 
@@ -86,6 +86,10 @@ class BaseImporter(object):
         else:
             self._run.status = Run.STATUS_COMPLETE
             log.info("Finished import with no errors!")
+        try:
+            denormalize(tablename=self.dataset.name, droptables=True)
+        except Exception,e:
+            self.log_exception("Could not denormalize data: %s"%e)
         self._run.time_end = datetime.utcnow()
         self.source.updated_at = self._run.time_end
         db.session.commit()
