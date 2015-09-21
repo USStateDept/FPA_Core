@@ -267,11 +267,32 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       span(data-bind='click:$root.selectCountry,css:{selected:selected}')
                         span(style="vertical-align:middle" data-bind="html:label")
                       div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
-                    span(data-bind="foreach:$data.countries,css:{hasCountryFilter:$root.hasCountryFilter}")
+                    span(data-bind="foreach:activeCountries,css:{hasCountryFilter:$root.hasCountryFilter}")
                       .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
                         div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                           div.flag(data-bind="css:iso_a2.toLowerCase()")
+<<<<<<< HEAD
                           span.flags-labels(style="vertical-align:middle" data-bind="html:label") 
+=======
+                          span.flags-labels(style="vertical-align:middle" data-bind="html:label")
+  
+
+  .row.tabs-app
+    .col-md-12
+      ul.nav.nav-tabs
+        li.active
+          a(href='#viz-container', data-toggle='tab') Chart       
+        li
+          a(href='#data-table', data-target="#data-table, #data-table-save", data-toggle='tab') Data Table
+      .tab-content
+        #data-table-save.tab-pane
+          .row(style="padding:10px 0")
+            span Export data: 
+            input#savecsv(type="button" value="CSV")
+            input#savexlsx(type="button" value="XLSX")
+        #viz-container.active.tab-pane
+        #data-table.tab-pane
+>>>>>>> 547525cb341a1bfb0abd2e6e880887178f7856c1
         
   .row
     .col-md-12
@@ -344,6 +365,10 @@ script(src="{{ static_path('find-ui/build/app/js/dataviz/savedv.js') }}")
 //- script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}")
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
+<<<<<<< HEAD
+=======
+//-script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
+>>>>>>> 547525cb341a1bfb0abd2e6e880887178f7856c1
 script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
 {% if current_user.is_authenticated() %}

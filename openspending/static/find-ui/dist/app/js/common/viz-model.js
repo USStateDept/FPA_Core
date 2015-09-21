@@ -111,7 +111,7 @@
             } else {
               $this.addClass("selected");
               vizModel.activeIndicators.push(selectedIndicator);
-              vizModel.indicatorsArray.push(selectedIndicator.label);
+              // vizModel.indicatorsArray.push(selectedIndicator.label);
               console.log(vizModel.indicatorsArray);
             }
 
