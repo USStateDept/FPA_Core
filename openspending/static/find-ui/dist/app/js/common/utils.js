@@ -13,6 +13,8 @@ var act;
 
     window.utils.statsData = [];
 
+    window.utils.metadatas = null;
+
     window.utils.flipCardEvent = function() {
 
         $(".flip").click(function() {
@@ -358,7 +360,6 @@ var act;
 
         var onEachFeature = function(feature, layer) {
             //  debugger;
-            console.log("onEachFeature");
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
@@ -570,7 +571,14 @@ var act;
         var statsCells = statsData.cells;
         var indicatorId = indicators[0];
         var title = indicators[0];
-        var metadatas = _.values(statsData['models']);
+        if (! window.utils.metadatas){
+            var metadatas = _.values(statsData['models']);
+            window.utils.metadatas = metadatas;            
+        }
+        else{
+            var metadatas = window.utils.metadatas;
+        }
+        //to be used in dataviz.js for updating chart
         //var groupId = group;
         //var cutBy = "name";
         var dataType = "avg"; //sum,avg
@@ -1030,7 +1038,7 @@ var act;
 
             //Add stats to series
             _.forEach(statsCells, function(c) {
-                if (latestYear == c.geometry__time) {
+                if (latestYear == c.time) {
                     data.push([
                         "Global Minimum",
                         c[indicatorId + "__min"]

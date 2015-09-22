@@ -524,11 +524,8 @@
 
             function _takeDataDrawChart() {
 
-              var _deferredMetaList = window.loader.loadIndicatorsMeta(indicators);
-              $.when.apply($, _deferredMetaList).done(function(response){
 
                 var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
-                _deferredList = _deferredList.concat(_deferredMetaList);
 
                   $.when.apply($, _deferredList)
                   .done(function(response) {
@@ -537,9 +534,6 @@
                   .fail(function(response){
                       $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
                   });
-
-
-              });
 
             }
 
@@ -1318,8 +1312,8 @@
             if (chartType == "bar") {
                 $("#bar-globals").show();
                 $("#data-proxy").data("min", highChartsJson.series[0].data[0][1]);
-                // $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
-                // $("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
+                $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
+                $("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
                 // console.log(highChartsJson.series[0].data);
                 // console.log(highChartsJson.series[0].data[0][0]);                
                 // console.log(highChartsJson.series[0].data);
