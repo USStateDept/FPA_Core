@@ -29,55 +29,6 @@
 
     var statsData, statsDataSeries;
 
-<<<<<<< HEAD
-=======
-    var eventBind = function() {
-        //var val = $('#filter-years').slider("option", "value");
-        window.utils.flipCardEvent();
-        // $('.dropdown-toggle').dropdown();
-    }
-
-    // function filterThis(e){
-    //     if
-
-    // }
-    // $('#filterCountriesInput').keyup(function(e){
-    //     // console.log("this.value is: " + this.value);
-    //     var inputText = this.value;
-    //     // console.log("Input text is: " + inputText);
-    //     // console.log("Type of input text is: " + typeof inputText);
-    //     filterCountries(e, inputText);
-    // });
-    // var filterCountries = function(e, inputText){
-    //     // console.log("this is: "+ this.toString());
-    //     // if (e.keyCode==13){
-    //         // $("#countryList div div").first().click();
-    //     // }
-    //     // else{
-    //     //     debugger;
-    //     console.log("inputText is: " + inputText);
-    //         var filterValue = inputText;
-    //         // console.log("filterValue is: " + filterValue);
-    //         // console.log("Type of filterValue is: " + typeof filterValue);
-
-    //         var countries = vizModel.countriesModelMaster();
-    //         console.log("Countries is: " + countries);
-    //         console.log("Countries is: " + typeof countries);
-    //     //     vizModel.countriesModel.removeAll();
-    //     //     debugger;
-    //     //     for (var x in countries) {
-    //     //         if (countries[x].label.toLowerCase().indexOf(filterValue.toLowerCase()) >= 0) {
-    //     //             vizModel.countriesModel.push(countries[x]);
-    //     //         }
-    //     //     }
-
-    //     //     $("#countryList div").first().css("background-color","#FFFF00");
-
-    //     //     return true;
-    //     // }
-    // }
-
->>>>>>> 547525cb341a1bfb0abd2e6e880887178f7856c1
     $('#modal').modal({
         show: false,
         keyboard: false
@@ -762,8 +713,8 @@
         });
     }
 
-	var saveFields = [];
-	var saveData = [];
+    var saveFields = [];
+    var saveData = [];
 
     var showTable = function(data) {
         //debugger;
@@ -851,8 +802,8 @@
             data.forEach(function(entry) {
 
                 if (dataTempObj['indicator'] == Object.keys(entry)[i] && dataTempObj['country'] == entry['region']) {
-					if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
-						entry[indicator] = (entry[indicator].toFixed(2))/1; //Rounds number to 2 decimal places
+                    if (entry[indicator] && entry[indicator] % 1 != 0) //Checks if data exists for year and if it has decimals
+                        entry[indicator] = (entry[indicator].toFixed(2))/1; //Rounds number to 2 decimal places
                     dataTempObj[entry['year']] = entry[indicator];
                 }
             });
@@ -919,156 +870,156 @@
             dataView.sort(comparer, args.sortAsc);
         });
 
-		columns.forEach(function(column,i){
-			saveFields.push(column.field);
-		});
-		saveData = dataWide;
+        columns.forEach(function(column,i){
+            saveFields.push(column.field);
+        });
+        saveData = dataWide;
     }
 
-	//var converter = require('json-2-csv');
+    //var converter = require('json-2-csv');
 
-	$("#savexlsx").click(function(){
-		exportData('xlsx');
-	});
+    $("#savexlsx").click(function(){
+        exportData('xlsx');
+    });
 
-	$("#savecsv").click(function(){
-		exportData('csv');
-	});
+    $("#savecsv").click(function(){
+        exportData('csv');
+    });
 
-	var exportData = function(type) {
+    var exportData = function(type) {
 
-		var wb = {} //work book
-		wb.Sheets = {};
-		wb.Props = {};
-		wb.SSF = {};
-		wb.SheetNames = ['FIND Data Export'];  //name all your sheets
+        var wb = {} //work book
+        wb.Sheets = {};
+        wb.Props = {};
+        wb.SSF = {};
+        wb.SheetNames = ['FIND Data Export'];  //name all your sheets
 
-		//make new work sheet
-		//array of arrays in variable data
-		//first array is headers
-		//one new array for each site's data
-		ws = {}
-		data = [];
-		data.push(saveFields);
+        //make new work sheet
+        //array of arrays in variable data
+        //first array is headers
+        //one new array for each site's data
+        ws = {}
+        data = [];
+        data.push(saveFields);
 
-		//sets saveData to proper columns
-		saveData.forEach(function(entry) {
-			dataTemp = [];
-			saveFields.forEach(function(field){
-				dataTemp.push(entry[field]);
-			});
-			data.push(dataTemp);
-		});
+        //sets saveData to proper columns
+        saveData.forEach(function(entry) {
+            dataTemp = [];
+            saveFields.forEach(function(field){
+                dataTemp.push(entry[field]);
+            });
+            data.push(dataTemp);
+        });
 
-		/* the range object is used to keep track of the range of the sheet */
-		var range = {
-			s: {
-				c: 0,
-				r: 0
-			},
-			e: {
-				c: 0,
-				r: 0
-			}
-		};
+        /* the range object is used to keep track of the range of the sheet */
+        var range = {
+            s: {
+                c: 0,
+                r: 0
+            },
+            e: {
+                c: 0,
+                r: 0
+            }
+        };
 
-		/* Iterate through each element in the structure */
-		for (var R = 0; R != data.length; ++R) {
-			if (range.e.r < R) range.e.r = R;
-			for (var C = 0; C != data[R].length; ++C) {
-				if (range.e.c < C) range.e.c = C;
+        /* Iterate through each element in the structure */
+        for (var R = 0; R != data.length; ++R) {
+            if (range.e.r < R) range.e.r = R;
+            for (var C = 0; C != data[R].length; ++C) {
+                if (range.e.c < C) range.e.c = C;
 
-				/* create cell object: .v is the actual data */
-				var cell = {
-					v: data[R][C]
-				};
-				if (cell.v == null) continue;
+                /* create cell object: .v is the actual data */
+                var cell = {
+                    v: data[R][C]
+                };
+                if (cell.v == null) continue;
 
-				/* create the correct cell reference */
-				var cell_ref = XLSX.utils.encode_cell({
-					c: C,
-					r: R
-				});
+                /* create the correct cell reference */
+                var cell_ref = XLSX.utils.encode_cell({
+                    c: C,
+                    r: R
+                });
 
-				/* determine the cell type */
-				if (typeof cell.v === 'number') cell.t = 'n';
-				else if (typeof cell.v === 'boolean') cell.t = 'b';
-				else cell.t = 's';
+                /* determine the cell type */
+                if (typeof cell.v === 'number') cell.t = 'n';
+                else if (typeof cell.v === 'boolean') cell.t = 'b';
+                else cell.t = 's';
 
-				/* add to structure */
-				ws[cell_ref] = cell;
-			}
-		}
-		ws['!ref'] = XLSX.utils.encode_range(range);
+                /* add to structure */
+                ws[cell_ref] = cell;
+            }
+        }
+        ws['!ref'] = XLSX.utils.encode_range(range);
 
-		//there are some options you can add, wch sets column width
-		var wscols = [{
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}, {
-			wch: 20
-		}];
-		ws['!cols'] = wscols;
+        //there are some options you can add, wch sets column width
+        var wscols = [{
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }, {
+            wch: 20
+        }];
+        ws['!cols'] = wscols;
 
-		/* add worksheet to workbook */
-		wb.Sheets["FIND Data Export"] = ws;
+        /* add worksheet to workbook */
+        wb.Sheets["FIND Data Export"] = ws;
 
-		// workbook options
-		var wopts = {
-						bookType: 'xlsx',
-						bookSST: false,
-						type: 'binary'
-					};
+        // workbook options
+        var wopts = {
+                        bookType: 'xlsx',
+                        bookSST: false,
+                        type: 'binary'
+                    };
 
-		//writes workbook
-		var wbout = XLSX.write(wb, wopts);
+        //writes workbook
+        var wbout = XLSX.write(wb, wopts);
 
-		/*convert to CSV if needed*/
-		if (type == 'csv');
-			var csv = XLSX.utils.sheet_to_csv(ws);
+        /*convert to CSV if needed*/
+        if (type == 'csv');
+            var csv = XLSX.utils.sheet_to_csv(ws);
 
-		function s2ab(s) {
-			var buf = new ArrayBuffer(s.length);
-			var view = new Uint8Array(buf);
-			for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-			return buf;
-		}
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
 
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth() + 1; //January is 0!
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
 
-		var yyyy = today.getFullYear();
-		if (dd < 10) {
-			dd = '0' + dd
-		}
-		if (mm < 10) {
-			mm = '0' + mm
-		}
-		var today = dd + '_' + mm + '_' + yyyy;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        var today = dd + '_' + mm + '_' + yyyy;
 
-		//USES FILESAVER.JS LIBRARY !! not associated with sheetjs
-		if (type == 'csv') {
-			saveAs(new Blob([s2ab(csv)],{type:"application/octet-stream"}), "FINDdata_" + today + ".csv")
-		} else {
-			saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "FINDdata_" + today + ".xlsx")
-		}
-	}
+        //USES FILESAVER.JS LIBRARY !! not associated with sheetjs
+        if (type == 'csv') {
+            saveAs(new Blob([s2ab(csv)],{type:"application/octet-stream"}), "FINDdata_" + today + ".csv")
+        } else {
+            saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "FINDdata_" + today + ".xlsx")
+        }
+    }
 
     var addDataToGeoJson = function(lastGeoJson, type,countries) {
 
