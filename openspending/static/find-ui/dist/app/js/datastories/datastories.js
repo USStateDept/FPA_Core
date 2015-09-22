@@ -12,8 +12,8 @@
    var type = "line";
    var chartType = type;
    
-   var dataUrl = '/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&cut=geometry__time:'+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__country_level0@'+regions+'|geometry__time';
-   var globalDataUrl = 'api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&cut=geometry__time:'+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__time';
+   var dataUrl = '/api/3/slicer/aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&daterange='+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__country_level0@'+regions+'|geometry__time';
+   var globalDataUrl = 'api/3/slicer/aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&daterange='+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__time';
    var metaUrl = 'api/3/datasets/' + indicator;
    
    var data;
@@ -40,40 +40,34 @@
         });
     }
     
-    function ajax3(){
-        return $.ajax({
-            url: metaUrl,
-            dataType: "json",
-            data: {
 
-            }
-        });
-    }
-    $.when(ajax1(), ajax2(), ajax3()).done(function(data, global, meta){
+    $.when(ajax1(), ajax2()).done(function(data, global){
+
+        meta = data[0]['models'][indicator];
 
         var cutBy = regions;
         var mergedCells = [];
         
         _.forEach(data[0].cells, function(cell) {
             
-            cell.region = cell["geometry__country_level0." + cutBy];
+            cell.region = cell["geo__" + cutBy];
 
-            cell.year = cell.geometry__time;
+            cell.year = cell.time;
 
-            delete cell.geometry__time;
-            delete cell["geometry__country_level0." + cutBy];
-            delete cell.num_entries;
+            delete cell.time;
+            delete cell["geo__" + cutBy];
+            delete cell.count;
 
             for (var id in cell) {
-                if (id.indexOf("__amount_max") > -1) {
+                if (id.indexOf("__max") > -1) {
                     delete cell[id];
                 }
 
-                if (id.indexOf("__amount_min") > -1) {
+                if (id.indexOf("__min") > -1) {
                     delete cell[id];
                 }
 
-                if (id.indexOf("__amount_sum") > -1) {
+                if (id.indexOf("__sum") > -1) {
                     delete cell[id];
                 }
             }
@@ -85,8 +79,9 @@
         var responseData = {
             cells: mergedCells
         }
-        
-        var sortedData = window.utils.prepareHighchartsJson(responseData, global[0], [meta], type, indicators, yearsExtremesForData);
+
+
+        var sortedData = window.utils.prepareHighchartsJson(responseData, global[0], type, indicators, yearsExtremesForData);
         var highChartsJson = sortedData.highcharts;
         highChartsJson.chart.events = {
             load: function() {

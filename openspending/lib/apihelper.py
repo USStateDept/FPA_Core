@@ -210,7 +210,7 @@ class DataBrowser(object):
             self.joins = self.joins.outerjoin(self.t[cubes_ts], \
                                         self.t[cubes_ts].c.geom_time_id==self.t['geometry__time'].c.id)
             for lab, caller in callables.iteritems():
-                self.selects.append(caller(self.t[cubes_ts].c.amount).label(cubes_ts.strip("__entry") + lab))
+                self.selects.append(caller(self.t[cubes_ts].c.amount).label(cubes_ts.split("__")[0] + lab))
 
         
 
@@ -230,7 +230,7 @@ class DataBrowser(object):
     def get_clusters(self, resultsdict, field=None):
 
         if not field:
-            field = self.cubes_tables[0].strip("__entry") + "__avg"
+            field = self.cubes_tables[0].split("__entry")[0] + "__avg"
 
         return get_cubes_breaks(resultsdict, field, method=self.clusterparams['cluster'], k=self.clusterparams['clusternum'])
 
