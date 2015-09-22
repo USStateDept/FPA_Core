@@ -3,6 +3,8 @@
 
     window.vizModel = {
 
+        indicatorsArray: ko.observable([]),
+
         selectView: function(type) {
 
             switch (type) {
@@ -89,6 +91,9 @@
 
         selectIndicatorMultiple: function(selectedIndicator, evt, goToVisualize) {
 
+            // console.log("TESTING");
+            console.log("Selected Indicator is: " + selectedIndicator.label);
+            $.each(selectedIndicator, function(k,v){console.log(k+ " : "+ v)});
             if (goToVisualize) {
                 //TODO: Calculate Year Extremes
                 window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&r=dos_region:all";
@@ -106,7 +111,14 @@
             } else {
               $this.addClass("selected");
               vizModel.activeIndicators.push(selectedIndicator);
+              // vizModel.indicatorsArray.push(selectedIndicator.label);
+              console.log(vizModel.indicatorsArray);
             }
+
+            // console.log("activeIndicators is: " + vizModel.activeIndicators[0].label);
+            // console.log("activeIndicators is: " + vizModel.activeIndicators[1].label);
+            // console.log("activeIndicators is: " + vizModel.activeIndicators[2].label);
+            // $.each(vizModel.activeIndicators, function(k,v){console.log(k+ " : "+ v)});
 
             // TODO -- inprogress -- make sure flip sequence is working properly
             //window.utils.flipCardEvent();
