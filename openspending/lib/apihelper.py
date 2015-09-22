@@ -501,7 +501,7 @@ class DataBrowser_v4(DataBrowser):
 
         self.dataframe = None
 
-        self.joins = []        
+        self.joins = None      
 
         self.cubes_tables = []
 
@@ -526,7 +526,7 @@ class DataBrowser_v4(DataBrowser):
         if self.drilldown:
             self._drilldowns()
 
-            if len(self.joins) > 0:
+            if len(self.cubes_tables) > 1:
                 self.selectable = select(self.selects).select_from(self.joins)
             else:
                 self.selectable = select(self.selects)
@@ -539,7 +539,7 @@ class DataBrowser_v4(DataBrowser):
                     self.selectable = self.selectable.group_by(self.t[table_name].c[dd])
         else:
 
-            if len(self.joins) > 0:
+            if len(self.cubes_tables) > 1:
                 self.selectable = select(self.selects).select_from(self.joins)
             else:
                 self.selectable = select(self.selects)
@@ -591,9 +591,12 @@ class DataBrowser_v4(DataBrowser):
             for lab, caller in callables.iteritems():
                 self.selects.append(caller(self.t[cubes_ts].c.amount).label(cubes_ts.strip("__denorm") + lab))
             if cubes_ts != self.primary_table.name:
-                self.joins = self.joins.outerjoin(self.t[cubes_ts], \
+                if isinstance(self.joins, type(None)):
+                    self.joins = self.primary_table.outerjoin(self.t[cubes_ts], \
                                             self.t[cubes_ts].c.geom_time_id==self.primary_table.c['geom_time_id'])
-
+                else:
+                    self.joins = self.joins.outerjoin(self.t[cubes_ts], \
+                                            self.t[cubes_ts].c.geom_time_id==self.primary_table.c['geom_time_id'])
         
 
     def _execute_query_iterator(self):
