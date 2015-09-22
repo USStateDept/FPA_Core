@@ -153,6 +153,13 @@ class DataBrowser(object):
 
         self.drilldowntables = []
 
+
+        self._finish_query()
+
+
+    def _finish_query(self):
+
+
         if self.drilldown:
             self._drilldowns()
 
@@ -470,6 +477,237 @@ class DataBrowser(object):
             "cluster": request.args.get("cluster", None),
             "clusternum": request.args.get("clusternum",5)
         }
+
+
+
+# http://localhost:5000/api/slicer/cube/geometry/cubes_aggregate?&cluster=jenks&
+# numclusters=4&cubes=under_five_mortality_rate_u5mr&
+# order=time&drilldown=geometry__country_level0@dos_region|geometry__time
+
+class DataBrowser_v4(DataBrowser):
+    """
+        input is query string
+    """
+
+    def __init__(self):
+        self.params = {}
+        self.cubes = []
+        self.daterange= {"start":None,"end":None}
+        self.format='json'
+        self.agg = {}
+        self.drilldown = {}
+        self.cut={}
+        self.nulls=True
+
+        self.dataframe = None
+
+        self.joins = []        
+
+        self.cubes_tables = []
+
+        self.t = {}
+
+        self.cachedresult = None
+
+        self._parse_params()
+
+        self._map_tables()
+
+        self.drilldowntables = []
+
+
+        self._finish_query()
+
+
+
+    def _finish_query(self):
+
+
+        if self.drilldown:
+            self._drilldowns()
+
+            if len(self.joins) > 0:
+                self.selectable = select(self.selects).select_from(self.joins)
+            else:
+                self.selectable = select(self.selects)
+
+            for table_name, dds in self.drilldown.iteritems():
+                for dd in dds:
+                    if table_name in ['geometry__country_level0', 'geometry__time']:
+                        table_name = self.primary_table.name
+                    self.drilldowntables.append(table_name + "." + dd)
+                    self.selectable = self.selectable.group_by(self.t[table_name].c[dd])
+        else:
+
+            if len(self.joins) > 0:
+                self.selectable = select(self.selects).select_from(self.joins)
+            else:
+                self.selectable = select(self.selects)
+
+        for table_name, cols in self.cut.iteritems():
+            for colname, values in cols.iteritems():
+                if table_name in ['geometry__country_level0', 'geometry__time']:
+                    table_name = self.primary_table.name
+                self.selectable = self.selectable.where(self.t[table_name].c[colname].in_(values))
+        if self.daterange['start']:
+            self.selectable = self.selectable.where(self.primary_table.c["time"] >= self.daterange['start'])
+        if self.daterange['end']:
+            self.selectable = self.selectable.where(self.primary_table.c["time"] <= self.daterange['end'])
+
+        if not self.nulls:
+            for cube_tb in self.cubes_tables: 
+                self.selectable = self.selectable.where(self.t[cube_tb].c["amount"] != None)
+
+     
+        #completed the selects, now doing the wheres and groupby
+
+
+
+    def _drilldowns(self):
+        #make sure column exists
+        for tablename, drilldowns in self.drilldown.iteritems():
+            for dd in drilldowns:
+                if tablename == "geometry__country_level0":
+                    self.selects.append(self.primary_table.c[dd].label("geo__%s"%dd))
+                elif tablename == "geometry__time":
+                    self.selects.append(self.primary_table.c['time'].label("time"))                    
+                else:
+                    self.selects.append(self.t[tablename].c[dd])
+
+            #group_by(t['geometry__country_level0'].c['dos_region'])
+
+    def _map_tables(self):
+        self.metadata = MetaData()
+        self.metadata.reflect(db.engine, only=self.cubes_tables, schema="finddata")
+        self.t = {z.name:z for z in self.metadata.sorted_tables}
+        self.primary_table= self.t[self.cubes_tables[0]]
+        #apply joins
+
+        callables = {"__max":func.max, "__min": func.min, "__avg":func.avg, "__sum":func.sum}
+
+        self.selects = [func.count(self.primary_table.c['geom_time_id']).label("count")]
+
+        for cubes_ts in self.cubes_tables:
+            for lab, caller in callables.iteritems():
+                self.selects.append(caller(self.t[cubes_ts].c.amount).label(cubes_ts.strip("__denorm") + lab))
+            if cubes_ts != self.primary_table.name:
+                self.joins = self.joins.outerjoin(self.t[cubes_ts], \
+                                            self.t[cubes_ts].c.geom_time_id==self.primary_table.c['geom_time_id'])
+
+        
+
+    def _execute_query_iterator(self):
+        if "geometry__time" in self.drilldown.keys():
+            self.selectable = self.selectable.order_by(self.primary_table.c['time'])
+        results = db.session.execute(self.selectable)
+        for u in results.fetchall():
+            yield dict(u)
+
+
+    def get_clusters(self, resultsdict, field=None):
+        if not field:
+            field = self.cubes_tables[0].strip("__denorm") + "__avg"
+
+        return get_cubes_breaks(resultsdict, field, method=self.clusterparams['cluster'], k=self.clusterparams['clusternum'])
+
+
+
+
+
+    def _parse_params(self):
+
+        cubes_arg = request.args.get("cubes", None)
+
+        try:
+            self.cubes = cubes_arg.split("|")
+            self.cubes_tables = ["%s__denorm"%c for c in self.cubes]
+        except:
+            raise RequestError("Parameter cubes with value  '%s'should be a valid cube names separated by a '|'"
+                    % (cubes_arg) )
+
+        if len (self.cubes) > 5:
+            raise RequestError("You can only join 5 cubes together at one time")  
+
+
+        #parse the date
+        dateparam = request.args.get("daterange", None)
+        if dateparam:
+            datesplit = dateparam.split("-")
+            if len(datesplit) == 1:
+                self.daterange['start'] = parse_date(datesplit[0]).year
+                #use this value to do a since date
+            elif len(datesplit) == 2:
+                self.daterange['start'] = parse_date(datesplit[0]).year
+                if self.daterange['start']:
+                    self.daterange['end'] = parse_date(datesplit[1]).year
+
+
+
+        #parse format
+        tempformat = request.args.get("format", None)
+        if tempformat:
+            if tempformat.lower() not in FORMATOPTS:
+                log.warn("Could not find format %s"%tempformat)
+            else:
+                self.format = tempformat.lower()
+        else:
+            self.format = 'json'
+
+
+        #parse cut
+        #cut=geometry__country_level0@name:albania;argentina;australia;azerbaijan
+        tempcuts = request.args.get("cut", None)
+        if tempcuts:
+            cutsplit = tempcuts.split("|")
+            for tempcut in cutsplit:
+                basenamesplit = tempcut.split(":")
+                name = basenamesplit[0]
+                values = basenamesplit[1].split(';')
+
+                cutter = name.split("@")
+                if len(cutter) > 1:
+                    if self.cut.get(cutter[0]):
+                        self.cut[cutter[0]][cutter[1]] = values
+                    else:
+                        self.cut[cutter[0]] = {cutter[1]:values}
+                else:
+                    if self.cut.get(cutter[0]):
+                        self.cut[cutter[0]][DEFAULTDRILLDOWN.get(cutter[0])] = values
+                    else:
+                        self.cut[cutter[0]] = {DEFAULTDRILLDOWN.get(cutter[0]):values}
+
+        # tempagg = request.args.get("agg", None)
+        # if tempagg:
+        #     aggsplit = tempagg.split("|")
+        #     for tempitem in aggsplit:
+        #         pass
+
+        tempdrilldown = request.args.get("drilldown", None)
+        if tempdrilldown:
+            drilldownsplit = tempdrilldown.split("|")
+            for tempdrill in drilldownsplit:
+                dd = tempdrill.split("@")
+                if len(dd) > 1:
+                    if self.drilldown.get(dd[0]):
+                        self.drilldown[dd[0]].append(dd[1])
+                    else:
+                        self.drilldown[dd[0]] = [dd[1]]
+                else:
+                    if self.drilldown.get(dd[0]):
+                        self.drilldown[dd[0]].append(DEFAULTDRILLDOWN.get(dd[0]))
+                    else:
+                        self.drilldown[dd[0]] = [DEFAULTDRILLDOWN.get(dd[0])]
+
+        self.nulls = request.args.get("nulls", False)
+
+
+        self.clusterparams = {
+            "cluster": request.args.get("cluster", None),
+            "clusternum": request.args.get("clusternum",5)
+        }
+
+
+
 
                         
 GEO_MAPPING = {"geometry__country_level0":  {

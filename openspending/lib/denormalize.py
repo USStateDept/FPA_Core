@@ -65,7 +65,7 @@ def denormalize(tablename=None, existingtables=[], droptables=False, datasetdb=N
                 Column('name', Unicode(150)),
                 Column('dod_cmd', Unicode(150)),
                 Column('wb_inc_lvl', Unicode(150)),
-                Column('time', Unicode(10), index=True),
+                Column('time', Integer(), index=True),
                 schema='finddata'
                 )
     temptable.create()
