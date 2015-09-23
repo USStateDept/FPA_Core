@@ -10,6 +10,8 @@
 		"body-parser": "~1.2.0",
 		"pg":"*",
 		"querystring":"*",
-		"squel":"*"
+		"squel":"*",
+		"excel-export": "~0.4.1",
+		"express-csv": "~0.6.0"
 	}
 }

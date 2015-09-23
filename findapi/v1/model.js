@@ -17,6 +17,8 @@ var pg = require('pg');
 var squel = require("squel");
 var calculateJenks = require("./jenks").calculateJenks;
 var errorHandling = require("./errorHandling");
+var nodeExcel = require('excel-export');
+var csv = require('express-csv')
 //(optionally) set the SQL dialect
 
 
@@ -214,7 +216,7 @@ var DataSource = function(request, response, rescallback) {
 
         that.clusterparams = {
             "cluster": request.query["cluster"],
-            "clusternum": request.query["clusternum"]
+            "numclusters": parseInt(request.query["numclusters"])
         }
         return that.buildQuery();
     };
@@ -314,6 +316,10 @@ var DataSource = function(request, response, rescallback) {
     this.get_json= function(result){
         var response= {};
         response['cells'] = result['rows'];
+        response['attributes'] = _.map(that.drilldown, function(d){
+            console.log(d);
+            return d[0];
+        });
         that.get_dataset_metadata(function(rowresult){
             response['models'] = _.map(rowresult.rows, function(d){
                 d.years= _.sortBy(d.years.split(","), function(val){
@@ -333,12 +339,46 @@ var DataSource = function(request, response, rescallback) {
 
     };
 
-    this.get_xls = function(){
+    this.get_xls = function(result){
+        var colkeys = _.keys(result['rows'][0])
+        var conf ={};
+        conf.stylesXmlFile = "styles.xml";
+        conf.cols = _.map(colkeys, function(colkey){
+            var colkeysplit = colkey.split("__");
+            var type = "number";
+            if (colkeysplit[0] == "geo"){
+                type = "string";
+            }
+            return {
+                caption:colkey,
+                type:type,
+                // beforeCellWrite:function(row, cellData){
+                //      return cellData;
+                // },
+                width:28.7109375
+            }
+        });
+        conf.rows = _.map(result['rows'], function(d){
+            return _.values(d);
+        });
 
+        var result = nodeExcel.execute(conf);
+        that.response.setHeader('Content-Type', 'application/vnd.openxmlformats');
+        that.response.setHeader("Content-Disposition", "attachment; filename=" + that.cubes[0] + ".xlsx");
+        that.response.end(result, 'binary');
+        return null;
     };
 
-    this.get_csv = function(){
-
+    this.get_csv = function(result){
+        fields = _.keys(result['rows'][0]);
+        values = _.map(result['rows'], function(d){
+            return _.values(d);
+        });
+        values.unshift(fields);
+       that.response.setHeader('Content-Type', 'text/csv');
+        that.response.setHeader("Content-Disposition", "attachment; filename=" + that.cubes[0] + ".csv");
+        that.response.csv(values);
+        return null;
     };
 
 
@@ -361,6 +401,8 @@ var DataSource = function(request, response, rescallback) {
 
     this.calculate_clusters = function(response){
         var clusternum = that.clusterparams.numclusters;
+        console.log(that.clusterparams);
+
 
         if (! clusternum){
             clusternum = 5;
@@ -369,7 +411,7 @@ var DataSource = function(request, response, rescallback) {
         var dataitem = response['cells'].map(function(d) { return+d[that.primary_table.split("__")[0] + "__avg"]; });
 
         if (dataitem.length <= clusternum){
-            clusternum = dataitem.length;
+            clusternum = dataitem.length-1;
         }
 
         var clusters = calculateJenks(dataitem, clusternum);
@@ -379,7 +421,16 @@ var DataSource = function(request, response, rescallback) {
             if (index >= list.length -1){
                 return false;
             }
-            labels.push(val + "-" + list[index+1])
+            if (index == 0){
+                labels.push("less than " + list[index+1]);                
+            }
+            else if (index == list.length -2){
+                labels.push("greater than " + list[index]);
+                
+            }
+            else{
+            labels.push(val + "-" + list[index+1]);
+            }
         });
         response['cluster'] = {
             'data': clusters,
