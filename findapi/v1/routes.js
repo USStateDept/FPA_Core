@@ -78,7 +78,8 @@ module.exports = function() {
 			}
 			else{
 				res.send(resdata);
-			}			
+			}	
+			ds.tearDown();		
 		});
 
 		// model.retrieve("employees", function(_response) {

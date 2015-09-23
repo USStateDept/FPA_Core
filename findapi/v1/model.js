@@ -65,40 +65,31 @@ var DataSource = function(request, rescallback) {
 
 
     this.client = new pg.Client(connectionString);
+    this.client.connect(function(err){
+        if (err){
+            console.log("could not connect to postgres");
+            console.log(err);
+        }
+    });
 
-    this.query = function(_query){
-        that.client.connect(function(err) {
-          if(err) {
-            return console.error('could not connect to postgres', err);
-          }
-          that.client.query(_query, function(err, result) {
-            if(err) {
-              return console.error('error running query', err);
-            }
-            if (that.format == "xls" || that.format == "excel"){
-                that.get_xls({
-                    success: true,
-                    rows: result.rows
-                });
-            }
-            else if( that.format == "csv"){
-                that.get_csv({
-                    success: true,
-                    rows: result.rows
-                });
-            }
-            else{
-                that.get_json({
-                    success: true,
-                    rows: result.rows
-                });                
-            }
+    this.query = function(_query, callback){
 
-            //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST) 
-            that.client.end();
-          });
+      that.client.query(_query, function(err, result) {
+        if(err) {
+          return console.error('error running query', err);
+        }
+        callback({
+            "success": true,
+            "rows": result.rows
         });
 
+      });
+
+
+    };
+
+    this.tearDown = function(){
+        that.client.end();
     };
 
     /**
@@ -108,7 +99,6 @@ var DataSource = function(request, rescallback) {
     this.cache = require("./cache")(config.cacheEnabled, config.cacheDuration);
 
     this.parseParams = function(request, _callback){
-        console.log(request.query);
         var cubes_arg = request.query['cubes'];
         if (! cubes_arg){
             console.log("No cube passed");
@@ -164,14 +154,14 @@ var DataSource = function(request, rescallback) {
                 var values = basenamesplit[1].split(';')
 
                 var cutter = name.split("@");
-                console.log(cutter);
+
                 if (cutter.length > 1){
                     if (that.cut[cutter[0]]){
                         that.cut[cutter[0]][cutter[1]] = values;
                     }
                     else{
-                        console.log(cutter);
-                        //that.cut[cutter[0]] = { cutter[1] : values };
+                        that.cut[cutter[0]] = {};
+                        that.cut[cutter[0]][cutter[1]] = values;
                     }
                 }
                 else{
@@ -179,8 +169,8 @@ var DataSource = function(request, rescallback) {
                         that.cut[cutter[0]][DEFAULTDRILLDOWN[cutter[0]]] = values;
                     }
                     else{
-                        console.log(cutter);
-                        //that.cut[cutter[0]] = {DEFAULTDRILLDOWN[cutter[0]]:values};
+                        var tempobj= DEFAULTDRILLDOWN[cutter[0]];
+                        that.cut[cutter[0]] = { tempobj : values };
                     }
                 }
             });               
@@ -254,7 +244,8 @@ var DataSource = function(request, rescallback) {
                 else if (tablename == "geometry__time"){
                     that.selectable = that.selectable
                                             .field(that.primary_table + ".time", "time")
-                                            .group(that.primary_table + ".time");
+                                            .group(that.primary_table + ".time")
+                                            .order("time");
 
                 }
                 else{
@@ -268,7 +259,9 @@ var DataSource = function(request, rescallback) {
                 if (_.has(['geometry__country_level0', 'geometry__time'], table_name)){
                     table_name = that.primary_table
                 }
-                that.selectable = that.selectable.where(that.primary_table + "." + colname + " IN (" + values.join(",") + ")");
+                if (values.length > 0){
+                    that.selectable = that.selectable.where(that.primary_table + "." + colname + " IN ('" + values.join("','") + "')");
+                }
             });
         });
 
@@ -297,19 +290,34 @@ var DataSource = function(request, rescallback) {
 
     this.get_response = function(){
         //console.log(that.selectable.toString());
-        return that.query(that.selectable.toString());
+        var callback = null;
+        if (that.format == "xls" || that.format == "excel"){
+            callback = that.get_xls;
+        }
+        else if( that.format == "csv"){
+            callback = that.get_csv;
+        }
+        else{
+            callback = that.get_json;
+        }
+        return that.query(that.selectable.toString(), callback);
 
     };
 
     this.get_json= function(result){
         var response= {};
         response['cells'] = result['rows'];
-        if (that.clusterparams['cluster'] == 'jenks'){
-            that.calculate_clusters(response);
-        }
-        else{
-            that.rescallback(response);
-        }
+        that.get_dataset_metadata(function(rowresult){
+            response['models'] = rowresult.rows;
+            if (that.clusterparams['cluster'] == 'jenks'){
+                that.calculate_clusters(response);
+            }
+            else{
+                that.rescallback(response);
+            }
+        });
+        //response['models'] = that.get_dataset_metadata();
+
 
     };
 
@@ -319,6 +327,24 @@ var DataSource = function(request, rescallback) {
 
     this.get_csv = function(){
 
+    };
+
+
+
+    this.get_dataset_metadata = function(callback){
+        var sqlstatement = squel.select()
+             .from("public.dataset")
+             .field("label")
+             .field("description")
+             .field('"dataType"')
+             .field("created_at")
+             .field('name')
+             .field('units')
+             .field('years')
+             .where('name IN  (?)', that.cubes.join(',')).toString();
+        that.query(sqlstatement, function(query_result){
+            callback(query_result);
+        });
     };
 
     this.calculate_clusters = function(response){
