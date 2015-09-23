@@ -49,6 +49,4 @@ openpyxl==2.2.2
 jsmin==2.1.1
 Pygments==2.0.2
 Flask-DebugToolbar==0.10.0
-numpy==1.9.2
-scipy==0.16.0
-PySAL==1.10.0
+dataset==0.6.1

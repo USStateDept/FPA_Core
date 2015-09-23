@@ -128,3 +128,42 @@ def schemadraw(**args):
         show_multiplicity_one=False # some people like to see the ones, some don't
     )
     graph.write_png('./doc/DevOps/dbschema.png') # write out the file
+
+
+from openspending.lib.denormalize import denormalize as denormalize_table
+from openspending.views.api_v2.dataset import index as get_datasets
+import json
+from sqlalchemy import MetaData
+import sys
+
+@manager.option('-d', '--drop', dest='droptables', action='store_true',
+                help="Drop existing tables (Optional)",
+                required=False,
+                default=None)
+@manager.command
+def denormalize(**args):
+    """
+    fetch all of the data tables and create a denomalized flat table.  
+    """
+    try:
+        import dataset
+    except ImportError:
+        print "dataset must be installed, pip install dataset"
+        sys.exit()
+
+    droptables = args.get('droptables', None)
+    resp= get_datasets()
+    datasetdb = dataset.connect(current_app.config.get("SQLALCHEMY_DATABASE_URI"), schema="finddata")
+    datasets = json.loads(resp.data)
+    metadata = MetaData(bind=db.engine)
+    try:
+        db.session.execute("CREATE SCHEMA finddata")
+    except Exception, e:
+        print e
+
+    existingtables = datasetdb.tables
+
+    for d in datasets:
+        tablename = d['name']
+
+        result = denormalize_table(tablename=tablename, existingtables=existingtables, droptables=droptables, datasetdb=datasetdb,metadata=metadata)
