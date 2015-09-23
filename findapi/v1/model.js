@@ -317,7 +317,6 @@ var DataSource = function(request, response, rescallback) {
         var response= {};
         response['cells'] = result['rows'];
         response['attributes'] = _.map(that.drilldown, function(d){
-            console.log(d);
             return d[0];
         });
         that.get_dataset_metadata(function(rowresult){
@@ -401,7 +400,6 @@ var DataSource = function(request, response, rescallback) {
 
     this.calculate_clusters = function(response){
         var clusternum = that.clusterparams.numclusters;
-        console.log(that.clusterparams);
 
 
         if (! clusternum){

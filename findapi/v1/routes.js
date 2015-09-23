@@ -72,6 +72,10 @@ module.exports = function() {
 	 *  }
 	 */
 	App.Express.get("/api/5/slicer/aggregate", function (req, res) {
+		res.header('Access-Control-Allow-Origin', '*');
+		res.header('Access-Control-Allow-Methods', 'GET');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
+
 		var ds = new DataSource(req, res, function(resdata){
 			if (! ds){
 				errorHandling.handle("There was an error", res);

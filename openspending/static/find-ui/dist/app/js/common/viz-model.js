@@ -26,9 +26,9 @@
 
             var groupId = vizModel.activeGroup().id;
             if (groupId != "all") {
-                var urlTemplate = "/api/3/slicer/aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&daterange={yearFrom}-{yearTo}&order=time"
+                var urlTemplate = window.config.server + "/slicer/aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&daterange={yearFrom}-{yearTo}&order=time"
             } else {
-                var urlTemplate = "/api/3/slicer/aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}&daterange={yearFrom}-{yearTo}&order=time"
+                var urlTemplate = window.config.server + "/slicer/aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}&daterange={yearFrom}-{yearTo}&order=time"
             }
             //var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}"
             var url = urlTemplate.replace(/{indicator_id}/g, indicator.id);

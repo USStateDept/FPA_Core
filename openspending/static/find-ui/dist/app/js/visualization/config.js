@@ -1,7 +1,7 @@
 (function() {
 
     window.config = {
-        "server": "/api/3",
+        "server": "http://localhost:3000/api/5",
 
         "services": {
 

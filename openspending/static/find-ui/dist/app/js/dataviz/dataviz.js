@@ -1183,7 +1183,7 @@
 
 
         var statsData = _.remove(responseDeferred, function(r) {
-            return r[0].attributes.length == 1 && r[0].attributes[0] == "geometry__time.time";
+            return r[0].attributes.length == 1 && r[0].attributes[0] == "time";
         });
 
 
@@ -1195,14 +1195,7 @@
 
 
             _.forEach(data.attributes, function(v){
-                if (v == "geometry__country_level0"){
-                    data.cutBy = "name";
-                    return false;
-                }
-                else if (v.indexOf("geometry__country_level0") > -1){
-                    data.cutBy = v.split(".")[1];
-                    return false;
-                }
+                if (v != "time"){data.cutBy = v;return false;}
             });
 
         });
@@ -1304,7 +1297,6 @@
         } else {
 
             //yearsExtremesForData = window.utils.getHashParams().f.split("|");
-
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
             //debugger;
             var highChartsJson = sortedData.highcharts;

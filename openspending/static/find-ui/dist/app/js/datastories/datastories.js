@@ -12,8 +12,8 @@
    var type = "line";
    var chartType = type;
    
-   var dataUrl = '/api/3/slicer/aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&daterange='+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__country_level0@'+regions+'|geometry__time';
-   var globalDataUrl = 'api/3/slicer/aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&daterange='+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__time';
+   var dataUrl = window.config.server + '/slicer/aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&daterange='+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__country_level0@'+regions+'|geometry__time';
+   var globalDataUrl = window.config.server + '/slicer/aggregate?&cluster=jenks&numclusters=4&cubes='+indicator+'&daterange='+yearFrom+'-'+yearTo+'&order=time&drilldown=geometry__time';
    var metaUrl = 'api/3/datasets/' + indicator;
    
    var data;

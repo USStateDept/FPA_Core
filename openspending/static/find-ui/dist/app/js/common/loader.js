@@ -53,7 +53,7 @@
 
         //////////////////////////////////////////////
 
-        var urlPrefix = "/api/3/slicer/aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&daterange={yearFrom}-{yearTo}&order=time";
+        var urlPrefix = window.config.server + "/slicer/aggregate?&cluster=jenks&numclusters=4&cubes={indicator_id}&daterange={yearFrom}-{yearTo}&order=time";
         urlPrefix = urlPrefix.replace(/{indicator_id}/g, indicatorIds.join("|"));
         urlPrefix = urlPrefix.replace(/{yearFrom}/g, yearsExtremes[0]);
         urlPrefix = urlPrefix.replace(/{yearTo}/g, yearsExtremes[1]);
