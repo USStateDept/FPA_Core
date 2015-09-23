@@ -16,6 +16,7 @@ var moment = require("moment");
 var pg = require('pg');
 var squel = require("squel");
 var calculateJenks = require("./jenks").calculateJenks;
+var errorHandling = require("./errorHandling");
 //(optionally) set the SQL dialect
 
 
@@ -34,8 +35,10 @@ var DEFAULTDRILLDOWN = {"geometry__country_level0":"sovereignt","geometry__time"
  * The model object
  * @constructor
  */
-var DataSource = function(request, rescallback) {
+var DataSource = function(request, response, rescallback) {
     var that = this;
+
+    this.response = response;
 
     this.rescallback = rescallback;
 
@@ -67,6 +70,7 @@ var DataSource = function(request, rescallback) {
     this.client = new pg.Client(connectionString);
     this.client.connect(function(err){
         if (err){
+            errorHandling.handle("There was an error with the database: " + err, that.response);
             console.log("could not connect to postgres");
             console.log(err);
         }
@@ -76,7 +80,9 @@ var DataSource = function(request, rescallback) {
 
       that.client.query(_query, function(err, result) {
         if(err) {
-          return console.error('error running query', err);
+            errorHandling.handle("Error on query: " + err + "\n" + _query, that.response);
+            console.log("Error on query: " + err + "\n" + _query);
+            return null;
         }
         callback({
             "success": true,
@@ -101,7 +107,8 @@ var DataSource = function(request, rescallback) {
     this.parseParams = function(request, _callback){
         var cubes_arg = request.query['cubes'];
         if (! cubes_arg){
-            console.log("No cube passed");
+            errorHandling.handle("No data to fetch, no cubes argument", that.response);
+            console.log("No data to fetch, no cubes argument");
             return null;
         }
 
@@ -308,7 +315,12 @@ var DataSource = function(request, rescallback) {
         var response= {};
         response['cells'] = result['rows'];
         that.get_dataset_metadata(function(rowresult){
-            response['models'] = rowresult.rows;
+            response['models'] = _.map(rowresult.rows, function(d){
+                d.years= _.sortBy(d.years.split(","), function(val){
+                    return +val;
+                });
+                return d;
+            });
             if (that.clusterparams['cluster'] == 'jenks'){
                 that.calculate_clusters(response);
             }
@@ -341,7 +353,7 @@ var DataSource = function(request, rescallback) {
              .field('name')
              .field('units')
              .field('years')
-             .where('name IN  (?)', that.cubes.join(',')).toString();
+             .where("name IN  (?)", that.cubes.join("','")).toString();
         that.query(sqlstatement, function(query_result){
             callback(query_result);
         });
@@ -384,6 +396,6 @@ var DataSource = function(request, rescallback) {
 }
 
 
-module.exports = function(request, rescallback) {
-    return new DataSource(request, rescallback);
+module.exports = function(request, response, rescallback) {
+    return new DataSource(request, response, rescallback);
 };
