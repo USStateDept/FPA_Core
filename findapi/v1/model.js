@@ -15,6 +15,7 @@ var _ =  require("underscore");
 var moment = require("moment");
 var pg = require('pg');
 var squel = require("squel");
+var calculateJenks = require("./jenks").calculateJenks;
 //(optionally) set the SQL dialect
 
 
@@ -26,6 +27,7 @@ var connectionString = require("../database").connectionString;
 var FORMATOPTS = {'json':true, 'csv':true, 'excel':true, 'xls':true};
 var RETURNLIMIT= 10000;
 var DEFAULTDRILLDOWN = {"geometry__country_level0":"sovereignt","geometry__time":"time"};
+
 
 
 /**
@@ -222,23 +224,24 @@ var DataSource = function(request, rescallback) {
 
     this.buildQuery = function(){
         that.primary_table = _.values(that.cubes_tables)[0];
-
+        that.primary_base = that.primary_table.split("__")[0];
         that.selectable = squel.select()
             .from("finddata." + that.primary_table + " AS " + that.primary_table)
             .field("COUNT(" + that.primary_table + ".geom_time_id)", "count")
-            .field("AVG(" + that.primary_table + ".amount)", that.primary_table + "__avg")
-            .field("MAX(" + that.primary_table + ".amount)", that.primary_table + "__max")
-            .field("MIN(" + that.primary_table + ".amount)", that.primary_table + "__min");
+            .field("AVG(" + that.primary_table + ".amount)", that.primary_base + "__avg")
+            .field("MAX(" + that.primary_table + ".amount)", that.primary_base + "__max")
+            .field("MIN(" + that.primary_table + ".amount)", that.primary_base + "__min");
 
         _.each(that.cubes_tables, function(cubes_ts, index){
             if (cubes_ts == that.primary_table){
                 return;
             }
+            var tempcube_base = cubes_ts.split("__")[0]
             that.selectable = that.selectable
-                .outer_join("finddata." + cubes_ts + " AS " + cubes_ts, null, cubes_ts + ".geom_time_id = "+ that.primary_table  + ".geom_time_id")
-                .field("AVG(" + cubes_ts + ".amount)", that.primary_table + "__avg")
-                .field("MAX(" + cubes_ts + ".amount)", that.primary_table + "__max")
-                .field("MIN(" + cubes_ts + ".amount)", that.primary_table + "__min");
+                .right_join("finddata." + cubes_ts + " AS " + cubes_ts, null, cubes_ts + ".geom_time_id = "+ that.primary_table  + ".geom_time_id")
+                .field("AVG(" + cubes_ts + ".amount)", tempcube_base + "__avg")
+                .field("MAX(" + cubes_ts + ".amount)", tempcube_base + "__max")
+                .field("MIN(" + cubes_ts + ".amount)", tempcube_base + "__min");
         });
 
         _.each(that.drilldown, function(drilldowns, tablename){
@@ -293,7 +296,7 @@ var DataSource = function(request, rescallback) {
     };
 
     this.get_response = function(){
-        console.log(that.selectable.toString());
+        //console.log(that.selectable.toString());
         return that.query(that.selectable.toString());
 
     };
@@ -301,7 +304,12 @@ var DataSource = function(request, rescallback) {
     this.get_json= function(result){
         var response= {};
         response['cells'] = result['rows'];
-        that.rescallback(response);
+        if (that.clusterparams['cluster'] == 'jenks'){
+            that.calculate_clusters(response);
+        }
+        else{
+            that.rescallback(response);
+        }
 
     };
 
@@ -312,6 +320,36 @@ var DataSource = function(request, rescallback) {
     this.get_csv = function(){
 
     };
+
+    this.calculate_clusters = function(response){
+        var clusternum = that.clusterparams.numclusters;
+
+        if (! clusternum){
+            clusternum = 5;
+        }
+
+        var dataitem = response['cells'].map(function(d) { return+d[that.primary_table.split("__")[0] + "__avg"]; });
+
+        if (dataitem.length <= clusternum){
+            clusternum = dataitem.length;
+        }
+
+        var clusters = calculateJenks(dataitem, clusternum);
+
+        var labels= [];
+        _.each(clusters, function(val, index, list){
+            if (index >= list.length -1){
+                return false;
+            }
+            labels.push(val + "-" + list[index+1])
+        });
+        response['cluster'] = {
+            'data': clusters,
+            'labels': labels
+        };
+
+        that.rescallback(response);
+    }
 
     return this.parseParams(request);
 
