@@ -157,9 +157,9 @@ def denormalize(**args):
     datasets = json.loads(resp.data)
     metadata = MetaData(bind=db.engine)
     try:
-        db.session.execute("CREATE SCHEMA finddata")
+        db.engine.execute("CREATE SCHEMA finddata")
     except Exception, e:
-        print e
+        print "ERORR", e
 
     existingtables = datasetdb.tables
 
