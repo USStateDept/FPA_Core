@@ -1,9 +1,60 @@
-(function() {
+var indicatorsArray=[];
+selectedIndicatorMultipleCount=0;
+function changeBubbleSquare(){
+    $("#bubbleIconSquare").after(
+                                "<div id='showAxes' style='width:40%;padding:0'>"+
+                                // "<div class='row' style='width: 30%; padding:0'>\n"+
+                                    // "<div class='col-md-2'>\n"+
+                                    "<div>\n"+
+                                        "<small>\n"+
+                                            "<b class='pull-left'>X-axis:</b>\n"+
+                                            // "<br>\n"+
+                                            "<span id='bubble1'></span>\n"+
+                                        "</small>\n"+
+                                    "</div>\n"+
+                                    "<div>\n"+
+                                        "<small>\n"+
+                                            "<b class='pull-left'>Y-axis:</b>\n"+
+                                            // "<br>\n"+
+                                            "<span id='bubble0'></span>\n"+
+                                        "</small>\n"+
+                                    "</div>\n"+
+                                    "<div>\n"+
+                                        "<small>\n"+
+                                            "<b class='pull-left'>Bubble size:</b>\n"+
+                                            // "<br>\n"+
+                                            "<span id='bubble2'></span>\n"+
+                                        "</small>\n"+
+                                    "</div>\n"
+                                    +
+                                "</div>"
+                                );
+    $("#bubbleIconSquare").css({'width':'35%','padding':0, 'float':'right'});
+    // $("#bubbleIconSquare").css();
+    // $("#bubbleIconSquare").css('class', 'pull-right');
+    $("#bubbleSquare").css({'float':'right'});
+    $("#bubble1").text(indicatorsArray[1]);
+    $("#bubble0").text(indicatorsArray[0]);
+    $("#bubble2").text(indicatorsArray[2]);
+    // console.log("changeBubbleSquare executed");
+}
 
+function unchangeBubbleSquare(){
+    $("#showAxes").remove();
+    $("#bubbleIconSquare").css({'width':'100%','float':'none'});
+    $("#bubbleSquare").css({'float':'none'});
+}
+
+(function() {
 
     window.vizModel = {
 
-        indicatorsArray: ko.observable([]),
+        // getIndicatorsArray: function(x){
+        //     console.log("x is: " + x);
+        //     console.log("getIndicatorsArray test");
+        //     console.log("indicatorsArray[x] is: "+indicatorsArray[x]);
+        //     return indicatorsArray[x];
+        // },
 
         selectView: function(type) {
 
@@ -92,8 +143,8 @@
         selectIndicatorMultiple: function(selectedIndicator, evt, goToVisualize) {
 
             // console.log("TESTING");
-            console.log("Selected Indicator is: " + selectedIndicator.label);
-            $.each(selectedIndicator, function(k,v){console.log(k+ " : "+ v)});
+            // console.log("Selected Indicator is: " + selectedIndicator.label);
+            // $.each(selectedIndicator, function(k,v){console.log(k+ " : "+ v)});
             if (goToVisualize) {
                 //TODO: Calculate Year Extremes
                 window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&r=dos_region:all";
@@ -112,8 +163,19 @@
               $this.addClass("selected");
               vizModel.activeIndicators.push(selectedIndicator);
               // vizModel.indicatorsArray.push(selectedIndicator.label);
-              console.log(vizModel.indicatorsArray);
+              indicatorsArray.push(selectedIndicator.label);
+              // console.log("Indicators Array is: " + indicatorsArray);
+              if (indicatorsArray.length==3){
+                changeBubbleSquare();
+                  // $("#bubble1").text(indicatorsArray[1]);
+                  // $("#bubble0").text(indicatorsArray[0]);
+                  // $("#bubble2").text(indicatorsArray[2]);
+              }
+              else{
+                unchangeBubbleSquare();
+              }
             }
+            selectedIndicatorMultipleCount++;
 
             // console.log("activeIndicators is: " + vizModel.activeIndicators[0].label);
             // console.log("activeIndicators is: " + vizModel.activeIndicators[1].label);
@@ -264,6 +326,7 @@
 
         clearActiveIndicators: function() {
             // remove from list
+            indicatorsArray=[];
             vizModel.activeIndicators.removeAll();
             // removed selected class
             $( ".indicator-item").removeClass("selected");

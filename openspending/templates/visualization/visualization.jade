@@ -251,26 +251,26 @@ link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.l
                   h4 Scatter
               .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length!=3}")
                 div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;bubble&#34;)}')
-                  div.well.category.noun-scatter-105477()
-                  h4 Bubble
-                  div.row
-                    div.col-md-4
-                      small
-                        b.pull-left X-axis:
-                        br
-                        span(data-bind="text: indicatorsArray[0]")
-                    div.col-md-4
-                      small
-                        b.pull-left Y-axis:
-                        br
-                        p.
-                          test
-                    div.col-md-4
-                      small
-                        b.pull-left Bubble size:
-                        br
-                        p.
-                          test
+                  div#bubbleIconSquare.well.category.noun-scatter-105477()
+                  h4#bubbleSquare Bubble
+                  //- div.row
+                  //-   div.col-md-4
+                  //-     small
+                  //-       b.pull-left X-axis:
+                  //-       br
+                  //-       //- span(data-bind="text: getIndicatorsArray(0)")
+                  //-       span#bubble1
+                  //-   div.col-md-4
+                  //-     small
+                  //-       b.pull-left Y-axis:
+                  //-       br
+                  //-       span#bubble0
+                  //-   div.col-md-4
+                  //-     small
+                  //-       b.pull-left Bubble size:
+                  //-       br
+                  //-       span#bubble2
+                        
               .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length<2}")
                 div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
                   div.well.category.noun-radar-50835()
