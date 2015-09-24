@@ -1111,7 +1111,7 @@ var act;
                 tooltip: {
                     formatter: function() {
                         var number = this.point.y
-                        return metadatas[0].label + '<br/>' + this.key + ': <b>' + Math.floor(this.point.y) + '</b>'
+                        return metadatas[0].label + '<br/>' + this.key + ': <b>' + this.point.y.toFixed(2) + '</b>'
                     }
                 },
                 series: seriesArray
