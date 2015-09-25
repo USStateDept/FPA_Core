@@ -106,7 +106,7 @@ link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.l
                 .row.f32(data-bind="foreach:_.values(activeGroup().regions)")
                   .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
                     span(data-bind='click:$root.selectCountry,css:{selected:selected}')
-                      span(style="vertical-align:middle" data-bind="html:label")
+                      span(style="vertical-align:middle;cursor:pointer;" data-bind="html:label")
                     div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
                   span(data-bind="foreach:$data.countries,css:{hasCountryFilter:$root.hasCountryFilter}")
                     .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
