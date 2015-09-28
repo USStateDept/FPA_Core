@@ -1,14 +1,13 @@
-language: node_js
+language: python
 python:
   - "2.7"
-node_js:
-  - "0.10" 
 addons:
   postgresql: "9.3"
 env:
  global:
     - OPENSPENDING_SETTINGS=./test_settings.py
     - NODE_ENV=testing
+sudo: required
 services:
   - rabbitmq
 before_install:
@@ -19,17 +18,17 @@ install:
   # To install external filter binaries, we first need to install
   # RubyGems and Node/NPM. I'm not sure why, since it seems clear
   # that NVM and RVM are pre-installed (see below).
-  # - sudo apt-get install python-software-properties
-  # - sudo apt-add-repository -y ppa:chris-lea/node.js
-  # - sudo apt-get update
-  # - sudo apt-get install nodejs
+  - sudo apt-get install python-software-properties
+  - sudo apt-add-repository -y ppa:chris-lea/node.js
+  - sudo apt-get update
+  - sudo apt-get install nodejs
   # These are useful for debugging this mess.
   #- env
   #- gem env
   #- rvm info
   # Use non-http registry? https://github.com/n1k0/casperjs/issues/876
   # Without this, installing doesn't work.
-  #- sudo npm config set registry http://registry.npmjs.org/
+  - sudo npm config set registry http://registry.npmjs.org/
 
   # Now install the external filter binaries, finally.
   # If we use sudo for this, ruby gems will not work: it seems they are
@@ -43,7 +42,7 @@ install:
   #- tar -zxvf google-refine-2.1-r2136.tar.gz
   #- sudo google-refine-2.1/refine
   - npm install --prefix ./findapi
-  - npm install -g forever
+  - npm install -g forever nodemon
 
 
   - pip install -r linuxreqs.txt -e .
@@ -52,13 +51,17 @@ install:
 
 
 before_script:
-  - forever start findapi/app.js
   - psql -c 'create database openspending_testing;' -U postgres
   - psql -d openspending_testing -U postgres -c "create extension postgis"
   - pg_restore -d openspending_testing -U postgres < ./openspending/tests/fixtures/testing_database.backup
+  - forever start --workingDir=findapi findapi/app.js
+  - sleep 5
+  - curl http://localhost:3000/
+  - forever list
   #make sure there is the latest db schema
   #migrate script didn't work with absolute location
   #- ostool db migrate
+  - node --version
   - nosetests --version
 script:
   - nosetests --with-coverage --cover-package=openspending

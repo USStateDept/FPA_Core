@@ -50,6 +50,7 @@ jsmin==2.1.1
 Pygments==2.0.2
 Flask-DebugToolbar==0.10.0
 dataset==0.6.1
+python-dateutil==2.4.2
 #https://s3.amazonaws.com/finddeps/numpy-1.9.2%2Bmkl-cp27-none-win32.whl
 #https://s3.amazonaws.com/finddeps/scipy-0.16.0-cp27-none-win32.whl
 #https://s3.amazonaws.com/finddeps/PySAL-1.10.0-py2-none-any.whl
