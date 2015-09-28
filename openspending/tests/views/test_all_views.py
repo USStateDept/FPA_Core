@@ -41,7 +41,7 @@ class TestDatasetController(ControllerTestCase):
         assert '200' in response.status
 
     def test_categories_dataorgs(self):
-        response = self.client.get(url_for('categories_api2.dataorgs'))
+        response = self.client.get(url_for('datasets_api2.dataorgs'))
         assert '200' in response.status 
 
     def test_countries_countrieslist(self):

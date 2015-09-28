@@ -24,8 +24,8 @@ class TestCountryModel(ControllerTestCase):
 
     def test_all_countries(self):
         result = Country.get_all_json()
-        assert len(result['data']) == 198
-        assert len(result['data'][0]['regions']) == 8
+        assert len(result) == 198
+        assert len(result[0]['regions']) == 8
 
     def test_properties_regions(self):
         tempobj = Country.by_gid(1)
