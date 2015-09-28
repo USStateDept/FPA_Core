@@ -1,4 +1,9 @@
 set OPENSPENDING_SETTINGS=%CD%\test_settings.py
+set PYTHONHOME=
+set PYTHONPATH=
+
+
+call forever start findapi\app.js
 
 set /p PGPASSWORD="Postgres password: "
 
@@ -14,5 +19,9 @@ ostool db migrate
 
 nosetests 
 
+call forever stopall
+
 "C:\Program Files\PostgreSQL\9.3\bin\dropdb.exe" -U postgres -W openspending_testing
+
+set OPENSPENDING_SETTINGS=%CD%\settings.py
 

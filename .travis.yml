@@ -1,6 +1,8 @@
-language: python
+language: node_js
 python:
   - "2.7"
+node_js:
+  - "0.10" 
 addons:
   postgresql: "9.3"
 env:
@@ -19,14 +21,14 @@ install:
   # - sudo apt-get install python-software-properties
   # - sudo apt-add-repository -y ppa:chris-lea/node.js
   # - sudo apt-get update
-  # - sudo apt-get install nodejs rubygems
+  # - sudo apt-get install nodejs
   # These are useful for debugging this mess.
   #- env
   #- gem env
   #- rvm info
   # Use non-http registry? https://github.com/n1k0/casperjs/issues/876
   # Without this, installing doesn't work.
-  # - sudo npm config set registry http://registry.npmjs.org/
+  #- sudo npm config set registry http://registry.npmjs.org/
 
   # Now install the external filter binaries, finally.
   # If we use sudo for this, ruby gems will not work: it seems they are
@@ -39,6 +41,8 @@ install:
   #- wget http://google-refine.googlecode.com/files/google-refine-2.1-r2136.tar.gz
   #- tar -zxvf google-refine-2.1-r2136.tar.gz
   #- sudo google-refine-2.1/refine
+  - npm install --prefix ./findapi
+  - npm install -g forever
 
 
   - pip install -r linuxreqs.txt -e .
@@ -47,6 +51,7 @@ install:
 
 
 before_script:
+  - forever start findapi/app.js
   - psql -c 'create database openspending_testing;' -U postgres
   - psql -d openspending_testing -U postgres -c "create extension postgis"
   - pg_restore -d openspending_testing -U postgres < ./openspending/tests/fixtures/testing_database.backup

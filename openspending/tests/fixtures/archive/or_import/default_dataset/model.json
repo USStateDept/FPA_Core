@@ -1,8 +1,0 @@
-{
-  "dataset": {
-    "name": "UNOrganization",
-    "unique_keys": ["entry_id"],
-    "label": "Un Date for stuff",
-    "description": "Non-blank description"
-  }
-}

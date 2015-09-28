@@ -7,7 +7,7 @@ module.exports = {
 	 */
 	address: "0.0.0.0",
 	port: 3000,
-	databaseURI: "postgres://postgres:1Password@localhost/find_may15",
+	databaseURI: "postgres://postgres:1Password@localhost/openspending_testing",
 	/**
 	 * Versioned configuration
 	 */

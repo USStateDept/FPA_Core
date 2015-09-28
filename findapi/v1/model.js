@@ -321,9 +321,14 @@ var DataSource = function(request, response, rescallback) {
         });
         that.get_dataset_metadata(function(rowresult){
             response['models'] = _.map(rowresult.rows, function(d){
-                d.years= _.sortBy(d.years.split(","), function(val){
-                    return +val;
-                });
+                if (! d.years){
+                    d.years = [];
+                }
+                else{
+                    d.years= _.sortBy(d.years.split(","), function(val){
+                        return +val;
+                    });
+                }
                 return d;
             });
             if (that.clusterparams['cluster'] == 'jenks'){
