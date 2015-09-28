@@ -1,0 +1,12 @@
+{
+
+	"address": "0.0.0.0",
+	"port": 3000,
+	"databaseURI": "postgres://postgres:1Password@localhost/openspending_testing",
+	"v1": {
+		"cacheEnabled": false,
+		"cacheDuration": 3600000,
+		"adminKeyEnabled": true,
+		"adminKey": "boilerplatesRock"
+	}
+}

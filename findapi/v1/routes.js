@@ -6,7 +6,7 @@ var App = require("../core");
 var _ =  require("underscore");
 var errorHandling = require("./errorHandling");
 var tokens = require("../tokens");
-var config = require("../config").v1;
+var config = require("config").get("v1");
 var DataSource = require("./model");
 
 module.exports = function() {

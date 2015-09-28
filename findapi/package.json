@@ -12,6 +12,7 @@
 		"querystring":"*",
 		"squel":"*",
 		"excel-export": "~0.4.1",
-		"express-csv": "~0.6.0"
+		"express-csv": "~0.6.0",
+		"config": "~1.16.0"
 	}
 }

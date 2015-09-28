@@ -7,7 +7,7 @@
  * @class Model
  * @version 1
  */
-var configpg = require("../config");
+var configpg = require("config");
 //var request = require("request");
 var querystring = require("querystring");
 var url = require('url');
@@ -22,7 +22,7 @@ var csv = require('express-csv')
 //(optionally) set the SQL dialect
 
 
-var config = require("../config").v1;
+var config = require("config").get("v1");
 var connectionString = require("../database").connectionString;
 
 
@@ -66,7 +66,7 @@ var DataSource = function(request, response, rescallback) {
 
     this.cachedresult = null;
 
-    var connectionString =  configpg.databaseURI || 'postgres://localhost:5432/openspending'
+    var connectionString =  configpg.get("databaseURI") || 'postgres://localhost:5432/openspending'
 
 
     this.client = new pg.Client(connectionString);

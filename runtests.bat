@@ -1,9 +1,10 @@
 set OPENSPENDING_SETTINGS=%CD%\test_settings.py
 set PYTHONHOME=
 set PYTHONPATH=
+set NODE_ENV=testing
 
 
-call forever start findapi\app.js
+call forever start --workingDir=findapi findapi\app.js
 
 set /p PGPASSWORD="Postgres password: "
 
@@ -24,4 +25,4 @@ call forever stopall
 "C:\Program Files\PostgreSQL\9.3\bin\dropdb.exe" -U postgres -W openspending_testing
 
 set OPENSPENDING_SETTINGS=%CD%\settings.py
-
+set NODE_ENV=development

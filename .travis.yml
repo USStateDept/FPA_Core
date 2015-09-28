@@ -8,6 +8,7 @@ addons:
 env:
  global:
     - OPENSPENDING_SETTINGS=./test_settings.py
+    - NODE_ENV=testing
 services:
   - rabbitmq
 before_install:

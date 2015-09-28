@@ -1,6 +1,6 @@
 var pg = require('pg');
-var config = require("./config");
+var config = require("config");
 
 module.exports = {
-	connectionString: config.databaseURI || 'postgres://localhost:5432/openspending'
+	connectionString: config.get("databaseURI") || 'postgres://localhost:5432/openspending'
 };
