@@ -83,7 +83,6 @@
   -moz-perspective: 800;
   -o-perspective: 800;
   min-height: 225px;
-  position: relative;
 }
 .flip .no-padding {
   padding: 0;

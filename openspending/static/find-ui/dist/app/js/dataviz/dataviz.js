@@ -830,6 +830,11 @@
             }
         });
 
+        for(var i=0;i<dataWide.length;i++){
+            if(dataWide[i]["country"]===null)
+                dataWide.splice(i,1);
+        }
+
         var options = {
             enableCellNavigation: true,
             enableColumnReorder: true,
@@ -1298,7 +1303,7 @@
 
             //yearsExtremesForData = window.utils.getHashParams().f.split("|");
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
-            //debugger;
+            
             var highChartsJson = sortedData.highcharts;
             //add the min,max and avg to the data-proxy span
             if (chartType == "bar") {

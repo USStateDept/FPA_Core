@@ -193,23 +193,22 @@ var act;
                 "indicators": indicatorsInSource
             }
 
-            var newSourceArray = ["MCC","CDA","DHS","SDG",,"UIS","WHO","IMF"];
-            var label=newSource.label.split("-")[0].trim();
-            // console.log(newSource.label);
-            if (newSourceArray.indexOf(label)!=-1){
-                // console.log("REACHED THIS LINE");
+            var newSourceArray = ["MCC","CDA","DHS","SDG","UIS","WHO","IMF"];
+            var label = newSource.label.split("-")[0].trim();
+
+
+            if (newSourceArray.indexOf(label) != -1){
                 sourcesModel.push(newSource);
             }
 
         }
-        //debugger;
+
         //Get the actual categories and sources
         for (var ind in indicatorsAll.data) {
 
             var newIndicator = indicatorsAll.data[ind];
             var sourceId = newIndicator.source;
             var categoryId = newIndicator.category;
-
 
             newIndicator.source = _.get(sourcesAll, 'data[sourceId].label');
             newIndicator.category = _.get(categoriesAll, 'data[categoryId].label');
@@ -218,10 +217,7 @@ var act;
             //newIndicator.popup = newIndicator.source + "<br>" + newIndicator.category;
             indicatorsModel.push(newIndicator);
 
-
-
         }
-        // debugger;
 
         model.categoriesModel(categoriesModel);
         model.sourcesModel(sourcesModel);
@@ -288,7 +284,7 @@ var act;
 
     window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson,countries) {
 
-        if (regions[0].indexOf(":") > -1) 
+        if (regions[0].indexOf(":") > -1)
             regions=countries;
 
         if (window.loader.geoJsonLayers[type]) {
@@ -323,7 +319,7 @@ var act;
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
                 featuresAdded.push(polygon);
-                
+
                 return {
 
                     weight: 2,
@@ -573,7 +569,7 @@ var act;
         var title = indicators[0];
         if (! window.utils.metadatas){
             var metadatas = _.values(statsData['models']);
-            window.utils.metadatas = metadatas;            
+            window.utils.metadatas = metadatas;
         }
         else{
             var metadatas = window.utils.metadatas;
@@ -821,7 +817,7 @@ var act;
         // user should be able to switch between the x, y and z
         var latestYear = yearsExtremesForData[1];
         var firstYear = yearsExtremesForData[0];
-        
+
         if (type == "scatter") {
 
             seriesArray = [];
@@ -1111,7 +1107,7 @@ var act;
                 tooltip: {
                     formatter: function() {
                         var number = this.point.y
-                        return metadatas[0].label + '<br/>' + this.key + ': <b>' + Math.floor(this.point.y) + '</b>'
+                        return metadatas[0].label + '<br/>' + this.key + ': <b>' + this.point.y.toFixed(2) + '</b>'
                     }
                 },
                 series: seriesArray
