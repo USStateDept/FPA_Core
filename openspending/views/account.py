@@ -51,7 +51,9 @@ def login():
     else:
         values = {"csrf_token": generate_csrf_token()}
 
-    return render_template('account/login.jade', form_fill=values)
+    return render_template('account/login.jade', 
+                        form_fill=values,
+                        form_fill_login=values)
 
 
 @blueprint.route('/login', methods=['POST', 'PUT'])
@@ -84,7 +86,6 @@ def register():
 
         #check that email is real
         #get the domain
-        print data['email']
         if (data['email'].find('@') == -1 or data['email'].find('.') == -1):
             flash_error("You must use a valid USG email address")
             raise colander.Invalid(AccountRegister.email,
@@ -145,7 +146,8 @@ def register():
     else:
         values["csrf_token"] = generate_csrf_token()
     return render_template('account/login.jade', form_fill=values,
-                           form_errors=errors)
+                           form_errors=errors,
+                           form_fill_login={'csrf_token': values['csrf_token']})
 
 
 @blueprint.route('/account/verify', methods=['POST', 'GET'])

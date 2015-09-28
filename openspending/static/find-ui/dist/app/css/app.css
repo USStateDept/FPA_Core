@@ -304,6 +304,14 @@ background green,
 .slick-header-column {
   height: 100% !important;
 }
+.form-group .error-message {
+  color: #f00;
+}
+.form-group .error-message:after {
+  color: #f00;
+  content: ' *';
+  display: inline;
+}
 /****** MEDIA QUERIES ************/
 @media (min-width: 768px) {
   .app .jumbotron {

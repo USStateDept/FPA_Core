@@ -16,7 +16,7 @@ div.container
   .row
     div.col-md-4
       h3 Login
-      {% formfill form_fill with form_errors %}
+      {% formfill form_fill_login with form_errors_login %}
       form.basic.login.form-horizontal(id="login", action="{{ url_for('account.login') }}", method="POST")
         input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
         fieldset
