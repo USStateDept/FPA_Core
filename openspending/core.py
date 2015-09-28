@@ -6,7 +6,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.cache import Cache
 from flask.ext.mail import Mail
-from flask.ext.assets import Environment
 from flaskext.uploads import UploadSet, IMAGES, configure_uploads
 import formencode_jinja2
 #from celery import Celery
@@ -41,7 +40,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 cache = Cache()
 mail = Mail()
-assets = Environment()
 #auth = HTTPDigestAuth()
 
 sourcefiles = UploadSet('sourcefiles', extensions=('txt', 'rtf', 'odf', 'ods', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'json', 'xml'))
@@ -72,7 +70,6 @@ def create_app(**config):
     db.init_app(app)
     cache.init_app(app)
     mail.init_app(app)
-    assets.init_app(app)
     login_manager.init_app(app)
     configure_uploads(app, (sourcefiles,))
 
@@ -104,11 +101,6 @@ def create_app(**config):
     def shutdown_session(exception=None):
         db.session.remove()
 
-    # with app.app_context():
-    #     app.cubes_workspace = Workspace()
-        
-    #     app.cubes_workspace.register_default_store('OpenSpendingStore')
-
 
     return app
 
@@ -139,9 +131,6 @@ def create_web_app(**config):
 
         from openspending.views.context import generate_csrf_token
         app.jinja_env.globals['csrf_token'] = generate_csrf_token 
-
-        from openspending.assets.assets import register_assets
-        register_assets(assets)  
 
         configure_template_filters(app)
 
