@@ -21,7 +21,7 @@ anyjson==0.3.3
 celery==3.1.17
 colander==0.9.3
 decorator==3.4.0
-economics==0.1.2
+#economics==0.1.2
 lxml==3.4.1
 messytables==0.2.1
 mistune==0.7
@@ -36,8 +36,8 @@ Flask-Assets==0.10
 cssmin==0.2.0
 #wainting for merge of PR https://github.com/USStateDept/cubes/pull/1
 #git+https://github.com/USStateDept/cubes.git@DOSv.15
-git+https://github.com/nathanhilbert/cubes.git
-expressions==0.2.2
+#git+https://github.com/nathanhilbert/cubes.git
+3expressions==0.2.2
 grako==3.5.1
 restpager==0.1
 git+https://github.com/kroman0/refine-client-py.git@master
@@ -50,7 +50,7 @@ jsmin==2.1.1
 Pygments==2.0.2
 Flask-DebugToolbar==0.10.0
 dataset==0.6.1
-https://s3.amazonaws.com/finddeps/numpy-1.9.2%2Bmkl-cp27-none-win32.whl
-https://s3.amazonaws.com/finddeps/scipy-0.16.0-cp27-none-win32.whl
-https://s3.amazonaws.com/finddeps/PySAL-1.10.0-py2-none-any.whl
-https://s3.amazonaws.com/finddeps/psycopg2-2.6.1-cp27-none-win32.whl
+#https://s3.amazonaws.com/finddeps/numpy-1.9.2%2Bmkl-cp27-none-win32.whl
+#https://s3.amazonaws.com/finddeps/scipy-0.16.0-cp27-none-win32.whl
+#https://s3.amazonaws.com/finddeps/PySAL-1.10.0-py2-none-any.whl
+#https://s3.amazonaws.com/finddeps/psycopg2-2.6.1-cp27-none-win32.whl

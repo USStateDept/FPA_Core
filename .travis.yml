@@ -39,7 +39,6 @@ install:
   #- wget http://google-refine.googlecode.com/files/google-refine-2.1-r2136.tar.gz
   #- tar -zxvf google-refine-2.1-r2136.tar.gz
   #- sudo google-refine-2.1/refine
-  - pip install numpy
 
 
   - pip install -r linuxreqs.txt -e .
