@@ -2,9 +2,9 @@
 
 Forked from [Spendb](https://github.com/openspending/spendb) and based on their amazing work.
 
-[![Build Status](https://travis-ci.org/USStateDept/FPA_Core.svg)](https://travis-ci.org/USStateDept/FPA_Core)
+[![Build Status](https://travis-ci.org/USStateDept/FPA_Core.svg?branch=master)](https://travis-ci.org/USStateDept/FPA_Core)
 
-[![Coverage Status](https://coveralls.io/repos/USStateDept/FPA_Core/badge.svg)](https://coveralls.io/r/USStateDept/FPA_Core)
+[![Coverage Status](https://coveralls.io/repos/USStateDept/FPA_Core/badge.svg?branch=master&service=github)](https://coveralls.io/github/USStateDept/FPA_Core?branch=master)
 
 To assist the Office of US Foreign Assistance Resources in implementing the Foreign Policy Analysis 
 Data Project, the US State Department's Office of eDiplomacy’s Geo Development Services Team (Geo|DST) is implementing a data management and visualization solution.  The focus of this project is to make country-level 
