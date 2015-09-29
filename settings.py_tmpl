@@ -52,8 +52,14 @@ FILE_SYSTEM_STORAGE_FILE_VIEW = 'static'
 #UploadSet Flask-uploads management of files
 UPLOADS_DEFAULT_DEST = os.path.realpath('.') + '/datauploads/'
 
-#domain whitelist 
-EMAIL_WHITELIST = ['state.gov', 'whitehouse.gov']
+
+EMAIL_WHITELIST = ['state.gov', 
+                'census.gov',
+                'usmc.mil',
+                'mcc.gov',
+                'usaid.gov',
+                'usda.gov',
+                'usgs.gov']
 
 
 #approved hosts for proxy
