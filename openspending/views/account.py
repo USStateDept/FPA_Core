@@ -12,7 +12,7 @@ from openspending.model.account import (Account, AccountRegister,
 from openspending.lib.helpers import url_for, obj_or_404
 from openspending.lib.helpers import flash_error
 from openspending.lib.helpers import flash_notice, flash_success
-from openspending.lib.reghelper import sendhash
+from openspending.lib.reghelper import sendhash, send_reset_hash
 from openspending.views.context import generate_csrf_token
 
 from openspending.model import Dataview
@@ -113,12 +113,12 @@ def register():
 
         # Check if the username already exists, return an error if so
         if Account.by_email(data['email']):
-            flash_error("Login Name already exists.  Click reset password.")
+            flash_error("Login Name already exists.  Click request password reset to change your password.")
 
             #resend the hash here to the email and notify the user
             raise colander.Invalid(
                 AccountRegister.email,
-                "Login Name already exists.  Click reset password.")
+                "Login Name already exists.  Click request password reset to change your password.")
 
 
 
@@ -230,9 +230,11 @@ def verify():
 #Developemnt and beta only
 @blueprint.route('/accounts/email_message', methods=['GET'])
 def email_message():
+    """
+    Redirect user to this to tell them to go check their email
+    """
 
     user_id = request.args.get('id')
-
     useraccount = Account.by_id(user_id)
 
     if not useraccount:
@@ -243,10 +245,24 @@ def email_message():
         message = "This operation is not possible for this user type"
         return render_template('account/email_message.jade', message=message)
 
-    message_dict = sendhash(useraccount, gettext=True)
-    message = str(message_dict) + "<br/><br/><a href='" + message_dict['verifylink'] + "'><h3>Click to Verify</h3></a>"
 
-    return render_template('account/email_message.jade', message=message)
+    emailsplit = useraccount.email.split("@")
+    email = emailsplit[0][:3] + "*****@" + emailsplit[1]
+
+    flash_success("Your account is being set up.  Please see note below.")
+
+    message = """Thank you for your request.  An email has been sent to %s with 
+                further instructions.  If you have not recieved an email in next few minutes
+                 please try <a style='color:#337ab7' href='%s'>resetting your
+                 password</a>."""%(email, url_for('account.trigger_reset'))
+
+
+
+    # message_dict = sendhash(useraccount, gettext=True)
+    # message = str(message_dict) + "<br/><br/><a href='" + message_dict['verifylink'] + "'><h3>Click to Verify</h3></a>"
+
+    return render_template('account/email_message.jade', 
+                            message=message)
 
 
 
@@ -275,7 +291,7 @@ def trigger_reset():
 
     # If it's a simple GET method we return the form
     if request.method == 'GET':
-        return render_template('account/trigger_reset.html', form_fill=values)
+        return render_template('account/trigger_reset.jade', form_fill=values)
 
     # Get the email
     email = request.form.get('email')
@@ -283,7 +299,7 @@ def trigger_reset():
     # Simple check to see if the email was provided. Flash error if not
     if email is None or not len(email):
         flash_error("Please enter an email address!")
-        return render_template('account/trigger_reset.html',  form_fill=values)
+        return render_template('account/trigger_reset.jade',  form_fill=values)
 
     # Get the account for this email
     account = Account.by_email(email)
@@ -291,7 +307,7 @@ def trigger_reset():
     # If no account is found we let the user know that it's not registered
     if account is None:
         flash_error("No user is registered under this address!")
-        return render_template('account/trigger_reset.html',  form_fill=values)
+        return render_template('account/trigger_reset.jade',  form_fill=values)
 
     account.reset_loginhash()
     db.session.commit()
@@ -299,7 +315,7 @@ def trigger_reset():
 
 
     # Send the reset link to the email of this account
-    sendhash(account)
+    send_reset_hash(account)
 
 
     # Redirect to the login page
