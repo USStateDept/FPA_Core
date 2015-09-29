@@ -1,0 +1,31 @@
+{% extends "base.jade" %}
+
+{% block page_title %}{% trans %}Password reset{% endtrans %}{% endblock %}
+
+{% block content %}
+
+
+
+.container.content-text
+  .row
+    .col-md-12.col-xs-12.col-s-12
+      h2.page-header Reset your Password
+  .row
+    .col-md-12.col-xs-12.col-s-12
+      .row
+        p
+      .row
+        p If you have forgotten the password for your account, you can request an email with a link that will allow you to reset your account password.
+  .row
+    .col-md-12.col-xs-12.col-s-12
+      .row
+        p Please enter the email address you used to register your account.
+      .row
+        {% formfill form_fill with form_errors %}
+        form(action="{{ url_for('account.trigger_reset') }}", method="POST", class="form-inline")
+          input(type="hidden",name="csrf_token", value="{{ csrf_token() }}")
+          input(type="text", class="input-large span5", name="email", placeholder="Email")
+          button(type="submit", class="btn") Request a reset
+        {% endformfill %}
+
+{% endblock %}
