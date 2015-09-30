@@ -14,6 +14,8 @@ Install
 Development
 -------------------------------
 
+[API Documentation](development/api_documentation.md)
+
 [See a list of some software you may want to checkout](development/things_to_know.md)
 
 [The Database Schema](DevOps/dbschema.png)
