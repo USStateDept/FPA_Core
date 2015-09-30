@@ -121,6 +121,7 @@ def can_edit_post(user, post):
 
 def can_delete_post(user, post):
     """Moderators and owners of the post can delete them"""
+    topic = post.topic
     if can_moderate(user, topic.forum):
         return True
     if topic.locked or topic.forum.locked:

@@ -40,13 +40,13 @@ nav.navbar.navbar-default.navbar-fixed-top
           ul.dropdown-menu.account-dropdown
             li
               a(href="{{url_for('account.profile') }}") User Profile
-            //li.divider
-            //li
-            //  p
-            //    strong Forum
-            //  a(href="{{ url_for('forum.index') }}") Forum   
-            //  a(href="{{ url_for('forum.search') }}") Forum Search       
-            //  a(href="{{ url_for('forum.topictracker') }}") Tracked Topics
+            li.divider
+            li
+              p
+                strong Forum
+              a(href="{{ url_for('forum.index') }}") Forum   
+              a(href="{{ url_for('forum.search') }}") Forum Search       
+              a(href="{{ url_for('forum.topictracker') }}") Tracked Topics
             li.divider
             {% if current_user.admin %}
             li

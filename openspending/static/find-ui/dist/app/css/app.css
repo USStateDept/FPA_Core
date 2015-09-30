@@ -31,6 +31,9 @@ body {
 .app a {
   color: #336b99;
 }
+.app a.btn {
+  color: #fff;
+}
 .app .navbar-default {
   background-color: #336b99;
 }
