@@ -22,7 +22,7 @@ from openspending.views.faq import blueprint as faq
 # from openspending.views.source import blueprint as source
 # from openspending.views.run import blueprint as run
 # from openspending.views.dimension import blueprint as dimension
-from openspending.views.error import handle_error
+from openspending.views.error import handle_error, login_redirect
 #from openspending.views import api_v2
 from openspending.views import api_v3
 from openspending.views import api_v4
@@ -72,7 +72,7 @@ def register_views(app):
     app.error_handler_spec[None][400] = handle_error
     app.error_handler_spec[None][401] = handle_error
     app.error_handler_spec[None][402] = handle_error
-    app.error_handler_spec[None][403] = handle_error
+    app.error_handler_spec[None][403] = login_redirect
     app.error_handler_spec[None][404] = handle_error
     app.error_handler_spec[None][500] = handle_error
 

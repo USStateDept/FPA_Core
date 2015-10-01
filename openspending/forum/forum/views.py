@@ -20,9 +20,10 @@ from openspending.core import db
 from openspending.forum.utils.forum_settings import flaskbb_config
 from openspending.forum.utils.helpers import (get_online_users, time_diff, format_quote,
                                    do_topic_action)
-from openspending.auth.forum import (can_post_reply, can_post_topic,
+from openspending.auth.perms import (can_post_reply, can_post_topic,
                                        can_delete_topic, can_delete_post,
                                        can_edit_post, can_moderate)
+from openspending.auth import authenticated_required
 from openspending.forum.forum.models import (Category, Forum, Topic, Post, ForumsRead,
                                   TopicsRead)
 from openspending.forum.forum.forms import (QuickreplyForm, ReplyForm, NewTopicForm,
@@ -33,9 +34,9 @@ forum = Blueprint("forum", __name__)
 
 
 @forum.route("/")
+@authenticated_required
 def index():
     categories = Category.get_all(user=current_user)
-    print categories
 
     # Fetch a few stats about the forum
     user_count = User.query.count()
@@ -59,12 +60,14 @@ def index():
 
 @forum.route("/category/<int:category_id>")
 @forum.route("/category/<int:category_id>-<slug>")
+@authenticated_required
 def view_category(category_id, slug=None):
-    category, forums = Category.\
-        get_forums(category_id=category_id, user=current_user)
+    return redirect(url_for("forum.index"))
+    # category, forums = Category.\
+    #     get_forums(category_id=category_id, user=current_user)
 
-    return render_template("forum/forum/category.html", forums=forums,
-                           category=category)
+    # return render_template("forum/forum/category.html", forums=forums,
+    #                        category=category)
 
 
 @forum.route("/forum/<int:forum_id>")
@@ -396,7 +399,7 @@ def reply_post(topic_id, post_id):
             form.save(current_user, topic)
             return redirect(post.topic.url)
     else:
-        form.content.data = format_quote(post.username, post.content)
+        form.content.data = format_quote(post.user_id, post.content)
 
     return render_template("forum/forum/new_post.html", topic=post.topic, form=form)
 
@@ -471,7 +474,7 @@ def report_post(post_id):
 @login_required
 def raw_post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
-    return format_quote(username=post.username, content=post.content)
+    return format_quote(account_id=post.user_id, content=post.content)
 
 
 @forum.route("/<int:forum_id>/markread", methods=["POST"])

@@ -19,6 +19,7 @@ div.container
       {% formfill form_fill_login with form_errors_login %}
       form.basic.login.form-horizontal(id="login", action="{{ url_for('account.login') }}", method="POST")
         input(type="hidden", name="csrf_token", value="{{ csrf_token() }}")
+        input(type="hidden", name="next")
         fieldset
           div.form-group
             label(for="login") Email Login

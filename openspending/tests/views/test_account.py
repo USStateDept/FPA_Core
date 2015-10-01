@@ -16,6 +16,9 @@ from werkzeug.security import generate_password_hash
 
 
 class TestLockDownController(ControllerTestCase):
+    """
+    Test the lockdown function for the beta site
+    """
     def setUp(self):
         super(TestLockDownController, self).setUp()
         current_app.config['LOCKDOWN_FORCE'] = True
@@ -66,8 +69,8 @@ class TestAccountController(ControllerTestCase):
 
 
     # Account Register
-
-    # Account reset password
+    # check that user cannot regiseter with same email
+    # check that email is in whitelist
 
 
     def test_anon_user_access(self):
@@ -86,39 +89,53 @@ class TestAccountController(ControllerTestCase):
         assert '403' in response.status, \
             "Anon user cannot access admin"
 
+
+    def test_trigger_reset(self):
+        """
+        user should be able to trigger their own reset
+        """
+        oldhash = self.user.login_hash
+        res = self.client.post(url_for("account.trigger_reset"), data=dict(email=self.user.email), follow_redirects=True)
+        assert "The message would" in res.data
+
+        badhashres = self.client.get(url_for("account.verify", login=oldhash))
+        assert "This URL is no longer valid" in badhashres.data, "Old hash should not work"
+
+        goodhash = self.client.post(url_for('account.verify', login=self.user.login_hash), \
+                data=dict(loginhash=self.user.login_hash, password1='mypassword', password2='mypassword'), follow_redirects=True)
+        print goodhash.data
+        assert "Password saved and you are now verified" in goodhash.data, "Success should redirect back to homepage with message"
+
+
+    def test_trigger_reset_bademail(self):
+        """
+        bad emails should be redirected back to the same page
+        """
+        res = self.client.post(url_for("account.trigger_reset"), data=dict(email="notmyemail@nothing.com"), follow_redirects=True)
+        assert "No user is registered under this address" in res.data
+
+
+        
     # to be implemented
 
-    # def test_unverified_user(self):
+    def test_unverified_user(self):
+        """
+        check that unverified user can't go anywhere
 
-    #     self.user.verified = False
-    #     db.session.commit()
-    #     login_user(self.user, remember=True)
-    #     response = self.client.get(url_for('home.index'), follow_redirects = True)
+        """
+        myfakeuser = make_account(name="tester", fullname='tester',
+                    email='tester@test.com',
+                    admin=False, verified=False)
 
-    #     assert '302' in response.status, \
-    #         'Redirect unverified user to enter password stuff'
+        myfakeuser.password = generate_password_hash("mypassword")
+        db.session.commit()
 
-    # def test_admin_access(self):
-    #     self.user.admin = True
-    #     password = generate_password_hash('test')
-    #     self.user.password = password
-    #     db.session.commit()
+        res= self.client.post(url_for('account.login'), 
+                            data=dict(login="tester@test.com",
+                                        password='mypassword'), follow_redirects=True)
+        assert "The message would have been sent below" in res.data, "should show an email message inn debug"
 
-    #     print self.user.email
+        res2 = self.client.get(url_for("forum.index"))
+        assert '403' in res2.status, "should not be able to access the forum as unverified user"
 
-    #     self.client.post(url_for('account.login'), data=dict(
-    #                         login=self.user.email,
-    #                         password='test'
-    #                     ), follow_redirects=True)
-
-    #     print "here it is", require.account.is_admin()
-
-    #     response = self.client.get(url_for('home.index'))
-    #     assert '200' in response.status, \
-    #         'Admin is happy on dinex'
-    #     assert 'Explore country-level indicators from a variety of sources and sectors' \
-    #         in response.data 
-
-    #     response = self.client.get('/admin/useraccount/')
-    #     assert '200' in response.status, "Admin has access to user management"
 

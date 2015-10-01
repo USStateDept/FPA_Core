@@ -5,15 +5,14 @@ from flask import current_app
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from openspending.core import db, login_manager
-from openspending.auth import require
-#from openspending.model.dataset import Dataset
+
 from openspending.model.account import (Account, AccountRegister,
                                         AccountSettings)
 from openspending.lib.helpers import url_for, obj_or_404
-from openspending.lib.helpers import flash_error
-from openspending.lib.helpers import flash_notice, flash_success
+from openspending.lib.helpers import flash_notice, flash_success, flash_error
 from openspending.lib.reghelper import sendhash, send_reset_hash
 from openspending.views.context import generate_csrf_token
+from openspending.auth.perms import is_authenticated
 
 from openspending.model import Dataview
 
@@ -51,6 +50,9 @@ def login():
     else:
         values = {"csrf_token": generate_csrf_token()}
 
+    if request.args.get("next", None):
+        values['next'] =  request.args.get("next", None)
+
     return render_template('account/login.jade', 
                         form_fill=values,
                         form_fill_login=values)
@@ -67,7 +69,10 @@ def login_perform():
             logout_user()
             login_user(account, remember=True)
             flash_success("Welcome back, " + account.fullname + "!")
-            return redirect(url_for('home.index'))
+            if request.form.get("next", None):
+                return redirect(request.form.get("next"))
+            else:
+                return redirect(url_for('home.index'))
     flash_error("Incorrect user name or password!")
     return login()
 
@@ -331,7 +336,7 @@ from openspending.forum.forum.models import (Topic,
 @blueprint.route('/user/<int:account_id>', methods=['GET'])
 def profile(account_id=None):
     """ Render the user page. """
-    if not current_user.is_authenticated():
+    if not is_authenticated(current_user):
         flash_error("This is only for registered users")
         abort(403)
 

@@ -238,7 +238,7 @@
 
                         by
                         {% if forum.last_post.user_id %}
-                            <a href="{{ url_for('user.dataloader', username=forum.last_post.user.username) }}">{{ forum.last_post.user.username }}</a>
+                            <a href="{{ url_for('account.profile', username=forum.last_post.user.id) }}">{{ forum.last_post.user.username }}</a>
                         {% else %}
                             {{ forum.last_post.username }}
                         {% endif %}

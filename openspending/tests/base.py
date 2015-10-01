@@ -19,7 +19,8 @@ class TestCase(FlaskTestCase):
             'UPLOADS_DEFAULT_DEST': tempfile.mkdtemp(),
             'LOCKDOWNUSER': 'test',
             'LOCKDOWNPASSWORD': 'test',
-            'LOCKDOWN_FORCE': True
+            'LOCKDOWN_FORCE': True,
+            'CSRF_DISABLE': True
         })
         return app
 

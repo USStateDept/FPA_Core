@@ -25,6 +25,7 @@ from flask_login import current_user
 
 from openspending.forum.utils.forum_settings import flaskbb_config
 from openspending.forum.utils.markup import markdown
+from openspending.auth.perms import is_authenticated
 
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
@@ -60,7 +61,7 @@ def do_topic_action(topics, user, action, reverse):
                     For example, to unlock a topic, ``reverse`` should be
                     set to ``True``.
     """
-    from openspending.auth.forum import can_moderate, can_delete_topic
+    from openspending.auth.perms import can_moderate, can_delete_topic
     from openspending.model.account import Account as User
     from openspending.forum.forum.models import Post
 
@@ -172,7 +173,7 @@ def get_forums(query_result, user):
 
     it = itertools.groupby(query_result, operator.itemgetter(0))
 
-    if user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
+    if is_authenticated(current_user):
         for key, value in it:
             forums = key, [(item[0], item[1]) for item in value]
     else:
@@ -192,7 +193,7 @@ def forum_is_unread(forum, forumsread, user):
     :param user: The user who should be checked if he has read the forum
     """
     # If the user is not signed in, every forum is marked as read
-    if not user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
+    if not is_authenticated(current_user):
         return False
 
     read_cutoff = datetime.utcnow() - timedelta(
@@ -239,7 +240,7 @@ def topic_is_unread(topic, topicsread, user, forumsread=None):
                        read, than you will also need to pass an forumsread
                        object.
     """
-    if not user.is_authenticated() and not getattr(user, 'is_lockdownuser', False):
+    if not is_authenticated(current_user):
         return False
 
     read_cutoff = datetime.utcnow() - timedelta(
@@ -379,16 +380,17 @@ def time_since(time):  # pragma: no cover
     return format_timedelta(delta, add_direction=True, locale=locale)
 
 
-def format_quote(username, content):
+def format_quote(user_id, content):
     """Returns a formatted quote depending on the markup language.
 
     :param username: The username of a user.
     :param content: The content of the quote
     """
-    profile_url = url_for('user.dataloader', username=username)
+    user = Account.by_id(user_id)
+    profile_url = url_for('account.profile', account_id=user_id)
     content = "\n> ".join(content.strip().split('\n'))
     quote = "**[{username}]({profile_url}) wrote:**\n> {content}\n".\
-            format(username=username, profile_url=profile_url, content=content)
+            format(username=user.name, profile_url=profile_url, content=content)
 
     return quote
 

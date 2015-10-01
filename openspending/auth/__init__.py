@@ -4,6 +4,41 @@ from werkzeug.exceptions import Forbidden
 # These have to be imported for the permission system to work
 import account  # NOQA
 import dataset  # NOQA
+from flask import abort
+from functools import wraps
+from flask.ext.login import current_user
+
+from openspending.auth.perms import is_authenticated, is_moderator, is_admin
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not is_admin(current_user):
+            abort(403)
+        else:
+            return f(*args, **kwargs)
+    return decorated
+
+
+def moderator_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not is_moderator(current_user):
+            abort(403)
+        else:
+            return f(*args, **kwargs)
+    return decorated
+
+def authenticated_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not is_authenticated(current_user):
+            abort(403)
+        else:
+            return f(*args, **kwargs)
+    return decorated
+
+
 
 class Requirement(object):
 

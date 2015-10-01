@@ -6,10 +6,11 @@ from werkzeug.exceptions import BadRequest
 from openspending.model.source import Source
 from openspending.model.run import Run
 from openspending.model.log_record import LogRecord
-from openspending.auth import require
+from openspending.auth import *
 from openspending.lib.helpers import get_dataset, obj_or_404, get_page
 from openspending.lib.pagination import Page
 from openspending.views.cache import disable_cache
+
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('run', __name__)
@@ -17,17 +18,17 @@ blueprint = Blueprint('run', __name__)
 
 def get_run(dataset, source, id):
     dataset = get_dataset(dataset)
-    require.dataset.update(dataset)
     source = obj_or_404(Source.by_id(source))
     if source.dataset != dataset:
         raise BadRequest("There was no source")
     run = obj_or_404(Run.by_id(id))
     if run.source != source:
-        raise BadRequest("There is no run '" + str(id) + '")
+        raise BadRequest("There is no run %s"%str(id))
     return dataset, source, run
 
 
 @blueprint.route('/<dataset>/sources/<source>/runs/<id>', methods=['GET'])
+@admin_required
 def view(dataset, source, id, format='html'):
     disable_cache()
     dataset, source, run = get_run(dataset, source, id)

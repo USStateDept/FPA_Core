@@ -13,30 +13,10 @@ from functools import wraps
 from flask import abort
 from flask_login import current_user
 
-from openspending.auth.forum import check_perm, is_moderator, is_admin
-
-def admin_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if current_user.is_anonymous() or getattr(current_user,"is_lockdownuser",False):
-            abort(403)
-        if not is_admin(current_user):
-            abort(403)
-        return f(*args, **kwargs)
-    return decorated
+from openspending.auth.perms import check_perm
+from openspending.auth import *
 
 
-def moderator_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if current_user.is_anonymous() or getattr(current_user,"is_lockdownuser",False):
-            abort(403)
-
-        if not is_moderator(current_user):
-            abort(403)
-
-        return f(*args, **kwargs)
-    return decorated
 
 
 def can_access_forum(func):
@@ -45,7 +25,7 @@ def can_access_forum(func):
 
     """
     def decorated(*args, **kwargs):
-        if current_user.is_anonymous() or getattr(current_user,"is_lockdownuser",False):
+        if not is_authenticated(current_user):
             abort(403)
 
         return func(*args, **kwargs)
@@ -65,7 +45,7 @@ def can_access_forum(func):
 
 def can_access_topic(func):
     def decorated(*args, **kwargs):
-        if current_user.is_anonymous() or getattr(current_user,"is_lockdownuser",False):
+        if not is_authenticated(current_user):
             abort(403)
 
         return func(*args, **kwargs)

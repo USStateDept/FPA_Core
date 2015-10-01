@@ -6,7 +6,6 @@ import json
 from flask import request, g, Response
 
 #from openspending.core import cache
-from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
 from openspending.views.api_v2.common import blueprint
 from openspending.views.error import api_json_errors
