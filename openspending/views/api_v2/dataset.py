@@ -13,8 +13,8 @@ from openspending.core import cache
 
 from openspending.core import db, sourcefiles
 from openspending.model import Dataset, Source, Run, DataOrg, SourceFile
-from openspending.auth import require
-from openspending import auth as can
+from openspending.auth import require, admin_required
+from openspending.auth.perms import is_admin
 from openspending.lib.jsonexport import jsonify
 from openspending.lib.helpers import get_dataset, get_source
 from openspending.views.context import api_form_data
@@ -90,6 +90,7 @@ def view(name):
 
 
 @blueprint.route('/datasets', methods=['POST', 'PUT'])
+@admin_required
 @api_json_errors
 def create():
     """
@@ -97,9 +98,6 @@ def create():
     and creates a private dataset to put sources in
     The json_errors return a json object
     """
-
-    if not require.dataset.create():
-        return jsonify({"errors":["Can not create new dataset.  Permission denied"]})
 
     try:
         dataset = api_form_data()
@@ -139,6 +137,7 @@ def create():
 
 
 @blueprint.route('/datasets/<name>', methods=['POST', 'PUT'])
+@admin_required
 @api_json_errors
 def update(name):
     """
@@ -146,7 +145,6 @@ def update(name):
     """
     try:
         dataset = get_dataset(name)
-        require.dataset.update(dataset)
         schema = dataset_schema(ValidationState(dataset))
         data = schema.deserialize(api_form_data())
 
@@ -160,6 +158,7 @@ def update(name):
 
 
 @blueprint.route('/datasets/<datasetname>/model/fields')
+@admin_required
 @api_json_errors
 def field(datasetname):
     """
@@ -184,6 +183,7 @@ def field(datasetname):
 
 
 @blueprint.route('/datasets/<datasetname>/model/fieldcheck/<columnname>', methods=['GET'])
+@admin_required
 @api_json_errors
 def field_polling_check(datasetname, columnname):
     """
@@ -202,6 +202,7 @@ def field_polling_check(datasetname, columnname):
 
 
 @blueprint.route('/datasets/<datasetname>/model/fieldcheck/<columnkey>', methods=['POST'])
+@admin_required
 @api_json_errors
 def field_polling_post(datasetname, columnkey):
     """
@@ -244,6 +245,7 @@ def field_polling_post(datasetname, columnkey):
 
 #probably shouldn't be a GET
 @blueprint.route('/datasets/<datasetname>/applymodel')
+@admin_required
 @api_json_errors
 def apply_default_model(datasetname):
 
@@ -271,6 +273,7 @@ def apply_default_model(datasetname):
 
 
 @blueprint.route('/datasets/<datasetname>/applymodel', methods=['POST', 'PUT'])
+@admin_required
 @api_json_errors
 def save_default_model(datasetname):
 
@@ -304,7 +307,6 @@ def save_default_model(datasetname):
 
 
 @blueprint.route('/datasets/<datasetname>/model', methods=['GET'])
-#@blueprint.route('/datasets/<datasetname>/model/<sourcename>')
 @api_json_errors
 def model(datasetname):
     #if not sourcename then we are saving the defaults for dataset
@@ -327,6 +329,7 @@ def model(datasetname):
 
 
 @blueprint.route('/datasets/<datasetname>/model', methods=['POST', 'PUT'])
+@admin_required
 @api_json_errors
 def update_model_createnew(datasetname):
     #refactor to include the update
@@ -410,6 +413,7 @@ def update_model_createnew(datasetname):
 
 
 @blueprint.route('/datasets/<datasetname>/runmodel', methods=['POST', 'PUT'])
+@admin_required
 @api_json_errors
 def update_model(datasetname):
 
@@ -484,11 +488,11 @@ def update_model(datasetname):
 
 
 @blueprint.route('/datasets/<datasetname>/sources', methods=['DELETE'])
+@admin_required
 @api_json_errors
 def delete(datasetname):
     try:
         dataset = get_dataset(datasetname)
-        require.dataset.update(dataset)
 
         db.session.delete(dataset.source)
         db.session.commit()
@@ -505,6 +509,7 @@ def delete(datasetname):
 
 @blueprint.route('/datasets/<datasetname>/model/ORoperations')
 @api_json_errors
+@admin_required
 def ORoperations(datasetname):
     try:
         dataset = get_dataset(datasetname)
@@ -531,10 +536,10 @@ def permissions():
 
     # Return permissions
     return jsonify({
-        'create': can.dataset.create() and dataset is None,
-        'read': False if dataset is None else can.dataset.read(dataset),
-        'update': False if dataset is None else can.dataset.update(dataset),
-        'delete': False if dataset is None else can.dataset.delete(dataset)
+        'create': is_admin(current_user),
+        'read': is_admin(current_user),
+        'update': is_admin(current_user),
+        'delete': is_admin(current_user)
     },
     headers= {'Cache-Control' : 'no-cache'})
 

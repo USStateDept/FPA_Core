@@ -20,8 +20,8 @@ from flask_babelex import gettext as _
 
 from openspending.forum._compat import iteritems
 from openspending.forum.utils.forum_settings import flaskbb_config
-from openspending.auth.forum import admin_required, moderator_required
-from openspending.auth.forum import can_ban_user, can_edit_user
+from openspending.auth import admin_required, moderator_required
+from openspending.auth.perms import can_ban_user, can_edit_user
 from openspending.core import db
 from openspending.model.account import AnonymousAccount as Guest, Account as User
 from openspending.forum.forum.models import Post, Topic, Forum, Category, Report

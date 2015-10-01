@@ -49,149 +49,126 @@ def shell_account():
 
 
 
-def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=True, meta_only=False, file_dir = None):
+# def load_from_databank(sourcejson, dataproviderjson, dry_run=False, overwrite=True, meta_only=False, file_dir = None):
 
-    print "Working on ", sourcejson['fields']['indicator']
-
-
-    dataorg = DataOrg.by_name(dataproviderjson['fields']['title'])
-
-    dataorgMeta = {
-        'description': dataproviderjson['fields']['description'], 
-        'label': dataproviderjson['fields']['title']
-    }
-
-    if not dataorg:
-        dataorg = DataOrg(dataorgMeta)
-        db.session.add(dataorg)
-
-    #dataorg will update with id here
-    db.session.commit()
-
-    #get or create dataset
-    dataset = Dataset.by_label(sourcejson['fields']['indicator'])
-
-    description = "http://databank.edip-maps.net/admin/etldata/dataconnection/" + str(sourcejson['pk']) + "/"
-
-    modelDataset = {'dataset': 
-            {
-                'label': sourcejson['fields']['indicator'],
-                'name': sourcejson['fields']['indicator'],
-                'description': description,
-                'dataType': sourcejson['fields']['data_type'],
-                'dataorg_id': dataorg.id
-            }
-        }
-
-    if not dataset:
-        #create one
-
-        dataset = Dataset(modelDataset['dataset'])
-        #dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
-        #dataset.data = dataproviderjson['fields'].get('mapping',{})
-        db.session.add(dataset)
-
-    else:
-        #dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
-        #dataset.data = dataproviderjson['fields'].get('mapping',{})
-        dataset.update(modelDataset['dataset'])
+#     print """This was the original source for keeping track of indicator metadata. 
+#             It should no longer be necessary.  If it needs to be run, uncomment the exit below"""
+#     import sys
+#     sys.exit(1)
 
 
-    db.session.commit()
+#     dataorg = DataOrg.by_name(dataproviderjson['fields']['title'])
+
+#     dataorgMeta = {
+#         'description': dataproviderjson['fields']['description'], 
+#         'label': dataproviderjson['fields']['title']
+#     }
+
+#     if not dataorg:
+#         dataorg = DataOrg(dataorgMeta)
+#         db.session.add(dataorg)
+
+#     #dataorg will update with id here
+#     db.session.commit()
+
+#     #get or create dataset
+#     dataset = Dataset.by_label(sourcejson['fields']['indicator'])
+
+#     description = "http://databank.edip-maps.net/admin/etldata/dataconnection/" + str(sourcejson['pk']) + "/"
+
+#     modelDataset = {'dataset': 
+#             {
+#                 'label': sourcejson['fields']['indicator'],
+#                 'name': sourcejson['fields']['indicator'],
+#                 'description': description,
+#                 'dataType': sourcejson['fields']['data_type'],
+#                 'dataorg_id': dataorg.id
+#             }
+#         }
+
+#     if not dataset:
+#         #create one
+
+#         dataset = Dataset(modelDataset['dataset'])
+#         #dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
+#         #dataset.data = dataproviderjson['fields'].get('mapping',{})
+#         db.session.add(dataset)
+
+#     else:
+#         #dataset.ORoperations = dataproviderjson['fields'].get('ORoperations', {})
+#         #dataset.data = dataproviderjson['fields'].get('mapping',{})
+#         dataset.update(modelDataset['dataset'])
 
 
-    systemaccount = Account.by_id(1)
-
-    if dataset.source:
-        try:
-            print "trying to delete source"
-            print dataset.source
-            dataset.source.delete()
-        except Exception, e:
-            print "could not delete source", e
-
-    source = None
+#     db.session.commit()
 
 
-    #check if we have a file uploaded first
-    if not sourcejson['fields']['webservice'] and not sourcejson['fields']['downloadedFile']:
-        print "you don't have any files to use"
-        return (None, False)
+#     systemaccount = Account.by_id(1)
 
-    if sourcejson['fields']['downloadedFile'] and file_dir and not sourcejson['fields']['webservice']:
-        #convert to a file:///name
-        #create a source file
-        try:
+#     if dataset.source:
+#         try:
+#             print "trying to delete source"
+#             print dataset.source
+#             dataset.source.delete()
+#         except Exception, e:
+#             print "could not delete source", e
 
-            filename = sourcejson['fields']['downloadedFile'].replace("rawdata/", "")
+#     source = None
 
-            #copy file over to another folder and open it
-            #copyfile(os.path.join(file_dir, filename), os.path.join(UPLOADED_FILES_DEST, filename))
 
-            orig_filepath = os.path.join(file_dir, filename)
+#     #check if we have a file uploaded first
+#     if not sourcejson['fields']['webservice'] and not sourcejson['fields']['downloadedFile']:
+#         print "you don't have any files to use"
+#         return (None, False)
 
-            with codecs.open(orig_filepath, 'rb') as fh:
-                wuezfile = FileStorage(stream=fh)
-                #upload_source_path = sourcefiles.save(wuezfile, name=filename, folder=UPLOADED_FILES_DEST)
-                upload_source_path = sourcefiles.save(wuezfile, name=filename)
-                sourcefile = SourceFile(rawfile = upload_source_path)
-                db.session.add(sourcefile)
-        except Exception ,e:
-            print "!!!!!Error failed", e
-            return (None, False)
-        try:
-            print sourcefile
-            source = Source(dataset=dataset, name=dataset.name, url=None, rawfile=sourcefile)
-        except Exception, e:
-            traceback.print_exc(e)
-            print "Could not load source rawfile", e
-            return(None, False)
+#     if sourcejson['fields']['downloadedFile'] and file_dir and not sourcejson['fields']['webservice']:
+#         #convert to a file:///name
+#         #create a source file
+#         try:
 
-    else:
-        try:
-            source = Source(dataset=dataset, name=dataset.name, url=sourcejson['fields']['webservice'], rawfile=None)
+#             filename = sourcejson['fields']['downloadedFile'].replace("rawdata/", "")
+
+#             #copy file over to another folder and open it
+#             #copyfile(os.path.join(file_dir, filename), os.path.join(UPLOADED_FILES_DEST, filename))
+
+#             orig_filepath = os.path.join(file_dir, filename)
+
+#             with codecs.open(orig_filepath, 'rb') as fh:
+#                 wuezfile = FileStorage(stream=fh)
+#                 #upload_source_path = sourcefiles.save(wuezfile, name=filename, folder=UPLOADED_FILES_DEST)
+#                 upload_source_path = sourcefiles.save(wuezfile, name=filename)
+#                 sourcefile = SourceFile(rawfile = upload_source_path)
+#                 db.session.add(sourcefile)
+#         except Exception ,e:
+#             print "!!!!!Error failed", e
+#             return (None, False)
+#         try:
+#             print sourcefile
+#             source = Source(dataset=dataset, name=dataset.name, url=None, rawfile=sourcefile)
+#         except Exception, e:
+#             traceback.print_exc(e)
+#             print "Could not load source rawfile", e
+#             return(None, False)
+
+#     else:
+#         try:
+#             source = Source(dataset=dataset, name=dataset.name, url=sourcejson['fields']['webservice'], rawfile=None)
             
-        except Exception, e:
-            print "Could not load source webservice", e
-            return(None, False)
+#         except Exception, e:
+#             print "Could not load source webservice", e
+#             return(None, False)
 
-    if not source:
-        return (None, False)
+#     if not source:
+#         return (None, False)
 
-    db.session.add(source)
-    db.session.commit()
+#     db.session.add(source)
+#     db.session.commit()
 
-    return (source, True)
+#     return (source, True)
 
 
 
-    # if len(dataset.ORoperations.keys()):
-    #     source.applyORInstructions(dataset.ORoperations)
-    #     source.ORoperations = dataset.ORoperations
-    # else:
-    #     print "can not apply the ORoperations"
-    
-    # #probably need to make sure this is here before we add the dynamic model
-    # db.session.commit()
 
-    # if len(dataset.data.keys()):
-    #     source.addData(dataset.data)
-    # else:
-    #     if not meta_only:
-    #         print "there was no field mapping.  Failed", dataset.label
-    #         return (source, False)
-
-    # if meta_only:
-    #     return (source, True)
-    
-
-    # importer = ORImporter(source)
-    # #dry run this
-    # importer.run(dry_run=dry_run)
-    # if importer._run.successful_sample:
-    #     return (source, True)
-    # else:
-    #     return (source, False)
 
 
 
@@ -368,75 +345,72 @@ def add_import_commands(manager):
 
 
 
-    @manager.option('-f', '--file-dir',
-                    dest='file_dir',
-                    help='File Dir of the uploaded Files')
-    @manager.option('jsondata', nargs=argparse.REMAINDER,
-                    help="JSON data from databank.edip-maps.net")
-    @manager.command
-    def loadmetaonlyjson(**args):
-        """ Load a JSON dump from  """
+    # @manager.option('-f', '--file-dir',
+    #                 dest='file_dir',
+    #                 help='File Dir of the uploaded Files')
+    # @manager.option('jsondata', nargs=argparse.REMAINDER,
+    #                 help="JSON data from databank.edip-maps.net")
+    # @manager.command
+    # def loadmetaonlyjson(**args):
+    #     """ Load a JSON dump from  """
 
 
-        log.warn("This command should only be run for bulk exports from the django admin site.  It may overwrite data already loaded into the system.  Test before using.")
-        tocontinue  = raw_input("If you're sure, enter 'y': ")
-
-        if tocontinue != 'y':
-            sys.exit()
+    #     log.warn("This command should only be run for bulk exports from the django admin site.  It may overwrite data already loaded into the system.  Test before using.")
+    #     sys.exit()
 
 
-        specificorg = args.get("specificorg", None)
-        file_dir = args.get('file_dir', None)
-        modelobjs = parseDBJSON(args)
+    #     specificorg = args.get("specificorg", None)
+    #     file_dir = args.get('file_dir', None)
+    #     modelobjs = parseDBJSON(args)
 
-        results = {"success":0, "errored":0, "skipped":0, "added_needs_work":0}
+    #     results = {"success":0, "errored":0, "skipped":0, "added_needs_work":0}
 
 
-        #go through the dataconnections
-        for dataconnection in modelobjs["dataconnection"]:
+    #     #go through the dataconnections
+    #     for dataconnection in modelobjs["dataconnection"]:
 
-            log("\n\n******************************************")
+    #         log("\n\n******************************************")
 
 
 
-            #get the dataprovider json
-            datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
-            if not datasetprovider:
-                results['skipped'] += 1
-                log("could not find the meta attached to this" +  str(dataconnection['fields']['indicator']))
-                continue
-            if specificorg and datasetprovider['fields'].get("title", "nothinghere") != specificorg:
-                results['skipped'] += 1
-                print "skipping unspecified organizations", datasetprovider['fields'].get("title", None)
-                continue
+    #         #get the dataprovider json
+    #         datasetprovider = getDataProviderJSONObj(dataconnection, modelobjs['metadata'])
+    #         if not datasetprovider:
+    #             results['skipped'] += 1
+    #             log("could not find the meta attached to this" +  str(dataconnection['fields']['indicator']))
+    #             continue
+    #         if specificorg and datasetprovider['fields'].get("title", "nothinghere") != specificorg:
+    #             results['skipped'] += 1
+    #             print "skipping unspecified organizations", datasetprovider['fields'].get("title", None)
+    #             continue
 
-            if dataconnection['fields'].get('status',None) not in ['Data Source Verified']:
-                results['skipped'] += 1
-                print "skipping becuase of status"
-                continue
-
-
-
-            errored_rows = []
-            #if we get here then we can try load a source
-            try:
-                sourceobj, loadresult = load_from_databank(dataconnection, datasetprovider, file_dir=file_dir, dry_run=True, meta_only=True)
-            except Exception, e:
-                print "!!!!!!!!!!!There was an error", e
-                loadresult = False
-            if loadresult:
-                results['success'] +=1
-            else:
-                results['added_needs_work'] += 1
-                errored_rows.append(dataconnection)
+    #         if dataconnection['fields'].get('status',None) not in ['Data Source Verified']:
+    #             results['skipped'] += 1
+    #             print "skipping becuase of status"
+    #             continue
 
 
 
-        print "\n\nHere are results:"
-        print results
-        print "\n\n Here are my errored rows"
-        for d in errored_rows:
-            print d
+    #         errored_rows = []
+    #         #if we get here then we can try load a source
+    #         try:
+    #             sourceobj, loadresult = load_from_databank(dataconnection, datasetprovider, file_dir=file_dir, dry_run=True, meta_only=True)
+    #         except Exception, e:
+    #             print "!!!!!!!!!!!There was an error", e
+    #             loadresult = False
+    #         if loadresult:
+    #             results['success'] +=1
+    #         else:
+    #             results['added_needs_work'] += 1
+    #             errored_rows.append(dataconnection)
+
+
+
+    #     print "\n\nHere are results:"
+    #     print results
+    #     print "\n\n Here are my errored rows"
+    #     for d in errored_rows:
+    #         print d
 
 
 
@@ -475,62 +449,62 @@ def add_import_commands(manager):
 
 
 
-    @manager.option('jsondata', nargs=argparse.REMAINDER,
-                    help="JSON data from databank.edip-maps.net")
-    @manager.command
-    def importdataorgs(**args):
-        """ Load a JSON dump from  """
+    # @manager.option('jsondata', nargs=argparse.REMAINDER,
+    #                 help="JSON data from databank.edip-maps.net")
+    # @manager.command
+    # def importdataorgs(**args):
+    #     """ Load a JSON dump from  """
 
-        print "You probably shouldn't be using this.  If you're sure chage the code to import sources.  Make sure it doesn't override what exists in teh DB"
-        sys.exit()
-
-
-        import json
-
-        from openspending.model import Dataset, DataOrg
-
-        jsonpath = args.get('jsondata', None)[0]
-        print jsonpath
-
-        try:
-            f = open(jsonpath, 'rb')
-        except Exception, e:
-            print "failed to open", jsonpath
-            print e
-            sys.exit()
-
-        djangodump = json.load(f)
-
-        f.close()
+    #     print "You probably shouldn't be using this.  If you're sure chage the code to import sources.  Make sure it doesn't override what exists in teh DB"
+    #     sys.exit()
 
 
+    #     import json
 
-        metadata = [] 
-        dataconnections = []
-        for obj in djangodump:
-          if obj['model'] == "etldata.metadata":
-               metadata.append(obj)
-          elif obj['model'] == "etldata.dataconnection":
-            dataconnections.append(obj)
+    #     from openspending.model import Dataset, DataOrg
+
+    #     jsonpath = args.get('jsondata', None)[0]
+    #     print jsonpath
+
+    #     try:
+    #         f = open(jsonpath, 'rb')
+    #     except Exception, e:
+    #         print "failed to open", jsonpath
+    #         print e
+    #         sys.exit()
+
+    #     djangodump = json.load(f)
+
+    #     f.close()
 
 
-        for dataobj in dataconnections:
-            datasetflask = Dataset.by_label(dataobj['fields']['indicator'])
-            if not datasetflask:
-                print "Could not find ", dataobj['fields']['indicator']
-                continue
-            print "\nworking on ", datasetflask
 
-            for met in metadata:
-                if dataobj['fields']['metadata'] == met['pk']:
-                    dataorgobj = DataOrg.by_name(met['fields']['title'])
-                    if not dataorgobj:
-                        #create new one
-                        datasetflask = DataOrg({"label":met['fields']['title'], "description":met['fields']['description']})
-                        db.session.add(datasetflask)
-                        datasetflask.dataorg = datasetflask
-                        print "created a new one"
-                    else:
-                        datasetflask.dataorg = dataorgobj
-                        print "adding to existing"
-                    db.session.commit()
+    #     metadata = [] 
+    #     dataconnections = []
+    #     for obj in djangodump:
+    #       if obj['model'] == "etldata.metadata":
+    #            metadata.append(obj)
+    #       elif obj['model'] == "etldata.dataconnection":
+    #         dataconnections.append(obj)
+
+
+    #     for dataobj in dataconnections:
+    #         datasetflask = Dataset.by_label(dataobj['fields']['indicator'])
+    #         if not datasetflask:
+    #             print "Could not find ", dataobj['fields']['indicator']
+    #             continue
+    #         print "\nworking on ", datasetflask
+
+    #         for met in metadata:
+    #             if dataobj['fields']['metadata'] == met['pk']:
+    #                 dataorgobj = DataOrg.by_name(met['fields']['title'])
+    #                 if not dataorgobj:
+    #                     #create new one
+    #                     datasetflask = DataOrg({"label":met['fields']['title'], "description":met['fields']['description']})
+    #                     db.session.add(datasetflask)
+    #                     datasetflask.dataorg = datasetflask
+    #                     print "created a new one"
+    #                 else:
+    #                     datasetflask.dataorg = dataorgobj
+    #                     print "adding to existing"
+    #                 db.session.commit()

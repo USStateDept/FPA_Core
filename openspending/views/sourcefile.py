@@ -6,7 +6,7 @@ from werkzeug.exceptions import BadRequest
 
 from openspending.core import db, sourcefiles
 from openspending.model.sourcefile import SourceFile
-from openspending.auth import require
+from openspending.auth import *
 from openspending.lib.jsonexport import jsonify
 from openspending.lib.helpers import url_for, obj_or_404, get_dataset
 
@@ -19,9 +19,9 @@ blueprint = Blueprint('sourcefile', __name__)
 
 
 @blueprint.route('/sourcefiles/create', methods=['GET', 'POST'])
+@admin_required
 def upload():
     """ Create a new badge in the system """
-    #require.badge.create()
 
     # TODO: some data validation wouldn't hurt.
     if request.method == 'POST':

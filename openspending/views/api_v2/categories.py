@@ -12,7 +12,6 @@ from flask import Blueprint, request, Response
 from openspending.model import Dataset
 from openspending.lib.findui import jsonp
 #, Source, Run, DataOrg, SourceFile
-# from openspending.auth import requir
 import json
 from openspending.core import cache
 # from openspending.lib.indices import clear_index_cache

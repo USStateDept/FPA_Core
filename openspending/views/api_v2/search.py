@@ -9,20 +9,10 @@ from flask import Blueprint, request
 
 from openspending.lib.findui import jsonp
 
-# from openspending.auth import require
 from openspending.model.dataset import Dataset
 from openspending.model.country import Country
 from openspending.views.error import api_json_errors
-# from openspending.lib import util
-# from openspending.lib.browser import Browser
-# from openspending.lib.streaming import JSONStreamingResponse
-# from openspending.lib.streaming import CSVStreamingResponse
-# from openspending.lib.jsonexport import jsonify
-# from openspending.lib.csvexport import write_csv
-# from openspending.lib.paramparser import SearchParamParser
-# from openspending.lib.hypermedia import entry_apply_links
-# from openspending.lib.hypermedia import dataset_apply_links
-#rom openspending.views.api_v2.common import blueprint
+
 
 
 log = logging.getLogger(__name__)

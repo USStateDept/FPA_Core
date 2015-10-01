@@ -68,7 +68,7 @@ class AccountView(sqla.ModelView):
 
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 
 
@@ -110,48 +110,48 @@ class SourceFileView(sqla.ModelView):
     }
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 
 class MetadataOrgView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class DataOrgView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class DatasetView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class SourceView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class RunView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class LogRecordView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class DataviewView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class FeedbackView(sqla.ModelView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 class TagsView(sqla.ModelView):
 
@@ -164,7 +164,7 @@ class TagsView(sqla.ModelView):
     column_list = ('slug_label', 'label','category','dataset_count',)
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 
     # Model handlers
@@ -224,7 +224,7 @@ class TagByTagView(sqla.ModelView):
     #     return
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 
 class TagByIndicatorView(sqla.ModelView):
@@ -253,7 +253,7 @@ class TagByIndicatorView(sqla.ModelView):
     can_create = False
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 
 
@@ -285,7 +285,7 @@ class IndicatorManagerView(sqla.ModelView):
 
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 
 class MetadataOrgManagerView(sqla.ModelView):
@@ -314,7 +314,7 @@ class MetadataOrgManagerView(sqla.ModelView):
     }
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
         
 class SourcesView(sqla.ModelView):
@@ -362,14 +362,14 @@ class SourcesView(sqla.ModelView):
     can_create = False
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
 
 class QAListView(sqla.ModelView):
     column_searchable_list = ('name',)
     # columns list Data source link to admin page, has data, source_url, run log with cleaned and source, date injested
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
     can_delete = False
     can_create = False
     can_edit= False
@@ -388,7 +388,7 @@ class QAListView(sqla.ModelView):
 class IndexView(AdminIndexView):
 
     def is_accessible(self):
-        return require.account.is_admin()
+        return require.perms.is_admin()
 
     @expose('/')
     def index(self):

@@ -9,10 +9,10 @@ from flask.ext.login import current_user
 from openspending.core import db
 
 from openspending.model import Dataview
-from openspending.auth import require
 from openspending.lib.jsonexport import jsonify
 from openspending.views.context import api_form_data
 from openspending.views.error import api_json_errors
+from openspending.auth import authenticated_required
 
 
 log = logging.getLogger(__name__)
@@ -20,29 +20,9 @@ blueprint = Blueprint('dataview_api2', __name__)
 
 
 
-@blueprint.route('/dataviews')
-@api_json_errors
-def dataviews():
-    #page = request.args.get('page')
-
-    q = Dataview.all().all()
-
-    return jsonify(q, headers= {'Cache-Control' : 'no-cache'})
-
-
-
-@blueprint.route('/dataview/<urlhash>')
-@api_json_errors
-def view(urlhash):
-    """
-    Get the dataset info to populate a form
-    """
-
-    dataview = Dataview.by_urlhash(urlhash)
-    return jsonify(dataview, headers= {'Cache-Control' : 'no-cache'})
-
 
 @blueprint.route('/dataview', methods=['POST', 'PUT'])
+@authenticated_required
 @api_json_errors
 def create():
     """
@@ -51,8 +31,6 @@ def create():
     The json_errors return a json object
     """
 
-    # if not require.dataview.create():
-    #     return jsonify({"errors":["Can not create new dataset.  Permission denied"]})
 
     try:
         dataview_form = api_form_data()

@@ -12,33 +12,7 @@ from flask import abort
 from functools import wraps
 from flask.ext.login import current_user
 
-def admin_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not is_admin(current_user):
-            abort(403)
-        else:
-            return f(*args, **kwargs)
-    return decorated
 
-
-def moderator_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not is_moderator(current_user):
-            abort(403)
-        else:
-            return f(*args, **kwargs)
-    return decorated
-
-def authenticated_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not is_authenticated(current_user):
-            abort(403)
-        else:
-            return f(*args, **kwargs)
-    return decorated
 
 def check_perm(user, perm, forum, post_user_id=None):
     """Checks if the `user` has a specified `perm` in the `forum`
@@ -67,31 +41,44 @@ def check_perm(user, perm, forum, post_user_id=None):
     # return not user.permissions['banned'] and user.permissions[perm]
 
 
-def is_authenticated(user):
-    return current_user.is_authenticated and getattr(current_user, 'verified', False) and not getattr(current_user, "is_lockdownuser", False)
+def is_authenticated(user = False):
+    if user:
+        return user.is_authenticated and getattr(user, 'verified', False) and not getattr(user, "is_lockdownuser", False)
+    else:
+        return current_user.is_authenticated and getattr(current_user, 'verified', False) and not getattr(current_user, "is_lockdownuser", False)
 
-def is_moderator(user):
+def is_moderator(user = False):
     """Returns ``True`` if the user is in a moderator or super moderator group.
 
     :param user: The user who should be checked.
     """
-    return getattr(user, "moderator", False) or getattr(user, "admin", False)
+    if user:
+        return getattr(user, "moderator", False) or getattr(user, "admin", False)
+    else:
+        return getattr(current_user, "moderator", False) or getattr(current_user, "admin", False)
 
 
-def is_admin(user):
+def is_admin(user = False):
     """Returns ``True`` if the user is a administrator.
 
     :param user:  The user who should be checked.
     """
-    return getattr(user, "admin", False)
+    if user:
+        return getattr(user, "admin", False)
+    else:
+        return getattr(current_user, "admin", False)
 
 
-def is_admin_or_moderator(user):
+def is_admin_or_moderator(user=False):
     """Returns ``True`` if the user is either a admin or in a moderator group
 
     :param user: The user who should be checked.
     """
-    return getattr(user, "moderator", False) or getattr(user, "admin", False)
+    if user:
+        return getattr(user, "moderator", False) or getattr(user, "admin", False)
+    else:
+        return getattr(current_user, "moderator", False) or getattr(current_user, "admin", False)
+
 
 
 def can_moderate(user, forum=None, perm=None):

@@ -172,7 +172,7 @@ def create_web_app(**config):
 from openspending.forum.utils.helpers import format_date, time_since, crop_title, \
     is_online, render_markup, mark_online, forum_is_unread, topic_is_unread
 # permission checks (here they are used for the jinja filters)
-from openspending.auth.forum import can_post_reply, can_post_topic, \
+from openspending.auth.perms import can_post_reply, can_post_topic, \
     can_delete_topic, can_delete_post, can_edit_post, can_edit_user, \
     can_ban_user, can_moderate, is_admin, is_moderator, is_admin_or_moderator\
     ,is_authenticated

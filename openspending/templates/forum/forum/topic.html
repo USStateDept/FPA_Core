@@ -34,14 +34,6 @@
                         {{ topic.url }}#pid{{ post.id }}
                     {%- endif -%}
                         ">{{ post.date_created|format_date('%d %B %Y') }}</a>
-                    {% if post.user_id and post.date_modified %}
-                    <small>
-                        (Last modified: {{ post.date_modified|format_date }} by
-                        <a href="{{ url_for('user.dataloader', username=post.modified_by) }}">
-                            {{ post.modified_by }}
-                        </a>.)
-                    </small>
-                    {% endif %}
                 </span>
             </td>
         </tr>
