@@ -263,7 +263,10 @@ class Source(db.Model):
         return True in [r.successful_load for r in self.runs]
 
     def __repr__(self):
-        return "<Source(%s,%r)>" % (self.name, self.id)
+        if self.name:
+            return "<Source(%s,%r)>" % (self.name, self.id)
+        else:
+            return "<Source(%r)>" % self.id
 
     @classmethod
     def by_id(cls, id):
@@ -297,5 +300,8 @@ class Source(db.Model):
         }
 
     def __unicode__(self):
-        return "<Source Model Name:" + self.name + ">"
+        if self.name:
+            return "<Source(%s,%r)>" % (self.name, self.id)
+        else:
+            return "<Source(%r)>" % self.id
 

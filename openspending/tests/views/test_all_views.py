@@ -22,7 +22,7 @@ class TestDatasetController(ControllerTestCase):
         current_app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
         #self.source = csvimport_fixture("sci_study")
 
-        self.user = make_account('test')
+        self.user = make_account('test', make_account=True)
 
     def test_account_login(self):
         response = self.client.get(url_for('account.login'))

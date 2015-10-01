@@ -70,7 +70,8 @@ def load_dataset(dataset):
 
 def make_account(name='test', fullname='Test User',
                  email='test@test.com', 
-                 admin=False, verified=True):
+                 admin=False, verified=True,
+                 moderator=False):
     from openspending.model.account import Account
 
     # First see if the account already exists and if so, return it
@@ -83,6 +84,7 @@ def make_account(name='test', fullname='Test User',
     account.fullname = fullname
     account.email = email
     account.admin = admin
+    account.moderator = moderator
     account.verified = verified
     db.session.add(account)
     db.session.commit()

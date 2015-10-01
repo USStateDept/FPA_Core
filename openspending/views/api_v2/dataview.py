@@ -35,8 +35,8 @@ def create():
     try:
         dataview_form = api_form_data()
         #make checks here for various secuirty and validation
-        if dataview_form['urlhash']:
-            dataview = Dataview.by_urlhash(dataview_form['urlhash'])
+        if dataview_form.get('urlhash', None):
+            dataview = Dataview.by_urlhash(dataview_form.get('urlhash'))
             dataview.update(dataview_form)
         else:
             dataview = Dataview(dataview_form)

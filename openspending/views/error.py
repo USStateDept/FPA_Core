@@ -38,7 +38,7 @@ def login_redirect(e):
     nextpath = request.environ.get("PATH_INFO", "/")
     if is_authenticated(current_user):
         flash_notice("This feature is only for administrators")
-        return redirect(url_for('home.index'), next=nextpath)
+        return redirect(url_for('home.index'))
     else:
         flash_notice("You are not permitted to use this feature.")
         return redirect(url_for('account.login', next=nextpath))
