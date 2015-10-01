@@ -272,7 +272,7 @@ extend(Chart.prototype, {
 		sourceWidth = options.exporting.sourceWidth ||
 			options.chart.width ||
 			(/px$/.test(cssWidth) && parseInt(cssWidth, 10)) ||
-			600;
+			1200;
 		sourceHeight = options.exporting.sourceHeight ||
 			options.chart.height ||
 			(/px$/.test(cssHeight) && parseInt(cssHeight, 10)) ||
@@ -370,11 +370,16 @@ extend(Chart.prototype, {
 	 * @param {Object} chartOptions Additional chart options for the SVG representation of the chart
 	 */
 	exportChart: function (options, chartOptions) {
-		
+		// console.log(typeof chartOptions);
+		// this.chartWidth=0;
 		var svg = this.getSVGForExport(options, chartOptions);
-
+		// console.log(options);
+		// console.log(chartOptions);
+		// console.log(svg);
 		// merge the options
 		options = merge(this.options.exporting, options);
+		// this.chartWidth=2000;
+		// console.log(this);
 
 		// do the post
 		Highcharts.post(options.url, {
