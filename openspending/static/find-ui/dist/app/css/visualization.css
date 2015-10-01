@@ -2,6 +2,10 @@
 .app .icon-category-70:after {
   content: url("../images/filecabinet.png") center center no-repeat;
 }
+.app .fa.fa-5x.fa-cubes {
+  text-align: center;
+  width: 100%;
+}
 .app .icon-category-10:after,
 .app .icon-category-peace-and-security:after {
   content: '\e60d';
@@ -79,7 +83,9 @@
   -moz-perspective: 800;
   -o-perspective: 800;
   min-height: 225px;
-  position: relative;
+}
+.flip .no-padding {
+  padding: 0;
 }
 .flip .card {
   width: 100%;
@@ -109,11 +115,6 @@
   height: 100%;
   position: absolute;
   z-index: 2;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  -o-backface-visibility: hidden;
 }
 .flip .card .front {
   position: absolute;
@@ -141,14 +142,16 @@
 }
 .flippedCol .list-group {
   max-height: 450px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background-color: #fff;
 }
 .flippedCol .list-group span.list {
-  overflow-y: scroll;
-  overflow-x: hidden;
   display: block;
   max-height: 410px;
-  background-color: #fff;
+}
+.flippedCol .list-group #slide-panel span.list {
+  max-height: 300px;
 }
 .downloadLinks {
   margin: 5px 0px 0px 20px;
@@ -156,7 +159,7 @@
   cursor: pointer;
 }
 .downloadLinks span {
-  display: none;
+  visibility: hidden;
   font-size: 12px;
   color: #fff;
   background-color: #eae6e6;
@@ -166,7 +169,7 @@
 }
 .indicator-item:hover .downloadLinks span {
   background-color: #5c74b4;
-  display: inline;
+  visibility: visible;
 }
 .indicator-item .glyphicon.glyphicon-plus,
 .indicator-item .glyphicon.glyphicon-minus {
@@ -195,6 +198,7 @@
 .app #viz-container {
   min-width: 50%;
   height: 550px;
+  background-color: #fff;
 }
 .app .selected-tab-value {
   color: #852224;
@@ -422,6 +426,7 @@
   height: 400px;
   background-color: #eae6e6;
   padding: 20px;
+  horizontal-align: center;
 }
 .app .expand-button {
   z-index: 1000;
@@ -450,8 +455,10 @@
 }
 .flags-labels {
   font-size: 18px;
-  padding-left: 10px;
+  padding: 0 0 0 10px;
   line-height: 15px;
+  position: relative;
+  top: 9px;
 }
 .flag-item {
   cursor: pointer;
@@ -459,11 +466,8 @@
 .flag-item:hover {
   text-decoration: underline;
 }
-.manual-selection .flag-item {
-  opacity: 0.5;
-}
 .manual-selection .flag-item.selected {
-  opacity: 1;
+  background-color: #336b99;
 }
 .f32 .flag {
   vertical-align: text-bottom;
@@ -509,27 +513,52 @@
   background-size: contain;
 }
 #data-table,
-#indicators,
-#comparator {
+#indicators {
   height: 470px;
   width: 100%;
   overflow: auto;
+}
+#comparator {
+  width: 100%;
 }
 .slick-viewport,
 .slick-header {
   font-size: 12px;
 }
 #slide-panel {
-  width: 400px;
+  width: 600px;
+  background-color: #eee;
   height: 400px;
   padding: 10px;
-  background: #fff;
   position: absolute;
   top: 200px;
   left: 0px;
   z-index: 2000;
-  margin-left: -400px;
+  margin-left: -600px;
   box-shadow: 10px 10px 5px #eee;
+  font-size: 12px;
+}
+#slide-panel .container-full {
+  overflow: hidden;
+}
+#slide-panel .selection-list .btn-default,
+#slide-panel .flags-labels {
+  font-size: 12px;
+}
+#slide-panel .well {
+  height: 80px;
+  padding: 10px;
+}
+#slide-panel h4 {
+  font-size: 12px;
+  max-height: 50px;
+  overflow: hidden;
+}
+#slide-panel .flip {
+  min-height: 100px;
+}
+#slide-panel .flippedCol .list-group {
+  max-height: 250px;
 }
 #opener {
   float: right;
@@ -548,4 +577,62 @@
 .slick-header-column.ui-state-default {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
+}
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: #fff;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+.info h4 {
+  margin: 0 0 5px;
+  color: #777;
+}
+.legend {
+  line-height: 18px;
+  color: #555;
+}
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+.modal-dialogue {
+  margin: 0 auto;
+}
+.glyphicon-nav {
+  width: 18px;
+  padding: 6px 0;
+  position: relative;
+  display: inline-block;
+  top: -1px;
+}
+.glyphicon-nav:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  border-top: 2px solid #336b99;
+  border-bottom: 2px solid #336b99;
+  top: 2px;
+}
+.glyphicon-nav:after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 0px;
+  height: 2px;
+  width: 100%;
+  background: #336b99;
+}
+#modalBtn {
+  background: #e7ebf0;
+  padding: 3px 6px;
+  border: none;
+  border-radius: 4px;
 }

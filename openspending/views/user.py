@@ -1,7 +1,7 @@
 import colander
 import logging
 import urllib
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from flask.ext.login import current_user
 from flask import current_app
 from openspending.core import db
@@ -11,33 +11,34 @@ from openspending.auth import require
 
 blueprint = Blueprint('user', __name__)
 
-@blueprint.route('/user', methods=['GET'])
-def dataloader():
-    """ Render the user page page. """
-    msg = ''
-    list = {}
-    if current_user.is_authenticated():
-      list = Dataview.query.filter_by(account_id=current_user.id).all()
-    return render_template('user/user.jade',dataviews=list,message=msg)
+
     
-@blueprint.route('/user/adddv', methods=['GET'])    
+@blueprint.route('/user/adddv', methods=['POST'])    
 def saveData():
     """ save a dv to the current  user """
     if current_user.is_authenticated() and current_user.id:
       """ unquote the js uri encoding """
-      viz_hash = urllib.unquote(request.query_string)
+      title = request.form.get('title')
+      description = request.form.get('description')
+      viz_hash = request.form.get('viz_settings')
+      if not title or not viz_hash:
+        return jsonify({"status":"error", "message": "You must provide a title and a visualization"})
       """ re add the #"""
-      viz_hash = '#'+viz_hash[2:]
-      if not viz_hash:
-        viz_hash="test"
-      logging.info("new row ================ %s ",viz_hash)
-      newrow = Dataview({'account_id':current_user.id,'settings':{'hash':viz_hash}})
-      db.session.add(newrow)
+      viz_hash = '#f='+ viz_hash[2:]
+      dataviewobj = Dataview.by_user_settings(settings={'hash':viz_hash}, account_id=current_user.id)
+      if dataviewobj:
+        dataviewobj.title = title
+        dataviewobj.description = description
+      else:
+        newrow = Dataview(dict(settings={'hash':viz_hash}, 
+                                account_id=current_user.id,
+                                title=title,
+                                description=description))      
+        db.session.add(newrow)
       db.session.commit()
-      msg = 'Saved visualization'
+      return jsonify({"status":"success", "message":"Saved Visualization %s."%title})
     else:
-      msg = 'You must be logged in'    
-    return redirect("/user")
+      abort(403)
 
 @blueprint.route('/user/removedv/<int:targetid>', methods=['GET'])    
 def deleteData(targetid):

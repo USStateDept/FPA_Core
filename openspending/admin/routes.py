@@ -178,20 +178,27 @@ class TagsView(sqla.ModelView):
 
 class TagByTagView(sqla.ModelView):
 
-    form_excluded_columns = ('slug_label','category', 'children', 'category')
+    form_excluded_columns = ('slug_label','children')
 
-    form_extra_fields = {
-        "type": SelectField(u'Type', choices=TAG_OPTIONS)
+    # form_extra_fields = {
+    #     "type": SelectField(u'Type', choices=TAG_OPTIONS)
+    # }
+
+    form_overrides = {
+            'category': SelectField
+        }
+    form_args = {
+        'category': {
+            'choices': TAG_OPTIONS
+        }
     }
-
-    form_columns = ('label', 'type', 'weight', 'datasets', )
-
+    form_columns = ('label', 'category', 'weight', 'datasets', )
 
     form_widget_args = {
         'label':{
             'style': 'width:600px'
         },
-        'type': {
+        'category': {
             'style': 'width:600px;'
         },
         'weight':{
@@ -205,16 +212,16 @@ class TagByTagView(sqla.ModelView):
     column_list = ('label', 'category', 'weight', 'dataset_count',)
 
 
-    can_delete = False
-    can_create = False
+    can_delete = True
+    can_create = True
 
     # Model handlers
-    def on_model_change(self, form, model, is_created=False):
-    #def create_model(self, form):
-
-        model.category = form.data['type']
-        model.slug_label = slugify(str(model.label), separator="_")
-        return
+    # def on_model_change(self, form, model, is_created=False):
+    # #def create_model(self, form):
+    #     print "here this is", form.data.get('type')
+    #     model.category = form.data['type']
+    #     model.slug_label = slugify(str(model.label), separator="_")
+    #     return
 
     def is_accessible(self):
         return require.account.is_admin()

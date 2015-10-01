@@ -8,6 +8,8 @@ from flask import Blueprint, request
 from flask.ext.login import current_user
 from colander import SchemaNode, String, Invalid
 from restpager import Pager
+from openspending.lib.cache import cache_key
+from openspending.core import cache
 
 from openspending.core import db, sourcefiles
 from openspending.model import Dataset, Source, Run, DataOrg, SourceFile
@@ -41,6 +43,7 @@ def dataorgs():
 
 @blueprint.route('/datasets')
 @api_json_errors
+@cache.cached(timeout=60, key_prefix=cache_key)
 def index():
     #page = request.args.get('page')
 
@@ -71,7 +74,7 @@ def index():
     #maybe put the pager back in
     # print q
     # pager = Pager(q)
-    return jsonify(returnset, headers= {'Cache-Control' : 'no-cache'})
+    return jsonify(returnset)
 
 
 @blueprint.route('/datasets/<name>')
@@ -462,6 +465,7 @@ def update_model(datasetname):
 
 
     load_source(dataset.source.id)
+    cache.clear()
     #add async request to load data
 
     return jsonify({"success":True})

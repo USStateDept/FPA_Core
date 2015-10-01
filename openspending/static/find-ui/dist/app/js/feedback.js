@@ -5,22 +5,22 @@
 
         $(".expandbtn").click(function(ev){
             if ($(this).hasClass("expanded")){
-                $(this).removeClass("expanded").html("<<");
+                $(this).removeClass("expanded");
                 $(".popupcontainer").hide();
                 $(".warningmessage").hide();
-                $.cookie("shownfeedback", true);
+                //$.cookie("shownfeedback", true);
             }
             else{
-                $(this).addClass("expanded").html(">>");
+                $(this).addClass("expanded");
                 $(".popupcontainer").show();
             }
         });
 
-        var cookieValue = $.cookie("shownfeedback");
+        /*var cookieValue = $.cookie("shownfeedback");
         if (cookieValue){
             $(".expandbtn").click();
             $(".warningmessage").hide();
-        }
+        }*/
 
 
 

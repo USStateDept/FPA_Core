@@ -1,0 +1,62 @@
+{% extends "base.jade" %}
+
+{% block page_title %}Data Stories{% endblock %}
+
+
+{% block banner %}
+
+{% endblock %}
+
+
+{% block optional_head %}
+
+{% endblock %}
+
+{% block content %}
+
+.container-full
+  .container#data-stories-full
+    .row
+      h3 U5MR is declining around the world
+      h5 The number of kids that die before their 5th birthday has been cut in half in the last 20 years.
+    .row
+      p
+    .row
+      p For every 1,000 babies born in 1990, 72 of those kids died before turning five. This number is referred to as the under-five mortality rate, or U5MR. Encouragingly, though, in the last twenty years a great deal of progress has been made. The global U5MR has been cut in half and now stands at 34 for every 1,000 births. And this positive trend is occurring all over the world.
+      p All regions of the world have shown a tremendous decline in under-five mortality since 1990. In fact, most regions have experienced a decline close to 60%. South and Central Asia has one of the fastest declines over the past 20 years and has brought its U5MR down by about 60% (to 43). The Middle East and Latin America aren’t far behind in the percent decrease and actually have a lower U5MR at 18 and 19, respectively.
+      p While decreasing by half or more the rate at which kids are dying around the world is an important development gain, there is still more progress to make. Although the U5MR in Africa has come down by about half like it has in the rest of the world, Africa’s current rate (82) is still higher than the global average from twenty years ago (72) and is nearly 12x more than the current average in Europe (6.7).
+    .row
+      #datastories-chart
+
+{% endblock %}
+
+{% block footer_scripts %}
+
+link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
+
+script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
+script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash-math/lodash.math.js') }}")
+script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
+script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")
+script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
+
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/common/config.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/loader.js') }}")
+
+script(src="{{ static_path('find-ui/build/app/js/common/utils.js') }}")
+
+script(src="{{ static_path('find-ui/build/app/js/datastories/datastories.js') }}")
+{% else %}
+script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
+
+script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
+
+script(src="{{ static_path('find-ui/dist/app/js/datastories/datastories.js') }}")
+{% endif %}
+
+{% endblock %}

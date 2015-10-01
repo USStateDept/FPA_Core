@@ -81,25 +81,25 @@ class ReportForm(Form):
         return report.save(post=post, user=user)
 
 
-class UserSearchForm(Form):
-    search_query = StringField(_("Search"), validators=[
-        Optional(), Length(min=3, max=50)
-    ])
+# class UserSearchForm(Form):
+#     search_query = StringField(_("Search"), validators=[
+#         Optional(), Length(min=3, max=50)
+#     ])
 
-    submit = SubmitField(_("Search"))
+#     submit = SubmitField(_("Search"))
 
-    def get_results(self):
-        query = self.search_query.data
-        return User.query.whoosh_search(query)
+#     def get_results(self):
+#         query = self.search_query.data
+#         return User.query.whoosh_search(query)
 
 
 class SearchPageForm(Form):
-    search_query = StringField(_("Criteria"), validators=[
+    search_query = StringField(_("Searh Terms"), validators=[
         DataRequired(), Length(min=3, max=50)])
 
     search_types = SelectMultipleField(_("Content"), validators=[
         DataRequired()], choices=[('post', _('Post')), ('topic', _('Topic')),
-                                  ('forum', _('Forum')), ('user', _('Users'))])
+                                  ('forum', _('Forum'))])
 
     submit = SubmitField(_("Search"))
 
@@ -110,7 +110,6 @@ class SearchPageForm(Form):
             'post': Post.query.whoosh_search,
             'topic': Topic.query.whoosh_search,
             'forum': Forum.query.whoosh_search,
-            'user': User.query.whoosh_search
         }
 
         query = self.search_query.data

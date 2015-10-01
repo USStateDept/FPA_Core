@@ -14,6 +14,7 @@ link(href='{{ static_path("find-ui/dist/app/css/flags32.css") }}', rel='styleshe
 link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.label.css") }}', rel='stylesheet')
 {% endblock %}
 
 {% block content %}
@@ -85,8 +86,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="foreach:activeCountries")
 
-                    li(role='presentation')
-                      span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
+                    li(role='presentation', data-bind='click:$root.selectCountry')
+                      span.glyphicon.glyphicon-remove(data-bind='css:{selected:selected}')
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
             .row
               h5.col-md-12.strong Global Min/Max/Avg is the default if no countries are selected
@@ -102,10 +103,10 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               p
             .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
               .col-md-8.countries-col(style="height:400px;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
-                .row.f32(data-bind="foreach:activeGroup().regions")
+                .row.f32(data-bind="foreach:_.values(activeGroup().regions)")
                   .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
-                    span.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
-                      span.flags-labels(style="vertical-align:middle" data-bind="html:label")
+                    span(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                      span(style="vertical-align:middle;cursor:pointer;" data-bind="html:label")
                     div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
                   span(data-bind="foreach:$data.countries,css:{hasCountryFilter:$root.hasCountryFilter}")
                     .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
@@ -134,8 +135,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear
                   ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="foreach:activeIndicators")
 
-                    li(role='presentation')
-                      span.glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
+                    li.removeItem(role='presentation', data-bind="click:$root.removeIndicator")
+                      span.glyphicon.glyphicon-remove
                       a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
                 
             .row
@@ -165,7 +166,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                               h4(data-bind="html:label")
                           .face.back
                             div.list-group()
-                              a.list-group-item.active(href="#" data-bind="html:label")
+                              a.list-group-item.active(href="#" data-bind="html:label + '<em style=\'float:right\'> click to close<em>'") 
                               span.list
                                 span.subcategories(data-bind="foreach:subcategories")
                                   a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")
@@ -250,8 +251,26 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                   h4 Scatter
               .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length!=3}")
                 div.well.category-wrapper(data-bind='click:function(){selectVizualization(&#34;bubble&#34;)}')
-                  div.well.category.noun-scatter-105477()
-                  h4 Bubble
+                  div#bubbleIconSquare.well.category.noun-scatter-105477()
+                  h4#bubbleSquare Bubble
+                  //- div.row
+                  //-   div.col-md-4
+                  //-     small
+                  //-       b.pull-left X-axis:
+                  //-       br
+                  //-       //- span(data-bind="text: getIndicatorsArray(0)")
+                  //-       span#bubble1
+                  //-   div.col-md-4
+                  //-     small
+                  //-       b.pull-left Y-axis:
+                  //-       br
+                  //-       span#bubble0
+                  //-   div.col-md-4
+                  //-     small
+                  //-       b.pull-left Bubble size:
+                  //-       br
+                  //-       span#bubble2
+                        
               .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length<2}")
                 div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
                   div.well.category.noun-radar-50835()
@@ -295,6 +314,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
 {% endblock %}
 
 {% block footer_scripts %}
+script
+  window.preloadedData = {};
+  window.preloadedData.categories_list = {{ categories_list | safe}};
+  window.preloadedData.countries_list = {{ countries_list | safe }};
+
+
+
 //-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
@@ -303,9 +329,19 @@ script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
+script(src="{{ static_path('find-ui/bower_components/Leaflet.label/dist/leaflet.label.js') }}")
 //-script(src='//code.highcharts.com/highcharts.js')
 //-script(src='//code.highcharts.com/modules/exporting.js')
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/common/config.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/loader.js') }}")
+//-script(src="{{ static_path('find-ui/build/app/js/visualization/highcharts-json.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/utils.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/visualization/visualization.js') }}")
+{% else %}
 script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
 //-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
@@ -313,10 +349,5 @@ script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 
+{% endif %}
 {% endblock %}
-
-
-
-
-
-

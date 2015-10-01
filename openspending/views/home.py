@@ -106,6 +106,13 @@ def glossary():
     #return render_template('home/index.jade', datasets=datasets)
     return render_template('glossary/glossary.jade')
 
+@blueprint.route('/datastories')
+def datastories():
+    #datasets = Dataset.all_by_account(current_user)
+    #return render_template('home/index.jade', datasets=datasets)
+    return render_template('datastories/datastories.jade')
+
+
 @blueprint.route('/')
 def index():
     #datasets = Dataset.all_by_account(current_user)

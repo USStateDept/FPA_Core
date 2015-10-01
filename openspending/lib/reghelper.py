@@ -11,23 +11,40 @@ def generate_hashlink(account):
 def sendhash(account, gettext = False):
     msg = Message(subject="FIND.state.gov Login URL",
               recipients=[account.email],
-              body = "You're getting this email because it was entered on FIND.state.gov.  \
-              Use the this link to login as a USG user.  \
-              This is a private link just for you, so do not forward it.\
-              " + generate_hashlink(account))
+              body = """You are recieving this email because it was entered on FIND.state.gov to register a new account.  Use the link found below to verify your email address and login to the system.\n\n This is a private link just for you.  Do not forward or share this email.  The link can only be used one time.\n\n
+              %s"""%str(generate_hashlink(account)))
     if gettext:
         returnobj = {
             "subject": "FIND.state.gov Login URL",
             "recipients":[account.email],
-            "body":  "You're getting this email because it was entered on FIND.state.gov.  \
-              Use the this link to login as a USG user.  \
-              This is a private link just for you, so do not forward it.\
-              " + generate_hashlink(account),
+            "body":  """You are recieving this email because it was entered on FIND.state.gov 
+              to register a new account.  Use the link found below to verify your email address and
+              login to the system.\n\n    
+              This is a private link just for you.  Do not forward or share this email.
+              The link can only be used one time.
+              %s"""%str(generate_hashlink(account)),
             "verifylink": generate_hashlink(account)
         }
         return returnobj
     try:
         mail.send(msg)
     except Exception ,e:
-        print "failed to send the message"
-        print e
+        log.critical("failed to send the message: %s \n with error: %s"%(account.email, e))
+
+def send_reset_hash(account, gettext=False):
+  msg = Message(subject="FIND.state.gov Reset Password URL",
+            recipients=[account.email],
+            body = """You are recieving this email because it was requested that the password be reset.  If this is incorrect, please email admin@find.state.gov immediately.\n\n This is a private link just for you.  Do not forward or share this email. The link can only be used one time.
+              %s"""%str(generate_hashlink(account)))
+  if gettext:
+      returnobj = {
+          "subject": "FIND.state.gov Reset Password URL",
+          "recipients":[account.email],
+          "body":  """You are recieving this email because it was requested that the password be reset.  If this is incorrect, please email admin@find.state.gov immediately.\n\n  This is a private link just for you.  Do not forward or share this email.  The link can only be used one time. \n\n%s"""%str(generate_hashlink(account)),
+          "verifylink": generate_hashlink(account)
+      }
+      return returnobj
+  try:
+      mail.send(msg)
+  except Exception ,e:
+      log.critical("failed to send reset password message: %s \n with error: %s"%(account.email, e))

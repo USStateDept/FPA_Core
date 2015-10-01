@@ -1,59 +1,60 @@
-function rc(){
+var indicatorsArray=[];
+selectedIndicatorMultipleCount=0;
+function changeBubbleSquare(){
+    $("#bubbleIconSquare").after(
+                                "<div id='showAxes' style='width:40%;padding:0'>"+
+                                // "<div class='row' style='width: 30%; padding:0'>\n"+
+                                    // "<div class='col-md-2'>\n"+
+                                    "<div>\n"+
+                                        "<small>\n"+
+                                            "<b class='pull-left'>X-axis:</b>\n"+
+                                            // "<br>\n"+
+                                            "<span id='bubble1'></span>\n"+
+                                        "</small>\n"+
+                                    "</div>\n"+
+                                    "<div>\n"+
+                                        "<small>\n"+
+                                            "<b class='pull-left'>Y-axis:</b>\n"+
+                                            // "<br>\n"+
+                                            "<span id='bubble0'></span>\n"+
+                                        "</small>\n"+
+                                    "</div>\n"+
+                                    "<div>\n"+
+                                        "<small>\n"+
+                                            "<b class='pull-left'>Bubble size:</b>\n"+
+                                            // "<br>\n"+
+                                            "<span id='bubble2'></span>\n"+
+                                        "</small>\n"+
+                                    "</div>\n"
+                                    +
+                                "</div>"
+                                );
+    $("#bubbleIconSquare").css({'width':'35%','padding':0, 'float':'right'});
+    // $("#bubbleIconSquare").css();
+    // $("#bubbleIconSquare").css('class', 'pull-right');
+    $("#bubbleSquare").css({'float':'right'});
+    $("#bubble1").text(indicatorsArray[1]);
+    $("#bubble0").text(indicatorsArray[0]);
+    $("#bubble2").text(indicatorsArray[2]);
+    // console.log("changeBubbleSquare executed");
+}
 
-    var selectedCountry = arguments[0];
-    var activeCountries = vizModel.activeCountries();
-    var selectedIndex = _.indexOf(activeCountries, selectedCountry);
-
-    vizModel.activeCountries.splice(selectedIndex, 1);
-
-    var countryLabel = selectedCountry.label;
-    var countryId = selectedCountry.id;
-
-    //vizModel.activeCountries.removeAll();
-
-    var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-    vizModel.countryGroupings.removeAll();
-
-    var activeGroupId = vizModel.activeGroup().id;
-    // debugger;
-    _.forEach(countryGroupings, function(countryGroup, i) {
-        if (countryGroup.id == countryId) {
-            countryGroup.selected = false;
-        }
-        _.forEach(countryGroup.regions, function(region) {
-            if (region.id == countryId && region.label == countryLabel) {
-                region.selected = false;
-            }
-            _.forEach(region.countries, function(country) { //for each Country
-                if (country.id == countryId) {
-                    country.selected = false;
-                }
-            });
-
-        });
-    });
-
-    _.forEach(countryGroupings, function(countryGroup, i) {
-        if (activeGroupId == countryGroup.id) {
-            vizModel.activeGroup(countryGroup);
-        }
-        vizModel.countryGroupings.push(countryGroup);
-    });
-
-    window.utils.removeOnMap(vizModel, selectedCountry);
-
-
-    // _.each(activeCountries, function(country){
-    //  if (geounit)
-    // });
-    // vizModel.activeCountries.push(selectedCountry);
-
+function unchangeBubbleSquare(){
+    $("#showAxes").remove();
+    $("#bubbleIconSquare").css({'width':'100%','float':'none'});
+    $("#bubbleSquare").css({'float':'none'});
 }
 
 (function() {
 
-
     window.vizModel = {
+
+        // getIndicatorsArray: function(x){
+        //     console.log("x is: " + x);
+        //     console.log("getIndicatorsArray test");
+        //     console.log("indicatorsArray[x] is: "+indicatorsArray[x]);
+        //     return indicatorsArray[x];
+        // },
 
         selectView: function(type) {
 
@@ -76,9 +77,9 @@ function rc(){
 
             var groupId = vizModel.activeGroup().id;
             if (groupId != "all") {
-                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
+                var urlTemplate = "/api/3/slicer/aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}&daterange={yearFrom}-{yearTo}&order=time"
             } else {
-                var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}&cut=geometry__time:{yearFrom}-{yearTo}&order=time"
+                var urlTemplate = "/api/3/slicer/aggregate?cubes={indicator_id}&drilldown=geometry__time|geometry__country_level0@sovereignt&format={format}&daterange={yearFrom}-{yearTo}&order=time"
             }
             //var urlTemplate = "/api/slicer/cube/geometry/cubes_aggregate?cubes={indicator_id}&drilldown=geometry__country_level0@{groupId}|geometry__time@time&cut=geometry__country_level0@{groupId}:{region}&format={format}"
             var url = urlTemplate.replace(/{indicator_id}/g, indicator.id);
@@ -117,42 +118,13 @@ function rc(){
         removeIndicator: function(selectedIndicator) {
 
             var indicatorIndex = _.indexOf(vizModel.activeIndicators(), selectedIndicator);
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
             vizModel.activeIndicators.splice(indicatorIndex, 1);
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                vizModel.indicatorsModel.push(indicator);
-            });
 
 
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.categoriesModel.push(category);
-            });
-            //debugger;
+            $("[data-indicatorid='" + selectedIndicator.id + "']").parent().removeClass("selected");
 
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.sourcesModel.push(source);
-            });
-
-            window.utils.flipCardEvent();
+            // TODO -- inprogress -- make sure flip sequence is working properly
+            //window.utils.flipCardEvent();
 
         },
 
@@ -170,7 +142,9 @@ function rc(){
 
         selectIndicatorMultiple: function(selectedIndicator, evt, goToVisualize) {
 
-
+            // console.log("TESTING");
+            // console.log("Selected Indicator is: " + selectedIndicator.label);
+            // $.each(selectedIndicator, function(k,v){console.log(k+ " : "+ v)});
             if (goToVisualize) {
                 //TODO: Calculate Year Extremes
                 window.location.href = "data-visualization#f=1990|2014&i=" + selectedIndicator.id + "&c=line&r=dos_region:all";
@@ -179,53 +153,37 @@ function rc(){
 
             window.clickedIndicator = true;
 
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
+            var $this = $("[data-indicatorid='" + selectedIndicator.id + "']").parent();
 
-            vizModel.activeIndicators.removeAll();
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                if (selectedIndicator.id == indicator.id) {
-                    indicator.selected = !indicator.selected;
-                }
-                if (indicator.selected) {
-                    vizModel.activeIndicators.push(indicator)
-                }
-                vizModel.indicatorsModel.push(indicator);
-            });
+            // toggle the selection/deselection
+            if($this.hasClass("selected")) {
+              $this.removeClass("selected");
+              vizModel.removeIndicator(selectedIndicator);
+            } else {
+              $this.addClass("selected");
+              vizModel.activeIndicators.push(selectedIndicator);
+              // vizModel.indicatorsArray.push(selectedIndicator.label);
+              indicatorsArray.push(selectedIndicator.label);
+              // console.log("Indicators Array is: " + indicatorsArray);
+              if (indicatorsArray.length==3){
+                changeBubbleSquare();
+                  // $("#bubble1").text(indicatorsArray[1]);
+                  // $("#bubble0").text(indicatorsArray[0]);
+                  // $("#bubble2").text(indicatorsArray[2]);
+              }
+              else{
+                unchangeBubbleSquare();
+              }
+            }
+            selectedIndicatorMultipleCount++;
 
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.categoriesModel.push(category);
-            });
+            // console.log("activeIndicators is: " + vizModel.activeIndicators[0].label);
+            // console.log("activeIndicators is: " + vizModel.activeIndicators[1].label);
+            // console.log("activeIndicators is: " + vizModel.activeIndicators[2].label);
+            // $.each(vizModel.activeIndicators, function(k,v){console.log(k+ " : "+ v)});
 
-
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    if (selectedIndicator.id == indicator.id) {
-
-                        indicator.selected = !indicator.selected;
-                    }
-                });
-                vizModel.sourcesModel.push(source);
-            });
-
-            window.utils.flipCardEvent();
-
-            var filterValue = $("#filterIndicators")[0].value;
-
-
-            vizModel.filterIndicators(null, {
-                currentTarget: {
-                    value: filterValue
-                }
-            });
+            // TODO -- inprogress -- make sure flip sequence is working properly
+            //window.utils.flipCardEvent();
 
         },
 
@@ -235,7 +193,7 @@ function rc(){
 
             var allowMultivariate = ["scatter", "bubble", "radar", "tree"];
 
-            var allowSinglevariate = ["line", "bar","map"];
+            var allowSinglevariate = ["line", "bar", "map"];
 
             var indicators = _.map(vizModel.activeIndicators(), function(indicator) {
                 return indicator.id;
@@ -296,16 +254,11 @@ function rc(){
 
             window.location.href = "/data-visualization#" + hashString;
 
-
-
         },
 
-
-        selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) { /* breakdown by regions or countries*/
+        selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
 
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
-
-            selectedCountry = _.clone(selectedCountry, true);
 
             if (isGroup) { //breakdown a group
                 selectedCountry.label += " Regions";
@@ -322,205 +275,72 @@ function rc(){
                 return;
             }
 
-            // var selectedCountry = arguments[0];
-            if (selectedCountry.selected) {
-                return false;
+            var abbr = selectedCountry.id.toLowerCase();
+            var $this = $("."+abbr+"").parent();
+
+            // toggle the selection/deselection
+            if ($this.hasClass("selected")) {
+              $this.removeClass("selected");
+              //vizModel.removeCountry(selectedCountry);
+              var activeCountries = vizModel.activeCountries();
+              var selectedIndex = _.indexOf(activeCountries, selectedCountry);
+
+              vizModel.activeCountries.splice(selectedIndex, 1);
+
+              // make sure selectetion is false
+              selectedCountry.selected = false;
+
+              // allows for immediate ui response before map load
+              setTimeout(function(){
+                window.utils.highlightOnMap(vizModel, selectedCountry);
+              },25);
+
+
+            } else {
+              $this.addClass("selected");
+              selectedCountry.selected = true;
+
+              vizModel.activeCountries.push(selectedCountry);
+
+              // allows for immediate ui response
+              setTimeout(function(){
+                window.utils.highlightOnMap(vizModel, selectedCountry)
+              },25);
             }
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
-
-            vizModel.activeCountries.push(selectedCountry);
-
-            var countriesModelMaster = _.clone(vizModel.countriesModelMaster(), true);
-            vizModel.countriesModelMaster.removeAll();
-
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = true;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = true;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = true;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-
-            var filterValue = $("#filterCountries")[0].value;
-
-
-            vizModel.filterCountries(null, {
-                currentTarget: {
-                    value: filterValue
-                }
-            });
-
-            // console.log("vizModel is: " + JSON.stringify(vizModel));
-            // console.log("selectedCountry is: " + JSON.stringify(selectedCountry));
-            window.utils.highlightOnMap(vizModel, selectedCountry);
 
         },
-
-
-
-        removeCountry: function() {
-
-
-            var selectedCountry = arguments[0];
-            var activeCountries = vizModel.activeCountries();
-            var selectedIndex = _.indexOf(activeCountries, selectedCountry);
-
-            vizModel.activeCountries.splice(selectedIndex, 1);
-
-            var countryLabel = selectedCountry.label;
-            var countryId = selectedCountry.id;
-
-            //vizModel.activeCountries.removeAll();
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-            // debugger;
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (countryGroup.id == countryId) {
-                    countryGroup.selected = false;
-                }
-                _.forEach(countryGroup.regions, function(region) {
-                    if (region.id == countryId && region.label == countryLabel) {
-                        region.selected = false;
-                    }
-                    _.forEach(region.countries, function(country) { //for each Country
-                        if (country.id == countryId) {
-                            country.selected = false;
-                        }
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-            window.utils.removeOnMap(vizModel, selectedCountry);
-
-
-            // _.each(activeCountries, function(country){
-            // 	if (geounit)
-            // });
-            // vizModel.activeCountries.push(selectedCountry);
-
-        },
-
 
         clearActiveCountries: function() {
 
+            var model =  vizModel.activeCountries();
+            for(var i = 0; i  < model.length; i++) {
+
+                var abbr = model[i].id.toLowerCase();
+                var $this = $("."+abbr+"").parent();
+                $this.removeClass("selected");
+
+            }
             vizModel.activeCountries.removeAll();
-
-            var countryGroupings = _.clone(vizModel.countryGroupings(), true);
-            vizModel.countryGroupings.removeAll();
-
-            var activeGroupId = vizModel.activeGroup().id;
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                countryGroup.selected = false;
-                _.forEach(countryGroup.regions, function(region) {
-                    region.selected = false;
-                    _.forEach(region.countries, function(country) { //for each Country
-                        country.selected = false;
-                    });
-
-                });
-            });
-
-            _.forEach(countryGroupings, function(countryGroup, i) {
-                if (activeGroupId == countryGroup.id) {
-                    vizModel.activeGroup(countryGroup);
-                }
-                vizModel.countryGroupings.push(countryGroup);
-            });
-
-            //window.utils.highlightOnMap(vizModel, null);
-
-            window.utils.clearOnMap(vizModel);
-
-
+            window.visualization.changeGroup("all");
         },
 
         clearActiveIndicators: function() {
-
+            // remove from list
+            indicatorsArray=[];
             vizModel.activeIndicators.removeAll();
-
-
-            var categoriesModel = _.clone(vizModel.categoriesModel(), true);
-            var sourcesModel = _.clone(vizModel.sourcesModel(), true);
-
-
-            vizModel.indicatorsModel.removeAll();
-            _.forEach(vizModel.indicatorsModelMaster(), function(indicator) {
-                indicator.selected = false;
-                vizModel.indicatorsModel.push(indicator);
-            });
-
-
-            vizModel.categoriesModel.removeAll();
-            _.forEach(categoriesModel, function(category) {
-                _.forEach(category.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                vizModel.categoriesModel.push(category);
-            });
-            //debugger;
-
-            vizModel.sourcesModel.removeAll();
-            _.forEach(sourcesModel, function(source) {
-                _.forEach(source.indicators, function(indicator) {
-                    indicator.selected = false;
-                });
-                vizModel.sourcesModel.push(source);
-            });
-
-            window.utils.flipCardEvent();
-
+            // removed selected class
+            $( ".indicator-item").removeClass("selected");
         },
 
         selectCountryGroup: function() {
 
-
-
             var groupId = arguments[0].id;
-            
+
             window.visualization.changeGroup(groupId);
 
             vizModel.activeGroup(arguments[0]);
             vizModel.activeRegion(""); //set active region to undefined
-
-
-            vizModel.countryGroupRegions.removeAll();
-
+            //vizModel.countryGroupRegions.removeAll();
 
             if (groupId == "all") {
                 vizModel.selectCountryGroupRegion("all"); //just select all countries
@@ -530,21 +350,18 @@ function rc(){
 
                 _.forEach(vizModel.countryGroupings(), function(countryGroup) {
                     if (groupId == countryGroup.id) {
-                        vizModel.countryGroupRegions(_.clone(countryGroup.regions, true));
-                        vizModel.selectCountryGroupRegion(countryGroup.regions[0]);
+                        //vizModel.countryGroupRegions(_.clone(countryGroup.regions, true));
+                        vizModel.selectCountryGroupRegion(_.values(countryGroup.regions)[0]);
                     }
                 });
 
             }
-
-
 
         },
 
         selectCountryGroupRegion: function() {
 
             //debugger;
-
             var selectedRegion = arguments[0];
             var selectedGroup = vizModel.activeGroup();
 
@@ -729,33 +546,10 @@ function rc(){
 
         countriesModelMaster: ko.observableArray([]),
 
-        countryGroupings: ko.observableArray([{
-            "id": "all",
-            "label": "All Countries",
-            "regions": []
-        }, {
-            "id": "continent",
-            "label": "Continent",
-            "regions": []
-        }, {
-            "id": "dod_cmd",
-            "label": "Department of Defense",
-            "regions": []
-        }, {
-            "id": "dos_region",
-            "label": "Department of State",
-            "regions": []
-        }, {
-            "id": "usaid_reg",
-            "label": "USAID",
-            "regions": []
-        }, {
-            "id": "wb_inc_lvl",
-            "label": "Income Groups",
-            "regions": []
-        }]),
+        countryGroupings: ko.observableArray([]),
 
-        countryGroupRegions: ko.observableArray([]),
+        //can't find where this is being used
+        //countryGroupRegions: ko.observableArray([]),
 
         newSearch: ko.observable(true)
 

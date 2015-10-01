@@ -29,7 +29,10 @@ body {
   color: #3a0000;
 }
 .app a {
-  color: #852224;
+  color: #336b99;
+}
+.app a.btn {
+  color: #fff;
 }
 .app .navbar-default {
   background-color: #336b99;
@@ -85,6 +88,9 @@ body {
   width: 100%;
   text-align: center;
   font-size: 40px;
+}
+.app .data-story-text {
+  padding: 0 0 20px;
 }
 .app img {
   width: 100%;
@@ -159,6 +165,9 @@ body {
   display: inline-block;
   cursor: pointer;
 }
+.app .footer {
+  padding: 50px;
+}
 .app .footer h1 {
   font-size: 36px;
   font-weight: 200;
@@ -168,10 +177,16 @@ body {
   padding-bottom: 20px;
 }
 .app .footer .updates ul {
-  color: #fff;
+  color: #000;
   font-size: 22px;
 }
 .app .footer #data-stories h3 {
+  color: #852224;
+}
+.app .footer #data-stories a {
+  color: #000;
+}
+.app .footer a {
   color: #fff;
 }
 .app .footer-links {
@@ -264,6 +279,9 @@ background green,
 #data-stories h1 {
   color: #fff;
 }
+#data-stories-full h3 {
+  color: #852224;
+}
 .carousel-fade .carousel-inner .item {
   opacity: 0;
   -webkit-transition-property: opacity;
@@ -289,6 +307,14 @@ background green,
 .slick-header-column {
   height: 100% !important;
 }
+.form-group .error-message {
+  color: #f00;
+}
+.form-group .error-message:after {
+  color: #f00;
+  content: ' *';
+  display: inline;
+}
 /****** MEDIA QUERIES ************/
 @media (min-width: 768px) {
   .app .jumbotron {
@@ -304,6 +330,10 @@ background green,
 @media (min-width: 992px) {
   .category-wrapper {
     height: 210px;
+  }
+  .app .data-story-container {
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
   }
 }
 @media (min-width: 1200px) {

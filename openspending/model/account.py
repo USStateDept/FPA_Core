@@ -178,7 +178,7 @@ class Account(db.Model):
     def url(self):
         """Returns the url for the user"""
         #change to public user page
-        return url_for("user.dataloader")
+        return url_for("account.profile", account_id=self.id)
         #return url_for("account.profile", username=self.username)
 
     @property
@@ -347,11 +347,10 @@ class AccountRegister(colander.MappingSchema):
 
 class AccountSettings(colander.MappingSchema):
     fullname = colander.SchemaNode(colander.String())
-    email = colander.SchemaNode(colander.String(),
-                                validator=colander.Email())
+    website = colander.SchemaNode(colander.String(), missing="")
 
-    password1 = colander.SchemaNode(colander.String(),
-                                    missing=None, default=None)
-    password2 = colander.SchemaNode(colander.String(),
-                                    missing=None, default=None)
+    # password1 = colander.SchemaNode(colander.String(),
+    #                                 missing=None, default=None)
+    # password2 = colander.SchemaNode(colander.String(),
+    #                                 missing=None, default=None)
 

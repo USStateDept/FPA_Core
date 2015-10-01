@@ -46,7 +46,7 @@ def flash_notice(message):
 
 
 def flash_error(message):
-    return flash(message, 'error')
+    return flash(message, 'warning')
 
 
 def flash_success(message):

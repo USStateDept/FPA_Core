@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from flask import Flask, redirect, session, abort
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
@@ -8,8 +9,8 @@ from flask.ext.mail import Mail
 from flask.ext.assets import Environment
 from flaskext.uploads import UploadSet, IMAGES, configure_uploads
 import formencode_jinja2
-from celery import Celery
-from cubes import Workspace
+#from celery import Celery
+#from cubes import Workspace
 #from flask.ext.httpauth import HTTPDigestAuth
 from flask.ext.login import current_user
 from flask import request
@@ -24,6 +25,10 @@ from openspending.lib.routing import FormatConverter, NoDotConverter
 from flask import g
 import flask_whooshalchemy as whoosearch
 from flask_debugtoolbar import DebugToolbarExtension
+
+
+from werkzeug.contrib.profiler import ProfilerMiddleware, MergeStream
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -60,12 +65,23 @@ def create_app(**config):
         'jinja2.ext.i18n'
     ])
 
+    #add some sqlalchemy connection numbers
+    app.config['SQLALCHEMY_POOL_SIZE'] = 50
+    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 200
+
     db.init_app(app)
     cache.init_app(app)
     mail.init_app(app)
     assets.init_app(app)
     login_manager.init_app(app)
     configure_uploads(app, (sourcefiles,))
+
+    # f = open('profiler.log', 'w')
+    # stream = MergeStream(sys.stdout, f)
+    # app.config['PROFILE'] = True
+    # app.wsgi_app = ProfilerMiddleware(app.wsgi_app, stream=stream, sort_by=['cumtime'], restrictions=[300])#, profile_dir=app.config.get("UPLOADS_FOLDER") + "/profiler")
+
+    
 
     @app.before_request
     def require_basic_auth(*args, **kwargs):
@@ -84,10 +100,14 @@ def create_app(**config):
             if not token or resquesttoken != token:
                 abort(403)
 
-    with app.app_context():
-        app.cubes_workspace = Workspace()
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        db.session.remove()
+
+    # with app.app_context():
+    #     app.cubes_workspace = Workspace()
         
-        app.cubes_workspace.register_default_store('OpenSpendingStore')
+    #     app.cubes_workspace.register_default_store('OpenSpendingStore')
 
 
     return app
@@ -132,20 +152,20 @@ def create_web_app(**config):
     return app
 
 
-def create_celery(app):
-    celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
-    celery.conf.update(app.config)
-    TaskBase = celery.Task
+# def create_celery(app):
+#     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
+#     celery.conf.update(app.config)
+#     TaskBase = celery.Task
 
-    class ContextTask(TaskBase):
-        abstract = True
+#     class ContextTask(TaskBase):
+#         abstract = True
         
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
+#         def __call__(self, *args, **kwargs):
+#             with app.app_context():
+#                 return TaskBase.__call__(self, *args, **kwargs)
     
-    celery.Task = ContextTask
-    return celery
+#     celery.Task = ContextTask
+#     return celery
 
 
 

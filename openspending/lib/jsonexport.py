@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, date
 from json import JSONEncoder
 from decorator import decorator
+import numpy as np
 
 from flask import request, Response
 
@@ -21,6 +22,8 @@ class AppEncoder(JSONEncoder):
             return obj.isoformat()
         elif isinstance(obj, set):
             return [o for o in obj]
+        elif isinstance(obj, np.ndarray):
+            return list(obj)
         return super(AppEncoder, self).default(obj)
 
 

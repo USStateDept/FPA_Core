@@ -12,6 +12,7 @@ link(href='{{ static_path("find-ui/dist/app/css/flags32.css") }}', rel='styleshe
 link(href='{{ static_path("find-ui/bower_components/slickgrid/slick.grid.css") }}', rel='stylesheet')
 //-link(href='{{ static_path("find-ui/bower_components/tidy-table/tidy-table.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/leaflet/dist/leaflet.css") }}', rel='stylesheet')
+link(href='{{ static_path("find-ui/bower_components/Leaflet.label/dist/leaflet.label.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.css") }}', rel='stylesheet')
 link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', rel='stylesheet')
 {% endblock %}
@@ -22,6 +23,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
   .row#loading
     .col-md-12
       img(src='/static/find-ui/dist/app/images/loader.GIF')
+
   .row
     p
   .row
@@ -29,17 +31,38 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       //-button.btn.btn-default.facebook(data-bind="click:shareFacebook")
       button.btn.btn-default.twitter(data-bind="click:shareTwitter")
       button.btn.btn-default.share(data-bind="click:shareUrl")
+      {% if current_user.is_authenticated() %}
       button.btn.btn-default.saveVZ(data-bind="click:saveVZ",title="Click to Save this Visualization")
+      // - hidden save dialog box
+      div#dialog-form(title="Save Visualization")
+        p.validateTips Please enter a title for your visualization
+        form
+          fieldset
+            input(type="hidden", name="csrf_token", id="csrf_token", value="{{ csrf_token() }}")
+            label(for="title") Title
+            br
+            input.text.ui-widget-content.ui-corner-all(type="text", name="savedv-title", id="savedv-title")
+            br
+            label(for="description") Description
+            br
+            input.text.ui-widget-content.ui-corner-all(type="text", name="savedv-description", id="savedv-description")
+            input(type="submit", tabindex="-1", style="position:absolute;top:-1000px")
+      div#dialog-form-msg(title="Save Visualization")
+        div.dvsave-msg
+      {% endif %}
     .col-md-2
-      button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
-      button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
+      span(data-bind="visible:activeChart()!='map'")
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
     .col-md-2
-      .pull-right#filter-years-label(data-bind="html:activeYears().join(' - ')")
+      .pull-right#filter-years-label
   .row
     p
   .row(style="padding:10px")
     .col-md-4
-      span#bar-globals
+      span#bar-globals(data-bind="visible:activeChart()!='map'")
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+        //- button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
         button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMin",type='button', data-toggle='dropdown', aria-expanded='true') Minimum
         button.btn.btn-default.dropdown-toggle(data-bind="click:chartBarToggleMax",type='button', data-toggle='dropdown', aria-expanded='true') Maximum
         button.btn.btn-default.dropdown-toggle#global-avg(data-bind="click:chartBarToggleAvg",type='button', data-toggle='dropdown', aria-expanded='true') Average
@@ -49,20 +72,40 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
       div#filter-years
       .row
         p
- 
- //- #slide-panel
-    a.btn#opener
-      i.glyphicon.glyphicon-align-justify
-    .container-full#content
-      .row.tabs-app
-        .col-md-12
+  .row.tabs-app
+    .col-md-12
+      ul.nav.nav-tabs
+        li.active
+          a(href='#viz-container', data-target="#viz-container, #filters", data-toggle='tab') Chart       
+        li
+          a(href='#data-table', data-target="#data-table, #data-table-save", data-toggle='tab') Data Table
+      .tab-content
+        #filters.active.tab-pane
+          .row(style="padding:10px 0")
+            button#modalBtn(data-toggle="modal",data-target="#slide-panel1")
+              span.glyphicon.glyphicon-nav(aria-hidden="true")
+              span(style="margin-left:6px; top: -4px; color:#666; font-weight:bold") Edit Visualization
+        #data-table-save.tab-pane
+          .row(style="padding:10px 0")
+            span Export data: 
+            input#savecsv(type="button" value="CSV")
+            input#savexlsx(type="button" value="XLSX")
+        #viz-container.active.tab-pane
+        #data-table.tab-pane
+        
+  #slide-panel1.modal.fade(role="dialog")
+    .modal-dialogue.modal-lg
+      .modal-content
+        .modal-header
+          //button.pull-right(data-dismiss="modal") Close
           ul.nav.nav-tabs
             li.active
               a(href='#comparator', data-toggle='tab') Comparator
             li
-              a(href='#indicators', data-toggle='tab') Indicators        
+              a(href='#indicators', data-toggle='tab') Indicators
+        .modal-body  
           .tab-content
-            #indicators.tab-pane
+            #indicators.tab-pane(style="overflow-auto")
               .row
                 p
               .row
@@ -75,17 +118,17 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         .glyphicon.glyphicon-menu-down
                         span() &nbsp;Selected Indicators&nbsp;
                         span.badge(data-bind="html:activeIndicators().length")
-                        a(data-bind="click:clearActiveIndicators,visible:activeIndicators().length>0")&nbsp;Clear
-                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="foreach:activeIndicators")
+                        a(data-bind="click:clearActiveIndicators, visible:activeIndicators().length>0")&nbsp;Clear
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedIndicators', data-bind="click:clearActiveIndicators, foreach:activeIndicators")
 
                       li(role='presentation')
                         span.glyphicon.glyphicon-remove(data-bind="click:$root.removeIndicator") 
                         a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
                   .dropdown.pull-right(data-bind="visible:activeIndicators().length > 0")
-                    button.btn.btn-default.dropdown-toggle(type='button' data-bind="click:$root.redrawChart") Swap Indicator
+                    button.btn.btn-default.dropdown-toggle(data-dismiss="modal",data-bind="click:$root.redrawChart") Swap Indicator
               .row
                 p 
-              .row
+              .row(style="overflow:auto; height:350px; padding:10px 0;")
                 .col-md-2
                   .tabbable.tabs-left
                     ul.nav.nav-tabs
@@ -111,7 +154,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                                 h4(data-bind="html:label")
                             .face.back
                               div.list-group()
-                                a.list-group-item.active(href="#" data-bind="html:label")
+                                a.list-group-item.active(href="#" data-bind="html:label + '<em style=\'float:right\'> click to close<em>'")
                                 span.list
                                   span.subcategories(data-bind="foreach:subcategories")
                                     a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")
@@ -195,16 +238,16 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         .glyphicon.glyphicon-menu-down
                         span() &nbsp;Selected Countries&nbsp;
                         span.badge(data-bind="html:activeCountries().length")
-                        a(data-bind="click:clearActiveCountries,visible:activeCountries().length>0")&nbsp;Clear
-                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="foreach:activeCountries")
+                        a(data-bind="click:clearActiveCountries, visible:activeCountries().length>0")&nbsp;Clear
+                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenuSelectedCountries', data-bind="click:clearActiveIndicators, foreach:activeCountries")
 
-                      li(role='presentation')
-                        span.glyphicon.glyphicon-remove(data-bind='click:$root.removeCountry,css:{selected:selected}')
+                      li(role='presentation', data-bind='click:$root.selectCountry')
+                        span.glyphicon.glyphicon-remove(data-bind='css:{selected:selected}')
                         a(role='menuitem', tabindex='-1', href='#',data-bind="html:label")
               .row.title
                 .col-md-12
                   .dropdown.pull-right(data-bind="visible:groupByRegion() || activeCountries().length > 0")
-                    button.btn.btn-default.dropdown-toggle(type='button' data-bind="click:addComparator") Add Comparator
+                    button.btn.btn-default.dropdown-toggle(data-dismiss="modal",data-bind="click:addComparator") Add Comparator
               .row
                 p
               .row
@@ -218,52 +261,63 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
               .row
                 p
               .row.countries-list(data-bind="css:{'manual-selection':activeCountries().length>0}")
-                .col-md-8.countries-col(style="height:400px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
-                  .row.f32(data-bind="foreach:activeGroup().regions")
+                .col-md-8.countries-col(style="height:350px;width:100%;overflow-y:auto" data-bind="visible:!groupByRegion() || activeGroup().id == 'all'")
+                  .row.f32(data-bind="foreach:_.values(activeGroup().regions)")
                     .col-md-12.col-sm-12.col-xs-12.region-level(style="line-height:25px",data-bind="visible:id != 'all'")
-                      span.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
-                        span.flags-labels(style="vertical-align:middle" data-bind="html:label")
+                      span(data-bind='click:$root.selectCountry,css:{selected:selected}')
+                        span(style="vertical-align:middle" data-bind="html:label")
                       div.noun-tree-140111(data-bind="click:function(data,evt){$root.selectCountry(data,evt,false, true)}" title="All Countries in this Region")
                     span(data-bind="foreach:$data.countries,css:{hasCountryFilter:$root.hasCountryFilter}")
                       .col-md-6.col-sm-12.col-xs-12.country-wrapper(style="line-height:25px" data-bind="css:{filtered:filtered}")
                         div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                           div.flag(data-bind="css:iso_a2.toLowerCase()")
                           span.flags-labels(style="vertical-align:middle" data-bind="html:label") 
-  
-
-  .row.tabs-app
-    .col-md-12
-      ul.nav.nav-tabs
-        li.active
-          a(href='#viz-container', data-toggle='tab') Chart       
-        li
-          a(href='#data-table', data-toggle='tab') Data Table
-      .tab-content
-        #viz-container.active.tab-pane
-        #data-table.tab-pane
         
   .row
     .col-md-12
+    center
+      span(data-bind="visible:activeChart()!='map'")
+        button.btn.btn-default.dropdown-toggle(data-bind="click:showAll",type='button', data-toggle='dropdown', aria-expanded='true') Show All
+        button.btn.btn-default.dropdown-toggle(data-bind="click:hideAll",type='button', data-toggle='dropdown', aria-expanded='true') Hide All
+      br
+      br
+      br
+      p.
+        * Boundary representation on maps is not necessarily authoritative or final. Additionally, subnational boundaries may appear even though no subnational data are available in FIND. 
+      p.
+        If you select a subnational area, you will be shown national information. For more information about the geography tile layer, visit openstreetmap.org.
      
-
 {% endblock %}
 
 {% block footer_scripts %}
 //-link(href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', rel='stylesheet')
 link(href="{{ static_path('find-ui/bower_components/jquery-ui/themes/smoothness/jquery-ui.css') }}", rel='stylesheet')
 
+script
+  window.preloadedData = {};
+  window.preloadedData.countries_list = {{ countries_list | safe }};
+  window.preloadedData.categories_list = {{ categories_list | safe }};
+
 script(src="{{ static_path('find-ui/bower_components/jquery-ui/jquery-ui.js') }}")
 script(src="{{ static_path('find-ui/bower_components/jquery-ui-slider-pips/dist/jquery-ui-slider-pips.min.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/lib/jquery-ui.multiselect.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/lodash/lodash.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/lodash-math/lodash.math.js') }}")
 script(src="{{ static_path('find-ui/bower_components/leaflet/dist/leaflet.js') }}")
+script(src="{{ static_path('find-ui/bower_components/Leaflet.label/dist/leaflet.label.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/highcharts-more.js') }}")
 //-script(src="{{ static_path('find-ui/bower_components/tidy-table/tidy-table.min.js') }}")
 script(src="{{ static_path('find-ui/bower_components/highcharts/modules/exporting.js') }}")
 script(src="{{ static_path('find-ui/bower_components/knockout/dist/knockout.js')  }}") 
+
+{% if not config.DEBUG %}
+script(src="{{ static_path('find-ui/build/app/js/common/config.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/loader.js') }}")
+{% else %}
 script(src="{{ static_path('find-ui/dist/app/js/common/config.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
+{% endif %}
 
 //-slickgrid
 script(src="{{ static_path('find-ui/bower_components/slickgrid/lib/jquery.event.drag-2.2.js') }}")
@@ -273,17 +327,28 @@ script(src="{{ static_path('find-ui/bower_components/slickgrid/slick.dataview.js
 script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.checkboxselectcolumn.js') }}")
 script(src="{{ static_path('find-ui/bower_components/slickgrid/plugins/slick.rowselectionmodel.js') }}")
 script(src="{{ static_path('find-ui/bower_components/slickgrid-bootstrap/bootstrap/bootstrap-slickgrid.js') }}")
+//script(src="{{ static_path('find-ui/bower_components/requirejs/require.js') }}")
+script(src="{{ static_path('find-ui/bower_components/js-xlsx/dist/xlsx.core.min.js') }}")
+script(src="{{ static_path('find-ui/bower_components/file-saver/FileSaver.min.js') }}")
 
+{% if not config.DEBUG %}
+//- script(src="{{ static_path('find-ui/build/app/js/dataviz/highcharts-json.js') }}")
+//- script(src="{{ static_path('find-ui/build/app/js/visualization/visualization.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/utils.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/build/app/js/dataviz/dataviz.js') }}")
+{% if current_user.is_authenticated() %}
+script(src="{{ static_path('find-ui/build/app/js/dataviz/savedv.js') }}")
+{% endif %}
+{% else %}
 //- script(src="{{ static_path('find-ui/dist/app/js/dataviz/highcharts-json.js') }}")
 //- script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
-//-script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/dataviz/dataviz.js') }}")
+{% if current_user.is_authenticated() %}
+script(src="{{ static_path('find-ui/dist/app/js/dataviz/savedv.js') }}")
+{% endif %}
+{% endif %}
 
 {% endblock %}
-
-
-
-
-
-

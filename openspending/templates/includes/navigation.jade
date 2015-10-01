@@ -16,6 +16,7 @@ nav.navbar.navbar-default.navbar-fixed-top
         span.icon-bar     
         span.icon-bar
       a.navbar-brand(href="{{ url_for('home.index') }}") FIND
+        p(style="font-size:12px; width:100%; position:relative; top:-1px; left:-3px; text-align:right;") beta
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
         li
@@ -38,12 +39,13 @@ nav.navbar.navbar-default.navbar-fixed-top
             {{ current_user.fullname }}
           ul.dropdown-menu.account-dropdown
             li
-              a(href="/user") User Profile
+              a(href="{{url_for('account.profile') }}") User Profile
             li.divider
             li
               p
                 strong Forum
-              a(href="{{ url_for('forum.index') }}") Main Forum            
+              a(href="{{ url_for('forum.index') }}") Forum   
+              a(href="{{ url_for('forum.search') }}") Forum Search       
               a(href="{{ url_for('forum.topictracker') }}") Tracked Topics
             li.divider
             {% if current_user.admin %}

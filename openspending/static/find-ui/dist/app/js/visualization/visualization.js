@@ -38,23 +38,24 @@
                 // console.log(feature.properties);
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
                 layer.bindPopup(name);
+                layer.bindLabel(name, {noHide:true,direction:'right'});
             }
         }
 
         window.visualization.lastGeoJson = response;
 
         //if (!window.visualization.geoJsonLayers[type]) {
-        //if layer doesnt exist then add it and symbolize as invisible 
+        //if layer doesnt exist then add it and symbolize as invisible
         window.visualization.geoJson[type] = response;
 
         window.visualization.geoJsonLayers[type] = L.geoJson(response, {
             style: {
 
-                weight: 0, //no border
+                weight: 1, //no border
                 opacity: 1,
                 color: 'gray',
                 //dashArray: '3',
-                fillOpacity: 0.0, //DO NOT DISLAY
+                fillOpacity: 1.0, //DO NOT DISLAY
                 fillColor: '#cccccc'
             },
             onEachFeature: onEachFeature
@@ -73,14 +74,18 @@
         if (groupId == "all") {
             groupId = "sovereignt";
         }
+        window.loader.loadGeoJSON(groupId, geoJSONHandler);
 
-        if (!window.visualization.geoJsonLayers[groupId]) {
-            window.loader.loadGeoJSON(groupId, geoJSONHandler);
-        } else {
-            //debugger;
-            //move this layer on top
-            //TODO: Leroy
-        }
+        return;
+
+        // 
+        // if (!window.visualization.geoJsonLayers[groupId]) {
+        //     window.loader.loadGeoJSON(groupId, geoJSONHandler);
+        // } else {
+        //     //debugger;
+        //     //move this layer on top
+        //     //TODO: Leroy
+        // }
 
     }
 
@@ -94,14 +99,10 @@
 
             map = L.map('map').setView([0, 0], 1);
 
-            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                maxZoom: 18
-            }).addTo(map);
-
             //load geojson for countries
             window.visualization.changeGroup("all");
             //window.loader.loadGeoJSON(defaultType, geoJSONHandler);
+
         }
 
     }
@@ -123,10 +124,6 @@
 
     var model = window.vizModel;
 
-    var countriesListLoadHandler = function(response) {
-
-        window.utils.bindCountries(response, model);
-    }
 
     var indicatorListLoadHandler = function(response) {
 
@@ -139,13 +136,13 @@
 
     }
 
-    window.loader.loadIndicatorList(window.config.server + window.config.services.categories, indicatorListLoadHandler);
-    window.loader.loadCountries("", countriesListLoadHandler);
+    indicatorListLoadHandler(window.preloadedData.categories_list);
+
+    window.utils.bindCountries(window.preloadedData.countries_list, model);
 
     var indicatorDataLoadHandler = function(response) {
 
         var highChartsJson = window.prepareHighchartsJson(response, model.activeChart(), model.activeIndicators(), model.activeGroup(), model.activeRegion());
-        console.log("here");
         model.activeData(highChartsJson);
 
         var highChartsJson = model.activeData();

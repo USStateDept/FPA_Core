@@ -8,8 +8,18 @@
 {% endblock %} 
 
 {% block content %}
-div The message would have been sent below if this was a live version, but we are still in Beta, so we provided the message on a webpage.
-div {{ message }}
+.container.content-text
+	.row
+		.col-md-12.col-xs-12.col-s-12
+			.row
+				p
+			.row
+				h4 {{ message }}
+	.row
+		.col-md-12.col-xs-12.col-s-12
+			.row
+				small The emailed link will direct you to change your password and login. 
+
 
 {% endblock %}
 

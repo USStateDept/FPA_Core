@@ -26,6 +26,8 @@
     "leaflet": "~0.7.3",
     "highcharts": "~4.1.5",
     "tidy-table": "~2.1.0",
-    "slickgrid-bootstrap": "*"
+    "slickgrid-bootstrap": "*",
+    "lodash-math": "*",
+    "Leaflet.label": "~0.2.1"
   }
 }
