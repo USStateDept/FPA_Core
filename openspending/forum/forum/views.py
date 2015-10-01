@@ -62,11 +62,12 @@ def index():
 @forum.route("/category/<int:category_id>-<slug>")
 @authenticated_required
 def view_category(category_id, slug=None):
-    category, forums = Category.\
-        get_forums(category_id=category_id, user=current_user)
+    return redirect(url_for("forum.index"))
+    # category, forums = Category.\
+    #     get_forums(category_id=category_id, user=current_user)
 
-    return render_template("forum/forum/category.html", forums=forums,
-                           category=category)
+    # return render_template("forum/forum/category.html", forums=forums,
+    #                        category=category)
 
 
 @forum.route("/forum/<int:forum_id>")

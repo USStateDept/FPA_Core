@@ -14,6 +14,7 @@ from flask import abort
 from flask_login import current_user
 
 from openspending.auth.perms import check_perm
+from openspending.auth import *
 
 
 
