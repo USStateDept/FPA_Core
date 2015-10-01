@@ -97,13 +97,18 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
     .modal-dialogue.modal-lg
       .modal-content
         .modal-header
-          //button.pull-right(data-dismiss="modal") Close
+        
           ul.nav.nav-tabs
             li.active
               a(href='#comparator', data-toggle='tab') Comparator
             li
               a(href='#indicators', data-toggle='tab') Indicators
-        .modal-body  
+            li
+              a(href='#charttype', data-toggle='tab') Chart Type
+              
+        .modal-body 
+
+         
           .tab-content
             #indicators.tab-pane(style="overflow-auto")
               .row
@@ -138,8 +143,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         a(href='#tab-source', data-toggle='tab') Collections        
                       li
                         a(href='#tab-alphabetic', data-toggle='tab') A - Z
-                      //- li
-                      //-   a(href='#tab-countries', data-toggle='tab') Countries
+  
 
                 .col-md-10
                   .tab-content
@@ -272,7 +276,41 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                         div.flag-item(data-bind='click:$root.selectCountry,css:{selected:selected}')
                           div.flag(data-bind="css:iso_a2.toLowerCase()")
                           span.flags-labels(style="vertical-align:middle" data-bind="html:label") 
-        
+                          
+                          
+            #charttype.tab-pane(style="overflow-auto")
+              .row
+                .col-sm-4.col-md-4()
+                  div.well.category-wrapper(data-bind='click:function(){changeChart(&#34;bar&#34;)}')
+                    div.well.category.noun-bar-45998()
+                    h4 Bar
+                .col-sm-4.col-md-4()
+                  div.well.category-wrapper(data-bind='click:function(){changeChart(&#34;line&#34;)}')
+                    div.well.category.noun-line-105490()
+                    h4 Line
+                .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length!=2}")
+                  div.well.category-wrapper(data-bind='click:function(){changeChart(&#34;scatter&#34;)}')
+                    div.well.category.noun-scatter-105477()
+                    h4 Scatter
+                .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length!=3}")
+                  div.well.category-wrapper(data-bind='click:function(){changeChart(&#34;bubble&#34;)}')
+                    div#bubbleIconSquare.well.category.noun-scatter-105477()
+                    h4#bubbleSquare Bubble
+                .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length<2}")
+                  div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                    div.well.category.noun-radar-50835()
+                    h4 Radar (coming soon)
+                .col-sm-4.col-md-4(data-bind="css:{'coming-soon':activeIndicators().length<2}")
+                  div.well.category-wrapper.coming-soon(data-bind='click:function(){}')
+                    div.well.category.noun-tree-35339()
+                    h4 Tree (coming soon)
+                .col-sm-4.col-md-4()
+                  div.well.category-wrapper(data-bind='click:function(){changeChart(&#34;map&#34;)}')
+                    div.well.category.noun-globe-76672()
+                    h4 Map
+
+                          
+                        
   .row
     .col-md-12
     center

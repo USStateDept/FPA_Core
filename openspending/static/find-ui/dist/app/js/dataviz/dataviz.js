@@ -499,6 +499,13 @@
 
         },
 
+        changeChart: function(chartType) {
+          var currentHash = window.utils.getHashParams();
+          currentHash.c = chartType;
+          window.utils.updateHash(currentHash);
+          location.reload();
+        },
+
         redrawChart: function(indicator) {
 
             $("#loading").show();
@@ -518,12 +525,9 @@
             currentHash.i = indicators[indicators.length - 1]; //USE ONLY ONE INDICATOR
             currentHash.i = indicators.join("|"); //USE ONLY ONE INDICATOR
 
-            //debugger;
             window.utils.updateHash(currentHash);
 
-
             function _takeDataDrawChart() {
-
 
                 var _deferredList = window.loader.loadIndicatorData(indicators, currentHash.r.split("|"), yearsExtremes);
 
@@ -534,7 +538,6 @@
                   .fail(function(response){
                       $("#loading").html('We\'re sorry! The server has encountered an error: Please <a style="color:#336b99;font-weight:600;" href="javascript:location.reload();">Click Here</a> to reload.');
                   });
-
             }
 
             _takeDataDrawChart();
@@ -1259,7 +1262,7 @@
         var responseData = {
             cells: mergedCells
         }
-        
+
         var responseStats = statsData[0];
 
         for(var i=0;i<responseData.cells.length;i++)
@@ -1275,7 +1278,7 @@
 
         if (chartType == "map") {
 
-            
+
 
            /* for(var i=0;i<responseData.cells.length;i++)
             {
@@ -1311,7 +1314,7 @@
             //yearsExtremesForData = window.utils.getHashParams().f.split("|");
 
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
-            
+
             var highChartsJson = sortedData.highcharts;
             //add the min,max and avg to the data-proxy span
             if (chartType == "bar") {
@@ -1320,12 +1323,12 @@
                 $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
                 $("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
                 // console.log(highChartsJson.series[0].data);
-                // console.log(highChartsJson.series[0].data[0][0]);                
+                // console.log(highChartsJson.series[0].data[0][0]);
                 // console.log(highChartsJson.series[0].data);
                 // console.log(highChartsJson.series);
                 // $.each(highChartsJson.series, function(k,v){
                 //     console.log(k + " : " + v);
-                //     $.each(v, function(a,b){ 
+                //     $.each(v, function(a,b){
                 //         console.log(a + " : " + b);
                 //     });
                 // });
