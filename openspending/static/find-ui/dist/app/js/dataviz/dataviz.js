@@ -1181,7 +1181,7 @@
     };
 
     var indicatorDataLoadHandler = function(args) {
-
+    
         //this might be the basic data loader
         var responseDeferred = args;
 
@@ -1257,13 +1257,20 @@
 
         });
 
-
-        //var responseData = args[0];
         var responseData = {
             cells: mergedCells
         }
 
         var responseStats = statsData[0];
+
+        var indicator = Object.keys(responseStats[0]["models"]);
+        var metadataURL = responseStats[0]["models"][indicator[0]]["url"];
+        var metadataLabel = responseStats[0]["models"][indicator[0]]["label"];
+        var metadataOrg = responseStats[0]["models"][indicator[0]]["dataorg"];
+
+        $("#metadata").html(function(){
+            return "</br>Indicator: " + metadataLabel + "\n</br>Source URL: " + metadataURL + "</br>Source: " + metadataOrg;
+        });
 
         for(var i=0;i<responseData.cells.length;i++)
             {

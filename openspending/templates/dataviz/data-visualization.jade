@@ -79,6 +79,8 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
           a(href='#viz-container', data-target="#viz-container, #filters", data-toggle='tab') Chart       
         li
           a(href='#data-table', data-target="#data-table, #data-table-save", data-toggle='tab') Data Table
+        li
+          a(href='#metadata', data-target="#metadata", data-toggle='tab') Metadata
       .tab-content
         #filters.active.tab-pane
           .row(style="padding:10px 0")
@@ -92,6 +94,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
             input#savexlsx(type="button" value="XLSX")
         #viz-container.active.tab-pane
         #data-table.tab-pane
+        #metadata.tab-pane
         
   #slide-panel1.modal.fade(role="dialog")
     .modal-dialogue.modal-lg
