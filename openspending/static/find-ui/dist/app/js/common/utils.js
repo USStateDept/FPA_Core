@@ -15,6 +15,10 @@ var act;
 
     window.utils.metadatas = null;
 
+    window.utils.capitalizeCountry = function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     window.utils.flipCardEvent = function() {
 
         $(".flip").click(function() {
@@ -696,9 +700,10 @@ var act;
             return size;
         };
         var size = Object.size(series);
-
+        
         for (var countryName in series) {
             var visible = false;
+
             // if (defaultVisibleCountries.indexOf(countryName) > -1) {
             visible = true;
             //  }
@@ -726,9 +731,9 @@ var act;
             //     visible: inBounds(series[countryName]) && (counter > 3 || size == 3) ? true : false,
             //     zIndex: counter++
             // });
-
+            var capitalizedCountryName = window.utils.capitalizeCountry(countryName);
             seriesArray.push({
-                name: countryName,
+                name: capitalizedCountryName,
                 data: series[countryName],
                 visible: (counter > 3 || size == 3) ? true : false,
                 zIndex: counter++
@@ -757,7 +762,7 @@ var act;
         }
 
         var ymin = inBounds(series[countryName]); //if there are neg values, return false; otherwise return true
-
+        
         var jsonLine = {
             chart: chartObj,
             title: {
@@ -881,9 +886,12 @@ var act;
                                 });
                         }
                     });
+
+                    var capitalizedRegion = window.utils.capitalizeCountry(c.region);
                     //debugger;
+
                     series.push({
-                        name: c.region,
+                        name: capitalizedRegion,
                         data: dataArray,
                         tooltip: {
                             pointFormat: '<b>' + indicator1 + ':</b> {point.x}<br/><b>' + indicator2 + ':</b> {point.y}<br/><b>year :</b> {point.year}'
@@ -974,9 +982,10 @@ var act;
             var countriesArr = [];
             for (var countryName in series) {
                 var visible = false;
+                var capitalizedCountryName = window.utils.capitalizeCountry(countryName);
                 visible = true;
                 seriesArray.push({
-                    name: countryName,
+                    name: capitalizedCountryName,
                     data: [series[countryName].data],
                     visible: counter > 3 || size == 3 ? true : false,
                     zIndex: counter++
@@ -1056,8 +1065,8 @@ var act;
 
             _.forEach(_cells, function(c) {
                 if (c.region && latestYear == c.year) {
-                    //debugger;
-                    data.push([c.region, c[indicatorId + "__" + dataType]]);
+                    var capitalizedRegion = window.utils.capitalizeCountry(c.region);//c.region.charAt(0).toUpperCase() + c.region.slice(1);
+                    data.push([capitalizedRegion, c[indicatorId + "__" + dataType]]);
                 }
             });
 

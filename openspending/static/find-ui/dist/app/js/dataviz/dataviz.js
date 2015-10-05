@@ -1285,21 +1285,6 @@
 
         if (chartType == "map") {
 
-
-
-           /* for(var i=0;i<responseData.cells.length;i++)
-            {
-                if(window.countries.indexOf(responseData.cells[i].region)>-1)
-                {
-                    break;
-                }
-                else{
-                    window.countries.push(responseData.cells[i].region);
-                }
-            }*/
-
-
-
             $("#loading").hide();
 
             map = L.map('viz-container').setView([0, 0], 3);
