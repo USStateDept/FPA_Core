@@ -38,7 +38,7 @@
     $('#modal').on('show.bs.modal', function(event) {
         var modal = $(this)
         modal.find('.modal-title').text(modalTitle);
-        modal.find('.modal-body').text(modalMessage);
+        modal.find('.modal-body').html(modalMessage);
     });
 
     $('#opener').on('click', function() {
@@ -74,15 +74,13 @@
 
             var url = "https://go.usa.gov/api/shorten.jsonp?login=find&apiKey=513b798e10d6c101ac6ac7fdd405d0e7&longUrl={encodeUrl}";
             url = url.replace("{encodeUrl}", encodeUrl);
-
+            
             window.loader.loadUrlShorten(url).then(function(response) {
                 modalTitle = "Share";
                 modalMessage = response.response.data.entry[0].short_url;
                 $('#modal').modal('show');
             });
-
-
-
+              
         },
 
         shareFacebook: function() {
@@ -93,7 +91,18 @@
 
         shareTwitter: function() {
 
-            debugger;
+            var encodeUrl = "http://find.state.gov";
+
+            encodeUrl = encodeURIComponent(encodeUrl);
+
+            var url = "https://go.usa.gov/api/shorten.jsonp?login=find&apiKey=513b798e10d6c101ac6ac7fdd405d0e7&longUrl={encodeUrl}";
+            url = url.replace("{encodeUrl}", encodeUrl);
+
+            window.loader.loadUrlShorten(url).then(function(response) {
+                modalTitle = "Share";
+                modalMessage = '<a href = "https://twitter.com/intent/tweet?text=' + response.response.data.entry[0].short_url + '" target="_blank">Tweet Visualization</a>';
+                $('#modal').modal('show');
+            });
 
         },
 
@@ -1372,7 +1381,7 @@
         //debugger;
         var activeChart = $('#viz-container').highcharts();
         //first three series are the stats
-        //debugger;
+        debugger;
         var json = window.utils.prepareHighchartsJson({
             cells: window.utils.masterCells
         }, {
@@ -1411,7 +1420,7 @@
                     dataMapping[d[0]] = d[1];
                 }
             });
-
+            
             var currentData = _.map(activeChart.series[0].data, function(d) {
                 return [d.name, d.y];
             });
