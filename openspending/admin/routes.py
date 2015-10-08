@@ -317,49 +317,32 @@ class MetadataOrgManagerView(sqla.ModelView):
         return require.perms.is_admin()
 
         
+class IndicatorsView(sqla.ModelView):
+
+    column_list = ('label','source','dataorg','metadataorg', 'units','tags_str',)
+
+    column_labels = dict(label='Indicator Name(Long)',source='Indicator Name(short)',dataorg='Direct Source',metadataorg='Originating Source',units='Units',tags_str='Category',)
+    
+    column_searchable_list = ('label',)
+        
+    can_delete = False
+    can_create = False
+    can_edit = False
+
+    def is_accessible(self):
+        return require.perms.is_admin()
+
 class SourcesView(sqla.ModelView):
 
-    column_list = ('label', 'dataType','dataorg','webservice','updated_at')
+    column_list = ('dataorg','metadataorg','datatype','source', 'units','tags_str',)
+
+    column_labels = dict(dataorg='Direct Source',metadataorg='Originating Source',label='Indicator Name(Long)',source='Indicator Name(short)',units='Units',tags_str='Category',)
     
     column_searchable_list = ('label',)
     
-    form_excluded_columns = ('source','name','created_at','runs','dataviews','datalastupdated')
-    
-    form_columns = ('label','units', 'dataorg','webservice','orgurl' ,'description', 'tags', 'updated_at','update_freq','update_cycle', 'years', 'stats','agency', 'managers', 'loaded', 'published', 'tested','stats','notes')
-    
-    #column_filters = ('webservice',)
-    
-    #session.query(func.count(User.id)).\
-    #    group_by(User.name)
-
-    
-    form_widget_args = {
-        'label':{
-            'style': 'width:100%'
-        },
-        'dataorg':{
-            'style': 'width:100%'
-        },
-        'description': {
-            'rows': 10,
-            'style': 'width:100%;'
-        },
-		'updated_at':{
-            'style': 'width:50%'
-        },
-        'years':{
-            'style': 'width:100%'
-        },
-        'stats':{
-            'style': 'width:50%'
-        },
-        'managers':{
-            'style': 'width:100%'
-        }
-    }
-
     can_delete = False
     can_create = False
+    can_edit = False
 
     def is_accessible(self):
         return require.perms.is_admin()
@@ -443,7 +426,9 @@ def register_admin(app, db):
 
     flaskadmin.add_view(TagsView(Tags, db.session, endpoint='tagsadmin', category='SysAdmin'))
 
-    flaskadmin.add_view(SourcesView(Dataset, db.session, endpoint='sourcesadmin', category='Indicators', name="Sources"))
+    flaskadmin.add_view(IndicatorsView(Dataset, db.session, endpoint='indicatorsadmin', category='Reports', name="Indicators"))
+
+    flaskadmin.add_view(SourcesView(Dataset, db.session, endpoint='sourcesadmin', category='Reports', name="Sources"))
 
     flaskadmin.add_view(QAListView(Source, db.session, category='DataLoading', endpoint="qaview", name="QA Links"))
 
