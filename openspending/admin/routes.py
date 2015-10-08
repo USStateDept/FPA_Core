@@ -334,9 +334,9 @@ class IndicatorsView(sqla.ModelView):
 
 class SourcesView(sqla.ModelView):
 
-    column_list = ('dataorg','metadataorg','datatype','source', 'units','tags_str',)
+    column_list = ('dataorg','metadataorg','datatype','lastorgupdate', 'update_freq','update_cycle','scope', 'datalastupdated','whentoupdate')
 
-    column_labels = dict(dataorg='Direct Source',metadataorg='Originating Source',label='Indicator Name(Long)',source='Indicator Name(short)',units='Units',tags_str='Category',)
+    column_labels = dict(dataorg='Direct Source',metadataorg='Originating Source',dataype='Data Type', last='lastorgupdate',update_freq='Frequency',update_cycle='Cycle',datalastupdated='Last Updated in FIND',whentoupdate='When to Update in FIND',)
     
     column_searchable_list = ('label',)
     
