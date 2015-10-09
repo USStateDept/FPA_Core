@@ -298,7 +298,7 @@ var act;
         var geojson = gjson['features'];
         var featuresAdded = [];
         var style = function(feature) {
-
+            
             var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
             //console.log("*********feature" + feature);
             if (!name) {
@@ -323,7 +323,7 @@ var act;
                 var polygon = L.multiPolygon(feature.geometry.coordinates);
                 //debugger;
                 featuresAdded.push(polygon);
-
+                
                 return {
 
                     weight: 2,
@@ -359,16 +359,24 @@ var act;
         }
 
         var onEachFeature = function(feature, layer) {
-            //  debugger;
+              
+
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
                 var popupText = name;
+                console.log(name);
                 if (feature.properties[indicator]) {
                     popupText += "</br>" + feature.properties[indicator];
                 }
-                layer.bindPopup(popupText);
-                layer.bindLabel(name, {noHide:true,direction:'right'});
+                else if(countries.indexOf(name.toLowerCase())>-1){
+                    
+                    popupText += "</br>" + "No data";
+                }
+
+
+                //layer.bindPopup(popupText);
+                layer.bindLabel(popupText, {noHide:true,direction:'right'});
             }
 
             layer.on({
@@ -548,7 +556,7 @@ var act;
             // does this feature have a property named popupContent?
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
-                layer.bindPopup(name);
+                //layer.bindPopup(name);
                 layer.bindLabel(name, {noHide:true,direction:'right'});
             }
         }

@@ -37,7 +37,7 @@
             if (feature.properties) {
                 // console.log(feature.properties);
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
-                layer.bindPopup(name);
+                //layer.bindPopup(name);
                 layer.bindLabel(name, {noHide:true,direction:'right'});
             }
         }
