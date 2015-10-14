@@ -40,7 +40,7 @@ link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css
           //-   a(href='#tab-countries', data-toggle='tab') Countries
     .col-md-10
       .tab-content
-        #tab-category.tab-pane.active
+        #tab-category.tab-pane
           .row(data-bind="foreach:categoriesModel")
             .col-sm-4.col-md-4.col-sm-2.flip
               .card
@@ -96,7 +96,7 @@ link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css
                           span(data-bind="click:function(obj,evt){$root.downloadData('excel',$data, evt)}") Excel    
                           span(data-bind="click:function(obj,evt){$root.downloadData('csv',$data, evt)}") CSV    
                           span(data-bind="click:function(obj,evt){$root.downloadData('json',$data, evt)}") JSON
-        #tab-alphabetic.tab-pane
+        #tab-alphabetic.tab-pane.active
           .row
             .col-md-12
               input.pull-left(data-bind="event:{keyup:filterIndicators}" placeHolder="Search Indicator")
