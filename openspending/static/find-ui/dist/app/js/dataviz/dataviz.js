@@ -514,7 +514,40 @@
           window.utils.updateHash(currentHash);
           location.reload();
         },
+        editChart: function(indicator){
+            
 
+            if(indicator.activeChart()=="line" && indicator.activeIndicators().length!=1){
+                modalTitle = "Share";
+                modalMessage = "Line can only have 1 indicator. Please click Edit Visualization again.";
+                $('#modal').modal('show');
+            }
+            else if(indicator.activeChart()=="bar" && indicator.activeIndicators().length!=1){
+                modalTitle = "Share";
+                modalMessage = "Bar can only have 1 indicator. Please click Edit Visualization again.";
+                $('#modal').modal('show');
+            }
+
+            else if(indicator.activeChart()=="map" && indicator.activeIndicators().length!=1){
+                modalTitle = "Share";
+                modalMessage = "Map can only have 1 indicator. Please click Edit Visualization again.";
+                $('#modal').modal('show');
+            }
+
+            else if(indicator.activeChart()=="scatter" && indicator.activeIndicators().length!=2){
+                modalTitle = "Share";
+                modalMessage = "Scatter can only have 2 indicators. Please click Edit Visualization again.";
+                $('#modal').modal('show');
+            }
+            else if(indicator.activeChart()=="bubble" && indicator.activeIndicators().length!=3){
+                modalTitle = "Share";
+                modalMessage = "Bubble can only have 3 indicators. Please click Edit Visualization again.";
+                $('#modal').modal('show');
+            }
+            else{
+                redrawChart(indicator);
+            }
+        },
         redrawChart: function(indicator) {
 
             $("#loading").show();
