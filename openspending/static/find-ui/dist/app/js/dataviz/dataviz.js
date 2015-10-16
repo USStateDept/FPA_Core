@@ -1141,7 +1141,7 @@
 
     }
 
-    var geoJSONHandler = function(response, type, cluster,countries, metadataLabel) {
+    var geoJSONHandler = function(response, type, cluster,countries, metadataLabel, metadataUnits) {
 
         var hashParams = window.utils.getHashParams();
         var yearsFilter = hashParams.f.split("|");
@@ -1156,7 +1156,7 @@
 
         addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator,window.countries);
         
-        window.utils.addLegend(cluster);
+        window.utils.addLegend(cluster, metadataUnits);
         window.utils.addTitle(metadataLabel);
 
 
@@ -1206,7 +1206,7 @@
 
     }
 
-    var getGeoJsonForMap = function(cluster, cells, type,countries,metadataLabel) {
+    var getGeoJsonForMap = function(cluster, cells, type,countries,metadataLabel,metadataUnits) {
         /* var groupId = "sovereignt";
         debugger;*/
 
@@ -1217,7 +1217,7 @@
         geometryType = type;
 
         if (!window.loader.geoJsonLayers[type]) {
-            window.loader.loadGeoJSON(type, geoJSONHandler, cluster,window.countries, metadataLabel);
+            window.loader.loadGeoJSON(type, geoJSONHandler, cluster,window.countries, metadataLabel,metadataUnits);
         } else {
 
         }
@@ -1311,7 +1311,8 @@
         var metadataURL = responseStats[0]["models"][indicator[0]]["url"];
         var metadataLabel = responseStats[0]["models"][indicator[0]]["label"];
         var metadataOrg = responseStats[0]["models"][indicator[0]]["dataorg"];
-
+        var metadataUnits = responseStats[0]["models"][indicator[0]]["units"];
+        
         $("#metadata").html(function(){
             return "</br>Indicator: " + metadataLabel + "\n</br>Source URL: " + metadataURL + "</br>Source: " + metadataOrg;
         });
@@ -1340,7 +1341,7 @@
 
             regType="sovereignt";
             
-            getGeoJsonForMap(cluster, responseData, regType, window.countries, metadataLabel);
+            getGeoJsonForMap(cluster, responseData, regType, window.countries, metadataLabel,metadataUnits);
 
             showTable(responseData);
 

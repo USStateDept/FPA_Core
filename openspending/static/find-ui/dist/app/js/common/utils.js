@@ -446,7 +446,7 @@ var act;
         info.addTo(map);
     }
 
-    window.utils.addLegend = function(cluster) {
+    window.utils.addLegend = function(cluster, units) {
 
         var legend = L.control({
             position: 'bottomright'
@@ -460,6 +460,8 @@ var act;
             //debugger;
             var div = L.DomUtil.create('div', 'info legend'),
                 grades = breaks;
+
+            legendLabels.push('Units: '+units)
 
             _.forEach(breaks, function(_b, i) {
                 //debugger;
