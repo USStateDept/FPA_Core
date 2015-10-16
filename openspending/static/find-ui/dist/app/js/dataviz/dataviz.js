@@ -1141,7 +1141,7 @@
 
     }
 
-    var geoJSONHandler = function(response, type, cluster,countries) {
+    var geoJSONHandler = function(response, type, cluster,countries, metadataLabel) {
 
         var hashParams = window.utils.getHashParams();
         var yearsFilter = hashParams.f.split("|");
@@ -1155,8 +1155,10 @@
         addDataToGeoJson(window.loader.lastGeoJson, type, window.countries);
 
         addChoroplethLayer(window.loader.lastGeoJson, type, cluster, onlyIndicator,window.countries);
-
+        
         window.utils.addLegend(cluster);
+        window.utils.addTitle(metadataLabel);
+
 
         //if (!window.visualization.geoJsonLayers[type]) {
         //if layer doesnt exist then add it and symbolize as invisible
@@ -1204,7 +1206,7 @@
 
     }
 
-    var getGeoJsonForMap = function(cluster, cells, type,countries) {
+    var getGeoJsonForMap = function(cluster, cells, type,countries,metadataLabel) {
         /* var groupId = "sovereignt";
         debugger;*/
 
@@ -1215,7 +1217,7 @@
         geometryType = type;
 
         if (!window.loader.geoJsonLayers[type]) {
-            window.loader.loadGeoJSON(type, geoJSONHandler, cluster,window.countries);
+            window.loader.loadGeoJSON(type, geoJSONHandler, cluster,window.countries, metadataLabel);
         } else {
 
         }
@@ -1337,8 +1339,8 @@
             var regType = hashParams.r.split("|");
 
             regType="sovereignt";
-
-            getGeoJsonForMap(cluster, responseData, regType, window.countries);
+            
+            getGeoJsonForMap(cluster, responseData, regType, window.countries, metadataLabel);
 
             showTable(responseData);
 

@@ -365,7 +365,7 @@ var act;
             if (feature.properties) {
                 var name = feature.properties.sovereignt || feature.properties.usaid_reg || feature.properties.continent || feature.properties.dod_cmd || feature.properties.dos_region || feature.properties.wb_inc_lvl;
                 var popupText = name;
-                console.log(name);
+                //console.log(name);
                 if (feature.properties[indicator]) {
                     popupText += "</br>" + feature.properties[indicator];
                 }
@@ -432,10 +432,24 @@ var act;
         return color;
     };
 
+    window.utils.addTitle = function(indicator) {
+        debugger;
+        var info = L.control();
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            //this.update();
+            this._div.innerHTML = '<h4>' + indicator + '</h4>';
+            return this._div;
+        };
+
+        info.addTo(map);
+    }
+
     window.utils.addLegend = function(cluster) {
 
         var legend = L.control({
-            position: 'topright'
+            position: 'bottomright'
         });
 
         var breaks = cluster.data;
