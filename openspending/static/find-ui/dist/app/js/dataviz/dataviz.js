@@ -516,32 +516,23 @@
         },
         editChart: function(indicator){
             
+            var single=["line","bar","map"];
+            var doubly=["scatter"];
 
-            if(indicator.activeChart()=="line" && indicator.activeIndicators().length!=1){
-                modalTitle = "Share";
-                modalMessage = "Line can only have 1 indicator. Please click Edit Visualization again.";
-                $('#modal').modal('show');
-            }
-            else if(indicator.activeChart()=="bar" && indicator.activeIndicators().length!=1){
-                modalTitle = "Share";
-                modalMessage = "Bar can only have 1 indicator. Please click Edit Visualization again.";
-                $('#modal').modal('show');
-            }
-
-            else if(indicator.activeChart()=="map" && indicator.activeIndicators().length!=1){
-                modalTitle = "Share";
-                modalMessage = "Map can only have 1 indicator. Please click Edit Visualization again.";
+            if(single.indexOf(indicator.activeChart())>-1  && indicator.activeIndicators().length!=1){
+                modalTitle = "Alert";
+                modalMessage = "A single indicator is supported by Line, Bar, and Map charts.  Please click Edit Visualization and choose 1 indicator.";
                 $('#modal').modal('show');
             }
 
             else if(indicator.activeChart()=="scatter" && indicator.activeIndicators().length!=2){
-                modalTitle = "Share";
-                modalMessage = "Scatter can only have 2 indicators. Please click Edit Visualization again.";
+                modalTitle = "Alert";
+                modalMessage = "Two indicators are supported by the Scatterplot.  Please click Edit Visualization and choose 2 indicators.";
                 $('#modal').modal('show');
             }
             else if(indicator.activeChart()=="bubble" && indicator.activeIndicators().length!=3){
-                modalTitle = "Share";
-                modalMessage = "Bubble can only have 3 indicators. Please click Edit Visualization again.";
+                modalTitle = "Alert";
+                modalMessage = "Three indicators are supported by the Bubble Chart.  Please click Edit Visualization and choose 3 indicators.";
                 $('#modal').modal('show');
             }
             else{
