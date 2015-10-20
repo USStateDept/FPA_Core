@@ -257,7 +257,7 @@ function unchangeBubbleSquare(){
         },
 
         selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
-
+            
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
 
             if (isGroup) { //breakdown a group
@@ -277,10 +277,10 @@ function unchangeBubbleSquare(){
 
             var abbr = selectedCountry.id.toLowerCase();
             var $this = $("."+abbr+"").parent();
-
-            // toggle the selection/deselection
-            if ($this.hasClass("selected")) {
-              $this.removeClass("selected");
+            
+            if(selectedCountry.selected){
+                 $this.removeClass("selected");
+              
               //vizModel.removeCountry(selectedCountry);
               var activeCountries = vizModel.activeCountries();
               var selectedIndex = _.indexOf(activeCountries, selectedCountry);
