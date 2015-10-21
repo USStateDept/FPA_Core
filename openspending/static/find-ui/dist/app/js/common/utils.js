@@ -287,7 +287,7 @@ var act;
     };
 
     window.utils.highlightOnMapViz = function(regions, type, cluster, indicator, gjson,countries) {
-
+        
         if (regions[0].indexOf(":") > -1)
             regions=countries;
 
@@ -296,6 +296,7 @@ var act;
         }
 
         var geojson = gjson['features'];
+
         var featuresAdded = [];
         var style = function(feature) {
             
@@ -314,7 +315,7 @@ var act;
 
             if (regions[0].indexOf(":") > -1) {
                 name = type + ":" + name;
-            } else { //if country
+            } else if(feature.properties.sovereignt) { //if country
                 name = name.toLowerCase();
             }
 
@@ -369,9 +370,12 @@ var act;
                 if (feature.properties[indicator]) {
                     popupText += "</br>" + feature.properties[indicator];
                 }
-                else if(countries.indexOf(name.toLowerCase())>-1){
+                else if(name!==undefined){
+
+                    if(countries.indexOf(name.toLowerCase())>-1 ){
                     
-                    popupText += "</br>" + "No data";
+                        popupText += "</br>" + "No data";
+                    }
                 }
 
 

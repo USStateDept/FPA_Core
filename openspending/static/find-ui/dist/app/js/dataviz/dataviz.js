@@ -1310,12 +1310,14 @@
 
         for(var i=0;i<responseData.cells.length;i++)
             {
-                if(window.countries.indexOf(responseData.cells[i].region)>-1)
+                var _r = responseData.cells[i].region;
+                if(window.countries.indexOf(_r)>-1)
                 {
                     break;
                 }
                 else{
-                    window.countries.push(responseData.cells[i].region);
+                    if(_r!==null)
+                    window.countries.push(_r);
                 }
             }
 
@@ -1327,11 +1329,18 @@
 
             window.loader.data = responseData;
             cluster = responseStats[0].cluster
-
+           
             var regType = hashParams.r.split("|");
 
-            regType="sovereignt";
-            
+            if(regType=="dos_region:all"||regType=="dod_cmd:all"||regType=="continent:all"||regType=="usaid_reg:all")
+            {
+                //regType="dos_region";
+                regType=regType[0].slice(0,regType[0].indexOf(':'));
+                debugger;
+            }
+            else{
+                regType="sovereignt";
+            }
             getGeoJsonForMap(cluster, responseData, regType, window.countries, metadataLabel,metadataUnits);
 
             showTable(responseData);
