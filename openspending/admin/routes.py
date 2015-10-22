@@ -319,6 +319,8 @@ class MetadataOrgManagerView(sqla.ModelView):
         
 class IndicatorsView(sqla.ModelView):
 
+    form_columns = ('update_freq','update_cycle','units',)
+
     column_list = ('label','source','dataorg','metadataorg', 'units','tags_str',)
 
     column_labels = dict(label='Indicator Name(Long)',source='Indicator Name(short)',dataorg='Direct Source',metadataorg='Originating Source',units='Units',tags_str='Category',)
@@ -327,7 +329,7 @@ class IndicatorsView(sqla.ModelView):
         
     can_delete = False
     can_create = False
-    can_edit = False
+    can_edit = True
 
     def is_accessible(self):
         return require.perms.is_admin()
