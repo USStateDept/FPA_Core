@@ -188,6 +188,9 @@ function unchangeBubbleSquare(){
         },
 
         selectVizualization: function(type) {
+            
+            if(type=="map")
+                vizModel.activeYears()[1]=2013;
 
             var groupByRegion = vizModel.groupByRegion();
 

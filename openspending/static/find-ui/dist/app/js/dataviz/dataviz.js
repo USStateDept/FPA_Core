@@ -509,8 +509,16 @@
         },
 
         changeChart: function(chartType) {
+            
           var currentHash = window.utils.getHashParams();
           currentHash.c = chartType;
+
+          if(chartType=="map" && currentHash.f.indexOf("2014")==5){
+
+            var begin = currentHash.f.slice(0,5);
+            currentHash.f = begin + "2013";
+          }
+          
           window.utils.updateHash(currentHash);
           location.reload();
         },
