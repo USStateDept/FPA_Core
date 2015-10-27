@@ -1,5 +1,12 @@
 (function() {
 
+    $(".list-group").click(function(){
+        console.log("click");
+        var classes = $(this).attr('class').split(' ');
+        if (classes.indexOf('shadow')!=-1){
+            console.log('test');
+        }
+    });
     /**
      * Start the Wiard mode
      **/

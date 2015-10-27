@@ -44,7 +44,7 @@ link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css
             .col-sm-4.col-md-4.col-sm-2.flip
               .card
                 .face.front
-                  div.well.category-wrapper()
+                  div.well.category-wrapper#well-wrapper()
                     span.badge(data-bind="html:length")
                     div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
                     h4(data-bind="html:label")
@@ -177,6 +177,7 @@ script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/clickout.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/data/data.js') }}")
 
 {% endblock %}

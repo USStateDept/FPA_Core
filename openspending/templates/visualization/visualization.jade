@@ -164,8 +164,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                               div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
                               h4(data-bind="html:label")
                           .face.back
+<<<<<<< Updated upstream
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
+=======
+                            div.list-group
+                              a.list-group-item.active(href="#" data-bind="html:label + '<em style=\'float:right\'> click to close<em>'") 
+>>>>>>> Stashed changes
                               span.list
                                 span.subcategories(data-bind="foreach:subcategories")
                                   a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")
@@ -312,6 +317,7 @@ script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
+//- script(src="{{ static_path('find-ui/dist/app/js/common/clickoutside.js') }}")
 
 {% endblock %}
 
