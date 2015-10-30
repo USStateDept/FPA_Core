@@ -1305,15 +1305,21 @@
         }
 
         var responseStats = statsData[0];
-
+        
         var indicator = Object.keys(responseStats[0]["models"]);
         var metadataURL = responseStats[0]["models"][indicator[0]]["url"];
         var metadataLabel = responseStats[0]["models"][indicator[0]]["label"];
-        var metadataOrg = responseStats[0]["models"][indicator[0]]["dataorg"];
+        var dataOrg = responseStats[0]["models"][indicator[0]]["dataorg"];
+        var metadataOrg = responseStats[0]["models"][indicator[0]]["metadataorg"];
         var metadataUnits = responseStats[0]["models"][indicator[0]]["units"];
-        
+        var note = responseStats[0]["models"][indicator[0]]["notes"];
+        var datalastupdated = responseStats[0]["models"][indicator[0]]["notes"];
+
         $("#metadata").html(function(){
-            return "</br>Indicator: " + metadataLabel + "\n</br>Source URL: " + metadataURL + "</br>Source: " + metadataOrg;
+            return "</br>Indicator: " + metadataLabel + "\n</br>Indicator URL: " + metadataURL + "</br>Direct Indicator Source: " + dataOrg
+            + "</br>Original Indicator Source: " + metadataOrg
+            + "</br>Indicator Definition: " + note
+            + "</br>Date of last update in FIND: " + datalastupdated;
         });
 
         for(var i=0;i<responseData.cells.length;i++)

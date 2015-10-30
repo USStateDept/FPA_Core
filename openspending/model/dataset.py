@@ -79,6 +79,7 @@ class Dataset(db.Model):
     organization = Column(Unicode(255))
     notes = Column(Unicode(4000))
     update_cycle = Column(Unicode(255))
+    definition = Column(Unicode(4000))
     #TODO
     #tag stuff
 
@@ -233,8 +234,11 @@ class Dataset(db.Model):
         if self.source:
             source_url = self.source.url
         dataorg_dict=None
+        metadataorg_dict=None
         if self.dataorg:
             dataorg_dict=self.dataorg.label
+        if self.metadataorg:
+            metadataorg_dict=self.metadataorg.label
         if self.years:
             the_years=self.years.split(",")
             the_years=map(int,the_years)
@@ -245,10 +249,13 @@ class Dataset(db.Model):
             'description': self.description,
             'dataType': self.dataType,
             'dataorg': dataorg_dict,
+            'metadataorg': metadataorg_dict,
             'created_at': self.created_at,
             'years':the_years,
-            'url':source_url,
-            'units':self.units
+            'url':self.orgurl,
+            'units':self.units,
+            'notes':self.definition,
+            'datalastupdated':self.datalastupdated
         }
 
 
