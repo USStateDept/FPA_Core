@@ -85,7 +85,6 @@ var act;
     window.utils.bindIndicators = function(response, model) {
 
 
-
         var categoriesAll = response.data.categories;
         var subcategoriesAll = response.data.subcategories;
         var sourcesAll = response.data.sources;
@@ -198,7 +197,7 @@ var act;
             }
 
             var newSourceArray = ["MCC","CDA","DHS","SDG","UIS","WHO","IMF"];
-            var label = newSource.label.split("-")[0].trim();
+            var label = newSource.label.split("–")[0].trim();
 
 
             if (newSourceArray.indexOf(label) != -1){
