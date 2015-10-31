@@ -73,6 +73,10 @@ def categories_list():
                                     "total":0,
                                     "data":collections.OrderedDict({})
                                 },
+                                "colls":{
+                                    "total":0,
+                                    "data":collections.OrderedDict({})
+                                },
                                 "indicators":{
                                     "total":0,
                                     "data":collections.OrderedDict({})
@@ -111,6 +115,7 @@ def categories_list():
         tags = getattr(indicator, "tags", [])
         subcategory = "None"
         category = "None"
+        colls="None"
 
         for tag in tags:
             if tag.category == "spsd":
@@ -127,31 +132,33 @@ def categories_list():
             elif tag.category == "subspsd":
                 #if outputschema['data']['categories']['data'].get(tag.slug_label, None):
                 outputschema['data']['subcategories']['data'][tag.slug_label]= {'label':tag.label}
-            #     if outputschema['data']['categories']['data'].get(tag.slug_label, None):
-            #         if outputschema['data']['categories']['data'][tag.slug_label]['subcategories'].get(tag.slug_label, None):
-            #             outputschema['data']['categories']['data'][tag.slug_label]['subcategories'][tag.slug_label]['indicators'].append(indicator.name)
-            #         else:
-            #             outputschema['data']['categories']['data'][tag.slug_label]['subcategories'][tag.slug_label] = {
-            #                                                                                                             "label": tag.label,
-            #                                                                                                             "indicators": [indicator.name]
-            #                                                                                                             }
-            #         ['indicators'].append(indicator.name)
-            #     else:
-            #         outputschema['data']['categories']['data'][tag.slug_label] = {
-            #                                                             'label': tag.label,
-            #                                                             'indicators': [indicator.name],
-            #                                                             "subcategories": {}
-            #                                                         }
-            #         outputschema['data']['categories']['total'] += 1
+            
                 subcategory = tag.slug_label
 
+            elif tag.category == "colls":
 
+                if outputschema['data']['colls']['data'].get(tag.slug_label, None):
+                    outputschema['data']['colls']['data'][tag.slug_label]['indicators'].append(indicator.name)
+                else:
+                    outputschema['data']['colls']['data'][tag.slug_label] = {
+                                                                        'label': tag.label,
+                                                                        'indicators': [indicator.name]
+                                                                        #"subcategories": {}
+                                                                    }
+                    outputschema['data']['colls']['total'] += 1
+                colls = tag.slug_label
+
+                #outputschema['data']['colls']['data'][tag.slug_label]= {'label':tag.label}
+
+                #colls = "test" #tag.slug_label + "test"
+                #print "colls: " + colls
         indicatorschema = {
                             "label":getattr(indicator, "label", "No Label"),
                             "description":getattr(indicator, "description", "No Description"),
                             "source":dataorg,
                             "category":category,
                             "subcategory":subcategory,
+                            "colls":colls,
                             "years":the_years
                         }
         outputschema['data']['indicators']['data'][keyname] = indicatorschema

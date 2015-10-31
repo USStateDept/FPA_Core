@@ -87,7 +87,7 @@ var act;
 
         var categoriesAll = response.data.categories;
         var subcategoriesAll = response.data.subcategories;
-        var sourcesAll = response.data.sources;
+        var sourcesAll = response.data.colls;
         var indicatorsAll = response.data.indicators;
 
         var categoriesModel = [];
@@ -197,7 +197,7 @@ var act;
             }
 
             var newSourceArray = ["MCC","CDA","DHS","SDG","UIS","WHO","IMF"];
-            var label = newSource.label.split("–")[0].trim();
+            var label = newSource.label.split("-")[0].trim();
 
 
             if (newSourceArray.indexOf(label) != -1){
