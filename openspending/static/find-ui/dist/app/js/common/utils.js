@@ -674,7 +674,6 @@ var act;
         var titleArray = _.map(metadatas, function(meta) {
             var title = meta.label;
             var units = meta.units;
-
             units = units == null ? "" : "(" + units + ")";
 
             return title + units;
@@ -704,16 +703,39 @@ var act;
             return meta = {
                 "label": meta.label,
                 "url": meta.url,
-                "dataorg": meta.dataorg
+                "dataorg": meta.dataorg,
+                "metadataorg": meta.metadataorg
             };
         });
 
+        // console.log(subtitleObj);
+        // $.each(subtitleObj, function(k,v){
+        //     console.log(k+":"+v);
+        //     $.each(v, function(a,b){
+        //         console.log(a+":"+b);
+        //     });
+        // });
+
+        // console.log('metadata is: ' + metadata);
+
         var subtitleArray = _.map(subtitleObj, function(subtitleArray, i) {
             var source = subtitleObj[i].dataorg || '-';
-            //return subtitleArray = subtitleObj[i].label + ' (<a href="'+subtitleObj[i].url+'" style="color:#852224" target="_blank">'+source+'</a>)';
-            return subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">' + source + '</a>)';
+            var metasource=subtitleObj[i].metadataorg || '-';
+            if (metasource!='-'){
+                subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">' + source + '</a>)' + ' (<a href="" target="_blank">' + metasource + '</a>)';
+                console.log('metasource is NOT blank');
+            }
+            else{
+                subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">' + source + '</a>)';
+                console.log('blank metasource');
+            }
+            return subtitleArray;
         });
+
         //debugger;
+        // console.log(subtitleArray);
+        // console.log(typeof subtitleArray);
+
         var subtitle = "Sources: " + subtitleArray.join(", ");
 
         var counter = 1;
