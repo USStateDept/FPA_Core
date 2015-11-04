@@ -11,7 +11,7 @@ def upgrade(migrate_engine):
 
     meta.bind = migrate_engine
     
-    scope = Column('scope', String(255)
+    scope = Column('scope', String(255))
     dataset = Table('dataset', meta, autoload=True)
     lastOrgUpate=Column('lastorgupdate', DateTime)
     whenToUpate=Column('whentoupdate', DateTime)
