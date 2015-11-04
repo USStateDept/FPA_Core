@@ -673,8 +673,8 @@ var act;
         //debugger;
         var titleArray = _.map(metadatas, function(meta) {
             var title = meta.label;
-            var units = meta.units;
-            units = units == null ? "" : "(" + units + ")";
+            var units = meta.units.trim();
+            units = units == "" ? "" : "(" + units + ")";
 
             return title + units;
         });
@@ -708,33 +708,19 @@ var act;
             };
         });
 
-        // console.log(subtitleObj);
-        // $.each(subtitleObj, function(k,v){
-        //     console.log(k+":"+v);
-        //     $.each(v, function(a,b){
-        //         console.log(a+":"+b);
-        //     });
-        // });
-
-        // console.log('metadata is: ' + metadata);
 
         var subtitleArray = _.map(subtitleObj, function(subtitleArray, i) {
             var source = subtitleObj[i].dataorg || '-';
             var metasource=subtitleObj[i].metadataorg || '-';
             if (metasource!='-'){
                 subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">' + source + '</a>)' + ' (<a href="" target="_blank">' + metasource + '</a>)';
-                console.log('metasource is NOT blank');
             }
             else{
                 subtitleArray = subtitleObj[i].label + ' (<a href="" target="_blank">' + source + '</a>)';
-                console.log('blank metasource');
             }
             return subtitleArray;
         });
 
-        //debugger;
-        // console.log(subtitleArray);
-        // console.log(typeof subtitleArray);
 
         var subtitle = "Sources: " + subtitleArray.join(", ");
 
