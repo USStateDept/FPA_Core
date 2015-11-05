@@ -98,7 +98,7 @@ defaultOptions.exporting = {
 	//enabled: true,
 	//filename: 'chart',
 	type: 'image/png',
-	url: 'http://export.highcharts.com/',
+	url: 'http://export.highcharts.com/', //very important line of code here
 	//width: undefined,
 	//scale: 2
 	buttons: {
