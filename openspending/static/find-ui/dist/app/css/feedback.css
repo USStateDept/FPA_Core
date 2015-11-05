@@ -4,7 +4,7 @@
   -webkit-border-radius: 5px;
   position: fixed;
   top: 123px;
-  right: 10px;
+  right: 0px;
   width: 200px;
   background-color: #e7ebf0;
   padding: 10px;
@@ -17,17 +17,18 @@ span.expandbtn {
   -webkit-border-radius: 5px 5px 0 0;
   position: fixed;
   top: 200px;
-  right: -21px;
+  right: -30px;
   background-color: #e7ebf0;
   z-index: 1000;
   text-align: center;
   cursor: pointer;
   padding: 2px 4px;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 20px;
   color: #666;
 }
 span.expanded {
-  right: 189px;
+  right: 170px;
 }
 span.rotate {
   -webkit-transform: rotate(-90deg);
