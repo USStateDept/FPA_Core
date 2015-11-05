@@ -22,6 +22,25 @@
     window.modalTitle = "";
     window.modalMessage = "";
 
+    // $(".face.back").clickoutside(function(){
+    var mymenu=$("#mymenu");
+    console.log(mymenu);
+    $("#tab-category").clickoutside(function(){
+        if (mymenu.is(":visible")){
+            console.log("you have clicked outside.");
+        }
+        else{
+            console.log("you have NOT clicked outside.");
+        }
+        // $(".list-group.shadow").hide();
+        // if ($(".list-group.shadow > a").is(":visible")){
+        //     console.log("you have clicked outside.");
+        // }
+        // else{
+        //     console.log("you have not clicked outside");
+        // }
+    });
+
     $('#modal').modal({
         show: false,
         keyboard: false

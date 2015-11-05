@@ -159,18 +159,13 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                       .col-sm-4.col-md-4.col-sm-2.flip
                         .card
                           .face.front
-                            div.well.category-wrapper()
+                            div#mymenu.well.category-wrapper
                               span.badge(data-bind="html:length")
                               div(data-bind="attr:{class:'icon-category-' + label.replace(/ /g,'-').replace(/,/g,'').toLowerCase() + ' well category'}")
                               h4(data-bind="html:label")
                           .face.back
-<<<<<<< Updated upstream
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
-=======
-                            div.list-group
-                              a.list-group-item.active(href="#" data-bind="html:label + '<em style=\'float:right\'> click to close<em>'") 
->>>>>>> Stashed changes
                               span.list
                                 span.subcategories(data-bind="foreach:subcategories")
                                   a.list-group-item.active(href="#" data-bind="click:$root.selectSubcategory")
@@ -207,7 +202,7 @@ link(href='{{ static_path("find-ui/dist/app/css/jquery.multiselect.css") }}', re
                               span.badge(data-bind="html:length")
                               div.well.category.icon-category-70()
                               h4(data-bind="html:label")
-                          .face.back
+                          .face.back.face-back
                             div.list-group()
                               a.list-group-item.active(href="#" data-bind="html:label")
                               span.list(data-bind="foreach:indicators")
@@ -316,8 +311,8 @@ script(src="{{ static_path('find-ui/dist/app/js/common/loader.js') }}")
 //-script(src="{{ static_path('find-ui/dist/app/js/visualization/highcharts-json.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/utils.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/common/viz-model.js') }}")
+script(src="{{ static_path('find-ui/dist/app/js/common/clickout.js') }}")
 script(src="{{ static_path('find-ui/dist/app/js/visualization/visualization.js') }}")
-//- script(src="{{ static_path('find-ui/dist/app/js/common/clickoutside.js') }}")
 
 {% endblock %}
 
