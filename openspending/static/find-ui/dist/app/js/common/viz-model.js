@@ -262,7 +262,7 @@ function unchangeBubbleSquare(){
         selectCountry: function(selectedCountry, evt, goToVisualize, breakdown) {
             
             var isGroup = selectedCountry.geounit.indexOf(":all") == selectedCountry.geounit.length - 4;
-
+            
             if (isGroup) { //breakdown a group
                 selectedCountry.label += " Regions";
             }
@@ -334,10 +334,50 @@ function unchangeBubbleSquare(){
             // removed selected class
             $( ".indicator-item").removeClass("selected");
         },
+        makeFullName: function(json){
+            
+            _.forEach(json.regions, function(v,k){
+                if(k==="WHA"){
+                    v.label="Western Hemisphere Affairs";
+                }
+                else if(k==="SCA"){
+                    v.label="South and Central Asian Affairs";
+                }
+                else if(k==="AF"){
+                     v.label="African Affairs";
+                }
+                else if(k==="EUR"){
+                     v.label="European and Eurasian Affairs";
+                }
+                else if(k==="EAP"){
+                     v.label="East Asian and Pacific Affairs";
+                }
+                else if(k==="NEA"){
+                     v.label="Near Eastern Affairs";
+                }
+                else if(k==="ME"){
+                     v.label="Middle East";
+                }
+                else if(k==="EE"){
+                     v.label="Europe and Eurasia";
+                }
+                else if(k==="LAC"){
+                     v.label="Latin America and the Caribbean";
+                }
+                else if(k==="OAPA"){
+                     v.label="Afghanistan and Pakistan";
+                }
+                else if(k==="AFR"){
+                     v.label="Africa";
+                }
 
+            });
+        },
         selectCountryGroup: function() {
-
+            
             var groupId = arguments[0].id;
+
+            vizModel.makeFullName(arguments[0]);
 
             window.visualization.changeGroup(groupId);
 
