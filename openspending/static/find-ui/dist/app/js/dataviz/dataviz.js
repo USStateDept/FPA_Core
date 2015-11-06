@@ -16,6 +16,7 @@
     //var groupByRegion = false;
     var modalTitle = "";
     var modalMessage = "";
+    var modalMessageContainer = "";
     var geometryType = "sovereignt";
 
     var yearsFilter = hashParams.f.split("|");
@@ -33,13 +34,6 @@
         show: false,
         keyboard: false
     }); // initialized with defaults
-
-
-    $('#modal').on('show.bs.modal', function(event) {
-        var modal = $(this)
-        modal.find('.modal-title').text(modalTitle);
-        modal.find('.modal-body').html(modalMessage);
-    });
 
     $('#opener').on('click', function() {
         var panel = $('#slide-panel');
@@ -78,6 +72,23 @@
             window.loader.loadUrlShorten(url).then(function(response) {
                 modalTitle = "Share";
                 modalMessage = response.response.data.entry[0].short_url;
+                modalMessageContainer = '<p><input class="modal-message" type="text" value="' + modalMessage + '"></input><button class="btn btn-default copy-button">Copy</button></p>';
+                $('#modal').find('.modal-title').text(modalTitle);
+                $('#modal').find('.modal-body').html(modalMessageContainer);
+
+                copyButton = $('#modal').find('.copy-button');
+
+                $(copyButton).on('click', function(event) {       
+                    $('#modal').find('.modal-message').focus().select();           
+                      try {  
+                        var successful = document.execCommand('copy');  
+                        var msg = successful ? 'successful' : 'unsuccessful';
+                        //output successful or unsuccessful to the console to test 
+                      } catch(err) {  
+                        //output successful or unsuccessful to the console to test                       
+                      }              
+                })                
+
                 $('#modal').modal('show');
             });
               
@@ -101,6 +112,8 @@
             window.loader.loadUrlShorten(url).then(function(response) {
                 modalTitle = "Share";
                 modalMessage = '<a href = "https://twitter.com/intent/tweet?text=' + response.response.data.entry[0].short_url + '" target="_blank">Tweet Visualization</a>';
+                $('#modal').find('.modal-title').text(modalTitle);
+                $('#modal').find('.modal-body').html(modalMessage);                
                 $('#modal').modal('show');
             });
 

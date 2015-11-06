@@ -24,6 +24,11 @@
         var modal = $(this)
         modal.find('.modal-title').text(window.modalTitle);
         modal.find('.modal-body').text(window.modalMessage);
+        debugger;
+        alert('here');
+        console.log('console here');
+        console.log(modal.find('p'));
+        // modal.find('.modal-footer').find('.btn').text('button');
     });
 
     $(function() {
