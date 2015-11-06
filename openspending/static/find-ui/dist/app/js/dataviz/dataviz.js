@@ -1352,7 +1352,7 @@
         var metadataOrg = responseStats[0]["models"][indicator[0]]["metadataorg"];
         var metadataUnits = responseStats[0]["models"][indicator[0]]["units"];
         var note = responseStats[0]["models"][indicator[0]]["notes"];
-        var datalastupdated = responseStats[0]["models"][indicator[0]]["notes"];
+        var datalastupdated = responseStats[0]["models"][indicator[0]]["datalastupdated"];
 
         $("#metadata").html(function(){
             return "</br>Indicator: " + metadataLabel + "\n</br>Indicator URL: " + metadataURL + "</br>Direct Indicator Source: " + dataOrg
