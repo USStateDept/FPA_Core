@@ -1,6 +1,5 @@
 (function() {
 
-
     var model = {
         searchResults: ko.observableArray([]),
 
@@ -49,7 +48,7 @@
     });
 	
 	var searchAjax = function(){
-		
+
 		var value = $(".main-search")[0].value;
 
 		var url = "/api/3/search/countries";
@@ -86,7 +85,7 @@
 			success: function(response) {
 				//test data for dev
 				//response = {"totaldatasets": 2, "totalcountries": 0, "data": {"indicators": {"gdp_growth": "GDP Growth", "gdp_total": "GDP, total"}, "countries": {}}};
-				searchHandler(response, value);
+        searchHandler(response, value);
 			}
 		});
 	}
@@ -136,8 +135,5 @@
 
 
     }
-
-
-
 
 }())

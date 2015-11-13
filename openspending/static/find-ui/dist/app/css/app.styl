@@ -117,12 +117,25 @@ html, body
 		width 100%
 		text-align center
 		font-size 40px
+
 .app .data-story-text
-	padding: 0 0 20px
+	display none
+
+.app .data-story-image
+	padding 0 0 20px
+
+.app .data-story-container:hover .data-story-text
+	display block
+
+.app .data-story-image
+	height auto
+
+.app .data-story-container:hover .data-story-title
+	display none
+
 .app img
 	width 100%
 	height auto
-	max-width 150px
 	
 .app .center-me
 	//text-align center
@@ -389,8 +402,18 @@ body .app ul.dropdown-menu.account-dropdown
 		height 210px
 	.app .data-story-container
 		margin-bottom -99999px
-		padding-bottom 99999px
+		padding 0px 0px 99999px 0px
 
+	.app .data-story-container:hover .data-story-text
+		margin-bottom -99999px
+		padding 0px 0px 99999px 0px
+		display block
+
+	.app .data-story-image
+		height auto
+
+	.app .data-story-container:hover .data-story-title
+		display none
 
 //large
 @media (min-width: 1200px)

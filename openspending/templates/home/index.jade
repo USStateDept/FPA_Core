@@ -155,41 +155,48 @@
         .row
           .col-md-12.text-center
             h1 Data Stories
-    .col-md-12#data-stories
+    .col-md-12#data-stories.data-stories
         .row(style="overflow:hidden")
           .col-md-3
-            a(href="/datastories")
-              div.well.data-story-container
-                .row
+            div.well.data-story-container
+              .row
+                .col-md-12
+                  h3.data-story-title Under-five mortality rate is declining around the world
+                  h4.data-story-text(alt="Data Story Description") The rate of children that die before their 5th birthday has been cut in half in the last 25 years.
+              .row
+                a(href="/datastories")
                   .col-md-12
-                    h3 Under-five mortality rate is declining around the world
-                .row
+                    img.data-story-image(src="{{ static_path('find-ui/dist/app/images/datastoryvisScatterPlot.png') }}")
+          .col-md-3
+            div.well.data-story-container                  
+              .row
+                .col-md-12
+                  h3.data-story-title If you are over 15 years old and reading this, then you are part of the 85% of the literate adult world.
+                  h4.data-story-text(alt="Data Story Description") The global adult literacy rate has increased by about 10% since 1990, and more people are literate than ever before.
+              .row
+                a(href="/datastories")
                   .col-md-12
-                    p.data-story-text The rate of children that die before their 5th birthday has been cut in half in the last 25 years.
+                    img.data-story-image(src="{{ static_path('find-ui/dist/app/images/datastoryvisScatterPlot.png') }}")                   
           .col-md-3
             div.well.data-story-container                  
               .row
                 .col-md-12
-                  h3 If you are over 15 years old and reading this, then you are part of the 85% of the literate adult world.               
+                  h3.data-story-title Dramatic increases in Mobile subscriptions in sub-Saharan Africa
+                  h4.data-story-text(alt="Data Story Description") 146 million mobile accounts created in the last 15 years within sub-Saharan Africa shows the ubiquitous growth of mobile technology in developing countries.
               .row
-                .col-md-12
-                  p.data-story-text The global adult literacy rate has increased by about 10% since 1990, and more people are literate than ever before.
+                a(href="/datastories")
+                  .col-md-12
+                    img.data-story-image(src="{{ static_path('find-ui/dist/app/images/datastoryvisScatterPlot.png') }}")
           .col-md-3
             div.well.data-story-container                  
               .row
                 .col-md-12
-                  h3 Dramatic increases in Mobile subscriptions in sub-Saharan Africa
+                  h3.data-story-title Fewer people are living in extreme poverty
+                  h4.data-story-text(alt="Data Story Description") The percentage of people living on less than $1.25 a day has dropped by more than half since 1990.
               .row
-                .col-md-12
-                  p.data-story-text 146 million mobile accounts created in the last 15 years within sub-Saharan Africa shows the ubiquitous growth of mobile technology in developing countries.
-          .col-md-3
-            div.well.data-story-container                  
-              .row
-                .col-md-12
-                  h3 Fewer people are living in extreme poverty
-              .row
-                .col-md-12
-                  p.data-story-text The percentage of people living on less than $1.25 a day has dropped by more than half since 1990.
+                a(href="/datastories")
+                  .col-md-12
+                    img.data-story-image(src="{{ static_path('find-ui/dist/app/images/datastoryvisScatterPlot.png') }}")
 
   .row.footer.bg-dark
     .col-md-12.updates#updates
