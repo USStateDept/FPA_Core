@@ -636,3 +636,9 @@
   border: none;
   border-radius: 4px;
 }
+div.bar {
+  display: inline-block;
+  width: 20px;
+  height: 75px; /* We'll override height later */
+  background-color: #008080;
+}

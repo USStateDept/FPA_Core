@@ -1276,7 +1276,7 @@
     };
 
     var indicatorDataLoadHandler = function(args) {
-    
+        debugger;
         //this might be the basic data loader
         var responseDeferred = args;
 
@@ -1419,27 +1419,36 @@
             var sortedData = window.utils.prepareHighchartsJson(responseData, responseStats[0], chartType, indicators, yearsExtremesForData);
 
             var highChartsJson = sortedData.highcharts;
+            debugger;
             //add the min,max and avg to the data-proxy span
             if (chartType == "bar") {
-                $("#bar-globals").show();
-                $("#data-proxy").data("min", highChartsJson.series[0].data[0][1]);
-                $("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
-                $("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
-                // console.log(highChartsJson.series[0].data);
-                // console.log(highChartsJson.series[0].data[0][0]);
-                // console.log(highChartsJson.series[0].data);
-                // console.log(highChartsJson.series);
-                // $.each(highChartsJson.series, function(k,v){
-                //     console.log(k + " : " + v);
-                //     $.each(v, function(a,b){
-                //         console.log(a + " : " + b);
-                //     });
-                // });
+                //$("#bar-globals").show();
+                //$("#data-proxy").data("min", highChartsJson.series[0].data[0][1]);
+                //$("#data-proxy").data("max", highChartsJson.series[0].data[1][1]);
+                //$("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
+                $("#loading").hide();
+
+                var dataset = [ 5, 10, 15, 20, 25 ];
+                debugger;
+
+                 d3.select("#viz-container.active.tab-pane")
+                    .selectAll("div")
+                    .data(dataset)
+                    .enter()
+                    .append("div")
+                    .attr("class", "bar");
+
+                /*d3.select("viz-container.active.tab-pane")
+                    .data(dataset)
+                    .enter()
+                    .append("div")
+                    .attr("class", "bar");*/
+
             } else {
                 $("#bar-globals").hide();
             }
 
-            highChartsJson.chart.events = {
+            /*highChartsJson.chart.events = {
                 load: function() {
 
                     var allowedSetExtremeCharts = ["line"];
@@ -1455,10 +1464,10 @@
                     }
 
                 }
-            }
+            }*/
             //debugger;
             //highChartsJson.subtitle.text = type;
-            var chart = $('#viz-container').highcharts(highChartsJson);
+            //var chart = $('#viz-container').highcharts(highChartsJson);
             //debugger;
             showTable(responseData);
             //debugger;
