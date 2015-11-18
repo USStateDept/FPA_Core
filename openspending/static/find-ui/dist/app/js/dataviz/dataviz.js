@@ -1428,21 +1428,25 @@
                 //$("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
                 $("#loading").hide();
 
-                var dataset = [ 5, 10, 15, 20, 25 ];
+                var dataset=[];// = [ 5, 10, 15, 20, 25 ];
+
+                _.each(sortedData.highcharts.series[0].data, function(n,key){
+                    dataset.push(n[1]);
+                });
+
+            
                 debugger;
 
-                 d3.select("#viz-container.active.tab-pane")
+                d3.select("#viz-container.active.tab-pane")
                     .selectAll("div")
                     .data(dataset)
                     .enter()
                     .append("div")
-                    .attr("class", "bar");
+                    .attr("class", "bar")
+                    .style("height", function(d) {
+                        return d + "px";
+                });
 
-                /*d3.select("viz-container.active.tab-pane")
-                    .data(dataset)
-                    .enter()
-                    .append("div")
-                    .attr("class", "bar");*/
 
             } else {
                 $("#bar-globals").hide();
