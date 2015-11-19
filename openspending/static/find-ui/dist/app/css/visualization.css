@@ -641,4 +641,5 @@ div.bar {
   width: 20px;
   height: 75px; /* We'll override height later */
   background-color: #008080;
+  margin-right: 2px;
 }

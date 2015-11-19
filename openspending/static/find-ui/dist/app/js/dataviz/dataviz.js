@@ -1275,6 +1275,43 @@
 
     };
 
+    var makeDataset=function(data){
+        dataset=[];
+
+        _.each(data, function(n,key){
+            dataset.push(n[1]);
+        });
+
+        return dataset;
+    }
+
+    var makeBar=function(dataset){
+        var w = 500;
+        var h = 100;
+
+        var svg = d3.select("#viz-container.active.tab-pane")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        svg.selectAll("rect")
+           .data(dataset)
+           .enter()
+           .append("rect")
+           .attr("x", function(d, i) {
+                return i * (w/dataset.length);  //Bar width of 20 plus 1 for padding
+            })
+           .attr("y", function(d) {
+                return h - d;  //Height minus data value
+            })
+           .attr("width", 20)
+           .attr("height", function(d) {
+                return d;  //Just the data value
+            })
+           .attr("fill", "teal");
+
+    }
+
     var indicatorDataLoadHandler = function(args) {
         debugger;
         //this might be the basic data loader
@@ -1428,24 +1465,45 @@
                 //$("#data-proxy").data("avg", highChartsJson.series[0].data[2][1]);
                 $("#loading").hide();
 
-                var dataset=[];// = [ 5, 10, 15, 20, 25 ];
+                // = [ 5, 10, 15, 20, 25 ];
 
-                _.each(sortedData.highcharts.series[0].data, function(n,key){
-                    dataset.push(n[1]);
-                });
+                var dataset = makeDataset(sortedData.highcharts.series[0].data);
+                makeBar(dataset);
 
             
                 debugger;
 
-                d3.select("#viz-container.active.tab-pane")
+                /*var margin = {top: 20, right: 30, bottom: 30, left: 40},
+                    width = 960 - margin.left - margin.right,
+                    height = 500 - margin.top - margin.bottom;
+
+                var y = d3.scale.linear()
+                    .range([height, 0]);
+
+               var chart = d3.select("#viz-container.active.tab-pane")
                     .selectAll("div")
                     .data(dataset)
                     .enter()
                     .append("div")
                     .attr("class", "bar")
                     .style("height", function(d) {
-                        return d + "px";
+                        var barHeight = d * 5;
+                        return barHeight + "px";
                 });
+
+                var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left");
+
+                chart.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);*/
+
+                
+
+                /*var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left");*/
 
 
             } else {
@@ -1527,7 +1585,10 @@
 
         if (chartType == "bar") {
 
-            var series = json.highcharts.series[0];
+            var dataset = makeDataset(json.highcharts.series[0].data);
+
+            makeBar(dataset);
+            /*var series = json.highcharts.series[0];
             var dataMapping = {};
             _.forEach(series.data, function(d, i) {
                 var data = d;
@@ -1549,7 +1610,7 @@
                 }
             });
             //debugger;
-            activeChart.series[0].setData(currentData, true);
+            activeChart.series[0].setData(currentData, true);*/
 
         }
 
