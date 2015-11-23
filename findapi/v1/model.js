@@ -5,10 +5,9 @@
  * related to your data.
  *
  * @class Model
- * @version 1
+ * @version 1.1.0
  */
 var configpg = require("config");
-//var request = require("request");
 var querystring = require("querystring");
 var url = require('url');
 var _ =  require("underscore");
@@ -19,18 +18,15 @@ var calculateJenks = require("./jenks").calculateJenks;
 var errorHandling = require("./errorHandling");
 var nodeExcel = require('excel-export');
 var csv = require('express-csv')
-//(optionally) set the SQL dialect
 
-
+// Database config
 var config = require("config").get("v1");
 var connectionString = require("../database").connectionString;
 
-
-
+// Data return variables
 var FORMATOPTS = {'json':true, 'csv':true, 'excel':true, 'xls':true};
 var RETURNLIMIT= 10000;
 var DEFAULTDRILLDOWN = {"geometry__country_level0":"sovereignt","geometry__time":"time"};
-
 
 
 /**
@@ -38,7 +34,8 @@ var DEFAULTDRILLDOWN = {"geometry__country_level0":"sovereignt","geometry__time"
  * @constructor
  */
 var DataSource = function(request, response, rescallback) {
-    var that = this;
+    
+    var self = this;
 
     this.response = response;
 
@@ -55,34 +52,32 @@ var DataSource = function(request, response, rescallback) {
     this.drilldown = {};
     this.cut={};
     this.nulls=true;
-
     this.dataframe = null;
-
     this.geomtables = ['geometry__time', 'geometry__country_level0'];
-
     this.cubes_tables = [];
-
     this.t = {};
-
     this.cachedresult = null;
 
-    var connectionString =  configpg.get("databaseURI") || 'postgres://localhost:5432/openspending'
-
-
+    var connectionString =  configpg.get("databaseURI") || 'postgres://localhost:5432/openspending';
     this.client = new pg.Client(connectionString);
-    this.client.connect(function(err){
-        if (err){
-            errorHandling.handle("There was an error with the database: " + err, that.response);
+    
+    this.client.connect(function(err) {
+        if (err) {
+            errorHandling.handle("There was an error with the database: " + err, self.response);
             console.log("could not connect to postgres");
             console.log(err);
         }
     });
 
-    this.query = function(_query, callback){
+    /**
+     *
+     *
+     */
+    this.query = function(_query, callback) {
 
-      that.client.query(_query, function(err, result) {
+      self.client.query(_query, function(err, result) {
         if(err) {
-            errorHandling.handle("Error on query: " + err + "\n" + _query, that.response);
+            errorHandling.handle("Error on query: " + err + "\n" + _query, self.response);
             console.log("Error on query: " + err + "\n" + _query);
             return null;
         }
@@ -93,11 +88,14 @@ var DataSource = function(request, response, rescallback) {
 
       });
 
-
     };
 
-    this.tearDown = function(){
-        that.client.end();
+    /**
+     *
+     *
+     */
+    this.tearDown = function() {
+        self.client.end();
     };
 
     /**
@@ -106,220 +104,222 @@ var DataSource = function(request, response, rescallback) {
      */
     this.cache = require("./cache")(config.cacheEnabled, config.cacheDuration);
 
-    this.parseParams = function(request, _callback){
+    /**
+     *
+     *
+     */
+    this.parseParams = function(request, _callback) {
         var cubes_arg = request.query['cubes'];
-        if (! cubes_arg){
-            errorHandling.handle("No data to fetch, no cubes argument", that.response);
+        if (! cubes_arg) {
+            errorHandling.handle("No data to fetch, no cubes argument", self.response);
             console.log("No data to fetch, no cubes argument");
             return null;
         }
 
-        that.cubes = cubes_arg.split("|");
-        that.cubes_tables = {}
-        _.each(that.cubes, function(elem, index){
-            that.cubes_tables[elem] = elem + "__denorm"
+        self.cubes = cubes_arg.split("|");
+        self.cubes_tables = {}
+        _.each(self.cubes, function(elem, index) {
+            self.cubes_tables[elem] = elem + "__denorm"
         });
 
-        if (that.cubes.length > 5){
+        if (self.cubes.length > 5) {
             console.log("Can only join up to 5 cubes");
             return null;
         }   
 
-
         var dateparam = request.query['daterange'];
-        if (dateparam){
+       
+        if (dateparam) {
             var datesplit = dateparam.split("-")
             if (datesplit.length == 1){
-                that.daterange['start'] = parseInt(datesplit[0]);
-            }
-            else if( datesplit.length == 2){
-                that.daterange['start'] = parseInt(datesplit[0]);
-                if (that.daterange['start']){
-                    that.daterange['end'] = parseInt(datesplit[1])
+                self.daterange['start'] = parseInt(datesplit[0]);
+            } else if( datesplit.length == 2) {
+                self.daterange['start'] = parseInt(datesplit[0]);
+                if (self.daterange['start']) {
+                    self.daterange['end'] = parseInt(datesplit[1])
                 }
             }
         }
 
-
         var tempformat = request.query['format'];
-        if (tempformat){
-            if (FORMATOPTS[tempformat.toLowerCase()]){
-                that.format = tempformat.toLowerCase()
-            } 
-            else{
-                that.format = 'json'
+        
+        if (tempformat) {
+            if (FORMATOPTS[tempformat.toLowerCase()]) {
+                self.format = tempformat.toLowerCase()
+            } else {
+                self.format = 'json'
             }
         }
 
-
-        //parse cut
-        //cut=geometry__country_level0@name:albania;argentina;australia;azerbaijan
         var tempcuts = request.query['cut'];
-        if (tempcuts){
+        
+        if (tempcuts) {
+
             var cutsplit = tempcuts.split("|")
-            _.each(cutsplit, function(tempcut, index){
+
+            _.each(cutsplit, function(tempcut, index) {
                 var basenamesplit = tempcut.split(":")
                 var name = basenamesplit[0]
                 var values = basenamesplit[1].split(';')
 
                 var cutter = name.split("@");
 
-                if (cutter.length > 1){
-                    if (that.cut[cutter[0]]){
-                        that.cut[cutter[0]][cutter[1]] = values;
+                if (cutter.length > 1) {
+                    if (self.cut[cutter[0]]) {
+                        self.cut[cutter[0]][cutter[1]] = values;
+                    } else {
+                        self.cut[cutter[0]] = {};
+                        self.cut[cutter[0]][cutter[1]] = values;
                     }
-                    else{
-                        that.cut[cutter[0]] = {};
-                        that.cut[cutter[0]][cutter[1]] = values;
-                    }
-                }
-                else{
-                    if (that.cut[cutter[0]]){
-                        that.cut[cutter[0]][DEFAULTDRILLDOWN[cutter[0]]] = values;
-                    }
-                    else{
+                } else {
+                    if (self.cut[cutter[0]]) {
+                        self.cut[cutter[0]][DEFAULTDRILLDOWN[cutter[0]]] = values;
+                    } else {
                         var tempobj= DEFAULTDRILLDOWN[cutter[0]];
-                        that.cut[cutter[0]] = { tempobj : values };
+                        self.cut[cutter[0]] = { tempobj : values };
                     }
                 }
             });               
         }
 
-
         var tempdrilldown = request.query["drilldown"];
-        if (tempdrilldown){
+        
+        if (tempdrilldown) {
+
             var drilldownsplit = tempdrilldown.split("|");
-            _.each(drilldownsplit, function(tempdrill){
+
+            _.each(drilldownsplit, function(tempdrill) {
                 var dd = tempdrill.split("@");
-                if (dd.length > 1){
-                    if (that.drilldown[dd[0]]){
-                        that.drilldown[dd[0]].push(dd[1])
+                if (dd.length > 1) {
+                    if (self.drilldown[dd[0]]) {
+                        self.drilldown[dd[0]].push(dd[1])
+                    } else {
+                        self.drilldown[dd[0]] = [dd[1]];
                     }
-                    else{
-                        that.drilldown[dd[0]] = [dd[1]];
-                    }
-                }
-                else{
-                    if (that.drilldown[dd[0]]){
-                        that.drilldown[dd[0]].push(DEFAULTDRILLDOWN[dd[0]]);
-                    }
-                    else{
-                        that.drilldown[dd[0]] = [DEFAULTDRILLDOWN[dd[0]]];
+                } else {
+                    if (self.drilldown[dd[0]]) {
+                        self.drilldown[dd[0]].push(DEFAULTDRILLDOWN[dd[0]]);
+                    } else {
+                        self.drilldown[dd[0]] = [DEFAULTDRILLDOWN[dd[0]]];
                     }
                 }
             });
-              
+
         }
 
-        that.nulls = request.query['nulls'];
+        self.nulls = request.query['nulls'];
 
-
-        that.clusterparams = {
+        self.clusterparams = {
             "cluster": request.query["cluster"],
             "numclusters": parseInt(request.query["numclusters"])
         }
-        return that.buildQuery();
+
+        return self.buildQuery();
     };
 
+    /**
+     *
+     *
+     */
     this.buildQuery = function(){
-        that.primary_table = _.values(that.cubes_tables)[0];
-        that.primary_base = that.primary_table.split("__")[0];
-        that.selectable = squel.select()
-            .from("finddata." + that.primary_table + " AS " + that.primary_table)
-            .field("COUNT(" + that.primary_table + ".geom_time_id)", "count")
-            .field("AVG(" + that.primary_table + ".amount)", that.primary_base + "__avg")
-            .field("MAX(" + that.primary_table + ".amount)", that.primary_base + "__max")
-            .field("MIN(" + that.primary_table + ".amount)", that.primary_base + "__min");
+        self.primary_table = _.values(self.cubes_tables)[0];
+        self.primary_base = self.primary_table.split("__")[0];
+        self.selectable = squel.select()
+            .from("finddata." + self.primary_table + " AS " + self.primary_table)
+            .field("COUNT(" + self.primary_table + ".geom_time_id)", "count")
+            .field("AVG(" + self.primary_table + ".amount)", self.primary_base + "__avg")
+            .field("MAX(" + self.primary_table + ".amount)", self.primary_base + "__max")
+            .field("MIN(" + self.primary_table + ".amount)", self.primary_base + "__min");
 
-        _.each(that.cubes_tables, function(cubes_ts, index){
-            if (cubes_ts == that.primary_table){
+        _.each(self.cubes_tables, function(cubes_ts, index) {
+            if (cubes_ts == self.primary_table) {
                 return;
             }
             var tempcube_base = cubes_ts.split("__")[0]
-            that.selectable = that.selectable
-                .right_join("finddata." + cubes_ts + " AS " + cubes_ts, null, cubes_ts + ".geom_time_id = "+ that.primary_table  + ".geom_time_id")
+            self.selectable = self.selectable
+                .right_join("finddata." + cubes_ts + " AS " + cubes_ts, null, cubes_ts + ".geom_time_id = "+ self.primary_table  + ".geom_time_id")
                 .field("AVG(" + cubes_ts + ".amount)", tempcube_base + "__avg")
                 .field("MAX(" + cubes_ts + ".amount)", tempcube_base + "__max")
                 .field("MIN(" + cubes_ts + ".amount)", tempcube_base + "__min");
         });
 
-        _.each(that.drilldown, function(drilldowns, tablename){
+        _.each(self.drilldown, function(drilldowns, tablename){
             _.each(drilldowns, function(dd,index){
-                if (tablename == "geometry__country_level0"){
-                    that.selectable = that.selectable
-                                            .field(that.primary_table + "." + dd, "geo__" + dd)
-                                            .group(that.primary_table + "." + dd);
-                }
-                else if (tablename == "geometry__time"){
-                    that.selectable = that.selectable
-                                            .field(that.primary_table + ".time", "time")
-                                            .group(that.primary_table + ".time")
+                if (tablename == "geometry__country_level0") {
+                    self.selectable = self.selectable
+                                            .field(self.primary_table + "." + dd, "geo__" + dd)
+                                            .group(self.primary_table + "." + dd);
+                } else if (tablename == "geometry__time") {
+                    self.selectable = self.selectable
+                                            .field(self.primary_table + ".time", "time")
+                                            .group(self.primary_table + ".time")
                                             .order("time");
 
-                }
-                else{
+                } else {
 
                 }
             });
         });
 
-        _.each(that.cut, function(cols, table_name){
-            _.each(cols, function(values, colname){
-                if (_.has(['geometry__country_level0', 'geometry__time'], table_name)){
-                    table_name = that.primary_table
+        _.each(self.cut, function(cols, table_name) {
+            _.each(cols, function(values, colname) {
+                if (_.has(['geometry__country_level0', 'geometry__time'], table_name)) {
+                    table_name = self.primary_table
                 }
-                if (values.length > 0){
-                    that.selectable = that.selectable.where(that.primary_table + "." + colname + " IN ('" + values.join("','") + "')");
+                if (values.length > 0) {
+                    self.selectable = self.selectable.where(self.primary_table + "." + colname + " IN ('" + values.join("','") + "')");
                 }
             });
         });
 
-        if (that.daterange['start']){
-            that.selectable = that.selectable.where(that.primary_table + ".time >= " + that.daterange['start']);
+        if (self.daterange['start']) {
+            self.selectable = self.selectable.where(self.primary_table + ".time >= " + self.daterange['start']);
         }
 
-        if (that.daterange['end']){
-            that.selectable = that.selectable.where(that.primary_table + ".time <= " + that.daterange['end']);
+        if (self.daterange['end']) {
+            self.selectable = self.selectable.where(self.primary_table + ".time <= " + self.daterange['end']);
         }
 
-
-    
-        if (!that.nulls){
-            _.each(that.cubes_tables, function(cube_tb){ 
-                that.selectable = that.selectable.where(cube_tb + ".amount IS NOT NULL");
+        if (!self.nulls) {
+            _.each(self.cubes_tables, function(cube_tb){ 
+                self.selectable = self.selectable.where(cube_tb + ".amount IS NOT NULL");
             });
         }
 
-        return that.get_response();
-
-
-
+        return self.getResponse();
 
     };
 
-    this.get_response = function(){
-        //console.log(that.selectable.toString());
+    /**
+     *
+     *
+     */
+    this.getResponse = function(){
+        
         var callback = null;
-        if (that.format == "xls" || that.format == "excel"){
-            callback = that.get_xls;
+        if (self.format == "xls" || self.format == "excel") {
+            callback = self.getXls;
+        } else if ( self.format == "csv") {
+            callback = self.getCsv;
+        } else {
+            callback = self.getJson;
         }
-        else if( that.format == "csv"){
-            callback = that.get_csv;
-        }
-        else{
-            callback = that.get_json;
-        }
-        return that.query(that.selectable.toString(), callback);
+        return self.query(self.selectable.toString(), callback);
 
     };
 
-    this.get_json= function(result){
+    /**
+     *
+     *
+     */
+    this.getJson= function(result){
+
         var response= {};
         response['cells'] = result['rows'];
-        response['attributes'] = _.map(that.drilldown, function(d){
+        response['attributes'] = _.map(self.drilldown, function(d){
             return d[0];
         });
-        that.get_dataset_metadata(function(rowresult){
+        self.getDatasetMetadata(function(rowresult){
             response['models'] = _.map(rowresult.rows, function(d){
                 if (! d.years){
                     d.years = [];
@@ -331,19 +331,22 @@ var DataSource = function(request, response, rescallback) {
                 }
                 return d;
             });
-            if (that.clusterparams['cluster'] == 'jenks'){
-                that.calculate_clusters(response);
+            if (self.clusterparams['cluster'] == 'jenks'){
+                self.calculateClusters(response);
             }
             else{
-                that.rescallback(response);
+                self.rescallback(response);
             }
         });
-        //response['models'] = that.get_dataset_metadata();
-
+        //response['models'] = self.get_dataset_metadata();
 
     };
 
-    this.get_xls = function(result){
+    /**
+     *
+     *
+     */
+    this.getXls = function(result){
         var colkeys = _.keys(result['rows'][0])
         var conf ={};
         conf.stylesXmlFile = "styles.xml";
@@ -367,27 +370,33 @@ var DataSource = function(request, response, rescallback) {
         });
 
         var result = nodeExcel.execute(conf);
-        that.response.setHeader('Content-Type', 'application/vnd.openxmlformats');
-        that.response.setHeader("Content-Disposition", "attachment; filename=" + that.cubes[0] + ".xlsx");
-        that.response.end(result, 'binary');
+        self.response.setHeader('Content-Type', 'application/vnd.openxmlformats');
+        self.response.setHeader("Content-Disposition", "attachment; filename=" + self.cubes[0] + ".xlsx");
+        self.response.end(result, 'binary');
         return null;
     };
 
-    this.get_csv = function(result){
+    /**
+     *
+     *
+     */
+    this.getCsv = function(result){
         fields = _.keys(result['rows'][0]);
         values = _.map(result['rows'], function(d){
             return _.values(d);
         });
         values.unshift(fields);
-       that.response.setHeader('Content-Type', 'text/csv');
-        that.response.setHeader("Content-Disposition", "attachment; filename=" + that.cubes[0] + ".csv");
-        that.response.csv(values);
+       self.response.setHeader('Content-Type', 'text/csv');
+        self.response.setHeader("Content-Disposition", "attachment; filename=" + self.cubes[0] + ".csv");
+        self.response.csv(values);
         return null;
     };
 
-
-
-    this.get_dataset_metadata = function(callback){
+    /**
+     *
+     *
+     */
+    this.getDatasetMetadata = function(callback){
         var sqlstatement = squel.select()
              .from("public.dataset")
              .field("label")
@@ -397,58 +406,60 @@ var DataSource = function(request, response, rescallback) {
              .field('name')
              .field('units')
              .field('years')
-             .where("name IN  (?)", that.cubes.join("','")).toString();
-        that.query(sqlstatement, function(query_result){
+             .where("name IN  (?)", self.cubes.join("','")).toString();
+        self.query(sqlstatement, function(query_result){
             callback(query_result);
         });
     };
 
-    this.calculate_clusters = function(response){
-        var clusternum = that.clusterparams.numclusters;
+    /**
+     *
+     *
+     */
+    this.calculateClusters = function(response){
 
+        var clusternum = self.clusterparams.numclusters;
 
-        if (! clusternum){
+        if (! clusternum) {
             clusternum = 5;
         }
 
-        var dataitem = response['cells'].map(function(d) { return+d[that.primary_table.split("__")[0] + "__avg"]; });
+        var dataitem = response['cells'].map(function(d) { return+d[self.primary_table.split("__")[0] + "__avg"]; });
 
-        if (dataitem.length <= clusternum){
+        if (dataitem.length <= clusternum) {
             clusternum = dataitem.length-1;
         }
 
         var clusters = calculateJenks(dataitem, clusternum);
 
         var labels= [];
-        _.each(clusters, function(val, index, list){
-            if (index >= list.length -1){
+
+        _.each(clusters, function(val, index, list) {
+            if (index >= list.length -1) {
                 return false;
             }
-            if (index == 0){
+
+            if (index == 0) {
                 labels.push("less than " + list[index+1]);                
-            }
-            else if (index == list.length -2){
+            } else if (index == list.length -2) {
                 labels.push("greater than " + list[index]);
                 
-            }
-            else{
+            } else {
             labels.push(val + "-" + list[index+1]);
             }
         });
+
         response['cluster'] = {
             'data': clusters,
             'labels': labels
         };
 
-        that.rescallback(response);
+        self.rescallback(response);
     }
 
     return this.parseParams(request);
 
-
-
 }
-
 
 module.exports = function(request, response, rescallback) {
     return new DataSource(request, response, rescallback);
