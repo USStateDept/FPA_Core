@@ -3,6 +3,7 @@
     window.countries=[];
     window.clickedIndicator = false;
     window.expandedCategory = false;
+    window.currentSet=[];
 
     var hashParams = window.utils.getHashParams();
     var yearsExtremes = []; //default, will be calculated
@@ -1285,14 +1286,38 @@
         return dataset;
     }
 
+    $( window ).resize(function() {
+        alert("hello");
+        //if(window.currentSet.length>0)
+        //    makeBar(window.currentSet);
+    });
+
     var makeBar=function(dataset){
-        var w = 500;
-        var h = 100;
+        //var w = 500;
+        //var h = 100;
+        var w = $("#viz-container.active.tab-pane").width();
+        var h = $("#viz-container.active.tab-pane").height();
+
+        //d3.select("#viz-container.active.tab-pane").remove();
+        $("#viz-container.active.tab-pane").empty();
+
+        var barWidth = w / (dataset.length+1);
+        var yScale = d3.scale.linear().range([h, 0]);
 
         var svg = d3.select("#viz-container.active.tab-pane")
             .append("svg")
             .attr("width", w)
             .attr("height", h);
+
+        /*var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");*/
+
+        var yAxis = d3.svg.axis()
+            .scale(yScale)
+            .orient("left");
+
+
 
         svg.selectAll("rect")
            .data(dataset)
@@ -1302,13 +1327,18 @@
                 return i * (w/dataset.length);  //Bar width of 20 plus 1 for padding
             })
            .attr("y", function(d) {
-                return h - d;  //Height minus data value
+                return h - (d * 4);  //Height minus data value
             })
-           .attr("width", 20)
+           .attr("width", barWidth)
            .attr("height", function(d) {
-                return d;  //Just the data value
+                return d * 4;  //Just the data value
             })
            .attr("fill", "teal");
+
+           svg.append("g")
+    .call(yAxis)
+    .scale(yScale)
+    .orient("left");
 
     }
 
@@ -1467,44 +1497,10 @@
 
                 // = [ 5, 10, 15, 20, 25 ];
 
-                var dataset = makeDataset(sortedData.highcharts.series[0].data);
-                makeBar(dataset);
+                window.currentSet = makeDataset(sortedData.highcharts.series[0].data);
+                makeBar(window.currentSet);
 
             
-                debugger;
-
-                /*var margin = {top: 20, right: 30, bottom: 30, left: 40},
-                    width = 960 - margin.left - margin.right,
-                    height = 500 - margin.top - margin.bottom;
-
-                var y = d3.scale.linear()
-                    .range([height, 0]);
-
-               var chart = d3.select("#viz-container.active.tab-pane")
-                    .selectAll("div")
-                    .data(dataset)
-                    .enter()
-                    .append("div")
-                    .attr("class", "bar")
-                    .style("height", function(d) {
-                        var barHeight = d * 5;
-                        return barHeight + "px";
-                });
-
-                var yAxis = d3.svg.axis()
-                    .scale(y)
-                    .orient("left");
-
-                chart.append("g")
-                    .attr("class", "y axis")
-                    .call(yAxis);*/
-
-                
-
-                /*var yAxis = d3.svg.axis()
-                    .scale(y)
-                    .orient("left");*/
-
 
             } else {
                 $("#bar-globals").hide();
@@ -1585,9 +1581,9 @@
 
         if (chartType == "bar") {
 
-            var dataset = makeDataset(json.highcharts.series[0].data);
+            window.currentSet = makeDataset(json.highcharts.series[0].data);
 
-            makeBar(dataset);
+            makeBar(window.currentSet);
             /*var series = json.highcharts.series[0];
             var dataMapping = {};
             _.forEach(series.data, function(d, i) {
