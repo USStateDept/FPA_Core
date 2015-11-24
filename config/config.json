@@ -1,0 +1,25 @@
+{
+  
+    "specialization": {
+    },
+
+    "database": {
+        "conn": "postgres://postgres:postgres@localhost/openspending"
+    } ,
+
+    "middleware": {
+
+        "static": {
+            "module": {
+                "arguments": [ "path:./.build" ]
+            }
+        },
+
+        "router": {
+            "module": {
+                "arguments": [{ "directory": "path:./controllers" }]
+            }
+        }
+
+    }
+}
