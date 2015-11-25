@@ -1,0 +1,405 @@
+<html>
+<head>
+
+  <!-- Import jQuery and Bootstrap -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  <!-- Import client side JavaScript -->
+  <script type="text/javascript" src="libs/form.js"></script>  
+
+  <!-- Import dummy data -->
+  <script type="text/javascript" src="data_indicators_dummy.js"></script>  
+
+</head>
+<body>
+  <!--Button to show the modal when clicked-->
+  <button class="btn" type="button" data-toggle="modal" data-target="#modal-example">show modal</button>
+  <button class="btn" type="button" data-toggle="modal" data-target="#modal-triage">modal FIND traige</button>
+  <button class="btn" type="button" data-toggle="modal" data-target="#modal-find-new">modal FIND new</button>
+  <button class="btn" type="button" data-toggle="modal" data-target="#modal-find-existing">modal FIND existing</button>
+  <!--The modal with the form on it-->
+  <div class="modal fade" id="modal-example">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--Close button in top right-->
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <!--Header text-->
+          <h3>Form Header</h3>
+        </div>
+
+        <div class="modal-body">
+          <!--Form-->
+          <form method="post" action="/ingest">
+            <div class="form-group">
+              <p>reference</p>
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="password">password</label>
+              <input type="password" name="password" class="form-control" placeholder="password">
+              <label for="datetime">datetime</label>                
+              <input type="datetime" name="datetime" class="form-control" placeholder="datetime">
+              <label for="date">date</label>
+              <input type="date" name="date" class="form-control" placeholder="date">
+              <label for="datetime-local">datetime-local</label>
+              <input type="datetime-local" name="datetime-local" class="form-control" placeholder="datetime-local">
+              <label for="month">month</label>
+              <input type="month" name="month" class="form-control" placeholder="month">
+              <label for="time">time</label>
+              <input type="time" name="time" class="form-control" placeholder="time">
+              <label for="week">week</label>
+              <input type="week" name="week" class="form-control" placeholder="week">
+              <label for="number">number</label>
+              <input type="number" name="number" class="form-control" placeholder="number">
+              <label for="email">email</label>
+              <input type="email" name="email" class="form-control" placeholder="email">
+              <label for="url">url</label>
+              <input type="url" name="url" class="form-control" placeholder="url">
+              <label for="search">search</label>
+              <input type="search" name="search" class="form-control" placeholder="search">
+              <label for="tel">tel</label>
+              <input type="tel" name="tel" class="form-control" placeholder="tel">
+              <label for="color">color</label>
+              <input type="color" name="color" class="form-control" placeholder="color">
+              <label for="file">file</label>
+              <input type="file" name="file" class="form-control" placeholder="file">
+              <label for="textarea">textarea</label>              
+              <textarea class="form-control" rows="3"></textarea>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="multiple-option-select">multiple-option-select</label>              
+              <select name="multiple-option-select" multiple class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>                         
+            </div>
+            <!--Submit button-->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <!--Another close button in the footer-->
+          <a href="#" class="btn" type="close" data-dismiss="modal">Close</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modal-triage">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--Close button in top right-->
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <!--Header text-->
+          <h3>Modal Triage</h3>
+        </div>
+
+        <div class="modal-body">
+          <!--Traige the user to the appropriate form-->
+          <p>triage</p>
+            <button class="btn btn-default btn-new-indicator-form" data-toggle="collapse" data-target="#new-indicator-form,#existing-indicator-form" style="display: none;">Add a new indicator</button><br />
+            <label for="possible-indicator">Type the indicator this data upload is associated with...</label>
+            <input id="possible-indicator" type="text" name="possible-indicator" class="form-control" placeholder="Type here">
+            <p id="indicator-suggestions">indicator suggestions</p>
+          <!--Form-->
+          <form id="new-indicator-form" class="collapse" method="post" action="/new-indicator-data">
+            <div class="form-group">
+              <p>new</p>
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="multiple-option-select">multiple-option-select</label>              
+              <select name="multiple-option-select" multiple class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="url">url</label>
+              <input type="url" name="url" class="form-control" placeholder="url">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="number">number</label>
+              <input type="number" name="number" class="form-control" placeholder="number">
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="date">date</label>
+              <input type="date" name="date" class="form-control" placeholder="date">
+              <label for="file">file</label>
+              <input type="file" name="file" class="form-control" placeholder="file">
+            </div>
+            <!--Submit button-->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+          <form id="existing-indicator-form" class="collapse in"method="post" action="/ingest/existing-indicator-data">
+            <div class="form-group">
+              <p>existing</p>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="multiple-option-select">multiple-option-select</label>              
+              <select name="multiple-option-select" multiple class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="url">url</label>
+              <input type="url" name="url" class="form-control" placeholder="url">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="number">number</label>
+              <input type="number" name="number" class="form-control" placeholder="number">
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="date">date</label>
+              <input type="date" name="date" class="form-control" placeholder="date">
+              <label for="file">file</label>
+              <input type="file" name="file" class="form-control" placeholder="file">                                    
+            </div>
+            <!--Submit button-->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>          
+        </div>
+
+        <div class="modal-footer">
+          <!--Another close button in the footer-->
+          <a href="#" class="btn" type="close" data-dismiss="modal">Close</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--The modal with the form on it-->
+  <div class="modal fade" id="modal-find-new">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--Close button in top right-->
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <!--Header text-->
+          <h3>New Indicator</h3>
+        </div>
+
+        <div class="modal-body">
+          <!--Form-->
+          <form method="post" action="/new-indicator-data">
+            <div class="form-group">
+              <p>new</p>
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="multiple-option-select">multiple-option-select</label>              
+              <select name="multiple-option-select" multiple class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="url">url</label>
+              <input type="url" name="url" class="form-control" placeholder="url">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="number">number</label>
+              <input type="number" name="number" class="form-control" placeholder="number">
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="date">date</label>
+              <input type="date" name="date" class="form-control" placeholder="date">
+              <label for="file">file</label>
+              <input type="file" name="file" class="form-control" placeholder="file">
+            </div>
+            <!--Submit button-->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <!--Another close button in the footer-->
+          <a href="#" class="btn" type="close" data-dismiss="modal">Close</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--The modal with the form on it-->
+  <div class="modal fade" id="modal-find-existing">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--Close button in top right-->
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <!--Header text-->
+          <h3>Existing Indicator</h3>
+        </div>
+
+        <div class="modal-body">
+          <!--Form-->
+          <form method="post" action="/existing-indicator-data">
+            <div class="form-group">
+              <p>existing</p>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="multiple-option-select">multiple-option-select</label>              
+              <select name="multiple-option-select" multiple class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="url">url</label>
+              <input type="url" name="url" class="form-control" placeholder="url">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="text">text</label>
+              <input type="text" name="text" class="form-control" placeholder="text">
+              <label for="number">number</label>
+              <input type="number" name="number" class="form-control" placeholder="number">
+              <label for="single-option-select">single-option-select</label>              
+              <select name="single-option-select" class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <label for="date">date</label>
+              <input type="date" name="date" class="form-control" placeholder="date">
+              <label for="file">file</label>
+              <input type="file" name="file" class="form-control" placeholder="file">                                    
+            </div>
+            <!--Submit button-->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <!--Another close button in the footer-->
+          <a href="#" class="btn" type="close" data-dismiss="modal">Close</a>
+        </div>
+
+      </div>
+    </div>
+  </div>  
+</body>
