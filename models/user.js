@@ -32,10 +32,11 @@ class UserModel {
     	}
      }
 
-     updateUserData(user){
+     updateUserData(){
      	// in order to change data user must be logged in and as the same user trying to change
      	if ( isAuthenticated(this.user.email && user.username === this.user.username) ){
     		// TODO Update the user
+    		// use this.user
     	}
     	else {
     		// User not logged in, return error message
@@ -43,9 +44,14 @@ class UserModel {
     	}
      }
 
-     createNewUser(user) {
+     deleteUser() {
+
+     }
+
+     createNewUser() {
      	// TODO insert a new user into DB
      	// hash password this.user.password
+     	// use this.user
      	// make sure user doesn't already exist
      }
      
