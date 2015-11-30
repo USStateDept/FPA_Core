@@ -22,6 +22,13 @@ app = module.exports = express();
 app.use(kraken(options));
 app.use(express.static(__dirname));
 app.on('start', function () {
-    console.log('Application ready to serve requests.');
-    console.log('Environment: %s', app.kraken.get('env:env'));
+    console.log('✅  API is ready to serve requests.');
+    if ( app.kraken.get('env:env') === "development" ) {
+    	console.log('🚧  Using Development Enviornment');
+    } else if ( app.kraken.get('env:env') === "production" ) {
+    	console.log('🔆  Using Production Enviornment');
+    } else {
+    	console.log('⁉  Using Unknown Enviornment');
+    }
+    
 });
