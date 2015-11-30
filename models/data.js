@@ -27,12 +27,6 @@ var DEFAULTDRILLDOWN = {"geometry__country_level0":"sovereignt","geometry__time"
  *
  * @class Data
  * @author Michael Ramos && Nathan Hilbert
- * @version 1.1.0
- */
-
-/**
- * The model object
- * @constructor
  */
 var DataSource = function(request, response, rescallback) {
     
