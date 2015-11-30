@@ -2,7 +2,7 @@
  * Ingest Endpoint
  *
  * Inserting Data into the DBs
- * @author
+ * @author Michael Ramos && Leroy Bryant && Terry Creamer
  */
 
 'use strict';

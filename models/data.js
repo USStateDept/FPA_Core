@@ -4,7 +4,7 @@
  * Find.state.gov main api for getting data for visualizations
  * @author Michael Ramos && Nathan Hilbert
  */
-
+ 
 'use strict';
 
 module.exports = function(request, response, rescallback) {
