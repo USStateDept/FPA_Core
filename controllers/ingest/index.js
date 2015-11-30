@@ -1,7 +1,14 @@
+/**
+ * Ingest Endpoint
+ *
+ * Inserting Data into the DBs
+ * @author
+ */
+
 'use strict';
 
-// put any requiers up here 
-
+import CategoryModel from '../../models/category';
+import IndicatorModel from '../../models/indicator';
 
 module.exports = function (router) {
 

@@ -1,7 +1,14 @@
+/**
+ * Data API Model
+ *
+ * Find.state.gov main api for getting data for visualizations
+ * @author Michael Ramos && Nathan Hilbert
+ */
+
 'use strict';
 
 module.exports = function(request, response, rescallback) {
-    return new DataSource(request, response, rescallback);
+    return new Data(request, response, rescallback);
 };
 
 var _ =  require("lodash");
@@ -20,15 +27,12 @@ var FORMATOPTS = {'json':true, 'csv':true, 'excel':true, 'xls':true};
 var RETURNLIMIT= 10000;
 var DEFAULTDRILLDOWN = {"geometry__country_level0":"sovereignt","geometry__time":"time"};
 
-/**
- * Data API Model
- *
- * Find.state.gov main api for getting data for visualizations
- *
+
+/*
+ * 
  * @class Data
- * @author Michael Ramos && Nathan Hilbert
  */
-var DataSource = function(request, response, rescallback) {
+var Data = function(request, response, rescallback) {
     
     var self = this;
     this.response = response;

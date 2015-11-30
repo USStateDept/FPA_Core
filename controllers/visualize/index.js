@@ -1,9 +1,19 @@
+/**
+ * Data Viz Endpoint
+ *
+ * Data api for returing data requiered by the front-end
+ * @author Michael Ramos 
+ */
+
 'use strict';
 
 var DataModel = require('../../models/data');
 
 module.exports = function (router) {
 
+	/**
+	 * @GET localhost/visualize
+	 */
     router.get('/', function (req, res) {
 
     	var ds = new DataModel(req, res, function(resdata){
@@ -15,7 +25,6 @@ module.exports = function (router) {
 			}	
 			ds.closeConnection();		
 		});
-	});
-        
+	});        
 
 };

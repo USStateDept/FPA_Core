@@ -1,36 +1,40 @@
+/**
+ * User Model
+ *
+ * Find.state.gov user model
+ * @author Michael Ramos 
+ */
+ 
 'use strict';
 
 // Database config
 var pg = require('pg');
 
 // creation dependensies
-var bcrypt   = require('bcrypt-nodejs');
+//var bcrypt   = require('bcrypt-nodejs');
 
-/**
- * User Model
- *
- * Find.state.gov user model
- *
+
+/*
+ * 
  * @class User
- * @author Michael Ramos 
  */
-class UserModel {
+export default class User {
     
     constructor(user) {
         this.user = user;
  	}
 
     getUserData() {
-    	if ( isAuthenticated(this.user.email) ){
-    		var profileData = {};
-    		// TODO Grab profile data and send to client
-    		// query using user param
-    		return profileData;
-    	}
-    	else {
+    	// if ( isAuthenticated(this.user.email) ){
+    	// 	var profileData = {};
+    	// 	// TODO Grab profile data and send to client
+    	// 	// query using user param
+    	// 	return profileData;
+    	// }
+    	//else {
     		// User not logged in, return error message
     		return { error: "User not logged in - can't grab data"};
-    	}
+    	//}
      }
 
      updateUserData(){
