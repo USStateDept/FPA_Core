@@ -2,10 +2,10 @@
   "name": "findapi",
   "version": "0.1.0",
   "description": "RESTful API for find.state.gov",
-  "author": "Michael Ramos &amp;&amp; Nathan Hilbert",
+  "author": "Office of eDiplomacy - Department of State",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "dev": "node server.js"
   },
   "dependencies": {
     "babel": "^6.1.18",
