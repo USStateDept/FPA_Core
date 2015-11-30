@@ -11,7 +11,7 @@ var bcrypt   = require('bcrypt-nodejs');
  *
  * Find.state.gov user model
  *
- * @class Indicators
+ * @class User
  * @author Michael Ramos 
  */
 class UserModel {
@@ -54,7 +54,7 @@ class UserModel {
      	// use this.user
      	// make sure user doesn't already exist
      }
-     
+
 }
 
 
