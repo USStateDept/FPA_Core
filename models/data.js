@@ -34,7 +34,7 @@ var DataSource = function(request, response, rescallback) {
     this.response = response;
     this.rescallback = rescallback;
     this.params = {};
-    this.cubes = [];
+    this.indicators = [];
     this.daterange= {"start":null,"end":null};
     this.format='json';
     this.agg = {};
@@ -43,7 +43,7 @@ var DataSource = function(request, response, rescallback) {
     this.nulls=true;
     this.dataframe = null;
     this.geomtables = ['geometry__time', 'geometry__country_level0'];
-    this.cubes_tables = [];
+    this.indicators_tables = [];
     this.t = {};
 
     
@@ -70,22 +70,22 @@ var DataSource = function(request, response, rescallback) {
      */
     this.parseParams = function(request, _callback) {
         
-        var cubes_arg = request.query['cubes'];
+        var indicators_arg = request.query['indicators'];
         
-        if (! cubes_arg) {
-            errorHandling.handle("No data to fetch, no cubes argument", self.response);
-            console.log("No data to fetch, no cubes argument");
+        if (! indicators_arg) {
+            errorHandling.handle("No data to fetch, no indicators argument", self.response);
+            console.log("No data to fetch, no indicators argument");
             return null;
         }
 
-        self.cubes = cubes_arg.split("|");
-        self.cubes_tables = {}
-        _.each(self.cubes, function(elem, index) {
-            self.cubes_tables[elem] = elem + "__denorm"
+        self.indicators = indicators_arg.split("|");
+        self.indicators_tables = {}
+        _.each(self.indicators, function(elem, index) {
+            self.indicators_tables[elem] = elem + "__denorm"
         });
 
-        if (self.cubes.length > 5) {
-            console.log("Can only join up to 5 cubes");
+        if (self.indicators.length > 5) {
+            console.log("Can only join up to 5 indicators");
             return null;
         }   
 
@@ -184,7 +184,7 @@ var DataSource = function(request, response, rescallback) {
      *
      */
     this.buildQuery = function(){
-        self.primary_table = _.values(self.cubes_tables)[0];
+        self.primary_table = _.values(self.indicators_tables)[0];
         self.primary_base = self.primary_table.split("__")[0];
         self.selectable = squel.select()
             .from("finddata." + self.primary_table + " AS " + self.primary_table)
@@ -193,16 +193,16 @@ var DataSource = function(request, response, rescallback) {
             .field("MAX(" + self.primary_table + ".amount)", self.primary_base + "__max")
             .field("MIN(" + self.primary_table + ".amount)", self.primary_base + "__min");
 
-        _.each(self.cubes_tables, function(cubes_ts, index) {
-            if (cubes_ts == self.primary_table) {
+        _.each(self.indicators_tables, function(indicators_ts, index) {
+            if (indicators_ts == self.primary_table) {
                 return;
             }
-            var tempcube_base = cubes_ts.split("__")[0]
+            var tempcube_base = indicators_ts.split("__")[0]
             self.selectable = self.selectable
-                .right_join("finddata." + cubes_ts + " AS " + cubes_ts, null, cubes_ts + ".geom_time_id = "+ self.primary_table  + ".geom_time_id")
-                .field("AVG(" + cubes_ts + ".amount)", tempcube_base + "__avg")
-                .field("MAX(" + cubes_ts + ".amount)", tempcube_base + "__max")
-                .field("MIN(" + cubes_ts + ".amount)", tempcube_base + "__min");
+                .right_join("finddata." + indicators_ts + " AS " + indicators_ts, null, indicators_ts + ".geom_time_id = "+ self.primary_table  + ".geom_time_id")
+                .field("AVG(" + indicators_ts + ".amount)", tempcube_base + "__avg")
+                .field("MAX(" + indicators_ts + ".amount)", tempcube_base + "__max")
+                .field("MIN(" + indicators_ts + ".amount)", tempcube_base + "__min");
         });
 
         _.each(self.drilldown, function(drilldowns, tablename){
@@ -243,7 +243,7 @@ var DataSource = function(request, response, rescallback) {
         }
 
         if (!self.nulls) {
-            _.each(self.cubes_tables, function(cube_tb){ 
+            _.each(self.indicators_tables, function(cube_tb){ 
                 self.selectable = self.selectable.where(cube_tb + ".amount IS NOT NULL");
             });
         }
@@ -355,7 +355,7 @@ var DataSource = function(request, response, rescallback) {
 
         var result = nodeExcel.execute(conf);
         self.response.setHeader('Content-Type', 'application/vnd.openxmlformats');
-        self.response.setHeader("Content-Disposition", "attachment; filename=" + self.cubes[0] + ".xlsx");
+        self.response.setHeader("Content-Disposition", "attachment; filename=" + self.indicators[0] + ".xlsx");
         self.response.end(result, 'binary');
         return null;
     };
@@ -371,7 +371,7 @@ var DataSource = function(request, response, rescallback) {
         });
         values.unshift(fields);
        self.response.setHeader('Content-Type', 'text/csv');
-        self.response.setHeader("Content-Disposition", "attachment; filename=" + self.cubes[0] + ".csv");
+        self.response.setHeader("Content-Disposition", "attachment; filename=" + self.indicators[0] + ".csv");
         self.response.csv(values);
         return null;
     };
@@ -390,7 +390,7 @@ var DataSource = function(request, response, rescallback) {
              .field('name')
              .field('units')
              .field('years')
-             .where("name IN  (?)", self.cubes.join("','")).toString();
+             .where("name IN  (?)", self.indicators.join("','")).toString();
         self.query(sqlstatement, function(query_result){
             callback(query_result);
         });

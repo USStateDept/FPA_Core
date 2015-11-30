@@ -1,4 +1,4 @@
-// 
+'use strict';
 
 // Database config
 var pg = require('pg');
@@ -15,6 +15,7 @@ var bcrypt   = require('bcrypt-nodejs');
  * @author Michael Ramos 
  */
 class UserModel {
+    
     constructor(user) {
         this.user = user;
  	}
