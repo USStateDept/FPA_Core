@@ -14,7 +14,7 @@ options = {
     onconfig: function (config, next) {
         // Add any additional config setup or overrides here. `config` is an initialized
         
-        // setup the model
+        // start, sync the database with models
         // call next to continue setting up middleware
         var ms = new ModelSet(config.get('database'));
 
