@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     classMethods: {
-      // Executed in the ./index.js
+      // Executed in ./index.js
       associate: function(models) {
         Country.hasMany(models.Country_Altname, {
           foreignKey: 'Country_ID'

@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     }, {
     classMethods: {
-      // Executed in the ./index.js
+      // Executed in ./index.js
       associate: function(models) {
         Country_Altname.belongsTo(models.Country, {
             foreignKey: 'Country_ID'
