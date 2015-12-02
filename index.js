@@ -31,14 +31,12 @@ options = {
 app = module.exports = express();
 app.use(kraken(options));
 app.use(express.static(__dirname));
-app.on('start', function () {
-    
+app.on('start', function () {    
     var env = app.kraken.get('env:env') || "development";
     if ( env === "production" ) {
     	console.log('===> 🔆  Using Production Environment');
     } else {
         console.log('===> 🚧  Using Development Environment');
     } 
-    console.log('===> ✅  API Server is ready to serve requests.');
-    
+    console.log('===> ✅  API Server is ready to serve requests.');   
 });
