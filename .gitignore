@@ -3,7 +3,12 @@
 .DS_Store
 .DS_Store?
 
+# DEV generated files #
+######################
+.build/
 .editorconfig
 
+# NPM generated files #
+######################
 /node_modules/
 npm-debug.log
