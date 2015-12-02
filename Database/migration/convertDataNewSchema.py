@@ -236,7 +236,7 @@ def populateCategoriesTable():
 			print oldId
 			name = row[2]
 			
-			cur.execute("""insert into find."category" (category_name, subcategory_name,category_id, data_modified_ts) VALUES ('""" + name + "',''," + str(oldId) + ",now())")
+			cur.execute("""insert into find."category" (category_name, subcat_name,category_id, data_modified_ts) VALUES ('""" + name + "',''," + str(oldId) + ",now())")
 
 
 		cur.execute("""select * from public."tags" where category like 'subspsd'""")    
@@ -249,7 +249,7 @@ def populateCategoriesTable():
 			print oldId
 			name = row[2]
 			
-			cur.execute("""insert into find."category" (category_name, subcategory_name, category_id, data_modified_ts) VALUES ('','""" + name + "'," + str(oldId) + ",now())")
+			cur.execute("""insert into find."category" (category_name, subcat_name, category_id, data_modified_ts) VALUES ('','""" + name + "'," + str(oldId) + ",now())")
 		
 		con.commit()
 			
@@ -261,13 +261,13 @@ def populateCategoriesTable():
 
 def main():
 	
-	#populateCollectionsTable()   
+	populateCollectionsTable()   
 	#populateCategoriesTable()
 	#populateIndicatorsTable()
 	#populateCategoriesJunctionTable()
 	#populateCollectionsJunctionTable()
 	#populateCountryTable()
-	populateDataTable()
+	#populateDataTable()
 
 
 if __name__ == "__main__":
