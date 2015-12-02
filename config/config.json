@@ -1,56 +1,62 @@
 {
   
-    "specialization": {
+"specialization": {
+},
+
+"database": {
+    "name": "openspending",
+    "username": "postgres",
+    "password": "postgres",
+    "settings": {
+        "host": "127.0.0.1",
+        "dialect": "postgres"
+    }
+},
+
+"middleware": {
+
+    "static": {
+        "module": {
+            "arguments": [ "path:./.build" ]
+        }
     },
 
-    "database": {
-        "conn": "postgres://postgres:postgres@localhost/openspending"
-    } ,
-
-    "middleware": {
-
-        "static": {
-            "module": {
-                "arguments": [ "path:./.build" ]
-            }
-        },
-
-        "router": {
-            "module": {
-                "arguments": [{ "directory": "path:./controllers" }]
-            }
-        },
-
-        /**
-         * Override the default lusca configuration to disable CSRF handling.
-         */
-        "appsec": {
-            "module": {
-                "arguments": [
-                    {
-                        "xframe": "SAMEORIGIN",
-                        "p3p": false,
-                        "csp": false
-                    }
-                ]
-            }
-        },
-        
-        /**
-         * Enable *ONLY* CSRF filtered by route.
-         * Note: The route "regex" needs the double parens
-         * because of how express parses route strings.
-         */
-        "csrf": {
-            "enabled": true,
-            "priority": 111,
-            "route": "/((?!ingest))*",
-            "module": {
-                "name": "lusca",
-                "method": "csrf",
-                "arguments": [ {} ]
-            }
+    "router": {
+        "module": {
+            "arguments": [{ "directory": "path:./controllers" }]
         }
+    },
 
+    /**
+     * Override the default lusca configuration to disable CSRF handling.
+     */
+    "appsec": {
+        "module": {
+            "arguments": [
+                {
+                    "xframe": "SAMEORIGIN",
+                    "p3p": false,
+                    "csp": false
+                }
+            ]
+        }
+    },
+    
+    /**
+     * Enable *ONLY* CSRF filtered by route.
+     * Note: The route "regex" needs the double parens
+     * because of how express parses route strings.
+     */
+    "csrf": {
+        "enabled": true,
+        "priority": 111,
+        "route": "/((?!ingest))*",
+        "module": {
+            "name": "lusca",
+            "method": "csrf",
+            "arguments": [ {} ]
+        }
     }
+
+}
 }

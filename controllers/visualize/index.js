@@ -4,10 +4,9 @@
  * Data api for returing data requiered by the front-end
  * @author Michael Ramos 
  */
-
 'use strict';
 
-var DataModel = require('../../models/data');
+var DataModel = require('../../lib/data');
 
 module.exports = function (router) {
 
