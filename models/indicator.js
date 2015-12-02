@@ -1,7 +1,7 @@
 /**
- * Category Model
+ * Indicator Model
  *
- * Find.state.gov indicator model
+ * @desc find.state.gov, indicators, sequelize orm
  * @author Michael Ramos 
  */
 'use strict';

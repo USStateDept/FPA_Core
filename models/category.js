@@ -1,7 +1,7 @@
 /**
  * Category Model
  *
- * Find.state.gov indicator model
+ * @desc find.state.gov, categories, sequelize orm
  * @author Michael Ramos 
  */
 'use strict';
@@ -23,18 +23,3 @@ module.exports = function(sequelize, DataTypes) {
   
   return Category;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
