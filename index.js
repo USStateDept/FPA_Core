@@ -12,16 +12,15 @@ import ModelSet from './models';
  */
 options = {
     onconfig: function (config, next) {
-        /*
-         * Add any additional config setup or overrides here. `config` is an initialized
-         * `confit` (https://github.com/krakenjs/confit/) configuration object.
-         */
-       
+        // Add any additional config setup or overrides here. `config` is an initialized
+        
         // setup the model
+        // call next to continue setting up middleware
         var ms = new ModelSet(config.get('database'));
 
         ms.init().then(function () {
             console.log('===> 💾  Database Synced -- Success');
+            // Make sure to call next to move on
             next(null, config);
         }).catch(function (err) {
             console.log('===> 🆘 💾  Database Setup Error: ' + err.message);
