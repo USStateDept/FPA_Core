@@ -4,7 +4,7 @@
 },
 
 "database": {
-    "name": "openspending",
+    "name": "test3",
     "username": "postgres",
     "password": "postgres",
     "settings": {

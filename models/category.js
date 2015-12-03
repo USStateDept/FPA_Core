@@ -19,6 +19,16 @@ module.exports = function(sequelize, DataTypes) {
     Sub_Category_Name: {
         type: DataTypes.STRING
     }
+  }, {
+    classMethods: {
+      // Executed in ./index.js
+      associate: function(models) {
+        Category.belongsToMany(models.Indicator, {
+            through: 'Category_Junction',
+            foreignKey: 'Category_ID'
+        });
+      }
+    }   
   });
   
   return Category;

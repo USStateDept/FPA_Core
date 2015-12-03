@@ -32,7 +32,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING
     },
     Country_Geography: {
-      type: DataTypes.GEOMETRY('MULTIPOLYGON')
+      type: DataTypes.STRING
+      //GEOMETRY('MULTIPOLYGON')
     }
   }, {
     classMethods: {
