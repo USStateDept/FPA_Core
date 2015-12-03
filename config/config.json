@@ -1,45 +1,54 @@
 {
   
-"specialization": {
-},
+  "specialization": {
+  },
 
-"database": {
-    "name": "test3",
+  /**
+   * Database setup // Change to production settings when not testing
+   */
+  "database": {
+    "name": "test4",
     "username": "postgres",
     "password": "postgres",
     "settings": {
-        "host": "127.0.0.1",
-        "dialect": "postgres"
+      "host": "127.0.0.1",
+      "dialect": "postgres"
     }
-},
+  },
 
-"middleware": {
+  /**
+   * Kraken Middleware
+   */
+  "middleware": {
 
     "static": {
-        "module": {
-            "arguments": [ "path:./.build" ]
-        }
+      "module": {
+        "arguments": [ "path:./.build" ]
+      }
     },
 
+    /**
+     * Routing Setup
+     */
     "router": {
-        "module": {
-            "arguments": [{ "directory": "path:./controllers" }]
-        }
+      "module": {
+        "arguments": [{ "directory": "path:./controllers" }]
+      }
     },
 
     /**
      * Override the default lusca configuration to disable CSRF handling.
      */
     "appsec": {
-        "module": {
-            "arguments": [
-                {
-                    "xframe": "SAMEORIGIN",
-                    "p3p": false,
-                    "csp": false
-                }
-            ]
-        }
+      "module": {
+        "arguments": [
+            {
+              "xframe": "SAMEORIGIN",
+              "p3p": false,
+              "csp": false
+            }
+        ]
+      }
     },
     
     /**
@@ -48,15 +57,15 @@
      * because of how express parses route strings.
      */
     "csrf": {
-        "enabled": true,
-        "priority": 111,
-        "route": "/((?!ingest))*",
-        "module": {
-            "name": "lusca",
-            "method": "csrf",
-            "arguments": [ {} ]
-        }
+      "enabled": true,
+      "priority": 111,
+      "route": "/((?!ingest))*",
+      "module": {
+        "name": "lusca",
+        "method": "csrf",
+        "arguments": [ {} ]
+      }
     }
-
-}
+  }
+  
 }

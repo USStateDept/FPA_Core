@@ -36,6 +36,10 @@ module.exports = function(sequelize, DataTypes) {
             through: 'Category_Junction',
             foreignKey: 'Indicator_ID'
         });
+        Indicator.belongsToMany(models.Collection, {
+            through: 'Collection_Junction',
+            foreignKey: 'Indicator_ID'
+        });
       }
     }   
   });
