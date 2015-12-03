@@ -1,3 +1,12 @@
+/**
+ * Models - Index
+ *
+ * @desc Index Class, purpose is to setup and sync the models.
+ * Executed in the server initiation. Be careful making edits
+ * to this file
+ * @author Michael Ramos 
+ */
+
 "use strict";
 
 var fs        = require("fs");
@@ -40,7 +49,6 @@ export default class Model {
 
     return db.sequelize.sync();
   }
-
 
 }
 
